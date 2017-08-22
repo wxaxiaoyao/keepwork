@@ -5,3 +5,4 @@
 * luarocks install lualogging
 * luarocks install lua-cjson
 * luarocks install luajwt
+* luarocks install lua-resty-template

@@ -2,7 +2,7 @@ luasql = require "luasql.mysql"
 
 env = luasql.mysql()
 
-conn = env:connect("keepwork", "root", "wuxiangan", "121.14.117.251", 3306)
+conn = env:connect("keepwork", "wuxiangan", "wuxiangan", "127.0.0.1", 3306)
 
 conn:execute("SET NAMES UTF8")
 

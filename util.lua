@@ -5,6 +5,7 @@ local jwt = require("luajwt")
 
 local util = {}
 
+-- 控制台输出
 function util.console(msg)
 	if type(msg) == "table" then
 		msg = util.toJson(msg)
@@ -13,6 +14,17 @@ function util.console(msg)
 	end
 
 	print(msg)
+end
+
+-- web 输出
+function util.say(msg)
+	if type(msg) == "table" then
+		msg = util.toJson(msg)
+	elseif type(msg) == "function" then
+		msg = tostring(msg)
+	end
+
+	ngx.say(msg)
 end
 
 -- json 编码
@@ -45,6 +57,11 @@ function util.decodeJWT(token, secret)
 	local payload, err = jwt.decode(token, secret)
 	
 	return payload
+end
+
+-- 获取共享字典
+util.getSharedDict = function()
+	return ngx.shared.shared_dict
 end
 
 

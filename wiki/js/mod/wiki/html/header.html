@@ -1,0 +1,838 @@
+<style>
+	.personal-header{
+		position: relative;
+		background-color: #FFF;
+	}
+	.personal-header .profile{
+		height: 400px;
+		overflow: hidden;
+	}
+	.personal-header .profile>img{
+		width: 100%;
+	}
+	.personal-header .text{
+		padding: 10px 30px;
+		width: 100%;
+	}
+	.personal-header .user-msg{
+		position: absolute;
+		bottom: 0;
+		padding: 30px;
+		display: flex;
+		left: 50%;
+		background-color: #FFF;
+		box-shadow: 0 0 15px 0 rgba(75,129,183,.35);
+		border-radius: 10px;
+	}
+	.personal-header h2{
+		color: #FF7A7A;
+		font-weight: bold;
+	}
+	.personal-header .info{
+		font-size: 12px;
+		color: #999;
+	}
+	.personal-header .user-msg>img{
+		width: 190px;
+		height: 190px;
+		object-fit: cover;
+		border-radius: 4px;
+	}
+	.personal-header .msg-top{
+		display: flex;
+		align-items: center;
+		margin-bottom: 25px;
+	}
+	.personal-header .msg-top>.msg-left{
+		flex: 1;
+	}
+	.personal-header .btn-lg{
+		padding: 11px 41px;
+		border-radius: 10px;
+	}
+	.personal-header .intro{
+		line-height: 25px;
+	}
+	@media (min-width:768px ) {
+		.personal-header{
+			height: 350px;
+		}
+		.personal-header .user-msg{
+			width: 700px;
+			transform: translate(-350px,0);
+		}
+	}
+	@media (min-width:992px ) {
+		.personal-header{
+			height: 510px;
+		}
+		.personal-header .user-msg{
+			width: 800px;
+			transform: translate(-400px,0);
+		}
+	}
+	@media(max-width: 768px){
+		.personal-header,.personal-header .profile{
+			height: 205px;
+		}
+		.personal-header .user-msg{
+			width: 90%;
+			transform: translate(0,0);
+			display: block;
+			text-align: left;
+			padding: 10px;
+			left: 5%;
+		}
+		.personal-header .user-msg>img {
+			position: absolute;
+			bottom: 128px;
+			top: 10px;
+			width: 60px;
+			height: 60px;
+			left: 10px;
+			float: none !important;
+		}
+		.personal-header .text{
+			padding: 10px 10px 0;
+		}
+		.personal-header .msg-top>.msg-left{
+			padding-left: 60px;
+		}
+		.personal-header .msg-top{
+			margin-bottom: 0;
+		}
+		.personal-header h2{
+			font-size: 16px;
+			margin: 5px;
+		}
+		.personal-header .info{
+			margin-bottom: 5px;
+		}
+		.personal-header .btn-lg{
+			padding: 7px 14px;
+			font-size: 14px;
+			border-radius: 4px;
+		}
+		.personal-header .intro{
+			font-size: 12px;
+			overflow: hidden;
+			line-height: 20px;
+			max-height: 36px;
+			margin-top: 10px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+		}
+	}
+</style>
+<style>
+	.personal2-header{
+		position: relative;
+		overflow: hidden;
+	}
+	.personal2-header h1{
+		font-size: 52px;
+		margin: 0;
+		font-weight: 400;
+	}
+	.personal2-header h1 .name-info{
+		font-size: 18px;
+	}
+	.personal2-header h3{
+		margin: 0;
+		font-weight: normal;
+	}
+	.personal2-header .personal-img{
+		position: absolute;
+		z-index: -1;
+		top: 0;
+		width:100%;
+	}
+	.personal2-header .personal-img > img{
+		min-width: 100%;
+	}
+	.personal2-header .msg-box{
+		width: 570px;
+		background-color: rgba(255, 255, 255, .8);
+		color: #666;
+	}
+	.personal2-header .detail-item > h4{
+		font-weight: normal;
+	}
+	.personal2-header .detail-item > p{
+		font-size: 12px;
+	}
+	.personal2-header .contact-box > div{
+		border-bottom: 1px solid #DCDCDC;
+		height: 42px;
+		line-height: 40px;
+		padding-left: 48px;
+		position: relative;
+	}
+	.personal2-header .contact-box > div > img{
+		position: absolute;
+		left: 0;
+		bottom: 10px;
+	}
+	.personal2-header .icons-box > div{
+		float: left;
+		margin-right: 25px;
+	}
+	@media (max-width: 720px) {
+		.personal2-header .personal-img{
+			position: relative;
+		}
+		.personal2-header .msg-box{
+			margin: 0 auto;
+			padding: 15px;
+			max-width: 360px;
+		}
+		.personal2-header h1{
+			font-size: 28px;
+		}
+		.personal2-header .detail{
+			margin: 15px 0;
+		}
+		.personal2-header .detail-item {
+			height: auto;
+		}
+		.personal2-header .detail-item > h4{
+			margin: 12px 0 6px;
+		}
+		.personal2-header .contact-box {
+			margin-bottom: 15px;
+		}
+	}
+	@media (min-width: 720px) {
+		.personal2-header .personal-img{
+			position: relative;
+		}
+		.personal2-header .container{
+			padding:0;
+		}
+		.personal2-header .msg-box{
+			margin: 0 auto;
+			max-width: none;
+			padding: 60px;
+		}
+		.personal2-header h1{
+			font-size: 28px;
+		}
+		.personal2-header .detail{
+			margin: 30px 0;
+		}
+		.personal2-header .detail-item {
+			height: 60px;
+		}
+		.personal2-header .detail-item > h4{
+			margin: 12px 0 6px;
+		}
+		.personal2-header .contact-box {
+			margin-bottom: 40px;
+		}
+	}
+	@media (min-width: 992px) {
+		.personal2-header .personal-img{
+			position: absolute;
+		}
+		.personal2-header .msg-box{
+			margin: 0;
+			padding: 30px 40px;
+			width: 470px;
+		}
+		.personal2-header h1{
+			font-size: 28px;
+		}
+		.personal2-header .detail{
+			margin: 15px 0;
+		}
+		.personal2-header .detail-item {
+			height: auto;
+		}
+		.personal2-header .detail-item > h4{
+			margin: 12px 0 6px;
+		}
+		.personal2-header .contact-box {
+			margin-bottom: 15px;
+		}
+	}
+	@media (min-width: 1024px) {
+		.personal2-header .msg-box{
+			margin: 15px 0;
+			padding: 12px 30px;
+			width: 470px;
+		}
+		.personal2-header h1{
+			font-size: 36px;
+		}
+		.personal2-header .detail{
+			margin: 20px 0;
+		}
+		.personal2-header .detail-item {
+			height: auto;
+		}
+		.personal2-header .detail-item > h4{
+			margin: 12px 0 6px;
+		}
+		.personal2-header .contact-box {
+			margin-bottom: 15px;
+		}
+	}
+	@media (min-width: 1366px) {
+		.personal2-header .msg-box{
+			padding: 30px 35px;
+			margin: 40px 0px;
+		}
+		.personal2-header .detail{
+			margin: 30px 0;
+		}
+		.personal2-header .detail-item {
+			height: 50px;
+		}
+		.personal2-header .contact-box {
+			margin-bottom: 20px;
+		}
+	}
+	@media (min-width: 1890px) {
+		.personal2-header .msg-box{
+			padding: 60px 70px 50px 100px;
+			margin: 80px 0;
+			width: 510px;
+		}
+		.personal2-header .detail{
+			margin: 50px 0;
+		}
+		.personal2-header .detail-item {
+			height: 68px;
+		}
+		.personal2-header .contact-box {
+			margin-bottom: 40px;
+		}
+	}
+</style>
+<style>
+	.org-header{
+		position: relative;
+		background-color: #F5F5F5;
+		padding:0;
+		height:440px;
+	}
+	.org-header .profile {
+		height: 440px;
+		overflow: hidden;
+	}
+	.org-header .profile>img{
+		width:100%;
+	}
+	.org-header .user-msg {
+		position: absolute;
+		bottom: 0;
+		padding: 30px 70px;
+		background-color: #FFF;
+		box-shadow: 0 0 15px 0 rgba(75, 129, 183, .35);
+		text-align: center;
+		width: 620px;
+		left: 50%;
+		transform: translateX(-310px);
+	}
+	.org-header .align-left{
+		font-size: 16px;
+		text-align: left;
+	}
+	.org-header p.info{
+		font-size: 14px;
+		font-weight: normal;
+		color: #999;
+		margin-bottom: 30px;
+	}
+	.org-header h1{
+		font-size: 60px;
+		color: #FF7A7A;
+		margin: 0;
+		font-weight: normal;
+	}
+	.org-header .btn-lg{
+		font-size: 18px;
+		padding:10px 63px;
+		margin-top: 25px;
+	}
+	.org-header .time{
+		margin-left: 25px;
+	}
+	@media (max-width: 768px) {
+		.org-header h1{
+			font-size: 32px;
+		}
+		.org-header,.org-header .profile{
+			height: 200px;
+		}
+		.org-header .user-msg{
+			width: 90%;
+			left: 5%;
+			transform: translateX(0);
+			padding: 10px 15px;
+			-webkit-box-shadow: none;
+			-moz-box-shadow: none;
+			box-shadow: none;
+		}
+		.org-header p.info{
+			margin-bottom: 15px;
+			font-size: 12px;
+		}
+		.org-header .align-left{
+			font-size: 14px;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			overflow: hidden;
+		}
+	}
+</style>
+<style>
+	.gameHeader{
+		position: relative;
+		color: #FFF5D4;
+	}
+	.gameHeader .banner-bg{
+		max-height: 480px;
+		overflow: hidden;
+	}
+	.gameHeader .banner-bg img{
+		width: 100%;
+		height: auto;
+	}
+	.gameHeader .banner-info{
+		position: absolute;
+		bottom: 30px;
+		right: 55%;
+		border: 3px solid #FFF5D2;
+		padding: 40px;
+		background-color: rgba(0, 0, 0, 0.2);
+	}
+	.gameHeader .banner-info:before{
+		content: '';
+		display: inline-block;
+		width: 22px;
+		height: 26px;
+		position: absolute;
+		left: 20px;
+		top: 16px;
+		border-color: #FFF5D2;
+		border-width: 4px 0 0px 4px;
+		border-style: solid;
+	}
+	.gameHeader .banner-info:after{
+		content: '';
+		display: inline-block;
+		width: 22px;
+		height: 26px;
+		position: absolute;
+		right: 20px;
+		bottom: 16px;
+		border-color: #FFF5D2;
+		border-width: 0 4px 4px 0;
+		border-style: solid;
+	}
+	.gameHeader h1{
+		font-size: 46px;
+		font-weight: normal;
+		color: #FFEA81;
+		text-shadow: 0 7px 0 #280f27;
+		margin: 0;
+	}
+	.gameHeader p.message{
+		font-size: 20px;
+		margin:20px 0 50px;
+		text-align: center;
+	}
+	.gameHeader .game-time{
+		display: -webkit-flex;
+		display: flex;
+		justify-content: space-around;
+		text-align: center;
+	}
+	@media (min-width: 1200px) and (max-width: 1600px) {
+		.gameHeader .banner-info{
+			bottom: 10px;
+		}
+		.gameHeader p.message{
+			margin: 0;
+		}
+	}
+	@media (min-width: 992px) and (max-width: 1200px){
+		.gameHeader .banner-info{
+			padding: 25px;
+			bottom: 10px;
+			right: 50%;
+		}
+		.gameHeader h1{
+			font-size: 36px;
+		}
+		.gameHeader h2{
+			font-size: 20px;
+		}
+		.gameHeader p.message{
+			font-size: 13px;
+			margin: 15px 0 0;
+		}
+		.gameHeader .game-time{
+			font-size: 14px;
+		}
+	}
+	@media (min-width: 768px) and (max-width: 992px) {
+		.gameHeader .banner-info{
+			padding: 12px 40px;
+			bottom: 10px;
+			right: 49%;
+		}
+		.gameHeader .banner-info:before{
+			left: 16px;
+			top:8px;
+		}
+		.gameHeader .banner-info:after{
+			right: 16px;
+			bottom:8px;
+		}
+		.gameHeader h1{
+			font-size: 24px;
+		}
+		.gameHeader-second h2{
+			font-size: 15px;
+			margin-top: 10px;
+		}
+		.gameHeader p.message{
+			font-size: 14px;
+			letter-spacing: normal;
+			margin: 10px 0 0;
+		}
+		.gameHeader .game-time{
+			font-size: 12px;
+			padding: 0 20px;
+		}
+	}
+	@media (max-width: 768px) {
+		.gameHeader .banner-bg img{
+			min-height: 170px;
+			width: 100%;
+			object-fit: cover;
+		}
+		.gameHeader .banner-info {
+			width: 80%;
+			right: 10%;
+			padding: 10px 15px;
+			bottom: 15px;
+			background-color: rgba(0, 0, 0, 0.6);
+		}
+		.gameHeader .banner-info:before{
+			left: 8px;
+			top: 6px;
+			width: 15px;
+			height: 15px;
+		}
+		.gameHeader .banner-info:after{
+			right: 8px;
+			bottom: 6px;
+			width: 15px;
+			height: 15px;
+		}
+		.gameHeader h1{
+			font-size: 24px;
+			text-shadow: 0 2px 0 #280f27;
+		}
+		.gameHeader p.message{
+			font-size: 14px;
+			letter-spacing: normal;
+			margin: 0;
+		}
+		.gameHeader .game-time{
+			font-size: 12px;
+			padding: 0 18px;
+			margin-top: 10px;
+			height: 25px;
+			line-height: 22px;
+		}
+	}
+</style>
+<style>
+	.gameHeader-second .banner-info{
+		text-align: center;
+	}
+	.gameHeader-second h2{
+		text-align: center;
+	}
+	.gameHeader-second p.message{
+		text-align: justify;
+		font-size: 16px;
+		font-weight: lighter;
+		text-align: center;
+		letter-spacing: .4em;
+	}
+	.gameHeader-second .game-time {
+		border: 1px solid #B08E68;
+		padding: 0 35px;
+		display: inline-block;
+		height: 36px;
+		line-height: 36px;
+		background: -webkit-linear-gradient(left,transparent, rgb(63, 22, 48),transparent);
+		position: relative;
+		border-right: 0;
+		border-left: 0;
+		margin-bottom: 0;
+	}
+	.gameHeader-second .game-time:before{
+		content: '';
+		display: inline-block;
+		width: 20px;
+		height: 34px;
+		border: 1px solid #B08E68;
+		position: absolute;
+		left: 0px;
+		top:0;
+		background-color: transparent;
+		border-left: 0;
+		border-radius: 0 100% 100% 0/50% 50%;
+	}
+	.gameHeader-second .game-time:after{
+		content: '';
+		display: inline-block;
+		width: 20px;
+		height: 34px;
+		border: 1px solid #B08E68;
+		position: absolute;
+		right: 0px;
+		top:0;
+		background-color: transparent;
+		border-right: 0;
+		border-radius: 100% 0 0px 100%/50% 50%;
+	}
+	@media (min-width: 992px) and (max-width: 1200px){
+		.gameHeader-second p.message{
+			font-size: 13px;
+		}
+	}
+	@media (min-width: 768px) and (max-width: 992px){
+		.gameHeader-second p.message{
+			font-size: 14px;
+			letter-spacing: normal;
+			margin: 10px 0 0;
+		}
+		.gameHeader-second .game-time {
+			font-size: 12px;
+			padding: 0 20px;
+		}
+	}
+	@media (max-width: 768px) {
+		.gameHeader-second h1{
+			font-size: 24px;
+			text-shadow: 0 2px 0 #280f27;
+		}
+		.gameHeader-second h2{
+			font-size: 15px;
+			margin: 10px 0;
+		}
+		.gameHeader-second .game-time{
+			font-size: 12px;
+			padding: 0 18px;
+			margin-top: 10px;
+			height: 25px;
+			line-height: 22px;
+		}
+		.gameHeader-second .game-time:before,.gameHeader-second .game-time:after{
+			width: 10px;
+			height: 23px;
+		}
+		.gameHeader-second p.message{
+			font-size: 14px;
+			letter-spacing: normal;
+			margin: 0;
+		}
+	}
+</style>
+<style>
+	.haqi-game{
+		position: relative;
+	}
+	.haqi-game .bg-img>img{
+		width: 100%;
+	}
+	.haqi-game .btns{
+		bottom: 110px;
+		position: absolute;
+		left: 40%;
+	}
+	.haqi-game .btns{
+		bottom: 10%;
+		position: absolute;
+		left: 0;
+		width: 100%;
+		text-align: center;
+	}
+	.haqi-game .btns .btn{
+		text-align: center;
+		padding: 0;
+		max-width: 285px;
+		width: 160px;
+		margin-right: 20px;
+	}
+	.haqi-game .haqi-btn1{
+		color: #FFF;
+		font-weight: bold;
+		font-size: 28px;
+		height: 35px;
+		line-height: 30px;
+		border-radius: 30px;
+		-webkit-text-stroke: 1px #89b62b;
+	}
+	.haqi-game .haqi-btn1.haqi-btn1-kind1{
+		background-color: #A2DF31;
+		box-shadow: 0 8px 0px 0px #8dcc47, 0 9px 25px -4px rgba(12, 3, 7,0.67), 0 -5px 0px 0px #befd79;
+	}
+	.haqi-game .haqi-btn1.haqi-btn1-kind2{
+		-webkit-text-stroke: 1px #57c6f2;
+		background-color: #61b4d4;
+		box-shadow: 0 8px 0px 0px #51aeca, 0 9px 25px -4px rgba(12, 3, 7, 0.67), 0 -5px 0px 0px #59caf7;
+	}
+	.haqi-game .haqi-btn2{
+		background-color: #2F6294;
+		color: #A0DE17;
+		font-weight: bold;
+		box-shadow: 0 6px 10px 0px rgba(12, 3, 7,.57) inset;
+		border-radius: 20px;
+		font-size: 25px;
+		height: 40px;
+		margin-top: 20px;
+	}
+	@media (max-width: 1280px) and (min-width: 992px){
+		.haqi-game .haqi-btn1{
+			font-size: 32px;
+		}
+	}
+	@media (min-width: 1920px) {
+		.haqi-game .btns{
+			bottom:10%;
+		}
+	}
+</style>
+
+<div ng-controller="headerController">
+	<!-- 个人主页头部 -->
+	<div ng-show="modParams.moduleKind=='personal' || !modParams.moduleKind">
+		<div class="personal-header">
+			<div class="profile">
+				<img ng-src="{{imgsPath + 'personal_header_banner.jpg'}}" alt="">
+			</div>
+			<div class="user-msg">
+				<img ng-src="{{user.portrait || imgsPath + 'personsal_header_profile.jpg'}}" alt="用户头像" class="pull-left">
+				<div class="text pull-left">
+					<div class="msg-top">
+						<div class="msg-left">
+							<h2>{{user.username}}</h2>
+							<p class="info"><span class="glyphicon glyphicon-map-marker"></span> {{user.location + '注册于:' + user.joindate}}</p>
+						</div>
+						<div class="btn btn-primary btn-lg">关注</div>
+					</div>
+					<p class="intro">{{user.introduce}}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 个人主页头部二 -->
+	<div ng-show="modParams.moduleKind=='personal2'" class="personal2-header">
+		<div class="personal-img">
+			<img src="http://git.keepwork.com/gitlab_rls_kaitlyn/keepworkdatasource/raw/master/kaitlyn_images/img_1503390454093.jpeg" alt="">
+		</div>
+		<div class="container">
+			<div class="msg-box">
+				<h1>{{modParams.displayName}} <span class="name-info">{{modParams.nameinfo}}</span></h1>
+				<h3>{{modParams.name}}</h3>
+
+				<div class="detail">
+					<div class="detail-item" ng-repeat="item in modParams.messages">
+						<h4>{{item.message}}</h4>
+						<p>{{item.info}}</p>
+					</div>
+				</div>
+
+				<div class="contact-box">
+					<div ng-show="modParams.phone">
+						<img src="http://git.keepwork.com/gitlab_rls_kaitlyn/keepworkdatasource/raw/master/kaitlyn_images/img_1503391847481.png" alt="">
+						<span>{{modParams.phone}}</span>
+					</div>
+					<div ng-show="modParams.email">
+						<img src="http://git.keepwork.com/gitlab_rls_kaitlyn/keepworkdatasource/raw/master/kaitlyn_images/img_1503391854764.png" alt="">
+						<span>{{modParams.email}}</span>
+					</div>
+				</div>
+
+				<div class="icons-box clearfix">
+					<div ng-show="modParams.qq" title="{{modParams.qq}}">
+						<img src="http://git.keepwork.com/gitlab_rls_kaitlyn/keepworkdatasource/raw/master/kaitlyn_images/img_1503392215028.png" alt="">
+					</div>
+					<div ng-show="modParams.wechat" title="{{modParams.wechat}}">
+						<img src="http://git.keepwork.com/gitlab_rls_kaitlyn/keepworkdatasource/raw/master/kaitlyn_images/img_1503392222458.png" alt="">
+					</div>
+					<div ng-show="modParams.weibo" title="{{modParams.weibo}}">
+						<img src="http://git.keepwork.com/gitlab_rls_kaitlyn/keepworkdatasource/raw/master/kaitlyn_images/img_1503392229771.png" alt="">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 组织主页头部 -->
+	<div ng-show="modParams.moduleKind=='organization'">
+		<div class="org-header" >
+			<div class="profile">
+				<img ng-src="{{modParams.displayBgImg}}" alt="">
+			</div>
+			<div class="user-msg">
+				<h1>{{modParams.displayName}}</h1>
+				<p class="info"><img ng-src="{{imgsPath+'icon/blog_location.png'}}" alt=""> {{modParams.location}}<span class="time">{{modParams.info}}</span></p>
+				<p class="align-left">{{modParams.introduce}}</p>
+			</div>
+		</div>
+	</div>
+	<!--大赛头部-->
+	<div ng-show="modParams.moduleKind=='game'">
+		<div class="gameHeader">
+			<div class="banner-bg">
+				<img ng-src="{{modParams.bgImg || getImageUrl('gameheader_banner.jpg',imgsPath)}}" alt="">
+			</div>
+			<div class="banner-info">
+				<h1>{{modParams.title || "全国3D创作大赛"}}</h1>
+				<p class="message">{{modParams.message || "用ParaCraft创意空间制作电影作品参与比赛"}}</p>
+				<div class="game-time">
+					<div class="time-item" ng-repeat="stage in modParams.stages">
+						<p>{{stage.name}}</p>
+						<p>{{stage.time}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--大赛头部2-->
+	<div ng-show="modParams.moduleKind=='game2'">
+		<div class="gameHeader gameHeader-second">
+			<div class="banner-bg">
+				<img ng-src="{{modParams.bgImg || getImageUrl('gameheader_banner.jpg',imgsPath)}}" alt="">
+			</div>
+			<div class="banner-info">
+				<h1>{{modParams.title}}</h1>
+				<h2>{{modParams.subTitle}}</h2>
+				<p class="message">{{modParams.message}}</p>
+				<h3 class="game-time">{{modParams.time}}</h3>
+			</div>
+		</div>
+	</div>
+	<!--哈奇头部-->
+	<div ng-show="modParams.moduleKind=='haqiGame'" class="haqi-game">
+		<div class="bg-img">
+			<img ng-src="{{modParams.bgImg || getImageUrl('haqi_banner.jpg',imgsPath)}}" alt="weizhi">
+		</div>
+		<div class="btns">
+			<a ng-repeat="btn in modParams.btnGroup1" href="{{btn.link}}" class="btn {{btn.btnClass || 'haqi-btn1 haqi-btn1-kind1'}}">{{btn.text}}{{btn.btnClass}}</a>
+			<a ng-repeat="btn in modParams.btnGroup2" href="{{btn.link}}" class="btn {{btn.btnClass || 'haqi-btn1 haqi-btn1-kind2'}}">{{btn.text}}</a>
+		</div>
+	</div>
+</div>
