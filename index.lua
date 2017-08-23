@@ -1,10 +1,25 @@
 
-package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua"
+package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
 local http = require("http")
---if ngx.var.uri == '/favicon.ico' then
-	--return 
---end
+local config = require("config")
+local user = require("user")
+-- 初始化http
+http:init(config)
+
+local log = http.log
+local router = http.router
+
+
+router:path("/", function(req, resp)
+	local _user = user:new()
+	local ret = _user:find({username="wuxiangan", password="wuxiangan"})
+	resp:send(ret)
+end)
+
+router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/wiki/models')
+
+http:handle()
 
 --require("http_init")
 

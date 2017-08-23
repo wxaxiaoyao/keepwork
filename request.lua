@@ -1,5 +1,3 @@
-local util = require("util")
-
 local request = {}
 
 function request:new()
@@ -40,10 +38,6 @@ end
 
 function request:dump()
 	ngx.header["Content-Type"] = "text/html"
-	util.say("-------------")
-	util.say(self)
-	util.say(self.uri)
-	util.say("-------------")
 end
 
 return request

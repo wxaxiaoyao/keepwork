@@ -106,3 +106,11 @@ Wed Aug 23 01:58:27 2017 DEBUG /api/wiki/models/user/getDetailByName
 Wed Aug 23 01:58:27 2017 DEBUG /wiki/assets/imgs/icon/logo.svg
 Wed Aug 23 02:01:05 2017 DEBUG /wiki/html/articles/featurelist.md
 Wed Aug 23 02:01:05 2017 DEBUG /wiki/assets/imgs/icon/logo.svg
+Wed Aug 23 18:31:18 2017 DEBUG ------------
+Wed Aug 23 18:43:53 2017 DEBUG {key = "test"}
+Wed Aug 23 19:03:20 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:14 {"key":"test"}
+Wed Aug 23 19:04:08 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:14 {"key":"test"}
+Wed Aug 23 19:04:08 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:15 "hello world"
+Wed Aug 23 19:04:24 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:14 {"key":"test"}
+Wed Aug 23 19:04:24 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:15 "hello world"
+Wed Aug 23 19:04:24 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:16 3
