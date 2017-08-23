@@ -8,6 +8,7 @@ local mysql = {
 	OFFSET = "$offset",
 	OR = "$or",
 	AND = "$and",
+	ON = "$on",
 }
 
 function mysql:init(config)
@@ -20,6 +21,7 @@ function mysql:init(config)
 
 	self.env = luasql.mysql()
 	self.conn = env:connect(config.database, config.username, config.password, config.host, config.port)
+	self.conn:execute("SET NAMES UTF8")
 end
 
 
@@ -29,8 +31,9 @@ function mysql:deinit()
 end
 
 
+function mysql:execute(sql_str)
 
---conn:execute("SET NAMES UTF8")
+end
 
 --cur = conn:execute("select * from user")
 

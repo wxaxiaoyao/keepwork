@@ -1,20 +1,22 @@
+local mysql = require("orm/mysql")
 
 local mysql_query = {}
 
-function mysql_query:new(q)
-	local obj = {}
+function mysql_query:new(obj, q)
+	--local obj = {}
+	obj = obj or {}
+
 	setmetatable(obj, self)
 	self.__index = self
 
 	q = q or {}
 
 	obj.m_select = q.select or {"*"}
-	obj.m_tablename = q.m_tablename
+	obj.m_tablename = q.tablename
 	obj.m_from = q.from or {}
 	obj.m_where = q.where or {}
-	obj.m_limit = q.limit or 200
-	obj.m_skip = q.skip or 0
-
+	obj.m_where[mysql.LIMIT] = q.limit or 200
+	obj.m_where[mysql.OFFSET] = q.offset or 0
 
 	return obj
 end
@@ -54,8 +56,16 @@ end
 
 -- or where 条件
 function mysql_query:orWhere(t)
-	self.m_where["or"] = t
+	self.m_where[mysql.OR] = t
 	return self
+end
+
+function mysql_query:limit(n)
+	self.m_where[mysql.LIMIT] = n
+end
+
+function mysql_query:offset(n)
+	self.m_where[mysql.OFFSET] = n
 end
 
 function mysql_query:string()
@@ -79,28 +89,23 @@ function mysql_query:string()
 		for _, value in ipairs(table) do
 			query_str = query_str .. value .. " "
 		end
-		if value["on"] then
-			query_str = query_str .. "on " .. value["on"] .. " "
+		if value[mysql.ON] then
+			query_str = query_str .. "on " .. value[mysql.ON] .. " "
 		end
 	end
 
-	query_str = query_str .. "where "
-	for index, where in ipairs(self.m_where) do
-		if #where == 2 then
-			query_str = query_str .. where[1] .. "=" .. where[2] .. " "
-		else
-			for _, value in ipairs(where) do
-				query_str = query_str .. value .. " "
-			end
-		end
-	end
-
-	query_str = query_str .. "limit " .. tostring(self.m_limit) .. " offset " .. tostring(self.m_skip) .. " "
+	query_str = query_str .. self:getWhereStr(self.m_where)
 
 	return query_str
 end
 
+function mysql_query:find(t)
+	self.m_where = t or self.m_where
 
+	local sql_str = self:string()
+
+	return sql_str
+end
 
 
 

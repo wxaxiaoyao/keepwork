@@ -14,7 +14,10 @@ local router = http.router
 router:path("/", function(req, resp)
 	local _user = user:new()
 	local ret = _user:find({username="wuxiangan", password="wuxiangan"})
-	resp:send(ret)
+	ngx.say(ret)
+	ret = _user:update({username="wuxiangan"}, {password="xiaoyao"})
+	ngx.say(ret)
+	--resp:send(ret)
 end)
 
 router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/wiki/models')
