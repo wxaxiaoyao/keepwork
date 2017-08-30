@@ -4,6 +4,7 @@ package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 local http = require("http")
 local config = require("config")
 local user = require("user")
+local util = require("util")
 -- 初始化http
 http:init(config)
 
@@ -14,9 +15,43 @@ local router = http.router
 router:path("/", function(req, resp)
 	local _user = user:new()
 	local ret = _user:find({username="wuxiangan", password="wuxiangan"})
-	ngx.say(ret)
+	--ngx.say(ret)
 	ret = _user:update({username="wuxiangan"}, {password="xiaoyao"})
-	ngx.say(ret)
+	--ngx.say(ret)
+	ret = _user:insert({
+		username="xiaoyao5",
+		password="wuxiangan",
+		desc="this is test",
+	})
+	util.say(ret)
+	--resp:send(ret)
+end)
+
+router:path("/find", function(req, resp)
+	local _user = user:new()
+	local ret = _user:find({password="wuxiangan"})
+	util.say(ret)
+	--resp:send(ret)
+end)
+
+router:path("/update", function(req, resp)
+	local _user = user:new()
+	local ret = _user:update({username="xiaoyao"}, {desc="test update"})
+	util.say(ret)
+	--resp:send(ret)
+end)
+
+router:path("/delete", function(req, resp)
+	local _user = user:new()
+	local ret = _user:delete({username="xiaoyao1"})
+	util.say(ret)
+	--resp:send(ret)
+end)
+
+router:path("/insert", function(req, resp)
+	local _user = user:new()
+	local ret = _user:insert({username="xiaoyao1", password="wuxiangan"})
+	util.say(ret)
 	--resp:send(ret)
 end)
 

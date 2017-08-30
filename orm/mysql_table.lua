@@ -44,7 +44,7 @@ function mysql_table:addfield(name, typ)
 	}
 end
 
-function mysql_table:getWhereStr(t)
+local function mysql_table:getWhereStr(t)
 	t = t or {}
 
 	local sql_str = "";
@@ -100,7 +100,7 @@ function mysql_table:getWhereStr(t)
 	return sql_str
 end
 
-function mysql_table:getKeyValueStr(key, value)
+local function mysql_table:getKeyValueStr(key, value)
 	local expr = "="
 	if type(value) == "object" then
 		for k, v in pairs(value) do
@@ -110,19 +110,49 @@ function mysql_table:getKeyValueStr(key, value)
 	end
 
 	if self.fields[key].typ == "string" then
-		value = "`" .. tostring(value) .. "`"
+		value = "'" .. tostring(value) .. "'"
 	elseif self.fields[key].typ == "number" then
 		value = tostring(value)
 	end
 
-	return key .. " " .. expr .. " " .. value, value, expr
+	return "`".. key .. "`" .. " " .. expr .. " " .. value, value, expr
 end
 
+-- 查找记录
 function mysql_table:find(t)
 	local sql_str = "select * from `" .. self.table_name .. "` " .. self:getWhereStr(t)
-	return sql_str
+	
+	mysql.log(sql_str)
+
+	local list = {}
+	local row = {}
+	local cur = mysql:execute(sql_str)
+	
+	row = cur:fetch({}, "a") 
+	while row do
+		list[#list+1] = row
+		--mysql.log(row.username)
+		row = cur:fetch({}, "a") 
+	end
+	 
+	return list
 end
 
+-- 查找单条记录
+function mysql_table:findOne(t)
+	t = t or {}
+	t[mysql.LIMIT] = 2
+
+	local list = self:find(t)
+
+	if #list == 1 then
+		return list[1]
+	end
+
+	return nil
+end
+
+-- 插入记录
 function mysql_table:insert(obj)
 	local sql_str = "insert into `" .. self.table_name .. "`("
 	local sql_value_str = "values("
@@ -131,10 +161,10 @@ function mysql_table:insert(obj)
 	for key, value in pairs(obj or {}) do
 		local _, v = self:getKeyValueStr(key, value)
 		if first then
-			sql_str = sql_str .. key
+			sql_str = sql_str .. "`" .. key .. "`"
 			sql_value_str = sql_value_str .. v
 		else
-			sql_str = sql_str .. "," .. key
+			sql_str = sql_str .. "," .. "`" .. key .. "`"
 			sql_value_str = sql_value_str .. "," .. v
 		end
 
@@ -145,9 +175,12 @@ function mysql_table:insert(obj)
 	sql_value_str = sql_value_str .. ")"
 	sql_str = sql_str .. " " .. sql_value_str
 
-	return sql_str
+	mysql.log(sql_str)
+	return mysql:execute(sql_str)
+	--return sql_str
 end
 
+-- 更新记录
 function mysql_table:update(q, o)
 	local sql_str = "update `" .. self.table_name .. "` set "	
 	local first = true
@@ -155,21 +188,38 @@ function mysql_table:update(q, o)
 	for key, value in pairs(o or {}) do
 		local _, v = self:getKeyValueStr(key, value)
 		if first then
-			sql_str = sql_str .. key .. "=" .. v 
+			sql_str = sql_str .. "`" .. key .. "`" .. "=" .. v 
 		else
-			sql_str = sql_str .. ", " .. key .. "=" .. v
+			sql_str = sql_str .. ", " .. "`"  .. key .. "`" .. "=" .. v
 		end
 		first = false
 	end
 
 	sql_str = sql_str .. " " .. self:getWhereStr(q)
-	return sql_str
+	
+	mysql.log(sql_str)
+	return mysql:execute(sql_str)
+	--return sql_str
 end
 
+-- 删除记录
+function mysql_table:delete(q)
+	local sql_str = "delete from `" .. self.table_name .. "` "
 
+	sql_str = sql_str .. self:getWhereStr(q)
+
+	mysql.log(sql_str)
+
+	return mysql:execute(sql_str)
+end
+
+-- 增改记录
 function mysql_table:upsert(q, o)
-	self:insert(o)
-	self:update(q,o)
+	if self:findOne(q) then
+		return self:update(q,o)
+	end
+
+	return self:insert(o)
 end
 
 return mysql_table
