@@ -1,7 +1,7 @@
 # keepwork
 
 ## 库依赖
-* luarocks install luasql-mysql
+* luarocks install luasql-mysql MYSQL_INCDIR=/usr/include/mysql 
 * luarocks install lualogging
 * luarocks install lua-cjson
 * luarocks install luajwt

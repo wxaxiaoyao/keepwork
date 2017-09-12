@@ -44,7 +44,7 @@ function mysql_table:addfield(name, typ)
 	}
 end
 
-local function mysql_table:getWhereStr(t)
+function mysql_table:getWhereStr(t)
 	t = t or {}
 
 	local sql_str = "";
@@ -100,7 +100,7 @@ local function mysql_table:getWhereStr(t)
 	return sql_str
 end
 
-local function mysql_table:getKeyValueStr(key, value)
+function mysql_table:getKeyValueStr(key, value)
 	local expr = "="
 	if type(value) == "object" then
 		for k, v in pairs(value) do
