@@ -1,4 +1,5 @@
 
+package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua"
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
 local http = require("http")
@@ -11,21 +12,42 @@ http:init(config)
 local log = http.log
 local router = http.router
 
+function getBustVersion()
+	return os.time()
+end
 
-router:path("/", function(req, resp)
-	local _user = user:new()
-	local ret = _user:find({username="wuxiangan", password="wuxiangan"})
-	--ngx.say(ret)
-	ret = _user:update({username="wuxiangan"}, {password="xiaoyao"})
-	--ngx.say(ret)
-	ret = _user:insert({
-		username="xiaoyao5",
-		password="wuxiangan",
-		desc="this is test",
-	})
-	util.say(ret)
-	--resp:send(ret)
+function RenderServerWikiCss() 
+	local bustVersion = getBustVersion()
+
+	return string.format('<link href="/wiki/assets/css/main.css?bust=%s" rel="stylesheet">\n', bustVersion)
+end
+
+function RenderServerWikiScript() 
+end
+router:setDefaultHandle(function(req, resp)
+	--ngx.log(ngx.INFO, "--------------")
+	--ngx.log(ngx.ERR, "--------------")
+	resp:render("index.html", {
+		RenderServerWikiCss=RenderServerWikiCss,
+		RenderServerWikiScript=function()
+		end
+	})	
 end)
+
+--router:path("/", function(req, resp)
+	--local _user = user:new()
+	--local ret = _user:find({username="wuxiangan", password="wuxiangan"})
+	----ngx.say(ret)
+	--ret = _user:update({username="wuxiangan"}, {password="xiaoyao"})
+	----ngx.say(ret)
+	--ret = _user:insert({
+		--username="xiaoyao5",
+		--password="wuxiangan",
+		--desc="this is test",
+	--})
+	--util.say(ret)
+	----resp:send(ret)
+--end)
 
 router:path("/find", function(req, resp)
 	local _user = user:new()
@@ -74,12 +96,6 @@ http:handle()
 --ngx.say("hello world")
 
 
---function RenderServerWikiCss() 
---end
-
---function RenderServerWikiScript() 
-	--return "<div>helloworl</div>"
---end
 
 --ngx.header["Content-Type"] = "text/html"
 --template.render("wiki/index.page", {

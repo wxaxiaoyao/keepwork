@@ -1,9 +1,0 @@
-```@wiki/js/workslist
-{
-"moduleKind":"game",
-"pageSize":"8",
-"title":"全部作品",
-"type":"all",
-"pagination":true
-}
-```
