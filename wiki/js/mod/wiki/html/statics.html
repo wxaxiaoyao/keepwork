@@ -1,0 +1,230 @@
+<style>
+    .personal-statics{
+        background-color: #E0EFFD;
+    }
+    .personal-statics .msg-box{
+        max-width: 930px;
+        margin: 0 auto;
+        padding: 55px 0;
+    }
+    .personal-statics .msg{
+        width: 33.3333%;
+        text-align: center;
+        float: left;
+    }
+    .personal-statics .msg p{
+        line-height: 35px;
+    }
+    .personal-statics .msg p>span{
+        font-size: 18px;
+    }
+    .personal-statics .text-primary{
+        color: #0081BA;
+    }
+    @media (max-width: 768px) {
+        .personal-statics .msg-box{
+            padding: 15px 0 0;
+            font-size: 12px;
+        }
+        .personal-statics .msg>img{
+            width: 40px;
+        }
+    }
+</style>
+<style>
+    .org-statics{
+        background-color: #F9FDFF;
+        text-align: center;
+        -webkit-box-shadow: 0 2px 3px 0 rgba(44,62,80,.35);
+        -moz-box-shadow: 0 2px 3px 0 rgba(44,62,80,.35);
+        box-shadow: 0 2px 3px 0 rgba(44,62,80,.35);
+        margin-bottom: 3px;
+    }
+    .org-statics .msg-box{
+        max-width: 930px;
+        margin: 0 auto;
+        padding: 27px 0;
+    }
+    .org-statics .msg{
+        width: 33.3333%;
+        text-align: center;
+        float: left;
+    }
+    .org-statics .msg p{
+        line-height: 35px;
+        font-size: 16px;
+        color: #666;
+    }
+    .org-statics .msg p>span{
+        font-size: 24px;
+        /*color: #ff7b7b;*/
+        margin-left: 20px;
+    }
+    .org-statics .text-primary{
+        color: #0081BA;
+    }
+    .org-statics .method{
+        padding-top: 20px;
+    }
+    .org-statics .btn-primary{
+        margin: 0 10px;
+        padding: 10.5px 33px;
+        border-radius: 10px;
+        font-size: 18px;
+    }
+    @media (max-width: 768px) {
+        .org-statics .btn-primary{
+            margin: 0 6px;
+            padding: 6.5px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .org-statics .msg-box{
+            padding:10px 0;
+        }
+        .org-statics .msg p{
+            font-size: 14px;
+        }
+        .org-statics .msg p>span{
+            font-size: 18px;
+            margin-left: 10px;
+        }
+    }
+</style>
+<style>
+    .game-btns {
+        padding: 30px 0;
+        text-align: center;
+        background-color: #FFFDFA;
+        -webkit-box-shadow: 0 2px 3px 0 rgba(44,62,80,.35);
+        -moz-box-shadow: 0 2px 3px 0 rgba(44,62,80,.35);
+        box-shadow: 0 2px 3px 0 rgba(44,62,80,.35);
+    }
+    .game-btns .large-btn{
+        border: 2px solid #F57270;
+        padding: 14.5px 61px;
+        font-size: 24px;
+        margin-right: 100px;
+        border-radius: 5px;
+        color: #F57270;
+        display: inline-block;
+    }
+    .game-btns .large-btn:last-child{
+    margin-right: 0;
+    }
+    .game-btns .large-btn:hover{
+        background-color: #F57270;
+        color: #FFF;
+    }
+</style>
+<style>
+    .game-msg{
+        display: flex;
+        justify-content: center;
+    }
+    .game-statics{
+        background-color: #fffdfa;
+    }
+    .game-statics-btns {
+        padding: 30px 0 3px;
+        text-align: center;
+        background-color: #FFFDFA;
+    }
+    .game-statics-btns .large-btn{
+        border: 2px solid #F57270;
+        padding: 14.5px 61px;
+        font-size: 24px;
+        margin-right: 100px;
+        border-radius: 5px;
+        color: #F57270;
+        background-color: transparent;
+        display: inline-block;
+    }
+    .game-statics-btns .large-btn:last-child{
+        margin-right: 0;
+    }
+    .game-statics-btns .large-btn:hover{
+        background-color: #F57270;
+        color: #FFF;
+    }
+</style>
+<style>
+    .haqi-statics{
+        text-align: center;
+        padding: 40px 0;
+        background: -webkit-gradient(linear,0% 0%, 0% 80%, from(#c9ee81), to(#FFFFFF));
+    }
+    .haqi-statics .haqi-btn{
+        color: #FFFC00;
+        background-color: #a2df31;
+        box-shadow: 0 8px 0px 0px #8dcc47, 0 8px 18px 3px rgba(12, 3, 7,0.1), 0 -5px 0px 0px #bcef61;
+        font-weight: bolder;
+        font-size: 24px;
+        margin-right: 10px;
+        width: 140px;
+        -webkit-text-stroke: 1px #89b62b;
+        height: 40px;
+        padding: 0;
+        line-height: 36px;
+        border-radius: 20px;
+    }
+
+</style>
+<div ng-controller="staticsController">
+    <!--个人信息统计-->
+    <div ng-show="modParams.moduleKind=='personal' || !modParams.moduleKind">
+        <div class="personal-statics" >
+            <div class="msg-box clearfix">
+                <div class="msg">
+                    <img ng-src="{{imgsPath + 'personal_statics_works.png'}}" alt="">
+                    <p class="text-primary">我的作品 <span>{{statics.websiteCount || 0}}</span></p>
+                </div>
+                <div class="msg">
+                    <img ng-src="{{imgsPath + 'personal_statics_concern.png'}}" alt="">
+                    <p class="text-primary">我的关注 <span>{{statics.favoriteCount || 0}}</span></p>
+                </div>
+                <div class="msg">
+                    <img ng-src="{{imgsPath + 'personal_statics_fans.png'}}" alt="">
+                    <p class="text-primary">我的粉丝 <span>{{statics.fansCount || 0}}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--组织信息统计-->
+    <div ng-show="modParams.moduleKind=='organization'">
+        <div class="org-statics template-theme" ng-class="themeClass" >
+            <div class="msg-box clearfix">
+                <div class="msg">
+                    <p class="text-primary">{{modParams.userCountText || "全部成员"}} <span class="theme-font-color">{{modParams.userCount || 0}}</span></p>
+                </div>
+                <div class="msg">
+                    <p class="text-primary">{{modParams.recommendWorksCountText || "推荐作品"}} <span class="theme-font-color">{{modParams.recommendWorksCount || 0}}</span></p>
+                </div>
+                <div class="msg">
+                    <p class="text-primary">{{modParams.worksCountText || "全部作品"}} <span class="theme-font-color">{{modParams.worksCount || 0}}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--大赛信息统计-->
+    <div ng-show="modParams.moduleKind=='game'">
+        <div class="org-statics template-theme game-statics" ng-class="themeClass" >
+            <div class="msg-box clearfix game-msg">
+                <div class="msg">
+                    <p class="text-primary">{{modParams.userCountText || "参赛作者"}} <span class="theme-font-color">{{modParams.userCount || 0}}</span></p>
+                </div>
+                <div class="msg">
+                    <p class="text-primary">{{modParams.worksCountText || "参赛作品"}} <span class="theme-font-color">{{modParams.worksCount || 0}}</span></p>
+                </div>
+                <div class="msg">
+                    <p class="text-primary">{{modParams.riseCountText || "入围作品"}} <span class="theme-font-color">{{modParams.riseCount || 0}}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--哈奇按钮集-->
+    <div ng-show="modParams.moduleKind=='haqiGame'" class="haqi-statics">
+        <a ng-repeat="btn in modParams.btns" href="{{btn.link}}" class="btn {{btn.btnClass || 'haqi-btn'}}">{{btn.text || "按 钮"}}</a>
+    </div>
+</div>

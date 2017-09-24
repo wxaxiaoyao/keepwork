@@ -23,14 +23,20 @@ function RenderServerWikiCss()
 end
 
 function RenderServerWikiScript() 
+	local bustVersion = getBustVersion()
+	local script_str = ""
+	script_str = script_str .. string.format('<script src="/wiki/js/config.js?bust=%s"></script>\n', bustVersion)
+	script_str = script_str .. string.format('<script data-main="/wiki/js/main.js?bust=%s" src="/wiki/js/lib/requirejs/require.js?bust=%s"></script>\n', bustVersion, bustVersion)
+
+	return script_str
 end
+
 router:setDefaultHandle(function(req, resp)
 	--ngx.log(ngx.INFO, "--------------")
 	--ngx.log(ngx.ERR, "--------------")
 	resp:render("index.html", {
 		RenderServerWikiCss=RenderServerWikiCss,
-		RenderServerWikiScript=function()
-		end
+		RenderServerWikiScript=RenderServerWikiScript,
 	})	
 end)
 

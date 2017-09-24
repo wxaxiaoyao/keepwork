@@ -1,0 +1,91 @@
+
+table {
+    display: table;
+    border-spacing: 0;
+    border-collapse: collapse;
+    background-color: transparent;
+
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+
+    border: 1px solid #dddddd;
+}
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+
+table>tbody>tr>td, table>tbody>tr>th, table>tfoot>tr>td, table>tfoot>tr>th, table>thead>tr>td, table>thead>tr>th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+
+td, th {
+    display: table-cell;
+    border: 1px solid #dddddd;
+}
+
+.wiki_page_inner_link {
+	position: relative;
+}
+
+.wiki_page_inner_link a.glyphicon-link {
+	position: absolute;
+	left: 0;
+	top: 50%;
+	margin-top: -7px;
+	font-size: 16px;
+    color: transparent;
+}
+
+.wiki_page_inner_link a.glyphicon-link:hover {
+    color: #3977AD;
+}
+.wiki_page_inner_link h1, .wiki_page_inner_link h2, .wiki_page_inner_link h3, .wiki_page_inner_link h4, .wiki_page_inner_link h5, .wiki_page_inner_link h6 {
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -ms-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+}
+.wiki_page_inner_link a.glyphicon-link:hover + h1, .wiki_page_inner_link a.glyphicon-link:hover + h2, .wiki_page_inner_link a.glyphicon-link:hover + h3, .wiki_page_inner_link a.glyphicon-link:hover + h4, .wiki_page_inner_link a.glyphicon-link:hover + h5, .wiki_page_inner_link a.glyphicon-link:hover + h6 {
+    padding-left: 15px;
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -ms-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s
+}
+
+@media print {
+    /*打印时隐藏link图标*/
+    .wiki_page_inner_link a.glyphicon-link{
+        display: none;
+    }
+}
+
+
+/*------github markdown csss------*/
+.markdown-body {
+	box-sizing: border-box;
+	min-width: 200px;
+	max-width: 980px;
+	margin: 0 auto;
+	padding: 45px;
+}
+
+@media (max-width: 767px) {
+	.markdown-body {
+		padding: 15px;
+	}
+}
