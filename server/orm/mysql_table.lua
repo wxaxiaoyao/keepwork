@@ -4,11 +4,11 @@ local mysql_query = require("orm/mysql_query")
 local mysql_table = {}
 
 function mysql_table:ctor()
-	print('table:ctor()')
+	--print('table:ctor()')
 end
 
 function mysql_table:new()
-	print("table:new()")
+	--print("table:new()")
 	local obj = {}
 
 	setmetatable(obj, self)
@@ -32,7 +32,7 @@ end
 
 
 -- get query 
-function mysql_table:getQuery()
+function mysql_table:get_query()
 	return mysql_query:new(self, {tablename=self.table_name})
 end
 
@@ -44,7 +44,7 @@ function mysql_table:addfield(name, typ)
 	}
 end
 
-function mysql_table:getWhereStr(t)
+function mysql_table:get_where_str(t)
 	t = t or {}
 
 	local sql_str = "";
@@ -53,7 +53,8 @@ function mysql_table:getWhereStr(t)
 	local is_or_first = true
 	for key, value in pairs(t) do
 		-- 非关键字
-		if key[1] ~= "$" then
+		local pos = string.find(key, "%$")
+		if pos ~= 1 then
 			if not has_where then
 				sql_str = sql_str .. " where "
 				has_where = true
@@ -64,7 +65,7 @@ function mysql_table:getWhereStr(t)
 			end
 			is_first = false
 
-			sql_str = sql_str .. self:getKeyValueStr(key, value)
+			sql_str = sql_str .. self:get_key_value_str(key, value)
 		end
 	end
 
@@ -83,7 +84,7 @@ function mysql_table:getWhereStr(t)
 				sql_str = sql_str .. " or "
 			end
 
-			sql_str = sql_str .. self:getKeyValueStr(key, value)
+			sql_str = sql_str .. self:get_key_value_str(key, value)
 		end
 
 		if not is_first then
@@ -100,7 +101,7 @@ function mysql_table:getWhereStr(t)
 	return sql_str
 end
 
-function mysql_table:getKeyValueStr(key, value)
+function mysql_table:get_key_value_str(key, value)
 	local expr = "="
 	if type(value) == "object" then
 		for k, v in pairs(value) do
@@ -120,7 +121,7 @@ end
 
 -- 查找记录
 function mysql_table:find(t)
-	local sql_str = "select * from `" .. self.table_name .. "` " .. self:getWhereStr(t)
+	local sql_str = "select * from `" .. self.table_name .. "` " .. self:get_where_str(t)
 	
 	mysql.log(sql_str)
 
@@ -159,7 +160,7 @@ function mysql_table:insert(obj)
 	local first = true
 
 	for key, value in pairs(obj or {}) do
-		local _, v = self:getKeyValueStr(key, value)
+		local _, v = self:get_key_value_str(key, value)
 		if first then
 			sql_str = sql_str .. "`" .. key .. "`"
 			sql_value_str = sql_value_str .. v
@@ -186,7 +187,7 @@ function mysql_table:update(q, o)
 	local first = true
 
 	for key, value in pairs(o or {}) do
-		local _, v = self:getKeyValueStr(key, value)
+		local _, v = self:get_key_value_str(key, value)
 		if first then
 			sql_str = sql_str .. "`" .. key .. "`" .. "=" .. v 
 		else
@@ -195,7 +196,7 @@ function mysql_table:update(q, o)
 		first = false
 	end
 
-	sql_str = sql_str .. " " .. self:getWhereStr(q)
+	sql_str = sql_str .. " " .. self:get_where_str(q)
 	
 	mysql.log(sql_str)
 	return mysql:execute(sql_str)
@@ -206,7 +207,7 @@ end
 function mysql_table:delete(q)
 	local sql_str = "delete from `" .. self.table_name .. "` "
 
-	sql_str = sql_str .. self:getWhereStr(q)
+	sql_str = sql_str .. self:get_where_str(q)
 
 	mysql.log(sql_str)
 

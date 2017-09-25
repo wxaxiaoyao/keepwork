@@ -80,4 +80,4 @@ function test()
 	console(debug.getinfo(2))
 end
 
-test()
+--test()

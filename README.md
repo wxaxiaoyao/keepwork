@@ -6,3 +6,4 @@
 * luarocks install lua-cjson
 * luarocks install luajwt
 * luarocks install lua-resty-template
+* luarocks install lua-resty-http

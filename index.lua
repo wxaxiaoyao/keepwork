@@ -4,7 +4,6 @@ package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
 local http = require("http")
 local config = require("config")
-local user = require("user")
 local util = require("util")
 -- 初始化http
 http:init(config)
