@@ -140,7 +140,7 @@ function mysql_table:find(t)
 end
 
 -- 查找单条记录
-function mysql_table:findOne(t)
+function mysql_table:find_one(t)
 	t = t or {}
 	t[mysql.LIMIT] = 2
 
