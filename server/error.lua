@@ -11,44 +11,9 @@ errors.NOT_PRIVILEGES = {id=5, message="not privileges"}
 errors.FORBIDDEN_ACCESS = {id=6, message="probidden access"}
 errors.RECORD_ALREADY_EXIST = {id=7, message="record already exist"}
 
-local function console(obj ,level, out)
-	out = out or print
-	function _print(obj, level, flag)
-		level = level or 0
-		local indent_str = ""
-		for i = 1, level do
-		  indent_str = indent_str.."    "
-		end
-	  
-		if not flag then
-			out(indent_str.."{")
-		end
-	  
-		for k,v in pairs(obj) do
-			if type(v) == "table" then 
-				out(string.format("%s    %s = {", indent_str, tostring(k)))
-				_print(v, level + 1, true)
-			elseif type(v) == "string" then
-				out(string.format('%s    %s = "%s"', indent_str, tostring(k), tostring(v)))
-			else
-				out(string.format("%s    %s = %s", indent_str, tostring(k), tostring(v)))
-			end
-		end
-		out(indent_str.."}")
-	end
-	
-	if type(obj) == "table" then
-		_print(obj)
-	elseif type(obj) == "string" then
-		out('"' .. obj .. '"')
-	else
-		out(tostring(obj))
-	end
-end
-
 
 -- 设置日志打印器
-errors.log = console
+--errors.log = console
 
 function errors:setLog(func)
 	self.log = func
@@ -80,9 +45,11 @@ function errors:wrap(err, data)
 	end
 	
 	if err and self.log and type(self.log) == "function" then 
+		local info = debug.getinfo(2)
 		self.log({
 			err=err,
 			data=data,
+			filepos = info.source .. ":" .. info.currentline,
 		})
 	end
 

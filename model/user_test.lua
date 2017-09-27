@@ -6,30 +6,34 @@ require("server/commonlib")
 
 local user = require("model/user")
 
-user.register({
-	username="xiaoyao",
+user:register({
+	username="xiaoyao1",
 	password="wuxiangan",
 })
 
---test_local()
+
+user:delete_by_username({username="xiaoyao1"})
+
+--commonlib.console(errors:wrap("hello world"))
+--commonlib.console(3,"test", "test")
 
 
---local test = {
-
---}
 
 
---setmetatable(test,{
+--local test = setmetatable({},{
 	--key="test",
+	--_key="_key",
 	--__index = function(t, k)
 		--local mt = getmetatable(t)
-		----print(t["test"])
-		--print(mt["key"])
-		--print(k)
-
-		----return nil
+		--local pos = string.find(k, '_')
+		--if pos == 1 then
+			--return nil
+		--end
+		--return mt[k]
 	--end
 --})
 
 --print(test["abc"])
+--print(test.key)
+--print(test._key)
 

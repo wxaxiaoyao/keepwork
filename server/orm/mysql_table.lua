@@ -25,6 +25,7 @@ function mysql_table:tablename(name)
 		return self.table_name
 	end
 
+
 	self.table_name = name
 
 	return self.table_name
@@ -110,9 +111,9 @@ function mysql_table:get_key_value_str(key, value)
 		end
 	end
 
-	if self.fields[key].typ == "string" then
+	if type(value) == "string" then
 		value = "'" .. tostring(value) .. "'"
-	elseif self.fields[key].typ == "number" then
+	elseif type(value) == "number" then
 		value = tostring(value)
 	end
 
@@ -127,7 +128,10 @@ function mysql_table:find(t)
 
 	local list = {}
 	local row = {}
-	local cur = mysql:execute(sql_str)
+	local cur, err = mysql:execute(sql_str)
+	if not cur then
+		return cur, err
+	end
 	
 	row = cur:fetch({}, "a") 
 	while row do
@@ -144,13 +148,16 @@ function mysql_table:find_one(t)
 	t = t or {}
 	t[mysql.LIMIT] = 2
 
-	local list = self:find(t)
+	local list, err = self:find(t)
+	if not list then
+		return list, err
+	end
 
 	if #list == 1 then
 		return list[1]
 	end
 
-	return nil
+	return nil, "record count error!!!"
 end
 
 -- 插入记录

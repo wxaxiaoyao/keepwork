@@ -1,24 +1,25 @@
-local mysql_table = require("orm/mysql_table")
+local orm = require("orm")
 
 -- user 表
-local user = commonlib.inherit(mysql_table)
+local user = commonlib.inherit(orm)
+user:tablename("user")
 
-function user:ctor()
-	self:tablename("user")
+--function user:ctor()
+	--self:tablename("user")
 
-	self:addfield("userId", "number")
-	self:addfield("username","string")
-	self:addfield("password","string")
-	self:addfield("email","string")
-	self:addfield("cellphone","string")
-	self:addfield("nickname","string")
-	self:addfield("portrait","string")
-	self:addfield("sex","string")
-	self:addfield("desc", "string")
-	self:addfield("roleId", "number")
-	self:addfield("createTime", "string")
-	self:addfield("updateTime", "string")
-end
+	--self:addfield("userId", "number")
+	--self:addfield("username","string")
+	--self:addfield("password","string")
+	--self:addfield("email","string")
+	--self:addfield("cellphone","string")
+	--self:addfield("nickname","string")
+	--self:addfield("portrait","string")
+	--self:addfield("sex","string")
+	--self:addfield("desc", "string")
+	--self:addfield("roleId", "number")
+	--self:addfield("createTime", "string")
+	--self:addfield("updateTime", "string")
+--end
 
 
 function user:test()
@@ -31,6 +32,19 @@ function user:test()
 	commonlib.console(ret)
 end
 
+-- 删除用户
+function user:delete_by_username(params)
+	if not params.username then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+	
+	local ok, msg = self:delete({username=params.username})
+	if ok == nil then
+		return errors:wrap(errors:new(msg))
+	end
+
+	return errors:wrap(nil)
+end
 
 -- 通过用户名
 function user:get_by_username(params)
@@ -58,19 +72,17 @@ function user:register(params)
 		return errors:wrap(errors:new("用户名只能由字母和数字组成"), params)
 	end
 
-	if self:get_by_username(params) then
+	local ret = self:get_by_username(params).data
+	if ret then
 		return errors:wrap(errors:new("用户已存在"), params)
 	end
 
-	local ret = self:insert(params)
-	
-	return ret
+	local ok, msg = self:insert(params)
+	if ok == nil then
+		return errors:wrap(errors:new(msg))
+	end
+
+	return errors:wrap(nil)
 end
 
-local function test_local()
-	commonlib.console("hello world")
-end
-
-return commonlib.export(user:new(), {
-	"register"
-})
+return user

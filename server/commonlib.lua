@@ -16,24 +16,58 @@ function commonlib.gettable(f, rootEnv)
     return t;
 end
 
+commonlib.object = {}
+
 -- 对象继承
 function commonlib.inherit(base, derived)
 	derived = derived or {}
 	
-	derived.new = function(self)
-		-- 创建子类
-		base = base or {}
+	-- 创建子类
+	base = base or {}
 
-		if type(base.new) == "function" then
-			base = base.new(base)
+	if type(base.new) == "function" then
+		base = base.new(base)
+	end
+
+	local _inherit = function(t, k)
+		local mt = getmetatable(t)
+
+		if not mt then
+			return mt
 		end
-	
-		local obj = {}
-		setmetatable(obj, derived)
-		derived.__index = derived
 
-		setmetatable(derived, base)
-		base.__index = base
+		local pos = string.find(k, '_')
+		if pos == 1 then
+			return nil
+		end
+		
+		local value = mt[k]
+
+		if value and type(value) == "function" then
+			return function(self, ...)
+				return value(mt, ...)
+			end
+		end
+
+		return value
+		--return mt[k]
+	end
+
+	setmetatable(derived, base)
+	base.__index = _inherit
+
+	base._derived_class = derived
+	derived._base_class = base
+
+	derived.new = function(self)
+		-- self <=> derived
+		local obj = {}
+
+		setmetatable(obj, self)
+		self.__index = _inherit
+
+		self._derived_class = obj
+		obj._base_class = self
 
 		-- 调用子类构造函数
 		if type(base.ctor) == "function" then
@@ -41,12 +75,13 @@ function commonlib.inherit(base, derived)
 		end
 
 		-- 调用派生类构造函数
-		if type(obj.ctor) == "function" then
-			obj:ctor()
+		if type(self.ctor) == "function" then
+			self.ctor(obj)
 		end
 
 		return obj
 	end
+
 	return derived
 end
 
@@ -69,14 +104,58 @@ function commonlib.export(obj, list)
 	})
 end
 
--- 控制台输出
-function commonlib.console(msg)
-	if type(msg) == "table" then
-		for key , value in pairs(msg) do
-			print(key .. ":" .. tostring(value))
+local function console(obj, out)
+	out = out or print
+
+	local outlist = {}
+	function _print(obj, level, flag)
+		-- 避免循环输出
+		local obj_str = tostring(obj)
+		for _, str in ipairs(outlist) do
+			if str == obj_str then
+				return
+			end
 		end
+		outlist[#outlist+1] = obj_str
+
+		level = level or 0
+		local indent_str = ""
+		for i = 1, level do
+		  indent_str = indent_str.."    "
+		end
+	  
+		if not flag then
+			out(indent_str.."{")
+		end
+	  
+		for k,v in pairs(obj) do
+			if type(v) == "table" then 
+				out(string.format("%s    %s = {", indent_str, tostring(k)))
+				_print(v, level + 1, true)
+			elseif type(v) == "string" then
+				out(string.format('%s    %s = "%s"', indent_str, tostring(k), tostring(v)))
+			else
+				out(string.format("%s    %s = %s", indent_str, tostring(k), tostring(v)))
+			end
+		end
+		out(indent_str.."}")
+	end
+	
+	if type(obj) == "table" then
+		_print(obj)
+	elseif type(obj) == "string" then
+		out('"' .. obj .. '"')
 	else
-		print(msg)
+		out(tostring(obj))
+	end
+end
+
+-- 控制台输出
+function commonlib.console(...)
+	local count = select("#", ...)
+	for i=1, count,1 do
+		--print((select(i, ...)))
+		console((select(i, ...)))
 	end
 end
 
@@ -120,3 +199,7 @@ function test()
 end
 
 --return commonlib
+
+
+
+errors:setLog(commonlib.console)
