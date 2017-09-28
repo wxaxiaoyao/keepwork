@@ -2,8 +2,10 @@
 local cjson = require("cjson")
 local cjson_safe = require("cjson.safe")
 local jwt = require("luajwt")
+local requests = require("requests")
 
-local util = {}
+--local util = {}
+util = {}
 
 -- 控制台输出
 function util.console(msg)
@@ -65,4 +67,30 @@ util.getSharedDict = function()
 end
 
 
-return util
+function util.request_url(params)
+	local method = params.method
+
+	if params.data and type(params.data) == "table" then
+		if params.headers then
+			params.headers['Content-Type'] = params.headers['Content-Type'] or "application/json"
+		else
+			params.headers = {['Content-Type'] = "application/json"}
+		end
+	end
+	--local res = nil
+
+	--params.method = nil
+	--if method == "GET" then
+		--res = requests.get(params)	
+	--elseif method == "POST" then
+		--res = requests.post(params)	
+	--end
+	--res:{headers:{}, text:string, status_code:number}
+	local res = requests.request(method, params)
+
+	res.data = res.json()
+
+	return res
+end
+
+--return util

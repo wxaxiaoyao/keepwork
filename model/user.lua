@@ -1,5 +1,8 @@
-local orm = require("orm")
+-- title: data source
+-- author: xiaoyao
+-- date: 2017-9-28
 
+local orm = require("orm/orm")
 -- user 表
 local user = commonlib.inherit(orm)
 user:tablename("user")
@@ -21,16 +24,6 @@ user:tablename("user")
 	--self:addfield("updateTime", "string")
 --end
 
-
-function user:test()
-	local ret = self:upsert({username="xiaoyao"},{
-		username="xiaoyao",
-		password="wuxiangan",
-		email="765485868@qq,cin",
-		nickname="逍遥"
-	})
-	commonlib.console(ret)
-end
 
 -- 删除用户
 function user:delete_by_username(params)
@@ -54,7 +47,29 @@ function user:get_by_username(params)
 
 	local data = self:find_one({username=params.username})
 
+	if data then
+		data.password = nil
+	end
+
 	return errors:wrap(nil, data)
+end
+
+-- 修改用户信息
+function user:set_by_username(params)
+	if not params or not params.username then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	--params.password = nil
+	--params.roleId = nil
+
+	local ok, msg = self:update({username=params.username}, params)
+
+	if ok == nil then
+		return errors:wrap(errors:new(err))
+	end
+
+	return errors:wrap(nil)
 end
 
 -- 注册接口

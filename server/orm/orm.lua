@@ -71,6 +71,10 @@ function orm:delete(t)
 	return l_db:delete(t)
 end
 
+function orm:update(q, t)
+	return l_db:update(q, t)
+end
+
 function orm:execute(t)
 	return l_db:execute(t)
 end
