@@ -36,6 +36,10 @@ function request:new()
 	return obj
 end
 
+function request:get_params() 
+	return self.params
+end
+
 function request:dump()
 	ngx.header["Content-Type"] = "text/html"
 end

@@ -2,6 +2,7 @@
 local cjson = require("cjson")
 local cjson_safe = require("cjson.safe")
 local jwt = require("luajwt")
+local md5 = require("md5")
 local requests = require("requests")
 
 --local util = {}
@@ -93,4 +94,7 @@ function util.request_url(params)
 	return res
 end
 
+function util.md5(msg)
+	return md5.sumhexa(msg)
+end
 --return util

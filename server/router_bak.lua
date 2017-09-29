@@ -35,7 +35,7 @@ local router = {
 function router:new()
 	local obj = {}
 
-	setmetatable(obj, self)
+	setmetatable(o, self)
 	self.__index = self
 	
 	return obj
@@ -55,10 +55,6 @@ function router:path(path, handle)
 	end
 
 	self.handler.pathHandler[path] = h
-end
-
-function router:terminal()
-	self.is_terminal = true
 end
 
 function router:group(path, handle)
@@ -157,9 +153,9 @@ function router:handle(req, resp)
 	local handle = self:getHandle(req.uri)
 
 	for _, func in ipairs(handle or {}) do
-		func(req, resp)
+		local ok = func(req, resp)
 
-		if not self.is_terminal then
+		if not ok then
 			break
 		end
 	end

@@ -162,6 +162,19 @@ function commonlib.console(...)
 	end
 end
 
+-- 获取当前日期
+function commonlib.get_date()
+	return os.date("%Y-%m-%d")
+end
+
+function commonlib.get_time()
+	return os.date("%H:%M:%S")
+end
+
+function commonlib.get_datetime()
+	return commonlib.get_date() .. " " .. commonlib.get_time()
+end
+
 function string_split(str, sep)
 	local list = {}
 
@@ -203,6 +216,14 @@ end
 
 --return commonlib
 
+function ngx_log(...)
+	local count = select("#", ...)
+	for i=1, count,1 do
+		--print((select(i, ...)))
+		console((select(i, ...)), function(msg)
+			ngx.log(ngx.ERR, msg)
+		end)
+	end
+end
 
-
-errors:setLog(commonlib.console)
+errors:set_log(commonlib.console)

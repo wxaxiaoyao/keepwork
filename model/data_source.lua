@@ -157,6 +157,10 @@ function data_source:get_default_by_username(params)
 	end
 
 	local data = self:find_one({username=params.username, is_default = 1})
+	if not data then
+		self:create_inner_gitlab_data_source(params)
+		data = self:find_one({username=params.username, is_default = 1})
+	end
 
 	return errors:wrap(nil, data)
 end
@@ -167,7 +171,7 @@ function data_source:get_by_name(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
-	local data = self:find_one(username=params.username, data_source_name=params.data_source_name)
+	local data = self:find_one({username=params.username, data_source_name=params.data_source_name})
 
 	return errors:wrap(nil, data)
 end

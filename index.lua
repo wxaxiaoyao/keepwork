@@ -6,7 +6,6 @@ local http = require("http")
 local config = require("config")
 local util = require("util")
 -- 初始化http
-http:init(config)
 
 local log = http.log
 local router = http.router
@@ -24,7 +23,7 @@ end
 function RenderServerWikiScript() 
 	local bustVersion = getBustVersion()
 	local script_str = ""
-	script_str = script_str .. string.format('<script src="/wiki/js/config.js?bust=%s"></script>\n', bustVersion)
+	script_str = script_str .. string.format('<script src="/wiki/js/app/config.js?bust=%s"></script>\n', bustVersion)
 	script_str = script_str .. string.format('<script data-main="/wiki/js/main.js?bust=%s" src="/wiki/js/lib/requirejs/require.js?bust=%s"></script>\n', bustVersion, bustVersion)
 
 	return script_str
@@ -54,37 +53,9 @@ end)
 	----resp:send(ret)
 --end)
 
-router:path("/find", function(req, resp)
-	local _user = user:new()
-	local ret = _user:find({password="wuxiangan"})
-	util.say(ret)
-	--resp:send(ret)
-end)
+router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/api/v0')
 
-router:path("/update", function(req, resp)
-	local _user = user:new()
-	local ret = _user:update({username="xiaoyao"}, {desc="test update"})
-	util.say(ret)
-	--resp:send(ret)
-end)
-
-router:path("/delete", function(req, resp)
-	local _user = user:new()
-	local ret = _user:delete({username="xiaoyao1"})
-	util.say(ret)
-	--resp:send(ret)
-end)
-
-router:path("/insert", function(req, resp)
-	local _user = user:new()
-	local ret = _user:insert({username="xiaoyao1", password="wuxiangan"})
-	util.say(ret)
-	--resp:send(ret)
-end)
-
-router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/wiki/models')
-
-http:handle()
+http:handle(config)
 
 --require("http_init")
 

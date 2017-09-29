@@ -12,7 +12,7 @@ local mysql = {
 }
 
 local function log(...)
-	--print(...)
+	print(...)
 end
 
 local l_log = nil
@@ -20,7 +20,7 @@ local l_is_inited = false
 local l_env = luasql.mysql()
 local l_conn = nil 
 
-function mysql:setLog(log)
+function mysql:set_log(log)
 	l_log = log
 end
 

@@ -1,5 +1,5 @@
 
-require("helper")
+require("commonlib")
 
 local util = require("util")
 local request = require("request")
@@ -13,17 +13,17 @@ http.router = router
 
 local req = request:new()
 local resp = response:new()
+local _router = router:new()
 
-ngx.log(ngx.ERR, req.uri)
+ngx_log(req.uri)
 
 function http:init(config)
 	config = config or {}
-
-	self.log = log:new(config.log)
+	--self.log = log:new(config.log)
 end
 
 function http:handle()
-	self.router:handle(req, resp)
+	_router:handle(req, resp)
 end
 
 return http

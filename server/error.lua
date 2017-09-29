@@ -15,33 +15,39 @@ errors.RECORD_ALREADY_EXIST = {id=7, message="record already exist"}
 -- 设置日志打印器
 --errors.log = console
 
-function errors:setLog(func)
+function errors:set_log(func)
 	self.log = func
 end
 
 -- 新建一个错误对象
 function errors:new(message, data) 
-	return {
+	local obj = {
 		id=-1,
 		message=message,
 		data=data,
-	};
+	}
+
+	--setmetatable(obj, self)
+	--self.__index = self
+
+	return obj
 end 
 
 -- 判断是否正确
-function errors:isOk(err) 
-	return err.id == 0
+function errors:is_ok() 
+	return self.id == 0
 end
 
 -- 判断是否出错
-function errors:isError(err)
-	return err.id ~= 0
+function errors:is_error(err)
+	return self.id ~= 0
 end
 
 -- 报错错误信息 并打印log
 function errors:wrap(err, data) 
+	local result = nil
 	if not err then
-		return {err=errors.SUCCESS, data=data}
+		result = {err=errors.SUCCESS, data=data}
 	end
 	
 	if err and self.log and type(self.log) == "function" then 
@@ -54,11 +60,14 @@ function errors:wrap(err, data)
 	end
 
 	if type(err) == "string" then 
-		return {err=self:new(err),data=data,}
+		result = {err=self:new(err),data=data,}
 	elseif type(err) == "table" then
-		return {err=err, data=data}
+		result = {err=err, data=data}
 	end
 
-	return {err=errors.SUCCESS, data=data}
+	setmetatable(result, self)
+	self.__index = self
+
+	return result
 end
 

@@ -15,6 +15,7 @@ site_data_source:tablename("site_data_source")
 --  site_data_source_id number
 --  data_source_name number
 --  site_id number
+--  is_default number
 --  username string
 --  sitename string
 --  visibility string
@@ -73,22 +74,22 @@ function site_data_source:_create_gitlab_project(params)
 	end
 	
 	local project = res.data
-	local webhook = "http://dev.keepwork.com/api/wiki/models/data_source/gitlabWebhook"
-	-- 创建webhook
-	res = util.request_url({
-		url = params.api_base_url .. "/projects/" .. tostring(project.id) .. "/hooks",
-		method = "POST",
-		headers = {['PRIVATE-TOKEN'] = params.token},
-		data = {
-			push_events = true,
-			enable_ssl_verification = false,
-			url = webhook_url,
-		}
-	})
+	--local webhook = "http://dev.keepwork.com/api/wiki/models/data_source/gitlabWebhook"
+	---- 创建webhook
+	--res = util.request_url({
+		--url = params.api_base_url .. "/projects/" .. tostring(project.id) .. "/hooks",
+		--method = "POST",
+		--headers = {['PRIVATE-TOKEN'] = params.token},
+		--data = {
+			--push_events = true,
+			--enable_ssl_verification = false,
+			--url = webhook_url,
+		--}
+	--})
 
-	if not res or res.status_code ~= 201 then
-		return errors:wrap(errors:new("创建项目回调失败"), params)
-	end
+	--if not res or res.status_code ~= 201 then
+		--return errors:wrap(errors:new("创建项目回调失败"), params)
+	--end
 
 	return errors:wrap(nil, project)
 end
@@ -132,10 +133,12 @@ function site_data_source:create_site_data_source(params)
 	local ok, msg = self:insert({
 		username = params.username,
 		sitename = params.sitename,
+		data_source_id = data_source.data_source_id,
 		data_source_name = data_source.data_source_name,
 		visibility = project_params.visibility,
 		project_id = project.id,
 		project_name = project_params.project_name,
+		is_default = params.is_default,
 	})
 
 	if ok == nil then
@@ -145,6 +148,51 @@ function site_data_source:create_site_data_source(params)
 	return errors:wrap(nil)
 end
 
+function site_data_source:create_default_site_data_source(params)
+	if not params.username then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = {
+		username = params.username,
+		sitename = const.DEFAULT_DATA_SOURCE_PUBLIC_PROJECT_NAME,
+		project_name = const.DEFAULT_DATA_SOURCE_PUBLIC_PROJECT_NAME,
+		is_default = 1,
+		visibility = "public",
+	}
+
+	local ret = self:create_site_data_source(data)
+	if ret:is_error() then
+		return ret
+	end
+
+	data.is_default = 0
+	data.visibility = "private"
+	data.sitename = const.DEFAULT_DATA_SOURCE_PRIVATE_PROJECT_NAME
+	data.project_name = const.DEFAULT_DATA_SOURCE_PRIVATE_PROJECT_NAME
+
+	local ret = self:create_site_data_source(data)
+	if ret:is_error() then
+		return ret
+	end
+
+	return errors:wrap(nil)
+end
+
+function site_data_source:get_default_site_data_source(params)
+	if not params.username then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = self:find_one({username=params.username, is_default=1})
+
+	if not data then
+		self:create_default_site_data_source(params)
+		data = self:find_one({username=params.username, is_default=1})
+	end
+
+	return errors:wrap(nil, data)
+end
 
 function site_data_source:get_by_username(params)
 	if not params.username then
@@ -162,7 +210,10 @@ function site_data_source:get_by_username(params)
 			end
 		end
 	end
+
+	return errors:wrap(nil, site_data_source_list)
 end
+
 
 function site_data_source:_copy_data_source(site_data_source_x, data_source_x)
 	if not site_data_source_x or not data_source_x then
@@ -171,7 +222,7 @@ function site_data_source:_copy_data_source(site_data_source_x, data_source_x)
 
 	site_data_source_x.data_source_id = data_source_x.data_source_id
 	site_data_source_x.type = data_source_x.type
-	site_data_source_x.external_user_id = data_sourcex.external_user_id
+	site_data_source_x.external_user_id = data_source_x.external_user_id
 	site_data_source_x.external_username = data_source_x.external_username
 	site_data_source_x.token = data_source_x.token
 	site_data_source_x.api_base_url = data_source_x.api_base_url
@@ -180,6 +231,7 @@ function site_data_source:_copy_data_source(site_data_source_x, data_source_x)
 end
 
 
+return site_data_source
 
 
 

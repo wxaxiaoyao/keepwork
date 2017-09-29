@@ -16,7 +16,7 @@ create table if not exists `user` (
     `email` varchar(24),                          -- 邮箱
     `cellphone` char(12),                         -- 手机
     `nickname` varchar(48),                       -- 昵称
-    `portriat` varchar(128),                      -- 头像url
+    `portrait` varchar(128),                      -- 头像url
     `sex` char(4),                                -- 性别
     `desc` varchar(128),                          -- 备注信息
     
@@ -104,7 +104,9 @@ create table if not exists `site_data_source` (
 	`site_data_source_id` bigint auto_increment primary key, -- _id
     
     `data_source_id` bigint not null,                        -- 引用的数据源
-    `site_id` bigint not null,                               -- 站点id 与 站点一一对应
+    `data_source_name` varchar(48),                          -- 引用的数据源名
+    
+    `site_id` bigint not null default 0,                               -- 站点id 与 站点一一对应
     
     `username` varchar(48) not null,                      -- 所属用户
     `sitename` varchar(48) not null,                      -- 所有站点
@@ -112,12 +114,14 @@ create table if not exists `site_data_source` (
     `visibility` char(12) not null,                       -- 可见性 private public
     `project_id` bigint,                                   -- 数据源上的项目id
     `project_name` varchar(48) not null,                   -- 项目名
-    `project_path` varchar(128) not null,                  -- 项目路径 默认等同projectName
+    `project_path` varchar(128),                  -- 项目路径 默认等同projectName
     
     `root_path` varchar(128),                              -- 页面存贮的根路径
     `last_commit_id` char(48),                              -- git last commit _id  下面两个字段是为避免被恶意更新commit _id设置， 响应git push事件无法辨认来源真实性
     `last_commit_id_update_time` int,                         -- git last commit _id update time
     `last_commit_id_update_flag` int,                         -- git last commit _id update flag  
+    
+    `is_default` tinyint default 0,                         -- 是否为默认数据源
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
