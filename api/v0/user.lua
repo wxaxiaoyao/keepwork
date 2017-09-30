@@ -1,6 +1,7 @@
 
 local user = commonlib.inherit()
 
+local convert_model = require("model/convert")
 local user_model = require("model/user")
 local site_data_source_model = require("model/site_data_source")
 local vip_model = require("model/vip")
@@ -18,12 +19,16 @@ function user:login(req, resp)
 	end
 
 	-- 数据源相关信息
-	userinfo.default_site_data_source = site_data_source_model:get_default_site_data_source(params).data
-	userinfo.site_data_source_list = site_data_source_model:get_by_username(params).data
-
+	local default_site_data_source = site_data_source_model:get_default_site_data_source(params).data
+	local site_data_source_list = site_data_source_model:get_by_username(params).data
 	-- vip相关信息
-	userinfo.vip_info = vip_model:get_by_username(params).data
+	local vip_info = vip_model:get_by_username(params).data
 
+	userinfo.defaultSiteDataSource = convert_model.site_data_source_new_to_old(default_site_data_source)
+	userinfo.dataSource = convert_model.list_convert(site_data_source_list, convert_model.site_data_source_new_to_old)
+	userinfo.vipInfo = convert_model.vip_new_to_old(vip_info)
+
+	-- 生成token
 	local token = util.encodeJWT({username=userinfo.username})
 
 	return resp:send(errors:wrap(nil, {token=token, userinfo=userinfo}))
@@ -52,11 +57,14 @@ function user:register(req, resp)
 	end
 	
 	-- 数据源相关信息
-	userinfo.default_site_data_source = site_data_source_model:get_default_site_data_source(params).data
-	userinfo.site_data_source_list = site_data_source_model:get_by_username(params).data
-	
+	local default_site_data_source = site_data_source_model:get_default_site_data_source(params).data
+	local site_data_source_list = site_data_source_model:get_by_username(params).data
+
 	-- vip相关信息
-	userinfo.vip_info = vip_model:get_by_username(params).data
+	local vip_info = vip_model:get_by_username(params).data
+
+	-- 生成token
+	local token = util.encodeJWT({username=userinfo.username})
 
 	return resp:send(errors:wrap(nil, {token=token, userinfo=userinfo}))
 end

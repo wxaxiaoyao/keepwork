@@ -9,25 +9,25 @@ local data_source_db = require("model/data_source")
 
 -- user 表
 local site_data_source = commonlib.inherit(orm)
-site_data_source:tablename("site_data_source")
 
--- table field
---  site_data_source_id number
---  data_source_name number
---  site_id number
---  is_default number
---  username string
---  sitename string
---  visibility string
---  project_id number
---  project_name string
---  project_path string
---  root_path string
---  last_commit_id string
---  last_commit_id_update_time number
---  last_commit_id_update_flag int
---  create_time
---  update_time
+-- define table
+site_data_source:tablename("site_data_source")
+site_data_source:addfield("site_data_source_id", "number")
+site_data_source:addfield("data_source_name", "string")
+site_data_source:addfield("site_id", "number")
+site_data_source:addfield("username", "string")
+site_data_source:addfield("sitename", "string")
+site_data_source:addfield("visibility", "string")
+site_data_source:addfield("project_id", "number")
+site_data_source:addfield("project_name", "string")
+site_data_source:addfield("root_path", "string")
+site_data_source:addfield("last_commit_id", "string")
+site_data_source:addfield("last_commit_id_update_time", "string")
+site_data_source:addfield("last_commit_id_update_time", "number")
+site_data_source:addfield("last_commit_id_update_flag", "number")
+site_data_source:addfield("is_default", "number")
+site_data_source:addfield("create_time", "string")
+site_data_source:addfield("update_time", "string")
 
 
 function site_data_source:_create_gitlab_project(params)

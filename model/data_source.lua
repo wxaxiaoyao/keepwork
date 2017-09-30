@@ -7,23 +7,22 @@ local orm = require("orm/orm")
 
 -- user 表
 local data_source = commonlib.inherit(orm)
+
+-- define table
 data_source:tablename("data_source")
-
-
--- table field
---  data_source_id number
---  username string
---  data_source_name string
---  type string
---  token string
---  api_base_url string
---  raw_base_url string
---  external_user_id number
---  external_username string
---  external_password string
---  create_time
---  update_time
-
+data_source:addfield("data_source_id", "number")
+data_source:addfield("username", "string")
+data_source:addfield("data_source_name", "string")
+data_source:addfield("type", "string")
+data_source:addfield("token", "string")
+data_source:addfield("api_base_url", "string")
+data_source:addfield("raw_base_url", "string")
+data_source:addfield("external_user_id", "number")
+data_source:addfield("external_username", "string")
+data_source:addfield("external_password", "string")
+data_source:addfield("is_default", "number")
+data_source:addfield("create_time", "string")
+data_source:addfield("update_time", "string")
 
 local l_admin_token = config["default"]["account_info"]["gitlab"]["token"]
 local l_gitlab_host = "http://" .. config["default"]["account_info"]["gitlab"]["host"]

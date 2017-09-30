@@ -24,6 +24,6 @@ params = {
 }
 
 --commonlib.console(util.toJson(errors:wrap(errors:new("hello world"))))
---user:register(request, response)
+user:register(request, response)
 
 user:login(request, response)

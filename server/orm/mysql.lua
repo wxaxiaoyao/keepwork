@@ -67,6 +67,8 @@ function mysql:new()
 	setmetatable(obj, self)
 	self.__index = self
 	
+	obj._fieldlist = {}
+
 	return obj
 end
 
@@ -76,11 +78,21 @@ function mysql:tablename(name)
 		return self.table_name
 	end
 
-
 	self.table_name = name
 
 	return self.table_name
 end
+
+-- 添加字段
+function mysql:addfield(fieldname, fieldtype)
+	local fields = self._fieldlist
+
+	fields[#fields+1] = {
+		fieldname = fieldname,
+		fieldtype = fieldtype,
+	}
+end
+
 
 function mysql:get_where_str(t)
 	t = t or {}
@@ -157,6 +169,28 @@ function mysql:get_key_value_str(key, value)
 	return "`".. key .. "`" .. " " .. expr .. " " .. value, value, expr
 end
 
+-- 类型转换
+function mysql:_type_convert(obj)
+	--commonlib.console(self)
+	local new_obj = {}
+	for key, value in pairs(obj or {}) do
+		for _, v in ipairs(self._fieldlist) do
+			if key == v.fieldname then
+				if v.fieldtype == "string" and type(value) ~= "string" then
+					new_obj[key] = tostring(value)
+				elseif v.fieldtype == "number" and type(value) ~= "number" then
+					new_obj[key] = tonumber(value)
+				else
+					new_obj[key] = value
+				end
+			end
+		end
+	end
+
+	--commonlib.console(new_obj)
+	return new_obj
+end
+
 -- 查找记录
 function mysql:find(t)
 	local sql_str = "select * from `" .. self.table_name .. "` " .. self:get_where_str(t)
@@ -172,7 +206,7 @@ function mysql:find(t)
 	
 	row = cur:fetch({}, "a") 
 	while row do
-		list[#list+1] = row
+		list[#list+1] = self:_type_convert(row)
 		--l_log(row.username)
 		row = cur:fetch({}, "a") 
 	end
@@ -266,5 +300,6 @@ function mysql:upsert(q, o)
 
 	return self:insert(o)
 end
+
 
 return mysql

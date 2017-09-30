@@ -9,23 +9,21 @@ local site_data_source_db = require("model/site_data_source")
 
 -- user 表
 local user = commonlib.inherit(orm)
-user:tablename("user")
 
 --function user:ctor()
-	--self:tablename("user")
-
-	--self:addfield("userId", "number")
-	--self:addfield("username","string")
-	--self:addfield("password","string")
-	--self:addfield("email","string")
-	--self:addfield("cellphone","string")
-	--self:addfield("nickname","string")
-	--self:addfield("portrait","string")
-	--self:addfield("sex","string")
-	--self:addfield("desc", "string")
-	--self:addfield("roleId", "number")
-	--self:addfield("createTime", "string")
-	--self:addfield("updateTime", "string")
+user:tablename("user")
+user:addfield("user_id", "number")
+user:addfield("username","string")
+user:addfield("password","string")
+user:addfield("email","string")
+user:addfield("cellphone","string")
+user:addfield("nickname","string")
+user:addfield("portrait","string")
+user:addfield("sex","string")
+user:addfield("desc", "string")
+user:addfield("role_id", "number")
+user:addfield("create_time", "string")
+user:addfield("update_time", "string")
 --end
 
 
