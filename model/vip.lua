@@ -6,8 +6,16 @@
 local orm = require("orm/orm")
 
 local vip = commonlib.inherit(orm)
-vip:tablename("vip")
 
+-- define table
+vip:tablename("vip")
+vip:addfield("vip_id", "number")
+vip:addfield("username", "string")
+vip:addfield("level", "number")
+vip:addfield("start_date", "string")
+vip:addfield("end_date", "string")
+vip:addfield("create_time", "string")
+vip:addfield("update_time", "string")
 
 function vip:get_by_username(params)
 	if not params.username then

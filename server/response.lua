@@ -2,7 +2,7 @@ local template = require("resty.template")
 local cjson = require("cjson")
 local cjson_safe = require("cjson.safe")
 
-local mime = require("mime")
+local mimetype = require("mimetype")
 local util = require("util")
 
 local response = {}
@@ -14,7 +14,7 @@ function response:new()
 	self.__index = self
 
 	-- 默认返回内容
-	ngx.header["Content-Type"] = mime.html
+	ngx.header["Content-Type"] = mimetype.html
 
 	return obj
 end
@@ -26,7 +26,7 @@ end
 
 -- 发送json
 function response:sendJson(data)
-	ngx.header["Content-Type"] = mime.json
+	ngx.header["Content-Type"] = mimetype.json
 	ngx.say(cjson_safe.encode(data))
 end
 

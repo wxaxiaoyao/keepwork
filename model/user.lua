@@ -9,23 +9,21 @@ local site_data_source_db = require("model/site_data_source")
 
 -- user 表
 local user = commonlib.inherit(orm)
-user:tablename("user")
 
 --function user:ctor()
-	--self:tablename("user")
-
-	--self:addfield("userId", "number")
-	--self:addfield("username","string")
-	--self:addfield("password","string")
-	--self:addfield("email","string")
-	--self:addfield("cellphone","string")
-	--self:addfield("nickname","string")
-	--self:addfield("portrait","string")
-	--self:addfield("sex","string")
-	--self:addfield("desc", "string")
-	--self:addfield("roleId", "number")
-	--self:addfield("createTime", "string")
-	--self:addfield("updateTime", "string")
+user:tablename("user")
+user:addfield("user_id", "number")
+user:addfield("username","string")
+user:addfield("password","string")
+user:addfield("email","string")
+user:addfield("cellphone","string")
+user:addfield("nickname","string")
+user:addfield("portrait","string")
+user:addfield("sex","string")
+user:addfield("desc", "string")
+user:addfield("role_id", "number")
+user:addfield("create_time", "string")
+user:addfield("update_time", "string")
 --end
 
 
@@ -35,12 +33,8 @@ function user:delete_by_username(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 	
-	local ok, msg = self:delete({username=params.username})
-	if ok == nil then
-		return errors:wrap(errors:new(msg))
-	end
-
-	return errors:wrap(nil)
+	local err = self:delete({username=params.username})
+	return errors:wrap(err)
 end
 
 -- 通过用户名
@@ -67,13 +61,9 @@ function user:set_by_username(params)
 	--params.password = nil
 	--params.roleId = nil
 
-	local ok, msg = self:update({username=params.username}, params)
+	local err = self:update({username=params.username}, params)
 
-	if ok == nil then
-		return errors:wrap(errors:new(err))
-	end
-
-	return errors:wrap(nil)
+	return errors:wrap(err)
 end
 
 -- 注册接口
@@ -101,9 +91,9 @@ function user:register(params)
 		password = util.md5(params.password),
 	}
 
-	local ok, msg = self:insert(user_params)
-	if ok == nil then
-		return errors:wrap(errors:new(msg))
+	local err = self:insert(user_params)
+	if err then
+		return errors:wrap(err)
 	end
 
 	local userinfo = self:find_one({username=params.username})

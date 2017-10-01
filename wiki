@@ -1,1 +1,1 @@
-/root/workspace/npl/nplproject/keepwork/www/wiki/
+/root/workspace/npl/wikicraft/www/wiki

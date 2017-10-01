@@ -30,6 +30,11 @@ function request:new()
 		obj.params = ngx.req.get_uri_args() or {}
 	else
 		ngx.req.read_body()
+		local test = ngx.req.get_post_args()
+		ngx.log(ngx.ERR, type(test))
+		ngx.log(ngx.ERR, util.toJson(test))
+		ngx.log(ngx.ERR, #test)
+		ngx.log(ngx.ERR, test.username)
 		obj.params = ngx.req.get_post_args() or {}
 	end
 

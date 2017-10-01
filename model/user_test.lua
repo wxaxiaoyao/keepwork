@@ -6,13 +6,14 @@ require("server/commonlib")
 
 local user = require("model/user")
 
-user:register({
-	username="xiaoyao1",
-	password="wuxiangan",
-})
+--user:register({
+	--username="xiaoyao1",
+	--password="wuxiangan",
+--})
 
 
-user:delete_by_username({username="xiaoyao1"})
+local data = user:get_by_username({username="xiaoyao"})
+commonlib.console(data)
 
 --commonlib.console(errors:wrap("hello world"))
 --commonlib.console(3,"test", "test")

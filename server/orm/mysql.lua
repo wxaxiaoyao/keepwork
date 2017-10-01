@@ -67,6 +67,8 @@ function mysql:new()
 	setmetatable(obj, self)
 	self.__index = self
 	
+	obj._fieldlist = {}
+
 	return obj
 end
 
@@ -76,11 +78,21 @@ function mysql:tablename(name)
 		return self.table_name
 	end
 
-
 	self.table_name = name
 
 	return self.table_name
 end
+
+-- 添加字段
+function mysql:addfield(fieldname, fieldtype)
+	local fields = self._fieldlist
+
+	fields[#fields+1] = {
+		fieldname = fieldname,
+		fieldtype = fieldtype,
+	}
+end
+
 
 function mysql:get_where_str(t)
 	t = t or {}
@@ -157,9 +169,32 @@ function mysql:get_key_value_str(key, value)
 	return "`".. key .. "`" .. " " .. expr .. " " .. value, value, expr
 end
 
+-- 类型转换
+function mysql:_type_convert(obj)
+	--commonlib.console(self)
+	local new_obj = {}
+	for key, value in pairs(obj or {}) do
+		for _, v in ipairs(self._fieldlist) do
+			if key == v.fieldname then
+				if v.fieldtype == "string" and type(value) ~= "string" then
+					new_obj[key] = tostring(value)
+				elseif v.fieldtype == "number" and type(value) ~= "number" then
+					new_obj[key] = tonumber(value)
+				else
+					new_obj[key] = value
+				end
+			end
+		end
+	end
+
+	--commonlib.console(new_obj)
+	return new_obj
+end
+
 -- 查找记录
-function mysql:find(t)
-	local sql_str = "select * from `" .. self.table_name .. "` " .. self:get_where_str(t)
+function mysql:find(q)
+	q = self:_type_convert(q)
+	local sql_str = "select * from `" .. self.table_name .. "` " .. self:get_where_str(q)
 	
 	l_log(sql_str)
 
@@ -167,12 +202,12 @@ function mysql:find(t)
 	local row = {}
 	local cur, err = mysql:execute(sql_str)
 	if not cur then
-		return cur, err
+		return list, err
 	end
 	
 	row = cur:fetch({}, "a") 
 	while row do
-		list[#list+1] = row
+		list[#list+1] = self:_type_convert(row)
 		--l_log(row.username)
 		row = cur:fetch({}, "a") 
 	end
@@ -181,29 +216,27 @@ function mysql:find(t)
 end
 
 -- 查找单条记录
-function mysql:find_one(t)
-	t = t or {}
-	t[mysql.LIMIT] = 2
+function mysql:find_one(q)
+	q = self:_type_convert(q)
+	q[mysql.LIMIT] = 2
 
-	local list, err = self:find(t)
-	if not list then
-		return list, err
-	end
+	local list = self:find(q)
 
-	if #list == 1 then
+	if list and #list == 1 then
 		return list[1]
 	end
 
-	return nil, "record count error!!!"
+	return nil
 end
 
 -- 插入记录
-function mysql:insert(obj)
+function mysql:insert(q)
+	q = self:_type_convert(q)
 	local sql_str = "insert into `" .. self.table_name .. "`("
 	local sql_value_str = "values("
 	local first = true
 
-	for key, value in pairs(obj or {}) do
+	for key, value in pairs(q) do
 		local _, v = self:get_key_value_str(key, value)
 		if first then
 			sql_str = sql_str .. "`" .. key .. "`"
@@ -221,12 +254,19 @@ function mysql:insert(obj)
 	sql_str = sql_str .. " " .. sql_value_str
 
 	l_log(sql_str)
-	return mysql:execute(sql_str)
+	local ret, err = mysql:execute(sql_str)
+	if ret == nil then
+		return err
+	end
+
+	return nil
 	--return sql_str
 end
 
 -- 更新记录
 function mysql:update(q, o)
+	q = self:_type_convert(q)
+	o = self:_type_convert(o)
 	local sql_str = "update `" .. self.table_name .. "` set "	
 	local first = true
 
@@ -243,28 +283,40 @@ function mysql:update(q, o)
 	sql_str = sql_str .. " " .. self:get_where_str(q)
 	
 	l_log(sql_str)
-	return mysql:execute(sql_str)
+	local ret, err = mysql:execute(sql_str)
+	if ret == nil then
+		return err
+	end
+	return nil
 	--return sql_str
 end
 
 -- 删除记录
 function mysql:delete(q)
+	q = self:_type_convert(q)
 	local sql_str = "delete from `" .. self.table_name .. "` "
 
 	sql_str = sql_str .. self:get_where_str(q)
 
 	l_log(sql_str)
 
-	return mysql:execute(sql_str)
+	local ret, err = mysql:execute(sql_str)
+	if ret == nil then
+		return err
+	end
+	return nil
 end
 
 -- 增改记录
 function mysql:upsert(q, o)
-	if self:findOne(q) then
+	--q = self:_type_convert(q)
+	--o = self:_type_convert(o)
+	if self:find_one(q) then
 		return self:update(q,o)
 	end
 
 	return self:insert(o)
 end
+
 
 return mysql

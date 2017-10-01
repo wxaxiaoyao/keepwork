@@ -3,6 +3,9 @@ local mysql = require("orm/mysql")
 
 local orm = {}
 
+orm.LIMIT = "$limit"
+orm.OFFSET = "$offset"
+
 orm.DB_TYPE_MYSQL=0
 orm.DB_TYPE_TABLEDB=1
 
@@ -43,12 +46,19 @@ function orm:tablename(t)
 	self._db:tablename(t)
 end
 
+function orm:addfield(fieldname, fieldtype)
+	self._db:addfield(fieldname, fieldtype)
+end
+
 function orm:set_db_type(typ)
 	self._db_type = typ
 
 	if self._db_type ==  self.DB_TYPE_MYSQL then
 		self._db = mysql:new()
 	end
+
+	orm.LIMIT = self._db.LIMIT
+	orm.OFFSET = self._db.OFFSET
 end
 
 function orm:find_one(t)

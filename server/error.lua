@@ -10,6 +10,7 @@ errors.USER_NOT_EXIST = {id=4, message="user not exist",}
 errors.NOT_PRIVILEGES = {id=5, message="not privileges"}
 errors.FORBIDDEN_ACCESS = {id=6, message="probidden access"}
 errors.RECORD_ALREADY_EXIST = {id=7, message="record already exist"}
+errors.DB_ERROR = {id=8, message = "database error"}
 
 
 -- 设置日志打印器
