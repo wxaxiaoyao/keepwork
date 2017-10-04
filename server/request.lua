@@ -1,3 +1,5 @@
+local util = require("util")
+
 local request = {}
 
 function request:new()
@@ -26,14 +28,25 @@ function request:new()
 	obj.uri = ngx.var.uri -- 不带参数uri
 	obj.args = ngx.var.args
 
+	obj.headers = ngx.req.get_headers()
 	if obj.query_string then
 		obj.params = ngx.req.get_uri_args() or {}
 	else
 		ngx.req.read_body()
-		obj.params = ngx.req.get_post_args() or {}
+		if (string.find(obj.content_type, "application/x-www-form-urlencoded")) then
+			obj.params = ngx.req.get_post_args() or {}
+		elseif (string.find(obj.content_type, "application/json")) then
+			obj.params = util.fromJson(ngx.req.get_body_data())
+		else
+			obj.params = ngx.req.get_body_data()
+		end
 	end
 
 	return obj
+end
+
+function request:get_params() 
+	return self.params
 end
 
 function request:dump()

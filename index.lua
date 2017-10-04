@@ -2,110 +2,44 @@
 package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua"
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
-local http = require("http")
-local config = require("config")
-local user = require("user")
-local util = require("util")
+commonlib = require("commonlib")
+http = require("http")
+const = require("const")
+errors = require("errors")
+config = require("config")
 -- 初始化http
-http:init(config)
+
+errors:set_log(commonlib.console)
 
 local log = http.log
 local router = http.router
 
-function getBustVersion()
+function get_bust_version()
 	return os.time()
 end
 
-function RenderServerWikiCss() 
-	local bustVersion = getBustVersion()
+function render_server_wWiki_css() 
+	local bust_version = get_bust_version()
 
-	return string.format('<link href="/wiki/assets/css/main.css?bust=%s" rel="stylesheet">\n', bustVersion)
+	return string.format('<link href="/wiki/assets/css/main.css?bust=%s" rel="stylesheet">\n', bust_version)
 end
 
-function RenderServerWikiScript() 
-	local bustVersion = getBustVersion()
+function render_server_wiki_script() 
+	local bust_version = get_bust_version()
 	local script_str = ""
-	script_str = script_str .. string.format('<script src="/wiki/js/config.js?bust=%s"></script>\n', bustVersion)
-	script_str = script_str .. string.format('<script data-main="/wiki/js/main.js?bust=%s" src="/wiki/js/lib/requirejs/require.js?bust=%s"></script>\n', bustVersion, bustVersion)
+	script_str = script_str .. string.format('<script src="/wiki/js/app/config.js?bust=%s"></script>\n', bust_version)
+	script_str = script_str .. string.format('<script data-main="/wiki/js/main.js?bust=%s" src="/wiki/js/lib/requirejs/require.js?bust=%s"></script>\n', bust_version, bust_version)
 
 	return script_str
 end
 
 router:setDefaultHandle(function(req, resp)
-	--ngx.log(ngx.INFO, "--------------")
-	--ngx.log(ngx.ERR, "--------------")
 	resp:render("index.html", {
-		RenderServerWikiCss=RenderServerWikiCss,
-		RenderServerWikiScript=RenderServerWikiScript,
+		render_server_wWiki_css=render_server_wWiki_css,
+		render_server_wiki_script=render_server_wiki_script,
 	})	
 end)
 
---router:path("/", function(req, resp)
-	--local _user = user:new()
-	--local ret = _user:find({username="wuxiangan", password="wuxiangan"})
-	----ngx.say(ret)
-	--ret = _user:update({username="wuxiangan"}, {password="xiaoyao"})
-	----ngx.say(ret)
-	--ret = _user:insert({
-		--username="xiaoyao5",
-		--password="wuxiangan",
-		--desc="this is test",
-	--})
-	--util.say(ret)
-	----resp:send(ret)
---end)
+router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/api/v0')
 
-router:path("/find", function(req, resp)
-	local _user = user:new()
-	local ret = _user:find({password="wuxiangan"})
-	util.say(ret)
-	--resp:send(ret)
-end)
-
-router:path("/update", function(req, resp)
-	local _user = user:new()
-	local ret = _user:update({username="xiaoyao"}, {desc="test update"})
-	util.say(ret)
-	--resp:send(ret)
-end)
-
-router:path("/delete", function(req, resp)
-	local _user = user:new()
-	local ret = _user:delete({username="xiaoyao1"})
-	util.say(ret)
-	--resp:send(ret)
-end)
-
-router:path("/insert", function(req, resp)
-	local _user = user:new()
-	local ret = _user:insert({username="xiaoyao1", password="wuxiangan"})
-	util.say(ret)
-	--resp:send(ret)
-end)
-
-router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/wiki/models')
-
-http:handle()
-
---require("http_init")
-
-
---local share_data = require("share_data")
-
---ngx.say(share_data.getCount())
---ngx.say(cjson.encode({dog=5}))
-
-
-
---log:debug("==============")
---log:debug("hello owrld")
---ngx.say("hello world")
-
-
-
---ngx.header["Content-Type"] = "text/html"
---template.render("wiki/index.page", {
-	--RenderServerWikiCss=RenderServerWikiCss(),
-	--RenderServerWikiScript=RenderServerWikiScript(),
---})
-
+http:handle(config)

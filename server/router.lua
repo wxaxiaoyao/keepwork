@@ -35,7 +35,7 @@ local router = {
 function router:new()
 	local obj = {}
 
-	setmetatable(o, self)
+	setmetatable(obj, self)
 	self.__index = self
 	
 	return obj
@@ -57,6 +57,10 @@ function router:path(path, handle)
 	self.handler.pathHandler[path] = h
 end
 
+function router:terminal()
+	self.is_terminal = true
+end
+
 function router:group(path, handle)
 
 end
@@ -68,10 +72,6 @@ end
 
 function router:filemap(path, dir, before, after) 
 	local handle = function(req, resp)
-		if not resp then
-			ngx.say("--------------")
-		end
-		ngx.log(ngx.ERR, "----------------------")
 		local uri = req.uri
 		local pos = string.find(uri, path)
 		if 1 ~= pos then
@@ -84,16 +84,17 @@ function router:filemap(path, dir, before, after)
 		end
 
 		filename = dir .. '/' .. filename
-		funcname = 'api_' .. string.gsub(funcname, '/','_')
+		funcname = string.gsub(funcname, '/','_')
 		-- 文件不存在
 		if not file_exist(filename .. '.lua') then
-			ngx.log(ngx.ERR, "file not exist:" .. filename)
+			ngx_log("file not exist:" .. filename)
 			return false
 		end
 		-- 加载模块
 		local module = require(filename)
 		local func = module[funcname]
 		if not func or type(func) ~= "function" then
+			ngx_log("request url nox exist")
 			return false
 		end
 		
@@ -156,9 +157,9 @@ function router:handle(req, resp)
 	local handle = self:getHandle(req.uri)
 
 	for _, func in ipairs(handle or {}) do
-		local ok = func(req, resp)
+		func(req, resp)
 
-		if not ok then
+		if not self.is_terminal then
 			break
 		end
 	end

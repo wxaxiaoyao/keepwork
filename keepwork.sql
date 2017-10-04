@@ -1,4 +1,4 @@
--- show databases;
+﻿-- show databases;
 
 -- create database keepwork;
 
@@ -115,14 +115,14 @@ create table if not exists `site_data_source` (
     `project_id` bigint,                                   -- 数据源上的项目id
     `project_name` varchar(48) not null,                   -- 项目名
     `project_path` varchar(128),                  -- 项目路径 默认等同projectName
-    
+
     `root_path` varchar(128),                              -- 页面存贮的根路径
     `last_commit_id` char(48),                              -- git last commit _id  下面两个字段是为避免被恶意更新commit _id设置， 响应git push事件无法辨认来源真实性
     `last_commit_id_update_time` int,                         -- git last commit _id update time
     `last_commit_id_update_flag` int,                         -- git last commit _id update flag  
     
     `is_default` tinyint default 0,                         -- 是否为默认数据源
-    
+
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
 );
@@ -220,6 +220,7 @@ create table if not exists `user_active` (
     `year` int not null,                                      -- 年份
     `date` char(12),                                          -- 日期 2017-09-30
     `count` int not null default 0,                           -- 活跃度
+
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
 );

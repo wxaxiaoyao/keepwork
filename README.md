@@ -6,3 +6,5 @@
 * luarocks install lua-cjson
 * luarocks install luajwt
 * luarocks install lua-resty-template
+* luarocks install lua-requests
+* luarocks install md5

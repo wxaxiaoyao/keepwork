@@ -2,6 +2,8 @@
 local cjson = require("cjson")
 local cjson_safe = require("cjson.safe")
 local jwt = require("luajwt")
+local md5 = require("md5")
+local requests = require("requests")
 
 local util = {}
 
@@ -64,5 +66,36 @@ util.getSharedDict = function()
 	return ngx.shared.shared_dict
 end
 
+
+function util.request_url(params)
+	local method = params.method
+
+	if params.data and type(params.data) == "table" then
+		if params.headers then
+			params.headers['Content-Type'] = params.headers['Content-Type'] or "application/json"
+		else
+			params.headers = {['Content-Type'] = "application/json"}
+		end
+	end
+	--local res = nil
+
+	--params.method = nil
+	--if method == "GET" then
+		--res = requests.get(params)	
+	--elseif method == "POST" then
+		--res = requests.post(params)	
+	--end
+	--res:{headers:{}, text:string, status_code:number}
+	local res = requests.request(method, params)
+
+	res.data = res.json()
+
+	return res
+end
+
+function util.md5(msg)
+	return md5.sumhexa(msg)
+	--return msg
+end
 
 return util

@@ -1,5 +1,0 @@
-```@template/js/default
-{
-    "class":""
-}
-```
