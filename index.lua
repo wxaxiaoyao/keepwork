@@ -2,10 +2,14 @@
 package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua"
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
-local http = require("http")
-local config = require("config")
-local util = require("util")
+commonlib = require("commonlib")
+http = require("http")
+const = require("const")
+errors = require("errors")
+config = require("config")
 -- 初始化http
+
+errors:set_log(commonlib.console)
 
 local log = http.log
 local router = http.router

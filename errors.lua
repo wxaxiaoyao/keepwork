@@ -1,5 +1,5 @@
 
-errors = {}
+local errors = {}
 
 -- 错误信息定义
 errors.SUCCESS = {id=0,message="success",}
@@ -72,3 +72,4 @@ function errors:wrap(err, data)
 	return result
 end
 
+return errors

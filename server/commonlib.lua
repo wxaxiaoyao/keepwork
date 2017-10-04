@@ -1,10 +1,8 @@
+--local util = require("util")
 
-require("error")
-require("util")
-require("const")
-config = require("config")
+local commonlib = {}
 
-commonlib = {}
+--commonlib.util = util
 
 -- get a table f, where f is a string
 -- @param f: f is a string like "a.b.c.d"
@@ -226,4 +224,5 @@ function ngx_log(...)
 	end
 end
 
-errors:set_log(commonlib.console)
+
+return commonlib

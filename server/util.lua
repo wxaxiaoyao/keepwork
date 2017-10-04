@@ -2,11 +2,10 @@
 local cjson = require("cjson")
 local cjson_safe = require("cjson.safe")
 local jwt = require("luajwt")
---local md5 = require("md5")
---local requests = require("requests")
+local md5 = require("md5")
+local requests = require("requests")
 
---local util = {}
-util = {}
+local util = {}
 
 -- 控制台输出
 function util.console(msg)
@@ -87,7 +86,7 @@ function util.request_url(params)
 		--res = requests.post(params)	
 	--end
 	--res:{headers:{}, text:string, status_code:number}
-	--local res = requests.request(method, params)
+	local res = requests.request(method, params)
 
 	res.data = res.json()
 
@@ -95,7 +94,8 @@ function util.request_url(params)
 end
 
 function util.md5(msg)
-	--return md5.sumhexa(msg)
-	return msg
+	return md5.sumhexa(msg)
+	--return msg
 end
---return util
+
+return util

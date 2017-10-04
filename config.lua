@@ -28,8 +28,10 @@ local config = {
 				["client_secret"] = "1dacf114c693d67c382de8f1da225ebb",
 			},
 			["gitlab"] = {
-				["host"] = "git.keepwork.com",
-				["token"] = "uVtd6_fs82yHyyEZAtzy",
+				--["host"] = "git.keepwork.com",
+				--["token"] = "uVtd6_fs82yHyyEZAtzy",
+				["host"] = "http:localhost:8088",
+				["token"] = "DgAMzoVYJY71inpyk2XG",
 			},
 			["sms"] = {
 				["accountToken"] = "2030b26949574f0694413a4881caf0b8",
