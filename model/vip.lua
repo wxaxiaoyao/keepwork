@@ -32,9 +32,9 @@ function vip:get_by_username(params)
 			start_date=cur_date,
 			end_date="",
 		}
-		local ok, msg = self:insert(vip_info)
-		if ok == nil then
-			return errors:wrap(errors:new("创建vip信息失败"), msg)
+		local err = self:insert(vip_info)
+		if err then
+			return errors:wrap(err)
 		end
 	end
 
