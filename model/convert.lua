@@ -48,31 +48,56 @@ function convert.user_new_to_old(obj)
 end
 
 function convert.site_old_to_new(obj)
-	return {
+	local data = {
 		site_id = obj._id,
 		username = obj.username,
-		sitename = obj.sitename,
-		type = obj.type,
+		sitename = obj.name or obj.sitename,
+		site_type = obj.type,
 		visibility = obj.visibility,
 		desc = obj.desc,
 		tags = obj.tags,
 		logoUrl = obj.logo,
 		isolate_data_source = obj.isolateDataSource,
 	}
+
+	if data.site_type == "personal" then
+		data.site_type = const.SITE_TYPE_PERSONAL
+	elseif data.site_type == "company" then
+		data.site_type = const.SITE_TYPE_COMPANY
+	elseif data.site_type == "organization" then
+		data.site_type = const.SITE_TYPE_ORGANIZATION
+	elseif data.site_type == "game" then
+		data.site_type = const.SITE_TYPE_GAME
+	end
+
+	return data
 end
 
 function convert.site_new_to_old(obj)
-	return {
+	local data =  {
 		_id = obj.site_id,
+		name = obj.sitename,
 		username = obj.username,
 		sitename = obj.sitename,
-		type = obj.type,
+		type = obj.site_type,
 		visibility = obj.visibility,
 		desc = obj.desc,
 		tags = obj.tags,
 		logoUrl = obj.logo,
 		isolateDataSource = obj.isolate_data_source,
 	}
+
+	if data.site_type == const.SITE_TYPE_PERSONAL then
+		data.site_type = "personal"
+	elseif data.site_type == const.SITE_TYPE_COMPANY then
+		data.site_type = "company"
+	elseif data.site_type == const.SITE_TYPE_ORGANIZATION then
+		data.site_type = "organization"
+	elseif data.site_type == const.SITE_TYPE_GAME then
+		data.site_type = "game"
+	end
+
+	return data
 end
 
 function convert.vip_old_to_new(obj)
@@ -140,6 +165,14 @@ function convert.site_data_source_old_to_new(obj)
 		last_commit_id = obj.lastCommitId,
 		last_commit_id_update_time = obj.lastCommitIdUpdateTime,
 		last_commit_id_update_flag = obj.updateFlag,
+
+		type = obj.type,
+		external_user_id = obj.dataSourceUserId,
+		external_username = obj.dataSourceUsername,
+		external_password = obj.dataSourcePassword,
+		token = obj.dataSourceToken,
+		api_base_url = obj.apiBaseUrl,
+		raw_base_url = obj.rawBaseUrl,
 	}
 end
 
@@ -156,6 +189,14 @@ function convert.site_data_source_new_to_old(obj)
 		lastCommitId = obj.last_commit_id,
 		lastCommitIdUpdateTime = obj.last_commit_id_update_time,
 		updateFlag = obj.last_commit_id_update_flag,
+
+		type = obj.type,
+		dataSourceUserId = obj.external_user_id,
+		dataSourceUsername = obj.external_username,
+		dataSourcePassword = obj.external_password,
+		dataSourceToken = obj.token,
+		apiBaseUrl = obj.api_base_url,
+		rawBaseUrl = obj.raw_base_url,
 	}
 end
 

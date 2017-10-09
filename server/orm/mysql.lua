@@ -191,6 +191,33 @@ function mysql:_type_convert(obj)
 	return new_obj
 end
 
+-- count 计数
+function mysql:count(q)
+	q = self:_type_convert(q)
+	local sql_str = "select count(*) as count from `" .. self.table_name .. "` " .. self:get_where_str(q)
+
+	l_log(sql_str)
+
+	local list = {}
+	local row = {}
+	local cur, err = mysql:execute(sql_str)
+	if not cur then
+		return 0, err
+	end
+	
+	row = cur:fetch({}, "a") 
+	while row do
+		list[#list+1] = row
+		row = cur:fetch({}, "a") 
+	end
+	 
+	if #list == 1 then
+		return tonumber(list[1]["count"])
+	end
+
+	return 0
+end
+
 -- 查找记录
 function mysql:find(q)
 	q = self:_type_convert(q)
@@ -208,7 +235,6 @@ function mysql:find(q)
 	row = cur:fetch({}, "a") 
 	while row do
 		list[#list+1] = self:_type_convert(row)
-		--l_log(row.username)
 		row = cur:fetch({}, "a") 
 	end
 	 

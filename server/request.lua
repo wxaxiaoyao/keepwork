@@ -31,7 +31,9 @@ function request:new()
 	obj.headers = ngx.req.get_headers()
 	if obj.query_string then
 		obj.params = ngx.req.get_uri_args() or {}
-	else
+	elseif obj.content_type then
+		--ngx_log(obj.content_type)
+		--ngx_log(obj.headers)
 		ngx.req.read_body()
 		if (string.find(obj.content_type, "application/x-www-form-urlencoded")) then
 			obj.params = ngx.req.get_post_args() or {}
@@ -40,6 +42,7 @@ function request:new()
 		else
 			obj.params = ngx.req.get_body_data()
 		end
+	else
 	end
 
 	return obj

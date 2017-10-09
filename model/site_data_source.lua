@@ -5,7 +5,7 @@
 
 local orm = require("orm/orm")
 
-local data_source_db = require("model/data_source")
+local data_source_model = require("model/data_source")
 
 -- user 表
 local site_data_source = commonlib.inherit(orm)
@@ -13,6 +13,7 @@ local site_data_source = commonlib.inherit(orm)
 -- define table
 site_data_source:tablename("site_data_source")
 site_data_source:addfield("site_data_source_id", "number")
+site_data_source:addfield("data_source_id", "number")
 site_data_source:addfield("data_source_name", "string")
 site_data_source:addfield("site_id", "number")
 site_data_source:addfield("username", "string")
@@ -35,7 +36,7 @@ function site_data_source:_create_gitlab_project(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
-	local ret = util.request_url({
+	local res = util.request_url({
 		url = params.api_base_url .. "/projects",
 		method = "GET",
 		headers = {['PRIVATE-TOKEN'] = params.token},
@@ -46,13 +47,14 @@ function site_data_source:_create_gitlab_project(params)
 	})
 
 	if not res or res.status_code ~= 200 then
+		log(res)
 		return errors:wrap(errors:new("获取项目信息失败"), params)
 	end
 	
 	data = res.data or {}
 
 	for _, project in ipairs(data) do
-		if string.lower(project.name) == string.lower(params.projectName) then
+		if string.lower(project.name) == string.lower(params.project_name) then
 			return errors:wrap(nil, project)
 		end
 	end
@@ -63,13 +65,14 @@ function site_data_source:_create_gitlab_project(params)
 		method = "POST",
 		headers = {['PRIVATE-TOKEN'] = params.token},
 		data = {
-			name = params.projectName, 
+			name = params.project_name, 
 			request_access_enabled = true, 
 			visibility = params.visibility,
 		},
 	})
 
 	if not res or res.status_code ~= 201 then
+		log(res)
 		return errors:wrap(errors:new("创建项目失败"), params)
 	end
 	
@@ -100,13 +103,18 @@ function site_data_source:create_site_data_source(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 	
+	local data = self:find_one({username=params.username, sitename=params.sitename})
+	if data then
+		return errors:wrap("站点数据源已存在")
+	end
+
 	local data_source_name = params.data_source_name
 	local data_source = nil
 	
 	if data_source_name then
-		data_source = data_source_db:get_by_name({username=params.username, data_source_name=data_source_name}).data
+		data_source = data_source_model:get_by_name({username=params.username, data_source_name=data_source_name}).data
 	else
-		data_source = data_source_db:get_default_by_username({username=params.username}).data
+		data_source = data_source_model:get_default_by_username({username=params.username}).data
 	end
 	
 	if not data_source then
@@ -141,7 +149,10 @@ function site_data_source:create_site_data_source(params)
 		is_default = params.is_default,
 	})
 
-	return errors:wrap(err)
+	local data = self:find_one({username=params.username, sitename=params.sitename})
+	self:_copy_data_source(data, data_source)
+
+	return errors:wrap(err, data)
 end
 
 function site_data_source:create_default_site_data_source(params)
@@ -187,6 +198,8 @@ function site_data_source:get_default_site_data_source(params)
 		data = self:find_one({username=params.username, is_default=1})
 	end
 
+	self:_copy_data_source(data)
+
 	return errors:wrap(nil, data)
 end
 
@@ -195,7 +208,7 @@ function site_data_source:get_by_username(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
-	local data_source_list = data_source_db:get_by_username({username=params.username}).data
+	local data_source_list = data_source_model:get_by_username({username=params.username}).data
 
 	local site_data_source_list = self:find({username=params.username})
 
@@ -210,10 +223,30 @@ function site_data_source:get_by_username(params)
 	return errors:wrap(nil, site_data_source_list)
 end
 
+function site_data_source:get_by_name(params)
+	if not params.username or not params.sitename then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = self:find_one({username=params.username, sitename=params.sitename})
+
+	self:_copy_data_source(data)	
+	return errors:wrap(nil, data)
+end
 
 function site_data_source:_copy_data_source(site_data_source_x, data_source_x)
-	if not site_data_source_x or not data_source_x then
+	if not site_data_source_x then
 		return 
+	end
+
+	if not data_source_x then
+		data_source_x = data_source_model:get_by_name({
+			username=site_data_source_x.username,
+			data_source_name = site_data_source_x.data_source_name,
+		}).data
+		if not data_source_x then
+			return
+		end
 	end
 
 	site_data_source_x.data_source_id = data_source_x.data_source_id

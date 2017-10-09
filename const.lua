@@ -11,3 +11,13 @@ const.DEFAULT_DATA_SOURCE_PUBLIC_SITENAME = "__keepwork_public__"
 const.DEFAULT_DATA_SOURCE_PRIVATE_SITENAME = "__keepwork_private__"
 const.DEFAULT_DATA_SOURCE_PUBLIC_PROJECT_NAME = "syskeepworkpublic"
 const.DEFAULT_DATA_SOURCE_PRIVATE_PROJECT_NAME = "syskeepworkprivate"
+
+
+-- SITE_TYPE
+const.SITE_TYPE_PERSONAL = 0
+const.SITE_TYPE_ORGANIZATION = 1
+const.SITE_TYPE_GAME = 2
+const.SITE_TYPE_COMPANY = 3
+
+
+return const

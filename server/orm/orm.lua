@@ -61,6 +61,10 @@ function orm:set_db_type(typ)
 	orm.OFFSET = self._db.OFFSET
 end
 
+function orm:count(t)
+	return self._db:count(t)
+end
+
 function orm:find_one(t)
 	return self._db:find_one(t)
 end

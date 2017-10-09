@@ -70,7 +70,7 @@ function router:controller(path, handle)
 end
 
 
-function router:filemap(path, dir, before, after) 
+function router:filemap(path, dir, is_api, before, after) 
 	local handle = function(req, resp)
 		local uri = req.uri
 		local pos = string.find(uri, path)
@@ -98,7 +98,12 @@ function router:filemap(path, dir, before, after)
 			return false
 		end
 		
-		return func(module, req, resp)
+		if is_api then
+			local params = req:get_params()
+			return resp:send(func(module, params, req, resp))
+		else
+			return func(module, req, resp)
+		end
 	end
 
 	local handles = {}

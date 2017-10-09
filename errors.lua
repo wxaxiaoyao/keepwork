@@ -40,7 +40,7 @@ function errors:is_ok()
 end
 
 -- 判断是否出错
-function errors:is_error(err)
+function errors:is_error()
 	return self.id ~= 0
 end
 
@@ -48,22 +48,22 @@ end
 function errors:wrap(err, data) 
 	local result = nil
 	if not err then
-		result = {err=errors.SUCCESS, data=data}
+		result = {error=errors.SUCCESS, data=data}
 	end
 	
 	if err and self.log and type(self.log) == "function" then 
 		local info = debug.getinfo(2)
 		self.log({
-			err=err,
+			error=err,
 			data=data,
 			filepos = info.source .. ":" .. info.currentline,
 		})
 	end
 
 	if type(err) == "string" then 
-		result = {err=self:new(err),data=data,}
+		result = {error=self:new(err),data=data}
 	elseif type(err) == "table" then
-		result = {err=err, data=data}
+		result = {error=err, data=data}
 	end
 
 	setmetatable(result, self)

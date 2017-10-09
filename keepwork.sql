@@ -36,15 +36,16 @@ drop table if exists `site`;
 create table if not exists `site` (
 	`site_id` bigint auto_increment primary key,      -- site_id
     `site_type` int,                                  -- 站点类型
-    `username` varchar(48) not null,                 -- 所属用户名
-    `sitename` varchar(48) not null,                 -- 站点名
+    `site_data_source_id` bigint,                     -- 站点数据源
+    `username` varchar(48) not null,                  -- 所属用户名
+    `sitename` varchar(48) not null,                  -- 站点名
     
-    -- `path`     varchar(128),                         -- 对应存贮路径  默认等同与sitename
-	`visibility` char(12),                           -- 可见性 private public
+    -- `path`     varchar(128),                       -- 对应存贮路径  默认等同与sitename
+	`visibility` char(12),                            -- 可见性 private public
     
-    `index`    varchar(48),                          -- 首页名 默认index
-    `tags`     varchar(128),                         -- 标签
-	`logo`     varchar(128),                         -- logo
+    `index`    varchar(48),                           -- 首页名 默认index
+    `tags`     varchar(128),                          -- 标签
+	`logo`     varchar(128),                          -- logo
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
@@ -106,7 +107,7 @@ create table if not exists `site_data_source` (
     `data_source_id` bigint not null,                        -- 引用的数据源
     `data_source_name` varchar(48),                          -- 引用的数据源名
     
-    `site_id` bigint not null default 0,                               -- 站点id 与 站点一一对应
+    -- `site_id` bigint not null default 0,                  -- 站点id 与 站点一一对应  不一定一一对应
     
     `username` varchar(48) not null,                      -- 所属用户
     `sitename` varchar(48) not null,                      -- 所有站点

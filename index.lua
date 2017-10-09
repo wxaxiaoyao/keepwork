@@ -3,15 +3,17 @@ package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
 commonlib = require("commonlib")
+util = require("util")
 http = require("http")
 const = require("const")
 errors = require("errors")
 config = require("config")
 -- 初始化http
 
-errors:set_log(commonlib.console)
+--errors:set_log(commonlib.console)
+errors:set_log(ngx_log)
+log = ngx_log
 
-local log = http.log
 local router = http.router
 
 function get_bust_version()
@@ -40,6 +42,6 @@ router:setDefaultHandle(function(req, resp)
 	})	
 end)
 
-router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/api/v0')
+router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/api/v0', true)
 
 http:handle(config)

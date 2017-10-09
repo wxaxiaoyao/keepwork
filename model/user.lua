@@ -27,6 +27,10 @@ user:addfield("update_time", "string")
 --end
 
 
+function user:test(params)
+	return self:count()
+end
+
 -- 删除用户
 function user:delete_by_username(params)
 	if not params.username then
