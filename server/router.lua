@@ -100,7 +100,10 @@ function router:filemap(path, dir, is_api, before, after)
 		
 		if is_api then
 			local params = req:get_params()
-			return resp:send(func(module, params, req, resp))
+			local result = func(module, params, req, resp)
+			local data = result.data 
+			result.data = nil
+			resp:send({error = result, data = data})
 		else
 			return func(module, req, resp)
 		end

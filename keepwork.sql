@@ -24,7 +24,7 @@ create table if not exists `user` (
     -- 创建 更新时间
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-    );
+    ) character set = utf8;
     
 -- insert into user values(null, "xiaoyao", "wuxiangan", "hello xiaoyao",null,null);
 
@@ -46,6 +46,7 @@ create table if not exists `site` (
     `index`    varchar(48),                           -- 首页名 默认index
     `tags`     varchar(128),                          -- 标签
 	`logo`     varchar(128),                          -- logo
+    `desc`     varchar(128),                          -- 备注
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp

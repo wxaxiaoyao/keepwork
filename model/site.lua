@@ -18,12 +18,13 @@ site:addfield("visibility","string")
 site:addfield("index","string")
 site:addfield("tags","string")
 site:addfield("logo","string")
+site:addfield("desc","string")
 site:addfield("create_time", "string")
 site:addfield("update_time", "string")
 --end
 
 
-
+-- 通过用户名站点名获取站点
 function site:get_by_name(params)
 	if not params.username or not params.sitename then
 		return errors:wrap(errors.PARAMS_ERROR)
@@ -35,6 +36,7 @@ function site:get_by_name(params)
 end
 
 
+-- 通过用户名获取站点列表
 function site:get_by_username(params)
 	if not params.username then
 		return errors:wrap(errors.PARAMS_ERROR)
@@ -46,6 +48,16 @@ function site:get_by_username(params)
 	return errors:wrap(nil, data)
 end
 
+-- 通过用户名站点修改
+function site:set_by_name(params)
+	if not params.username or not params.sitename then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local err = self:update({username=params.username, sitename=params.sitename}, params)
+
+	return errors:wrap(err)
+end
 
 -- 创建站点
 function site:create(params)
@@ -66,5 +78,10 @@ function site:create(params)
 	return self:get_by_name(params)
 end
 
+-- 删除站点
+function site:delete_site(params)
+	local err = self:delete(params)
+	return errors:wrap(err)
+end
 
 return site

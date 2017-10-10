@@ -150,4 +150,51 @@ function user:login(params)
 	return errors:wrap(nil, userinfo)
 end
 
+-- 通过用户名修改用户信息
+function user:update_by_username(params)
+	if not params.username then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	params.password = nil
+	params.role_id = nil
+
+	local err = self:update({username=params.username}, params)
+
+	return errors:wrap(err)
+end
+
+-- 修改用户密码
+function user:modify_password(params)
+	if not params.username or not params.oldpassword or not params.newpassword then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = self:find_one({
+		username = params.username,
+		password = util.md5(params.oldpassword),
+	})
+
+	if not data then
+		return errors:wrap(errors.NOT_FOUND)
+	end
+
+	local err = self:update({username=params.username}, {password=util.md5(params.newpassword)})
+
+	return errors:wrap(err)
+end
+
 return user
+
+
+
+
+
+
+
+
+
+
+
+
+

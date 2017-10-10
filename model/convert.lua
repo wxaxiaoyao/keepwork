@@ -56,8 +56,9 @@ function convert.site_old_to_new(obj)
 		visibility = obj.visibility,
 		desc = obj.desc,
 		tags = obj.tags,
-		logoUrl = obj.logo,
+		logo = obj.logoUrl,
 		isolate_data_source = obj.isolateDataSource,
+		site_data_source_id = obj.site_data_source_id,
 	}
 
 	if data.site_type == "personal" then
@@ -85,6 +86,7 @@ function convert.site_new_to_old(obj)
 		tags = obj.tags,
 		logoUrl = obj.logo,
 		isolateDataSource = obj.isolate_data_source,
+		site_data_source_id = obj.site_data_source_id,
 	}
 
 	if data.site_type == const.SITE_TYPE_PERSONAL then
@@ -189,6 +191,7 @@ function convert.site_data_source_new_to_old(obj)
 		lastCommitId = obj.last_commit_id,
 		lastCommitIdUpdateTime = obj.last_commit_id_update_time,
 		updateFlag = obj.last_commit_id_update_flag,
+		is_default = obj.is_default,
 
 		type = obj.type,
 		dataSourceUserId = obj.external_user_id,

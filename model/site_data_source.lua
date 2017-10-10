@@ -234,6 +234,18 @@ function site_data_source:get_by_name(params)
 	return errors:wrap(nil, data)
 end
 
+-- 通过id获取站点数据源
+function site_data_source:get_by_id(params)
+	if not params.site_data_source_id then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = self:find_one({site_data_source_id=params.site_data_source_id})
+	self:_copy_data_source(data)
+
+	return errors:wrap(nil, data)
+end
+
 function site_data_source:_copy_data_source(site_data_source_x, data_source_x)
 	if not site_data_source_x then
 		return 
@@ -259,6 +271,16 @@ function site_data_source:_copy_data_source(site_data_source_x, data_source_x)
 	return
 end
 
+-- 通过id修改站点数据源
+function site_data_source:update_by_id(params)
+	if not params.site_data_source_id then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local err = self:update({site_data_source_id=params.site_data_source_id}, params)
+
+	return errors:wrap(err)
+end
 
 return site_data_source
 

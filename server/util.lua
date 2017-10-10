@@ -55,6 +55,10 @@ end
 
 -- jwt 编码
 function util.decodeJWT(token, secret)
+	if not token then
+		return nil
+	end
+
 	secret = secret or "keepwork"
 	local payload, err = jwt.decode(token, secret)
 	

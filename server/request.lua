@@ -29,6 +29,11 @@ function request:new()
 	obj.args = ngx.var.args
 
 	obj.headers = ngx.req.get_headers()
+
+	local authorization = obj.headers['authorization']
+	local token = authorization and authorization:match("%s+(%S+)")
+	obj.payload = util.decodeJWT(token or "")
+
 	if obj.query_string then
 		obj.params = ngx.req.get_uri_args() or {}
 	elseif obj.content_type then
