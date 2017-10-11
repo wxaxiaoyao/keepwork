@@ -133,7 +133,8 @@ create table if not exists `site_data_source` (
 -- domain 管理表
 drop table if exists `domain`;
 create table if not exists `domain` (
-	`domain_id` bigint auto_increment primary key,          -- _id
+	`domain_id` bigint auto_increment primary key,         -- _id
+	`domain` varchar(64) not null,                         --  domain
     `username` varchar(48) not null,                       -- username
     `sitename` varchar(48) not null,                       -- sitename
     
@@ -192,6 +193,7 @@ drop table if exists `site_group`;
 create table if not exists `site_group` (
 	`site_group_id` bigint auto_increment primary key,          -- _id
     `username` varchar(48) not null,                          -- 用户名 
+    `sitename` varchar(48) not null,                          -- 站点名
     `groupname` varchar(48) not null,                         -- 组名   username-groupname 为外键 代替group_id  便于通过username查询
     `level` int not null,                                     -- 权限级别 
 

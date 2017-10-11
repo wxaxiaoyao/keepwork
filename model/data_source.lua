@@ -134,6 +134,65 @@ function data_source:create_inner_gitlab_data_source(params)
 	return errors:wrap(err)
 end
 
+-- 增改gitlab数据源
+function data_source:set_gitlab_data_source(params)
+	if not params.data_source_name or not params.token or not params.username or not params.api_base_url or not params.raw_base_url then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	params.type = params.type or const.DATA_SOURCE_TYPE_GITLAB
+	local res = util.request_url({
+		url = params.api_base_url .. "/user",
+		method = "GET",
+		headers = {['PRIVATE-TOKEN'] = params.token},
+	})
+
+	if not res or res.status_code ~= 200 then
+		return errors:wrap("get gitlab user error", res)
+	end
+	
+	local data = res.data
+	params.external_user_id = data.id
+	params.external_username = data.username
+
+	local err = self:upsert({data_source_name=params.data_source_name}, params)
+	return errors:wrap(err)
+end
+
+-- 增改github数据源
+function data_source:set_github_data_source(params)
+	if not params.data_source_name or not params.token or not params.username or not params.api_base_url or not params.raw_base_url then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+	params.type = params.type or const.DATA_SOURCE_TYPE_GITHUB
+	local res = util.request_url({
+		url = params.api_base_url .. "/user",
+		method = "GET",
+		headers = {["User-Agent"]="Satellizer",["Accept"]="application/vnd.github.full+json", ["Authorization"]= " token " .. params.token},
+	})
+
+	if not res or res.status_code ~= 200 then
+		return errors:wrap("get gitlab user error", res)
+	end
+	
+	local data = res.data
+	params.external_user_id = data.id
+	params.external_username = data.login
+
+	local err = self:upsert({username = params.username, data_source_name = params.data_source_name}, params)
+	return errors:wrap(err)
+end
+
+-- 设置数据源
+function data_source:set_data_source(params)
+	if params.type == const.DATA_SOURCE_TYPE_GITLAB then
+		return self:set_gitlab_data_source(params)
+	elseif params.type == const.DATA_SOURCE_TYPE_GITHUB then
+		return self:set_github_data_source(params)
+	end
+	
+	return errors:wrap(errors.PARAMS_ERROR)
+end
 
 -- 获取记录
 function data_source:get_by_username(params)
