@@ -231,4 +231,11 @@ function data_source:get_by_name(params)
 	return errors:wrap(nil, data)
 end
 
+-- 获取数据源记录
+function data_source:get(params)
+	local data = self:find(params)
+
+	return errors:wrap(nil, data)
+end
+
 return data_source

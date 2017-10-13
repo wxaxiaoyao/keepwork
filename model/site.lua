@@ -4,6 +4,8 @@
 
 local orm = require("orm/orm")
 
+local site_data_source_model = require("model/site_data_source")
+
 -- site 表
 local site = commonlib.inherit(orm)
 
@@ -58,6 +60,16 @@ function site:set_by_name(params)
 
 	return errors:wrap(err)
 end
+
+-- 获取站点及数据源通过站点名
+--function site:get_with_ds_by_name(params)
+	--local result = self:get_by_name(params)
+	--if result:is_error() or not result.data then
+		--return result
+	--end
+
+	--local siteinfo = result.data
+--end
 
 -- 创建站点
 function site:create(params)

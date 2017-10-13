@@ -22,7 +22,7 @@ site_group:addfield("update_time", "string")
 -- 设置站点组
 function site_group:set_site_group(params)
 	if not params.username or not params.sitename or not params.groupname then
-		return errors:wrap(errors.REQUEST_PARAMS_ERROR)
+		return errors:wrap(errors.PARAMS_ERROR)
 	end
 	
 	params.level = params.level or const.USER_PRIVILEGE_NONE_LEVEL
@@ -39,7 +39,7 @@ end
 -- 通过组名获取
 function site_group:get_by_user_group_name(params)
 	if not params.username or not params.groupname then
-		return errors:wrap(errors.REQUEST_PARAMS_ERROR)
+		return errors:wrap(errors.PARAMS_ERROR)
 	end
 	
 	local data = self:find({
@@ -49,10 +49,51 @@ function site_group:get_by_user_group_name(params)
 
 	return errors:wrap(nil, data)
 end
+
+-- 通过用户名 站点名获取
+function site_group:get_by_user_site_name(params)
+	if not params.username or not params.sitename then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+	
+	local data = self:find({
+		username = params.username, 
+		sitename = params.sitename, 
+	})
+
+	return errors:wrap(nil, data)
+end
+
+-- 通过用户名获取站点组
+function site_group:get_by_username(params)
+	if not params.username then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = self:find({username=params.username})
+
+	return errors:wrap(nil, data)
+end
+
+
+---- 通过成员名和组名
+--function site_group:get_by_member_group_name(params)
+	--if not params.membername or not params.groupname then
+		--return errors:wrap(errors.PARAMS_ERROR)
+	--end
+	
+	--local data = self:find({
+		--username = params.username, 
+		--groupname = params.groupname, 
+	--})
+
+	--return errors:wrap(nil, data)
+--end
+
 -- 删除站点组
 function site_group:delete_by_groupname(params)
 	if not params.username or not params.sitename or not params.groupname then
-		return errors:wrap(errors.REQUEST_PARAMS_ERROR)
+		return errors:wrap(errors.PARAMS_ERROR)
 	end
 	
 	local err = self:delete({
@@ -67,7 +108,7 @@ end
 -- 删除所有站点组
 function site_group:delete_by_sitename(params)
 	if not params.username or not params.sitename then
-		return errors:wrap(errors.REQUEST_PARAMS_ERROR)
+		return errors:wrap(errors.PARAMS_ERROR)
 	end
 	
 	local err = self:delete({
@@ -82,7 +123,7 @@ end
 -- 删除用户所有站点组
 function site_group:delete_by_username(params)
 	if not params.username then
-		return errors:wrap(errors.REQUEST_PARAMS_ERROR)
+		return errors:wrap(errors.PARAMS_ERROR)
 	end
 	
 	local err = self:delete({

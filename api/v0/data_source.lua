@@ -28,4 +28,10 @@ function data_source:setDataSource(params)
 	return data_source_model:get_by_name(params)
 end
 
+-- 获取数据源记录
+function data_source:get(params)
+	return data_source_model:get(params)
+end
+
+
 return data_source

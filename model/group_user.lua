@@ -32,6 +32,31 @@ function group_user:set_group_user(params)
 	return errors:wrap(err)
 end
 
+-- 通过成员名获取组
+function group_user:get_by_membername(params)
+	if not params.membername then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = self:find({membername=params.membername})
+
+	return errors:wrap(nil, data)
+end
+
+-- 通过用户名组名获取
+function group_user:get_by_user_group_name(params)
+	if not params.username or not params.groupname then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = self:find({
+		username = params.username, 
+		groupname = params.groupname, 
+	})
+
+	return errors:wrap(nil, data)
+end
+
 
 -- 删除组成员
 function group_user:delete_by_membername(params)

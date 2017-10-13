@@ -206,7 +206,8 @@ create table if not exists `site_group` (
 drop table if exists `site_user`;
 create table if not exists `site_user` (
 	`site_user_id` bigint auto_increment primary key,           -- _id
-    `username` varchar(48) not null,                          -- 用户名 
+    `username` varchar(48) not null,                          -- 用户名
+    `sitename` varchar(48) not null,                          -- 站点名
     `groupname` varchar(48) not null,                         -- 组名   username-groupname 为外键 代替group_id  便于通过username查询
     `membername` varchar(48) not null,                        -- 组成员名
     `level` int not null,                                     -- 权限级别 
