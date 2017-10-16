@@ -23,6 +23,7 @@ end
 
 
 function site_group:upsert(params)
+	params = convert_model.site_group_old_to_new(params)
 	return site_group_model:set_site_group(params)
 end
 
@@ -36,6 +37,7 @@ end
 
 -- 获取用户用户编辑权限的站点
 function site_group:getByMemberName(params)
+	params.membername = params.memberName
 	local data = group_user_model:get_by_membername(params).data
 
 	local sitelist = {}

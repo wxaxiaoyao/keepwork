@@ -203,4 +203,24 @@ function convert.site_data_source_new_to_old(obj)
 	}
 end
 
+function convert.site_group_new_to_old(obj)
+	return {
+		_id = obj.site_group_id,
+		username = obj.username,
+		sitename = obj.sitename,
+		groupname = obj.groupname,
+		level = obj.level,
+	}
+end
+
+function convert.site_group_old_to_new(obj)
+	return {
+		site_group_id = obj._id,
+		username = obj.username,
+		sitename = obj.sitename,
+		groupname = obj.groupname,
+		level = obj.level,
+	}
+end
+
 return convert

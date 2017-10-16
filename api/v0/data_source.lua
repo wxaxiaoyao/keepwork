@@ -17,6 +17,7 @@ function data_source:getByUsername(params)
 end
 
 
+-- 
 function data_source:setDataSource(params)
 	params = convert_model.data_source_old_to_new(params)
 
@@ -25,12 +26,20 @@ function data_source:setDataSource(params)
 		return result
 	end
 	
-	return data_source_model:get_by_name(params)
+	local data = data_source_model:get_by_name(params).data
+
+	data = convert_model.data_source_new_to_old(data)
+
+	return errors:wrap(nil, data)
 end
 
 -- 获取数据源记录
 function data_source:get(params)
-	return data_source_model:get(params)
+	local data = data_source_model:get(params).data
+
+	data = convert_model.list_convert(data, convert_model.data_source_new_to_old)
+
+	return errors:wrap(nil, data)
 end
 
 

@@ -13,7 +13,6 @@ select * from user limit 100;
 
 delete from user where username="xiaoyao";
 
-
 select * from data_source;
 
 select * from site_data_source;
@@ -23,6 +22,7 @@ select * from site;
 delete from site;
 
 select * from vip;
+
 update vip set end_date="2018-09-29";
 
 select * from data_source;
