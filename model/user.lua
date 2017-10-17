@@ -31,6 +31,27 @@ function user:test(params)
 	return self:count()
 end
 
+-- 用户信息过滤
+function user:filter(userinfo)
+	return {
+		user_id = userinfo.user_id,
+		username = userinfo.username,
+		email = userinfo.email,
+		cellphone = userinfo.cellphone,
+		nickname = userinfo.nickname,
+		portrait = userinfo.portrait,
+		sex = userinfo.sex,
+		desc = userinfo.desc,
+		create_time = userinfo.create_time,
+		update_time = userinfo.update_time,
+	}
+end
+
+-- 简化用户信息
+function user:simplify(userinfo)
+	userinfo.password = nil
+end
+
 -- 删除用户
 function user:delete_by_username(params)
 	if not params.username then
@@ -39,6 +60,21 @@ function user:delete_by_username(params)
 	
 	local err = self:delete({username=params.username})
 	return errors:wrap(err)
+end
+
+-- 通过用户id
+function user:get_by_user_id(params)
+	if not params.user_id then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = self:find_one({user_id=params.user_id})
+
+	if data then
+		data.password = nil
+	end
+
+	return errors:wrap(nil, data)
 end
 
 -- 通过用户名

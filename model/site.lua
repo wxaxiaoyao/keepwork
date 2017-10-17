@@ -37,7 +37,6 @@ function site:get_by_name(params)
 	return errors:wrap(nil, data)
 end
 
-
 -- 通过用户名获取站点列表
 function site:get_by_username(params)
 	if not params.username then

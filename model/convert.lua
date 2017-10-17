@@ -223,4 +223,12 @@ function convert.site_group_old_to_new(obj)
 	}
 end
 
+function convert.active_new_to_old(obj)
+	return {
+		username = obj.username,
+		year = obj.year,
+		active = obj.active_data,
+	}
+end
+
 return convert

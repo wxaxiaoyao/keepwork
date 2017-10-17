@@ -28,3 +28,11 @@ update vip set end_date="2018-09-29";
 select * from data_source;
 
 alter table user convert to character set utf8;
+
+select * from `group`;
+
+select * from group_user;
+
+select * from site_group;
+
+select * from fans;

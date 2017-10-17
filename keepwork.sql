@@ -50,7 +50,7 @@ create table if not exists `site` (
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 用户页面表
@@ -72,7 +72,7 @@ create table if not exists `page` (
 	
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 数据源表
@@ -97,7 +97,7 @@ create table if not exists `data_source` (
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 站点数据源
@@ -127,20 +127,19 @@ create table if not exists `site_data_source` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- domain 管理表
 drop table if exists `domain`;
-create table if not exists `domain` (
-	`domain_id` bigint auto_increment primary key,         -- _id
-	`domain` varchar(64) not null,                         --  domain
-    `username` varchar(48) not null,                       -- username
-    `sitename` varchar(48) not null,                       -- sitename
-    
-    `create_time` timestamp default current_timestamp,
-    `update_time` timestamp default current_timestamp on update current_timestamp
-);
+CREATE TABLE IF NOT EXISTS `domain` (
+    `domain_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `domain` VARCHAR(64) NOT NULL,
+    `username` VARCHAR(48) NOT NULL,
+    `sitename` VARCHAR(48) NOT NULL,
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) character set = utf8;
 
 
 
@@ -157,7 +156,7 @@ create table if not exists `user_account` (
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 用户组
@@ -171,7 +170,7 @@ create table if not exists `group` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 组用户
@@ -185,7 +184,7 @@ create table if not exists `group_user` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 站点组
@@ -199,7 +198,7 @@ create table if not exists `site_group` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 站点用户
@@ -214,7 +213,7 @@ create table if not exists `site_user` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 用户活动图
@@ -228,37 +227,38 @@ create table if not exists `user_active` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 粉丝表
 drop table if exists `fans`;
 create table if not exists `fans` (
 	`fans_id` bigint auto_increment primary key,               -- _id
-    `username` varchar(48) not null,                          -- 用户名
+    `username` varchar(48) not null,                           -- 用户名
 	`fans_username` varchar(48) not null,                      -- 粉丝用户名
 	
-    `fans_user_portrait` varchar(128),                          -- 粉丝用户头像
+    `extra_data` text,                                         -- 额外数据存用户和粉丝用户信息
     -- ... 其它显示信息  冗余存贮 
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 收藏表  目前为站点收藏    wiki module 收藏可以考虑整合
 drop table if exists `favorite`;
 create table if not exists `favorite` (
 	`favorite_id` bigint auto_increment primary key,           -- _id
-    `username` varchar(48) not null,                          -- 用户名
+    `username` varchar(48) not null,                           -- 用户名
     
-    `site_id` bigint not null,                                 -- 收藏的站点
+	-- `site_id` bigint not null,                              -- 收藏的站点
     `favorite_username` varchar(48) not null,                  -- 收藏的用户名
     `favorite_sitename` varchar(48) not null,                  -- 收藏的站点名
-
+	`extra_data` text,                                         -- 额外数据  冗余设计
+    
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 用户动态表
@@ -273,7 +273,7 @@ create table if not exists `trends` (
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- 用户访问历史  目前只记录访问的站点历史
@@ -288,7 +288,7 @@ create table if not exists `visit_history` (
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- vip
@@ -302,7 +302,7 @@ create table if not exists `vip` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- vip trade
@@ -316,7 +316,7 @@ create table if not exists `vip_trade` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 -- wiki module
@@ -337,7 +337,7 @@ create table if not exists `wiki_module` (
     
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 -- wiki moduel classify  关系型数据库可不用此表，可通过sql分组实现
 drop table if exists `wiki_module_classify`;
@@ -348,7 +348,7 @@ create table if not exists `wiki_module_classify` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 
 
@@ -367,7 +367,7 @@ create table if not exists `mod_site_member` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 -- 站点的作品表
 drop table if exists `mod_site_works`;
@@ -386,7 +386,7 @@ create table if not exists `mod_site_works` (
 
     `create_time` timestamp default current_timestamp,
     `update_time` timestamp default current_timestamp on update current_timestamp
-);
+) character set = utf8;
 
 -- drop table if exists `mod_site_apply`;
 -- create table if not exists `mod_site_apply` (

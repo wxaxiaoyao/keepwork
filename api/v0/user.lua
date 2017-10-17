@@ -3,8 +3,11 @@ local user = commonlib.inherit()
 
 local convert_model = require("model/convert")
 local user_model = require("model/user")
+local user_active_model = require("model/user_active")
+local site_model = require("model/site")
 local site_data_source_model = require("model/site_data_source")
 local vip_model = require("model/vip")
+local fans_model = require("model/fans")
 
 -- 用户登录
 function user:login(params, req, resp)
@@ -91,6 +94,38 @@ function user:changepw(params, req, resp)
 		username = payload.username,
 		oldpassword = params.oldpassword,
 		newpassword = params.newpassword,
+	})
+end
+
+function user:getDetailByName(params)
+	local userinfo = user_model:get_by_username(params).data
+	
+	if not userinfo then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local date = commonlib.get_date()
+	local year = os.date("%Y")
+	local activeObj = user_active_model:get_year_data_by_username({username=userinfo.username, year=year}).data
+	activeObj = convert_model.active_new_to_old(activeObj)
+	local list = site_model:find({username=userinfo.username, site_type = const.SITE_TYPE_ORGANIZATION}) or {}
+	local selfOrganizationObj = {total = #list, siteList = list}
+	local joinOrganizationObj = {total = 0, siteList = {}}
+	local hotSiteObj = {total = 0, siteList = {}}
+	local allSiteList = site_model:get_by_username({username=userinfo.username}).data
+	local fansObj = fans_model:get_by_username({username=userinfo.username}).data
+	local followUserObj = fans_model:get_by_fans_username({fans_username=userinfo.username}).data
+	local followSiteObj = {}
+	return errors:wrap(nil, {
+		userinfo = convert_model.user_new_to_old(userinfo),
+		activeObj = activeObj,
+		selfOrganizationObj = selfOrganizationObj,
+		joinOrganizationObj = joinOrganizationObj,
+		hotSiteObj = hotSiteObj,
+		allSiteList = allSiteList,
+		fansObj = {total = fansObj.total, userList = fansObj.list},
+		followObj = {followUserObj = followUserObj, followSiteObj = followSiteObj},
+		trendsObj = {},
 	})
 end
 
