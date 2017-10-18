@@ -8,7 +8,7 @@ local user_model = require("model/user")
 function user_fans:getUserByUserId(params)
 	params.user_id = params.userId
 
-	return user_model:get_by_user_id(params).data
+	return user_model:get_by_id(params).data
 end
 
 function user_fans:getCountByUserId(params)

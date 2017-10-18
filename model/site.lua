@@ -37,6 +37,17 @@ function site:get_by_name(params)
 	return errors:wrap(nil, data)
 end
 
+-- 通过id获取站点
+function site:get_by_id(params)
+	if not params.site_id then
+		return errors:wrap(errors.PARAMS_ERROR)
+	end
+
+	local data = self:find_one({site_id = params.site_id})
+
+	return errors:wrap(nil, data)
+end
+
 -- 通过用户名获取站点列表
 function site:get_by_username(params)
 	if not params.username then

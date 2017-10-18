@@ -63,7 +63,7 @@ function user:delete_by_username(params)
 end
 
 -- 通过用户id
-function user:get_by_user_id(params)
+function user:get_by_id(params)
 	if not params.user_id then
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
