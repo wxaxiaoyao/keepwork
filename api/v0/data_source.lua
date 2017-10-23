@@ -1,4 +1,4 @@
-local data_source = commonlib.inherit()
+local data_source = common.inherit()
 
 local data_source_model = require("model/data_source")
 local convert_model = require("model/convert")

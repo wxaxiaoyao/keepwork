@@ -4,7 +4,7 @@
 
 local orm = require("orm/orm")
 
-local fans = commonlib.inherit(orm)
+local fans = common.inherit(orm)
 
 fans:tablename("fans")
 fans:addfield("fans_id", "number")

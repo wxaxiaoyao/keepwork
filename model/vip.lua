@@ -5,7 +5,7 @@
 
 local orm = require("orm/orm")
 
-local vip = commonlib.inherit(orm)
+local vip = common.inherit(orm)
 
 -- define table
 vip:tablename("vip")
@@ -23,7 +23,7 @@ function vip:get_by_username(params)
 	end
 
 	local vip_info = self:find_one({username=params.username})
-	local cur_date = commonlib.get_date()
+	local cur_date = common.get_date()
 
 	if not vip_info then
 		vip_info = {

@@ -3,7 +3,7 @@ local logging_console = require('logging.console')
 local logging_file = require('logging.file')
 local cjson_safe = require("cjson.safe")
 
-log = {
+local log = {
 	DEBUG=logging.DEBUG,
 	INFO=logging.INFO,
 	WARN=logging.WARN,

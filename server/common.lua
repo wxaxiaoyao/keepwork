@@ -1,13 +1,13 @@
 --local util = require("util")
 
-local commonlib = {}
+local common = {}
 
---commonlib.util = util
+--common.util = util
 
 -- get a table f, where f is a string
 -- @param f: f is a string like "a.b.c.d"
 -- @param rootEnv: it can be a table from which to search for f, if nil, the global table _G is used.
-function commonlib.gettable(f, rootEnv)
+function common.gettable(f, rootEnv)
     if(not f) then return end 
     local t = rootEnv or _G    -- start with the table of globals
     for w, d in string.gfind(f, "([%w_]+)(.?)") do
@@ -17,10 +17,10 @@ function commonlib.gettable(f, rootEnv)
     return t;
 end
 
-commonlib.object = {}
+common.object = {}
 
 -- 对象继承
-function commonlib.inherit(base, derived)
+function common.inherit(base, derived)
 	derived = derived or {}
 	
 	-- 创建子类
@@ -87,7 +87,7 @@ function commonlib.inherit(base, derived)
 end
 
 -- 对象导出
-function commonlib.export(obj, list)
+function common.export(obj, list)
 	return setmetatable({}, {
 		__index = function(t,k)
 			for _, key in ipairs(list or {}) do
@@ -152,7 +152,7 @@ local function console(obj, out)
 end
 
 -- 控制台输出
-function commonlib.console(...)
+function common.console(...)
 	local count = select("#", ...)
 	for i=1, count,1 do
 		--print((select(i, ...)))
@@ -161,16 +161,16 @@ function commonlib.console(...)
 end
 
 -- 获取当前日期
-function commonlib.get_date()
+function common.get_date()
 	return os.date("%Y-%m-%d")
 end
 
-function commonlib.get_time()
+function common.get_time()
 	return os.date("%H:%M:%S")
 end
 
-function commonlib.get_datetime()
-	return commonlib.get_date() .. " " .. commonlib.get_time()
+function common.get_datetime()
+	return common.get_date() .. " " .. common.get_time()
 end
 
 function string_split(str, sep)
@@ -204,7 +204,7 @@ function getCurrentDir(dept)
 
 	local info = debug.getinfo(dept)
 
-	return string.match(info.source, '@(.*)/[^/]*$')
+	return string.match(info.source, '@?(.*)/[^/]*$')
 end
 
 
@@ -212,7 +212,7 @@ function test()
 	console(debug.getinfo(2))
 end
 
---return commonlib
+--return common
 
 function ngx_log(...)
 	local count = select("#", ...)
@@ -225,4 +225,4 @@ function ngx_log(...)
 end
 
 
-return commonlib
+return common

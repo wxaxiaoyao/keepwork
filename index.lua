@@ -2,19 +2,26 @@
 package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua"
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
-commonlib = require("commonlib")
-util = require("util")
+--NPL.load("(gl)script/ide/commonlib.lua")
+
+-- 定义服务器类型
+HTTP_SERVER_TYPE = "npl"
+
+common = require("common")
 http = require("http")
 const = require("const")
 errors = require("errors")
 config = require("config")
+
+util = http.util
 -- 初始化http
 
 --errors:set_log(commonlib.console)
 errors:set_log(ngx_log)
-log = ngx_log
+--log = ngx_log
 
 local router = http.router
+
 
 function get_bust_version()
 	return os.time()
@@ -42,6 +49,16 @@ router:setDefaultHandle(function(req, resp)
 	})	
 end)
 
+router:path("/test", function(req, resp)
+	resp:send("hello world")
+end)
+
 router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/api/v0', true)
 
 http:handle(config)
+
+--function activate()
+	----print("-----------")
+--end
+
+--NPL.this(activate)

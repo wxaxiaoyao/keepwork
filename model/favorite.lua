@@ -4,7 +4,7 @@
 
 local orm = require("orm/orm")
 
-local favorite = commonlib.inherit(orm)
+local favorite = common.inherit(orm)
 
 favorite:tablename("favorite")
 favorite:addfield("favorite_id", "number")

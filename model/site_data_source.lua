@@ -8,7 +8,7 @@ local orm = require("orm/orm")
 local data_source_model = require("model/data_source")
 
 -- user 表
-local site_data_source = commonlib.inherit(orm)
+local site_data_source = common.inherit(orm)
 
 -- define table
 site_data_source:tablename("site_data_source")

@@ -1,5 +1,5 @@
 
-local site_group = commonlib.inherit()
+local site_group = common.inherit()
 
 local convert_model = require("model/convert")
 local site_model = require("model/site")

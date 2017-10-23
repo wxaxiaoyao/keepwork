@@ -3,7 +3,7 @@
 local convert_model = require("model/convert")
 local site_data_source_model = require("model/site_data_source")
 
-local site_data_source = commonlib.inherit()
+local site_data_source = common.inherit()
 
 -- 通过用户名获取数据源
 function site_data_source:getByUsername(params, req, resp)

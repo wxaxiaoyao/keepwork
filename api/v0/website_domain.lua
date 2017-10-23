@@ -1,5 +1,5 @@
 
-local website_domain = commonlib.inherit()
+local website_domain = common.inherit()
 
 local domain_model = require("model/domain")
 --local user_model = require("model/user")

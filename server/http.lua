@@ -1,30 +1,40 @@
 
-require("commonlib")
+local HTTP_SERVER_TYPE_LUA = "lua"
+local HTTP_SERVER_TYPE_NPL = "npl"
 
-local util = require("util")
-local request = require("request")
-local response = require("response")
-local router = require("router")
-local log = require("log")
 
-local http = {}
-
-http.router = router
-
-local req = request:new()
-local resp = response:new()
-local _router = router:new()
-
-ngx_log(req.uri)
-
-function http:init(config)
-	config = config or {}
-	--self.log = log:new(config.log)
+function npl_init()
+	NPL.load("(gl)script/ide/commonlib.lua")
 end
 
-function http:handle()
-	_router:handle(req, resp)
+function lua_init()
+
 end
+
+if HTTP_SERVER_TYPE == HTTP_SERVER_TYPE_LUA then
+	lua_init()
+else
+	npl_init()
+end
+
+function import(filename)
+	if HTTP_SERVER_TYPE == HTTP_SERVER_TYPE_LUA then
+		return require(filename)
+	else
+		return require(filename)
+		--return NPL.load(filename)
+	end
+end
+
+--log(debug.getinfo(1))
+
+local http = import(HTTP_SERVER_TYPE .. "_http")
+--local http = NPL.load("npl_http.lua")
+--local http = require("npl_http")
+
+print("-----------")
+log(http)
 
 return http
+
 

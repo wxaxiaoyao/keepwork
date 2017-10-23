@@ -1,5 +1,5 @@
 
-local user = commonlib.inherit()
+local user = common.inherit()
 
 local convert_model = require("model/convert")
 local user_model = require("model/user")
@@ -104,7 +104,7 @@ function user:getDetailByName(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
-	local date = commonlib.get_date()
+	local date = common.get_date()
 	local year = os.date("%Y")
 	local activeObj = user_active_model:get_year_data_by_username({username=userinfo.username, year=year}).data
 	activeObj = convert_model.active_new_to_old(activeObj)

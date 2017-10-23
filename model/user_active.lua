@@ -5,7 +5,7 @@
 
 local orm = require("orm/orm")
 
-local user_active = commonlib.inherit(orm)
+local user_active = common.inherit(orm)
 
 -- define table
 user_active:tablename("user_active")
@@ -24,7 +24,7 @@ function user_active:addcount(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
-	local date = params.date or commonlib.get_date()
+	local date = params.date or common.get_date()
 	local count = params.count or 1
 
 	local data = self:find_one({

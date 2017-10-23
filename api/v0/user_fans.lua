@@ -1,5 +1,5 @@
 
-local user_fans = commonlib.inherit()
+local user_fans = common.inherit()
 
 local fans_model = require("model/fans")
 local user_model = require("model/user")

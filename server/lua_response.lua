@@ -19,24 +19,26 @@ function response:new()
 	return obj
 end
 
+function response:set_header(key, val)
+	ngx.header[key] = val
+end
+
 -- 返回视图
 function response:render(view, context)
 	template.render(view, context)
 end
 
--- 发送json
-function response:sendJson(data)
-	ngx.header["Content-Type"] = mimetype.json
-	ngx.say(cjson_safe.encode(data))
-end
-
 -- 发送文本
 function response:send(data)
+	data = data or ""
 	if type(data) == "table" then
-		self:sendJson(data)
-	else
-		ngx.say(tostring(data))
+		ngx.header["Content-Type"] = mimetype.json
+		data = cjson_safe.encode(data)
+	else 
+		data = tostring(data)
 	end
+
+	ngx.say(tostring(data))
 end
 
 return response

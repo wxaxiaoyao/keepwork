@@ -1,4 +1,4 @@
-local website = commonlib.inherit()
+local website = common.inherit()
 
 local site_model = require("model/site")
 local user_model = require("model/user")

@@ -5,7 +5,7 @@
 local orm = require("orm/orm")
 
 -- user 表
-local group_user = commonlib.inherit(orm)
+local group_user = common.inherit(orm)
 
 --function user:ctor()
 group_user:tablename("group_user")

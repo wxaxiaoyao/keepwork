@@ -1,7 +1,7 @@
 package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua"
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
-require("server/commonlib")
+require("server/common")
 
 
 local user_active = require("user_active")
@@ -16,4 +16,4 @@ local data = user_active:get_year_data_by_username({
 	year = 2017,
 })
 
-commonlib.console(data)
+common.console(data)

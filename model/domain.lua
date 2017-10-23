@@ -5,7 +5,7 @@
 local orm = require("orm/orm")
 
 -- user 表
-local domain = commonlib.inherit(orm)
+local domain = common.inherit(orm)
 
 --function user:ctor()
 domain:tablename("domain")

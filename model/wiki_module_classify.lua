@@ -5,7 +5,7 @@
 
 local orm = require("orm/orm")
 
-local wiki_module_classify = commonlib.inherit(orm)
+local wiki_module_classify = common.inherit(orm)
 
 -- define table
 wiki_module_classify:tablename("wiki_module_classify")

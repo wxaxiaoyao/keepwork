@@ -6,14 +6,14 @@
 package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua"
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
-commonlib = require("commonlib")
+common = require("common")
 util = require("util")
 const = require("const")
 errors = require("errors")
 config = require("config")
 
-log = commonlib.console
-errors:set_log(commonlib.console)
+log = common.console
+errors:set_log(common.console)
 
 local site_data_source = require("model/site_data_source")
 

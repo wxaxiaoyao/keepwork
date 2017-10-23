@@ -5,7 +5,7 @@
 local orm = require("orm/orm")
 
 -- user 表
-local site_user = commonlib.inherit(orm)
+local site_user = common.inherit(orm)
 
 --function user:ctor()
 site_user:tablename("site_user")

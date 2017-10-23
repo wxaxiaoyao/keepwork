@@ -1,5 +1,5 @@
 
-local group = commonlib.inherit()
+local group = common.inherit()
 
 local group_model = require("model/group")
 

@@ -1,116 +1,40 @@
-Mon Aug 14 23:12:59 2017 INFO hello world
-Mon Aug 14 23:14:00 2017 INFO hello world
-Sun Aug 20 16:54:35 2017 INFO test
-Sun Aug 20 16:55:04 2017 INFO test
-Sun Aug 20 16:55:04 2017 DEBUG ==============
-testSun Aug 20 18:17:05 2017 DEBUG ==============
-Sun Aug 20 18:17:05 2017 DEBUG ==============
-Sun Aug 20 18:17:06 2017 DEBUG ==============
-Sun Aug 20 18:17:06 2017 DEBUG ==============
-Sun Aug 20 18:17:16 2017 DEBUG ==============
-Sun Aug 20 18:17:16 2017 DEBUG ==============
-Sun Aug 20 18:17:17 2017 DEBUG ==============
-Sun Aug 20 18:17:17 2017 DEBUG ==============
-Sun Aug 20 18:17:18 2017 DEBUG ==============
-Sun Aug 20 18:17:18 2017 DEBUG ==============
-Sun Aug 20 18:17:20 2017 DEBUG ==============
-Sun Aug 20 18:17:20 2017 DEBUG ==============
-Sun Aug 20 18:17:24 2017 DEBUG ==============
-Sun Aug 20 18:17:24 2017 DEBUG ==============
-Sun Aug 20 18:17:57 2017 DEBUG ==============
-Sun Aug 20 18:17:57 2017 DEBUG ==============
-Sun Aug 20 18:18:02 2017 DEBUG ==============
-Sun Aug 20 18:18:02 2017 DEBUG ==============
-Sun Aug 20 18:21:24 2017 DEBUG ==============
-Sun Aug 20 18:21:24 2017 DEBUG hello owrld
-Sun Aug 20 18:21:24 2017 DEBUG ==============
-Sun Aug 20 18:21:24 2017 DEBUG hello owrld
-Sun Aug 20 18:24:50 2017 DEBUG ==============
-Sun Aug 20 18:24:50 2017 DEBUG hello owrld
-Sun Aug 20 18:24:50 2017 DEBUG ==============
-Sun Aug 20 18:24:50 2017 DEBUG hello owrld
-Sun Aug 20 18:24:52 2017 DEBUG ==============
-Sun Aug 20 18:24:52 2017 DEBUG hello owrld
-Sun Aug 20 18:24:52 2017 DEBUG ==============
-Sun Aug 20 18:24:52 2017 DEBUG hello owrld
-Sun Aug 20 18:24:57 2017 DEBUG ==============
-Sun Aug 20 18:24:57 2017 DEBUG hello owrld
-Sun Aug 20 18:24:57 2017 DEBUG ==============
-Sun Aug 20 18:24:57 2017 DEBUG hello owrld
-Sun Aug 20 18:24:59 2017 DEBUG ==============
-Sun Aug 20 18:24:59 2017 DEBUG hello owrld
-Sun Aug 20 18:24:59 2017 DEBUG ==============
-Sun Aug 20 18:24:59 2017 DEBUG hello owrld
-Sun Aug 20 18:25:06 2017 DEBUG ==============
-Sun Aug 20 18:25:06 2017 DEBUG hello owrld
-Sun Aug 20 18:25:06 2017 DEBUG ==============
-Sun Aug 20 18:25:06 2017 DEBUG hello owrld
-hello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldSun Aug 20 18:44:12 2017 DEBUG /
-Sun Aug 20 18:44:12 2017 DEBUG /favicon.ico
-Sun Aug 20 18:46:21 2017 DEBUG /
-Sun Aug 20 18:46:21 2017 DEBUG /favicon.ico
-Sun Aug 20 18:46:26 2017 DEBUG /
-Sun Aug 20 18:46:26 2017 DEBUG /favicon.ico
-Sun Aug 20 18:46:53 2017 DEBUG /
-Sun Aug 20 18:48:54 2017 DEBUG /
-Sun Aug 20 18:49:02 2017 DEBUG /
-Sun Aug 20 18:49:05 2017 DEBUG /
-Sun Aug 20 18:49:06 2017 DEBUG /
-Sun Aug 20 18:49:21 2017 DEBUG /
-Sun Aug 20 18:49:22 2017 DEBUG /
-Sun Aug 20 18:49:25 2017 DEBUG /
-Wed Aug 23 01:23:12 2017 DEBUG /
-Wed Aug 23 01:30:49 2017 DEBUG /
-Wed Aug 23 01:30:50 2017 DEBUG /
-Wed Aug 23 01:30:52 2017 DEBUG /
-Wed Aug 23 01:30:58 2017 DEBUG /
-Wed Aug 23 01:30:59 2017 DEBUG /
-Wed Aug 23 01:31:26 2017 DEBUG /
-Wed Aug 23 01:31:28 2017 DEBUG /
-Wed Aug 23 01:31:28 2017 DEBUG /
-Wed Aug 23 01:31:59 2017 DEBUG /
-Wed Aug 23 01:32:58 2017 DEBUG /
-Wed Aug 23 01:33:46 2017 DEBUG /
-Wed Aug 23 01:33:48 2017 DEBUG /
-Wed Aug 23 01:35:08 2017 DEBUG /
-Wed Aug 23 01:50:50 2017 DEBUG /js/lib/angular-ui-select/select.min.css.map
-Wed Aug 23 01:53:30 2017 DEBUG /js/lib/angular-ui-select/select.min.css.map
-Wed Aug 23 01:53:31 2017 DEBUG /wiki/js/lib/angular/angular.min.js.map
-Wed Aug 23 01:53:31 2017 DEBUG /wiki/js/lib/angular-ui-select/select.min.js.map
-Wed Aug 23 01:53:31 2017 DEBUG /wiki/js/lib/angular-sanitize/angular-sanitize.min.js.map
-Wed Aug 23 01:53:31 2017 DEBUG /wiki/html/articles/featurelist.md
-Wed Aug 23 01:53:31 2017 DEBUG /js/lib/bootstrap/fonts/glyphicons-halflings-regular.woff2
-Wed Aug 23 01:53:31 2017 DEBUG /js/lib/iconFont/iconfont.woff
-Wed Aug 23 01:53:31 2017 DEBUG /api/wiki/models/user/getDetailByName
-Wed Aug 23 01:53:31 2017 DEBUG /wiki/assets/imgs/icon/logo.svg
-Wed Aug 23 01:53:31 2017 DEBUG /js/lib/bootstrap/fonts/glyphicons-halflings-regular.woff
-Wed Aug 23 01:53:31 2017 DEBUG /js/lib/iconFont/iconfont.ttf
-Wed Aug 23 01:53:31 2017 DEBUG /js/lib/bootstrap/fonts/glyphicons-halflings-regular.ttf
-Wed Aug 23 01:55:16 2017 DEBUG /wiki/apps
-Wed Aug 23 01:55:19 2017 DEBUG /js/lib/angular-ui-select/select.min.css.map
-Wed Aug 23 01:55:19 2017 DEBUG /wiki/js/lib/angular/angular.min.js.map
-Wed Aug 23 01:55:19 2017 DEBUG /wiki/js/lib/angular-ui-select/select.min.js.map
-Wed Aug 23 01:55:19 2017 DEBUG /wiki/js/lib/angular-sanitize/angular-sanitize.min.js.map
-Wed Aug 23 01:55:19 2017 DEBUG /wiki/html/articles/featurelist.md
-Wed Aug 23 01:55:20 2017 DEBUG /api/wiki/models/user/getDetailByName
-Wed Aug 23 01:55:20 2017 DEBUG /wiki/assets/imgs/icon/logo.svg
-Wed Aug 23 01:58:00 2017 DEBUG /js/lib/angular-ui-select/select.min.css.map
-Wed Aug 23 01:58:01 2017 DEBUG /wiki/js/lib/angular/angular.min.js.map
-Wed Aug 23 01:58:01 2017 DEBUG /wiki/js/lib/angular-ui-select/select.min.js.map
-Wed Aug 23 01:58:01 2017 DEBUG /wiki/js/lib/angular-sanitize/angular-sanitize.min.js.map
-Wed Aug 23 01:58:01 2017 DEBUG /wiki/html/articles/featurelist.md
-Wed Aug 23 01:58:01 2017 DEBUG /api/wiki/models/user/getDetailByName
-Wed Aug 23 01:58:01 2017 DEBUG /wiki/assets/imgs/icon/logo.svg
-Wed Aug 23 01:58:27 2017 DEBUG /wiki/html/articles/featurelist.md
-Wed Aug 23 01:58:27 2017 DEBUG /api/wiki/models/user/getDetailByName
-Wed Aug 23 01:58:27 2017 DEBUG /wiki/assets/imgs/icon/logo.svg
-Wed Aug 23 02:01:05 2017 DEBUG /wiki/html/articles/featurelist.md
-Wed Aug 23 02:01:05 2017 DEBUG /wiki/assets/imgs/icon/logo.svg
-Wed Aug 23 18:31:18 2017 DEBUG ------------
-Wed Aug 23 18:43:53 2017 DEBUG {key = "test"}
-Wed Aug 23 19:03:20 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:14 {"key":"test"}
-Wed Aug 23 19:04:08 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:14 {"key":"test"}
-Wed Aug 23 19:04:08 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:15 "hello world"
-Wed Aug 23 19:04:24 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:14 {"key":"test"}
-Wed Aug 23 19:04:24 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:15 "hello world"
-Wed Aug 23 19:04:24 2017 DEBUG @/root/workspace/lua/keepwork/index.lua:16 3
+NPL bin dir: /mnt/d/workspace/npl/NPLRuntime/ParaWorld/bin64/
+no packages at: /mnt/d/workspace/npl/NPLRuntime/ParaWorld/packages
+ParaEngine Root Dir is /mnt/d/workspace/lua/keepwork/
+search path: /mnt/d/workspace/npl/NPLRuntime/npl_packages/main/
+./packages dir: /mnt/d/workspace/lua/keepwork/
+main loop: index.lua 
+CAssetManifest loaded 0 files
+CAsyncLoader is started with 1 IO thread and 2 worker thread
+warning: ParaEngine::LoadLibrary( ./libPhysicsBT.so ) failed because ./libPhysicsBT.so: cannot open shared object file: No such file or directory
+Failed loading plug-in: ./libPhysicsBT.so
+note: no physics engine found, null physics is used 
+2017-10-23 19:38:53|-1562245248|ParaEngineServer started
+(main) state is now running in a separate thread. It is more responsive now. 
+ParaEngine LuaJIT 64bits version:LuaJIT 2.1.0-beta3
+Jit status:true, SSE2, SSE3, SSE4.1, BMI2, fold, cse, dce, fwd, dse, narrow, loop, abc, sink, fuse 
+ffi loaded shared lib: C
+warning: script file npl_util.lua not found
+-----------
+{is_start=false,response={},request={},router={handler={groupHandler={},fileHandler={},controllerHandler={},pathHandler={},},},util={},}/root/workspace/lua/keepwork/server/npl_http.luaNPL server 0.1 is listening on 0.0.0.0:88
+TCPKeepAlive: false
+AppKeepAlive: false
+IdleTimeout: true
+IdleTimeoutPeriod: 120000
+UseCompression(incoming): false
+CompressionLevel: -1
+CompressionThreshold: 204800
+NPL max pending incoming connections allowed is 1000
+2017-10-23 19:38:53|-2080438528|incoming connection (127.0.0.1/61945) is established and assigned a temporary id (~1). 
+[string "index.lua"]:53: attempt to index local 'resp' (a nil value) <Runtime error>
+2017-10-23 19:38:53|-2080438528|incoming connection (127.0.0.1/61946) is established and assigned a temporary id (~2). 
+2017-10-23 19:40:55|-2080438528|connection time out (127.0.0.1/61945) with id (~1). 
+2017-10-23 19:40:55|-2080438528|connection time out (127.0.0.1/61946) with id (~2). 
+2017-10-23 19:40:55|-2080438528|connection closed (127.0.0.1/61945) with id (~1). 
+2017-10-23 19:40:55|-2080438528|connection closed (127.0.0.1/61946) with id (~2). 
+2017-10-23 19:40:55|-2080438528|incoming connection (127.0.0.1/62127) is established and assigned a temporary id (~3). 
+[string "index.lua"]:53: attempt to index local 'resp' (a nil value) <Runtime error>
+2017-10-23 19:40:55|-2080438528|incoming connection (127.0.0.1/62128) is established and assigned a temporary id (~4). 
+network: handle_read stopped, asio msg: End of file. Connection will be closed 
+2017-10-23 19:41:34|-2080438528|connection closed (127.0.0.1/62128) with id (~4). 
+network: handle_read stopped, asio msg: End of file. Connection will be closed 

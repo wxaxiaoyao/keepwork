@@ -2,7 +2,7 @@
 package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua"
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
-commonlib = require("commonlib")
+common = require("common")
 util = require("util")
 const = require("const")
 errors = require("errors")
@@ -17,11 +17,11 @@ local user = require("model/user")
 
 
 local data = user:get_by_username({username="xiaoyao"})
-commonlib.console(data)
+common.console(data)
 
-commonlib.console(user:test())
---commonlib.console(errors:wrap("hello world"))
---commonlib.console(3,"test", "test")
+common.console(user:test())
+--common.console(errors:wrap("hello world"))
+--common.console(3,"test", "test")
 
 
 

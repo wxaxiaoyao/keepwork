@@ -6,7 +6,7 @@
 package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua"
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
-require("server/commonlib")
+require("server/common")
 
 local data_source = require("model/data_source")
 

@@ -1,6 +1,8 @@
 
 -- 全局配置
 local config = {
+	ip = nil,
+	port = 88,
 	["default"] = {
 		root_dir="/root/workspace/lua/keepwork/",
 		log={

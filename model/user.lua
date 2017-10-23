@@ -8,7 +8,7 @@ local data_source_db = require("model/data_source")
 local site_data_source_db = require("model/site_data_source")
 
 -- user 表
-local user = commonlib.inherit(orm)
+local user = common.inherit(orm)
 
 --function user:ctor()
 user:tablename("user")

@@ -6,7 +6,7 @@
 local orm = require("orm/orm")
 
 -- user 表
-local data_source = commonlib.inherit(orm)
+local data_source = common.inherit(orm)
 
 -- define table
 data_source:tablename("data_source")
@@ -85,7 +85,7 @@ function data_source:create_inner_gitlab_data_source(params)
 			headers = {['PRIVATE-TOKEN']= l_admin_token},
 			data = gitlab_user_params,
 		})
-		commonlib.console(res)
+		common.console(res)
 		if not res or res.status_code ~= 201 then
 			return errors:wrap(errors:new("create gitlab user error"), res)
 		end
