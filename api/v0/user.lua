@@ -12,6 +12,7 @@ local fans_model = require("model/fans")
 -- 用户登录
 function user:login(params, req, resp)
 	local params = req:get_params()
+	log(params)
 	if not params or not params.username or not params.password then
 		return errors:wrap(errors.PARAMS_ERROR)
 	end

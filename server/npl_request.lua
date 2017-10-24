@@ -1,7 +1,19 @@
+--NPL.load("(gl)script/ide/Json.lua");
 
 local util = NPL.load("./npl_util.lua");
 local request = {}
 
+-- 将头部统一转小写
+local function format_headers(headers)
+	--local obj = {}
+	for key, value in pairs(headers or {}) do
+		local key_lower = string.lower(key)
+		if key ~= key_lower then
+			headers[key_lower] = headers[key]
+			headers[key] = nil
+		end
+	end
+end
 
 function request:new(msg)
 	if not msg then	
@@ -12,7 +24,8 @@ function request:new(msg)
 
 	setmetatable(obj, self)
 	self.__index = self
-
+	
+	format_headers(msg)
 	obj.nid = msg.tid or msg.nid
 	obj.headers= msg
 	obj.method = msg.method
@@ -20,6 +33,7 @@ function request:new(msg)
 	
 	return obj
 end
+
 
 local function get_boundary(content_type)
 	local boundary = string.match(content_type, "boundary%=(.-)$")
@@ -135,26 +149,27 @@ function request:parse_multipart_data(input, input_type, tab, overwrite)
 end
 
 function request:parse_post_data()
-	--local params = {}
-	--local body = self.headers.body
-	--local input_type = self.headers["content-type"]
-	--if not input_type or not body or body == "" then
-		--return {}
-	--end
+	--log(self.headers, true)
+	local params = {}
+	local body = self.headers.body
+	local input_type = self.headers["content-type"]
+	if not input_type or not body or body == "" then
+		return {}
+	end
 
-	--local input_type_lower = string.lower(input_type)
+	local input_type_lower = string.lower(input_type)
 
-	--if (string.find(input_type_lower, "x-www-form-urlencoded")) then
-		--params = util.parse_str(body)
-	--elseif (string.find(input_type_lower, "multipart/form-data")) then
-		--params = self:parse_multipart_data(body, input_type, params, true);
-	--elseif (string.find(input_type_lower, "application/json")) then
-		--params = commonlib.Json.Decode(body) 
-	--else
-		--params = util.parse_str(body)
-	--end
+	if (string.find(input_type_lower, "x-www-form-urlencoded")) then
+		params = util.parse_str(body)
+	elseif (string.find(input_type_lower, "multipart/form-data")) then
+		params = self:parse_multipart_data(body, input_type, params, true);
+	elseif (string.find(input_type_lower, "application/json")) then
+		params = commonlib.Json.Decode(body) 
+	else
+		params = util.parse_str(body)
+	end
 
-	--return params
+	return params
 end
 
 function request:get_params()

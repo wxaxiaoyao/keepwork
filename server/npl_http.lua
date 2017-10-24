@@ -21,6 +21,20 @@ function http:init(config)
 
 end
 
+-- 静态文件处理
+function http:statics(req, resp)
+	local uri = req.uri
+	local path = uri:match("([^?]+)")
+	local ext = path:match('^.+%.([a-zA-Z0-9]+)$')
+	
+	if not ext then
+		return false
+	end
+
+	resp:send_file(path, ext)
+
+	return true
+end
 
 function http:handle(config)
 	if self.is_start then
@@ -29,7 +43,7 @@ function http:handle(config)
 
 	local debug_info = debug.getinfo(1, 'S')
 	local filename = debug_info.source:match("@?(.*)")
-	log(filename)
+	--log(filename)
 	--log(filename:match("@?(.*)"))
 	--log(debug.getinfo(1,'S').source:match('^[@%./\\]*(.+[/\\])[^/\\]+$'))
 	
@@ -46,6 +60,12 @@ function activate()
 	local req = request:new(msg)
 	local resp = response:new(req)
 	local route = router:new()
+
+	log(req.uri .. "\n")
+	
+	if http:statics(req, resp) then
+		return
+	end
 
 	route:handle(req, resp)
 end

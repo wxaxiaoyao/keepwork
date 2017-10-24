@@ -32,9 +32,6 @@ local http = import(HTTP_SERVER_TYPE .. "_http")
 --local http = NPL.load("npl_http.lua")
 --local http = require("npl_http")
 
-print("-----------")
-log(http)
-
 return http
 
 

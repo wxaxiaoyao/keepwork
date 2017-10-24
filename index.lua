@@ -17,7 +17,7 @@ util = http.util
 -- 初始化http
 
 --errors:set_log(commonlib.console)
-errors:set_log(ngx_log)
+errors:set_log(log)
 --log = ngx_log
 
 local router = http.router
@@ -30,7 +30,7 @@ end
 function render_server_wWiki_css() 
 	local bust_version = get_bust_version()
 
-	return string.format('<link href="/wiki/assets/css/main.css?bust=%s" rel="stylesheet">\n', bust_version)
+	return string.format('<link href="/wiki/assets/css/main.css?bust=%s" type="text/css" rel="stylesheet">\n', bust_version)
 end
 
 function render_server_wiki_script() 

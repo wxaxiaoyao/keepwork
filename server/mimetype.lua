@@ -17,6 +17,7 @@ local mime = {
 	jpeg = 'image/jpeg',
 	jpg = 'image/jpeg',
 	js = 'application/x-javascript',
+	--map = 'application/x-javascript',
 	json = 'application/json',
 	atom = 'application/atom+xml',
 	rss = 'application/rss+xml',

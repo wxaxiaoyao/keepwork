@@ -32,7 +32,7 @@ local response = {}
 function response:new(req)
 	local obj = {}
 	setmetatable(obj, self)
-	obj.__index = self
+	self.__index = self
 	obj.request = req
 	obj.charset = 'utf-8'
 	obj.status = '200'
@@ -41,7 +41,7 @@ function response:new(req)
 		--['status'] = '200',
 		['Content-Type'] = mimetype.html
 	}
-	return o
+	return obj
 end
 
 
@@ -52,13 +52,18 @@ end
 
 function response:set_content_type(mime_type)
 	self.content_type = mime_type
-	self:set_header('Content-Type', mime_type .. 'charset=' .. self.charset)
+	if not self.content_type then
+		self:set_header('Content-Type', nil)
+	else
+		--self:set_header('Content-Type', mime_type .. ' charset=' .. self.charset)
+		self:set_header('Content-Type', mime_type)
+	end
 end
 
 
 function response:set_charset(charset)
 	self.charset = charset
-	self:set_header('Content-Type', self.contentType .. 'charset=' .. self.charset)
+	self:set_header('Content-Type', self.content_type .. ' charset=' .. self.charset)
 end
 
 
@@ -73,12 +78,12 @@ function response:set_header(key, val)
 end
 
 
-function response:onBefore()
+function response:on_before()
 
 end
 
 
-function response:onAfter()
+function response:on_after()
 
 end
 
@@ -89,8 +94,6 @@ function response:append_cookie(cookie)
 	end
 	self.cookies[#(self.cookies) + 1] = cookie
 end
-
-
 
 function response:_send()
 	local out = {}
@@ -117,16 +120,17 @@ end
 
 -- 返回视图
 function response:render(view, context)
-	template.render(view, context)
+	local data = template.compile(view)(context)
+	--self:set_content("<div>hello world</div>")
+	self:set_content(data)
+
+	self:_send()
 end
 
-function response:send(data)
-	if(not data) then
-		data = self.data
-	end
-	
+-- 发送数据
+function response:send(data, status_code)
 	data = data or ""
-
+	
 	if(type(data) == 'table') then
 		self:set_content_type(mimetype.json)
 		data = commonlib.Json.Encode(data)
@@ -139,11 +143,29 @@ function response:send(data)
 	self:_send()
 end
 
+-- 发送文件
+function response:send_file(path, ext)
+	if not path or path == "" then
+		return
+	end
 
-function response:render(templateUrl, data)
+	path = string.gsub(path, '//', '/')
+	ext = ext or path:match('^.+%.([a-zA-Z0-9]+)$')
+
+	local file = io.open("./" .. path, "rb")
+
+	if not file then 
+		self:send("文件路径错误", 404)
+	end
+
+	local content = file:read("*a")
+	file:close()
+
+	self:set_content_type(mimetype[ext])
+	self:send(content)
 end
 
-
+-- 重定向
 function response:redirect(url)
 	self:set_status(302)
 	self:set_header('Location', url)

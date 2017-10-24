@@ -1,5 +1,6 @@
 
 local mysql = require("orm/mysql")
+local tabledb = require("orm/tabledb")
 
 local orm = {}
 
@@ -24,8 +25,11 @@ function orm:new()
 		return mt[k]
 	end
 
-	obj._db_type = orm.DB_TYPE_MYSQL
-	obj._db = mysql:new()
+	--obj._db_type = orm.DB_TYPE_MYSQL
+	--obj._db = mysql:new()
+
+	obj._db_type = orm.DB_TYPE_TABLEDB
+	obj._db = tabledb:new()
 	--self.set_db_type(obj, orm.DB_TYPE_MYSQL)
 
 	return obj
@@ -55,6 +59,8 @@ function orm:set_db_type(typ)
 
 	if self._db_type ==  self.DB_TYPE_MYSQL then
 		self._db = mysql:new()
+	elseif self._db_type == self.DB_TYPE_TABLEDB then
+		self._db = tabledb:new()
 	end
 
 	orm.LIMIT = self._db.LIMIT
@@ -100,6 +106,7 @@ end
 --mysql:set_log(commonlib.console)
 --orm:init()
 mysql:init()
+tabledb:init()
 
 return orm
 
