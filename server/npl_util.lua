@@ -9,11 +9,17 @@ NPL.load("(gl)script/apps/WebServer/npl_util.lua");
 local util = commonlib.gettable("WebServer.util");
 -----------------------------------------------
 ]]
+
 NPL.load("(gl)script/ide/System/os/GetUrl.lua");
-local util = commonlib.gettable("WebServer.util");
+NPL.load('script/ide/Json.lua')
+NPL.load("(gl)script/ide/System/Encoding/jwt.lua")
+--local requests = require("requests")
+
+local jwt = commonlib.gettable("System.Encoding.jwt")
+local util = {};
 
 -- Decode an URL-encoded string (see RFC 2396)
-function util.url_decode(str)
+function util.decode_url(str)
 	if not str then return nil end
 	str = string.gsub (str, "+", " ")
 	str = string.gsub (str, "%%(%x%x)", function(h) return string.char(tonumber(h,16)) end)
@@ -22,41 +28,13 @@ function util.url_decode(str)
 end
 
 -- URL-encode a string (see RFC 2396)
-function util.url_encode(str)
+function util.encode_url(str)
 	if not str then return nil end
 	str = string.gsub (str, "\n", "\r\n")
 	str = string.gsub (str, "([^%w ])",
 		function (c) return string.format ("%%%02X", string.byte(c)) end)
 	str = string.gsub (str, " ", "+")
 	return str
-end
-
--- Sanitizes all HTML tags
-function util.sanitize(text)
-	return text:gsub(">", "&gt;"):gsub("<", "&lt;")
-end
-
--- Checks whether s is not nil or the empty string
-function util.not_empty(s)
-	if s and s ~= "" then return s else return nil end
-end
-
-
--- Merge user defined arguments into defaults array.
--- @param args : string or array.  Value to merge with $defaults
--- @param defaults: Optional. Array that serves as the defaults. Default empty.
--- @return array Merged user defined values with defaults.
-function util.parse_args( args, defaults)
-	local r;
-	if ( type(args) == "table" ) then
-		r = args;
-	elseif ( type(args) == "string" ) then
-		r = util.parse_str( args, r );
-	end
-	if (type(defaults) == "table") then
-		commonlib.partialcopy(r, defaults);
-	end
-	return r;
 end
 
 -- Encodes a string into its escaped hexadecimal representation
@@ -80,7 +58,7 @@ end
 -- Parses a string into variables to be stored in an array.
 -- @param str: url query string such as "a=1&b&c=3"
 -- @return the url params table returned. 
-function util.parse_str(str, params)
+function util.parse_url_args(str, params)
 	params = params or {};
 	if(not str) then
 		return params;
@@ -88,8 +66,8 @@ function util.parse_str(str, params)
 	for param in string.gmatch (str, "([^&]+)") do
 		local k,v = string.match (param, "(.*)=(.*)")
 		if(k) then
-			k = util.url_decode (k)
-			v = util.url_decode (v)
+			k = util.decode_url (k)
+			v = util.decode_url (v)
 		else
 			k, v = param, "";
 		end
@@ -106,10 +84,70 @@ function util.parse_str(str, params)
 	return params;
 end
 
--- please see System.os.GetUrl
-function util.GetUrl(...)
-	return System.os.GetUrl(...);
+function util.to_json(t)
+	return commonlib.Json.Encode(t)
 end
 
+function util.from_json(s)
+	return commonlib.Json.Decode(s)
+end
+
+function util.encode_jwt(payload, secret, expire)
+	return jwt.encode(payload, secret, nil, expire)
+end
+
+function util.decode_jwt(token, secret)
+	return jwt.decode(token, secret)
+end
+
+function util.md5(msg)
+	return ParaMisc.md5(msg)
+end
+
+-- url
+-- method
+-- headers
+-- data
+--res:{headers:{}, text:string, status_code:number}
+--function util.get_url(params)
+	--local method = params.method or "GET"
+
+	--if params.headers then
+		--params.headers['Content-Type'] = params.headers['Content-Type'] or "application/json"
+	--else
+		--params.headers = {['Content-Type'] = "application/json"}
+	--end
+
+	--if string.lower(method) == "get" then
+		--params.params = params.data
+		----params.data = nil
+	--end
+	--local res = requests.request(method, params)
+
+	--res.data = res.json()
+
+	--return res
+--end
+
+function util.get_url(params, callback)
+	local method = params.method or "GET"
+
+	if string.lower(method) == "get" then
+		params.qs = params.data
+	else
+		params.form = params.data
+	end
+	--params.data = nil
+
+	System.os.GetUrl(params, function(code, data)
+		data.status_code = code
+		callback(data)
+		--log(data)
+	end)
+	--local code, data = yield()
+
+	--log(data, true)
+	return nil
+end
 
 return util

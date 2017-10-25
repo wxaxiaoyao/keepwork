@@ -160,13 +160,13 @@ function request:parse_post_data()
 	local input_type_lower = string.lower(input_type)
 
 	if (string.find(input_type_lower, "x-www-form-urlencoded")) then
-		params = util.parse_str(body)
+		params = util.parse_url_args(body)
 	elseif (string.find(input_type_lower, "multipart/form-data")) then
 		params = self:parse_multipart_data(body, input_type, params, true);
 	elseif (string.find(input_type_lower, "application/json")) then
 		params = commonlib.Json.Decode(body) 
 	else
-		params = util.parse_str(body)
+		params = util.parse_url_args(body)
 	end
 
 	return params
@@ -181,7 +181,7 @@ function request:get_params()
 	local args_str = string.match(uri, "?(.+)$")
 
 	if args_str then
-		self.params = util.parse_str(args_str)
+		self.params = util.parse_url_args(args_str)
 	else
 		self.params = self:parse_post_data()
 	end

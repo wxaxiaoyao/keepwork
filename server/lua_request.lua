@@ -1,4 +1,4 @@
-local util = require("util")
+local util = require("lua_util")
 
 local request = {}
 
@@ -32,7 +32,7 @@ function request:new()
 
 	local authorization = obj.headers['authorization']
 	local token = authorization and authorization:match("%s+(%S+)")
-	obj.payload = util.decodeJWT(token or "")
+	obj.payload = util.decode_jwt(token or "")
 
 	if obj.query_string then
 		obj.params = ngx.req.get_uri_args() or {}
@@ -43,7 +43,7 @@ function request:new()
 		if (string.find(obj.content_type, "application/x-www-form-urlencoded")) then
 			obj.params = ngx.req.get_post_args() or {}
 		elseif (string.find(obj.content_type, "application/json")) then
-			obj.params = util.fromJson(ngx.req.get_body_data())
+			obj.params = util.from_json(ngx.req.get_body_data())
 		else
 			obj.params = ngx.req.get_body_data()
 		end

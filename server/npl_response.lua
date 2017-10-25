@@ -1,8 +1,5 @@
---require('commonlib')
---require('json')
 NPL.load('script/ide/commonlib.lua')
 NPL.load('script/ide/Json.lua')
---local mimetype = require('mimetype')
 local mimetype = require('mimetype')
 local template = require("resty.template")
 

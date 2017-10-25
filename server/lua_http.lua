@@ -1,9 +1,9 @@
 
 local common = require("common")
 
-local util = require("util")
-local request = require("request")
-local response = require("response")
+local util = require("lua_util")
+local request = require("lua_request")
+local response = require("lua_response")
 local router = require("router")
 local log = require("log")
 
@@ -17,7 +17,6 @@ http.util = util
 
 local req = request:new()
 local resp = response:new()
-local _router = router:new()
 
 ngx_log(req.uri)
 
@@ -27,7 +26,7 @@ function http:init(config)
 end
 
 function http:handle()
-	_router:handle(req, resp)
+	router:handle(req, resp)
 end
 
 return http

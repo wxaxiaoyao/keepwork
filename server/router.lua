@@ -1,6 +1,4 @@
 --require("helper")
-local util = require("util")
-
 function string_split(str, sep)
 	local list = {}
 

@@ -1,6 +1,8 @@
 
-local mysql = require("orm/mysql")
-local tabledb = require("orm/tabledb")
+local mysql = nil
+local tabledb = nil
+--local mysql = require("orm/mysql")
+--local tabledb = require("orm/tabledb")
 
 local orm = {}
 
@@ -15,34 +17,52 @@ function orm:new()
 	local obj = {}
 
 	setmetatable(obj, self)
-	self.__index = function(t, k)
-		local mt = getmetatable(t)
-		local pos = string.find(k, '_')
-		if pos == 1 then
-			return nil
-		end
+	self.__index = self
+	--self.__index = function(t, k)
+		--local mt = getmetatable(t)
+		--local pos = string.find(k, '_')
+		--if pos == 1 then
+			--return nil
+		--end
 		
-		return mt[k]
-	end
+		--return mt[k]
+	--end
 
-	--obj._db_type = orm.DB_TYPE_MYSQL
-	--obj._db = mysql:new()
+	obj._db_type = self._db_type
+	obj._db = self._db:new()
 
-	obj._db_type = orm.DB_TYPE_TABLEDB
-	obj._db = tabledb:new()
+	--obj._db_type = orm.DB_TYPE_TABLEDB
+	--obj._db = tabledb:new()
+
 	--self.set_db_type(obj, orm.DB_TYPE_MYSQL)
 
 	return obj
 end
 
+
+local function get_db(db_type)
+	if db_type == "mysql" then
+		mysql = mysql or require("orm/mysql")
+		return mysql
+	else
+		tabledb = tabledb or require("orm/tabledb")
+		return tabledb
+	end
+end
+
 function orm:ctor()
 end
 
-function orm:init(t)
-	self._db:init(t)
+function orm:init(config)
+	self._db = get_db(config.db_type)
+	self._db_config = config[config.db_type]
+	self._db_type = config.db_type
+
+	self._db:init(self._db_config)
 end
 
 function orm:deinit()
+	--self._db:deinit()
 	self._db:deinit()
 end
 
@@ -102,11 +122,6 @@ end
 function orm:db()
 	return self._db
 end
-
---mysql:set_log(commonlib.console)
---orm:init()
-mysql:init()
-tabledb:init()
 
 return orm
 

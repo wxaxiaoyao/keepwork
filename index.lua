@@ -2,32 +2,30 @@
 package.path = package.path .. ";/root/workspace/lua/keepwork/server/?.lua;?.lua"
 package.path = package.path .. ";/root/workspace/lua/keepwork/?.lua;?.lua"
 
---NPL.load("(gl)script/ide/commonlib.lua")
-
--- 定义服务器类型
-HTTP_SERVER_TYPE = "npl"
-
 common = require("common")
 http = require("http")
+--router = require("router")
 const = require("const")
 errors = require("errors")
 config = require("config")
 
-util = http.util
 -- 初始化http
+http:init(config)
 
+util = http.util
+router = http.router
+
+
+log = function()
+end
 --errors:set_log(commonlib.console)
 errors:set_log(log)
---log = ngx_log
-
-local router = http.router
-
 
 function get_bust_version()
 	return os.time()
 end
 
-function render_server_wWiki_css() 
+function render_server_wiki_css() 
 	local bust_version = get_bust_version()
 
 	return string.format('<link href="/wiki/assets/css/main.css?bust=%s" type="text/css" rel="stylesheet">\n', bust_version)
@@ -44,21 +42,23 @@ end
 
 router:setDefaultHandle(function(req, resp)
 	resp:render("index.html", {
-		render_server_wWiki_css=render_server_wWiki_css,
+		render_server_wiki_css=render_server_wiki_css,
 		render_server_wiki_script=render_server_wiki_script,
 	})	
 end)
 
 router:path("/test", function(req, resp)
-	resp:send("hello world")
+	util.get_url({url="http://localhost:8900/api/wiki/models/test/get"},function(data)
+		resp:send(data)
+	end)
+	--resp:send("hello world")
 end)
 
 router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/api/v0', true)
 
-http:handle(config)
+http:start()
 
 --function activate()
-	----print("-----------")
 --end
 
 --NPL.this(activate)

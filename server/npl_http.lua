@@ -1,11 +1,11 @@
 
 NPL.load("(gl)script/ide/commonlib.lua")
 
+local util = import("npl_util")
 local request = import("npl_request")
 local response = import("npl_response")
 local router = import("router")
 --local log = import("log")
-local util = import("util")
 
 local http = {
 	is_start = false,

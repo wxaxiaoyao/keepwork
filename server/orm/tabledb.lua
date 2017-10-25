@@ -96,12 +96,12 @@ local tabledb = {
 
 local l_db = nil
 
-function tabledb:init()
+function tabledb:init(config)
 	if l_db then
 		return 
 	end
 
-	l_db = TableDatabase:new():connect("database/", function() end);
+	l_db = TableDatabase:new():connect(config.path or "database/", function() end);
 	if not l_db then
 		log("open tabledb failed")
 	end
@@ -166,7 +166,11 @@ function tabledb:_get_query_object(t, is_pagination)
 	t[tabledb.OFFSET] = nil
 
 	for k, v in pairs(t) do
-		key = key .. "+" .. k
+		if string.match(k, '^[+-]') then
+			key = key .. k
+		else
+			key = key .. "+" .. k
+		end
 		value[#value+1] = v
 	end
 

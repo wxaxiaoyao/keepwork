@@ -1,9 +1,7 @@
 local template = require("resty.template")
 local cjson = require("cjson")
 local cjson_safe = require("cjson.safe")
-
 local mimetype = require("mimetype")
-local util = require("util")
 
 local response = {}
 

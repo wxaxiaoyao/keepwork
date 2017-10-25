@@ -64,7 +64,7 @@ function data_source:create_inner_gitlab_data_source(params)
 	}
 
 	-- 拉取用户信息
-	local res = util.request_url({
+	local res = util.get_url({
 		url = api_base_url .. "/users",
 		method = "GET",
 		headers = {['PRIVATE-TOKEN']= l_admin_token},
@@ -79,7 +79,7 @@ function data_source:create_inner_gitlab_data_source(params)
 
 	if #data == 0 then
 		-- 不存在创建用户
-		res = util.request_url({
+		res = util.get_url({
 			url = api_base_url .. "/users",
 			method = "POST",
 			headers = {['PRIVATE-TOKEN']= l_admin_token},
@@ -96,7 +96,7 @@ function data_source:create_inner_gitlab_data_source(params)
 	end
 
 	-- 检测token
-	res = util.request_url({
+	res = util.get_url({
 		url=api_base_url .. "/users/" .. tostring(gitlab_user.external_user_id) .. "/impersonation_tokens",
 		method = "GET",
 		headers = {['PRIVATE-TOKEN']= l_admin_token},
@@ -113,7 +113,7 @@ function data_source:create_inner_gitlab_data_source(params)
 	end
 
 	if not gitlab_user.token then
-		res = util.request_url({
+		res = util.get_url({
 			url=api_base_url .. "/users/" .. tostring(gitlab_user.external_user_id) .. "/impersonation_tokens",
 			method = "POST",
 			headers = {['PRIVATE-TOKEN']= l_admin_token},
@@ -141,7 +141,7 @@ function data_source:set_gitlab_data_source(params)
 	end
 
 	params.type = params.type or const.DATA_SOURCE_TYPE_GITLAB
-	local res = util.request_url({
+	local res = util.get_url({
 		url = params.api_base_url .. "/user",
 		method = "GET",
 		headers = {['PRIVATE-TOKEN'] = params.token},
@@ -165,7 +165,7 @@ function data_source:set_github_data_source(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 	params.type = params.type or const.DATA_SOURCE_TYPE_GITHUB
-	local res = util.request_url({
+	local res = util.get_url({
 		url = params.api_base_url .. "/user",
 		method = "GET",
 		headers = {["User-Agent"]="Satellizer",["Accept"]="application/vnd.github.full+json", ["Authorization"]= " token " .. params.token},
