@@ -12,7 +12,7 @@ function npl_init()
 end
 
 function lua_init()
-
+	log = ngx_log
 end
 
 function import(filename)
@@ -57,6 +57,7 @@ function http:init(config)
 	-- 数据库初始化
 	init_db(config)
 
+	--log(server_type)
 	-- 启动webserver
 	self.http = require(server_type .. "_http")
 end

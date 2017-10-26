@@ -36,6 +36,8 @@ end
 
 -- json 解码
 function util.from_json(s)
+	ngx_log("=============")
+	ngx_log(s)
 	return cjson_safe.decode(s)
 end
 

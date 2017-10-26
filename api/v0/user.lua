@@ -36,7 +36,7 @@ function user:login(params, req, resp)
 
 
 	-- 生成token
-	local token = util.encodeJWT({username=userinfo.username}, nil, 3600 * 100)
+	local token = util.encode_jwt({username=userinfo.username}, nil, 3600 * 100)
 
 	return errors:wrap(nil, {token=token, userinfo=userinfo})
 end
@@ -71,7 +71,7 @@ function user:register(params, req, resp)
 	local vip_info = vip_model:get_by_username(params).data
 
 	-- 生成token
-	local token = util.encodeJWT({username=userinfo.username}, nil, 3600 * 100)
+	local token = util.encode_jwt({username=userinfo.username}, nil, 3600 * 100)
 
 	-- 数据格式转换
 	userinfo = convert_model.user_new_to_old(userinfo)

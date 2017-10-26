@@ -30,13 +30,16 @@ function request:new()
 
 	obj.headers = ngx.req.get_headers()
 
+	ngx_log("-----------------")
 	local authorization = obj.headers['authorization']
 	local token = authorization and authorization:match("%s+(%S+)")
 	obj.payload = util.decode_jwt(token or "")
 
+	ngx_log("-----------------1")
 	if obj.query_string then
 		obj.params = ngx.req.get_uri_args() or {}
 	elseif obj.content_type then
+		ngx_log("-----------------2")
 		--ngx_log(obj.content_type)
 		--ngx_log(obj.headers)
 		ngx.req.read_body()
@@ -50,6 +53,7 @@ function request:new()
 	else
 	end
 
+	ngx_log("-----------------3")
 	return obj
 end
 

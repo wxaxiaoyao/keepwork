@@ -36,7 +36,7 @@ function site_data_source:_create_gitlab_project(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
-	local res = util.request_url({
+	local res = util.get_url({
 		url = params.api_base_url .. "/projects",
 		method = "GET",
 		headers = {['PRIVATE-TOKEN'] = params.token},
@@ -60,7 +60,7 @@ function site_data_source:_create_gitlab_project(params)
 	end
 
 	-- 不存创建项目
-	res = util.request_url({
+	res = util.get_url({
 		url = params.api_base_url .. "/projects",
 		method = "POST",
 		headers = {['PRIVATE-TOKEN'] = params.token},
@@ -79,7 +79,7 @@ function site_data_source:_create_gitlab_project(params)
 	local project = res.data
 	--local webhook = "http://dev.keepwork.com/api/wiki/models/data_source/gitlabWebhook"
 	---- 创建webhook
-	--res = util.request_url({
+	--res = util.get_url({
 		--url = params.api_base_url .. "/projects/" .. tostring(project.id) .. "/hooks",
 		--method = "POST",
 		--headers = {['PRIVATE-TOKEN'] = params.token},

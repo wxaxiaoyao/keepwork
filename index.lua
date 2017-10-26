@@ -48,10 +48,10 @@ router:setDefaultHandle(function(req, resp)
 end)
 
 router:path("/test", function(req, resp)
-	util.get_url({url="http://localhost:8900/api/wiki/models/test/get"},function(data)
+	util.get_url({url="http://www.baidu.com"},function(data)
 		resp:send(data)
 	end)
-	--resp:send("hello world")
+	resp:send("hello world")
 end)
 
 router:filemap('/api/wiki/models', '/root/workspace/lua/keepwork/api/v0', true)
