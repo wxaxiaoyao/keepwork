@@ -16,7 +16,7 @@ NPL.load("(gl)script/ide/System/Encoding/jwt.lua")
 --local requests = require("requests")
 
 local jwt = commonlib.gettable("System.Encoding.jwt")
-local util = {};
+local util = commonlib.gettable("nws.util");
 
 -- Decode an URL-encoded string (see RFC 2396)
 function util.decode_url(str)

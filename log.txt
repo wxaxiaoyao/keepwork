@@ -1,21 +1,31 @@
-NPL bin dir: /mnt/d/workspace/npl/NPLRuntime/ParaWorld/bin64/
-no packages at: /mnt/d/workspace/npl/NPLRuntime/ParaWorld/packages
-ParaEngine Root Dir is /mnt/d/workspace/lua/keepwork/
-search path: /mnt/d/workspace/npl/NPLRuntime/npl_packages/main/
-./packages dir: /mnt/d/workspace/lua/keepwork/
+NPL bin dir: /root/workspace/npl/NPLRuntime/ParaWorld/bin64/
+no packages at: /root/workspace/npl/NPLRuntime/ParaWorld/packages
+ParaEngine Root Dir is /root/workspace/lua/keepwork/
+search path: /root/workspace/npl/NPLRuntime/npl_packages/main/
+./packages dir: /root/workspace/lua/keepwork/
 main loop: index.lua 
 CAssetManifest loaded 0 files
-CAsyncLoader is started with 1 IO thread and 2 worker thread
+CAsyncLoader QueueID:0(Local) has 1 worker threads
+CAsyncLoader QueueID:1(Asset) has 1 worker threads
+CAsyncLoader QueueID:2(Web) has 1 worker threads
+CAsyncLoader QueueID:3(Asset_BigFile) has 1 worker threads
+CAsyncLoader QueueID:4(AudioFile) has 1 worker threads
+CAsyncLoader is started with 1 IO thread and 5 worker threads
 warning: ParaEngine::LoadLibrary( ./libPhysicsBT.so ) failed because ./libPhysicsBT.so: cannot open shared object file: No such file or directory
 Failed loading plug-in: ./libPhysicsBT.so
 note: no physics engine found, null physics is used 
-2017-10-25 19:20:18|1860372352|ParaEngineServer started
+2017-10-27 17:53:26|-231909504|ParaEngineServer started
 (main) state is now running in a separate thread. It is more responsive now. 
 ParaEngine LuaJIT 64bits version:LuaJIT 2.1.0-beta3
 Jit status:true, SSE2, SSE3, SSE4.1, BMI2, fold, cse, dce, fwd, dse, narrow, loop, abc, sink, fuse 
 ffi loaded shared lib: C
-warning: script file npl_util.lua not found
-NPL server 0.1 is listening on 0.0.0.0:88
+2017-10-27 17:53:26 13||system|os|hook cm_m_down_hook of type 1 is created
+2017-10-27 17:53:26 13||system|os|hook cm_m_move_hook of type 1 is created
+2017-10-27 17:53:26 13||system|os|hook cm_m_wheel_hook of type 1 is created
+2017-10-27 17:53:26 13||system|os|hook cm_m_up_hook of type 1 is created
+2017-10-27 17:53:26 13||system|os|hook cm_keydown of type 1 is created
+{is_start=false,request={},util={},config={default={log={file=true,filename="/root/workspace/lua/keepwork/log.txt",},root_dir="/root/workspace/lua/keepwork/",account_info={qq={client_secret="01bd221b70beee7ffc64230e4a261873",},gitlab={host="git.keepwork.com",token="uVtd6_fs82yHyyEZAtzy",},github={client_secret="e8ca5391317ddca9c0907811ed7a0a814880f9d1",},weixin={client_secret="eed69599248b4e8096300910c1a56db4",},email={url="smtp.exmail.qq.com",username="noreply@mail.keepwork.com",from="noreply@mail.keepwork.com",password="Keepwork.123",},xinlangweibo={client_secret="1dacf114c693d67c382de8f1da225ebb",},sms={accountToken="2030b26949574f0694413a4881caf0b8",},},},database={mysql={password="wuxiangan",db_name="keepwork",username="wuxiangan",host="127.0.0.1",port=3306,},db_type="mysql",tabledb={path="database/",},},server_type="npl",server_port=8888,},response={},orm={DB_TYPE_TABLEDB=1,DB_TYPE_MYSQL=0,OFFSET="$offset",LIMIT="$limit",},http={is_start=false,response={},request={},router={handler={groupHandler={},fil==>log message ignored, because it is longer than 1024
+{handler={groupHandler={},fileHandler={},controllerHandler={},pathHandler={},},}启动服务器...NPL server 0.1 is listening on 0.0.0.0:8888
 TCPKeepAlive: false
 AppKeepAlive: false
 IdleTimeout: true
@@ -24,21 +34,13 @@ UseCompression(incoming): false
 CompressionLevel: -1
 CompressionThreshold: 204800
 NPL max pending incoming connections allowed is 1000
-2017-10-25 19:20:18|1559693056|incoming connection (127.0.0.1/51824) is established and assigned a temporary id (~1). 
-[string "script/ide/System/os/GetUrl.lua"]:73: attempt to index global 'cURL' (a nil value) <Runtime error>
-2017-10-25 19:20:18|1559693056|incoming connection (127.0.0.1/51822) is established and assigned a temporary id (~2). 
+2017-10-27 17:53:26|-511727872|incoming connection (121.35.210.193/3493) is established and assigned a temporary id (~1). 
+/test
+----------------2017-10-27 17:53:26|-511727872|incoming connection (121.35.210.193/38124) is established and assigned a temporary id (~2). 
 network: handle_read stopped, asio msg: End of file. Connection will be closed 
-2017-10-25 19:20:23|1559693056|connection closed (127.0.0.1/51822) with id (~2). 
-2017-10-25 19:20:26|1559693056|incoming connection (127.0.0.1/51839) is established and assigned a temporary id (~3). 
-[string "script/ide/System/os/GetUrl.lua"]:73: attempt to index global 'cURL' (a nil value) <Runtime error>
-2017-10-25 19:22:20|1559693056|connection time out (127.0.0.1/51824) with id (~1). 
-2017-10-25 19:22:20|1559693056|connection closed (127.0.0.1/51824) with id (~1). 
-2017-10-25 19:22:20|1559693056|incoming connection (127.0.0.1/52016) is established and assigned a temporary id (~4). 
-[string "script/ide/System/os/GetUrl.lua"]:73: attempt to index global 'cURL' (a nil value) <Runtime error>
-2017-10-25 19:22:28|1559693056|connection time out (127.0.0.1/51839) with id (~3). 
-2017-10-25 19:22:28|1559693056|connection closed (127.0.0.1/51839) with id (~3). 
-2017-10-25 19:22:28|1559693056|incoming connection (127.0.0.1/52031) is established and assigned a temporary id (~5). 
-[string "script/ide/System/os/GetUrl.lua"]:73: attempt to index global 'cURL' (a nil value) <Runtime error>
-2017-10-25 19:24:20|1559693056|connection time out (127.0.0.1/52016) with id (~4). 
-2017-10-25 19:24:20|1559693056|connection closed (127.0.0.1/52016) with id (~4). 
-2017-10-25 19:24:20|1559693056|incoming connection (127.0.0.1/52192) is established and assigned a temporary id (~6). 
+2017-10-27 17:53:31|-511727872|connection closed (121.35.210.193/38124) with id (~2). 
+network: handle_read stopped, asio msg: End of file. Connection will be closed 
+2017-10-27 17:55:22|-511727872|connection closed (121.35.210.193/3493) with id (~1). 
+2017-10-27 18:07:18|-511727872|incoming connection (140.205.225.186/24192) is established and assigned a temporary id (~3). 
+/master-status
+network: handle_read stopped, asio msg: End of file. Connection will be closed 

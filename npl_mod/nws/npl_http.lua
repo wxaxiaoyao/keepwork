@@ -1,10 +1,8 @@
 
-NPL.load("(gl)script/ide/commonlib.lua")
-
-local util = import("npl_util")
-local request = import("npl_request")
-local response = import("npl_response")
-local router = import("router")
+local util = commonlib.gettable("nws.util")
+local request = commonlib.gettable("nws.request")
+local response = commonlib.gettable("nws.response")
+local router = commonlib.gettable("nws.router")
 --local log = import("log")
 
 local http = {
@@ -47,7 +45,7 @@ function http:handle(config)
 	--log(filename:match("@?(.*)"))
 	--log(debug.getinfo(1,'S').source:match('^[@%./\\]*(.+[/\\])[^/\\]+$'))
 	
-	local port = config.port or 88
+	local port = config.port or 8888
 	NPL.AddPublicFile(filename, -10)
 	NPL.StartNetServer("0.0.0.0", tostring(port))
 end

@@ -1,4 +1,6 @@
 
-local md5 = require("md5")
+NPL.load("(gl)script/ide/commonlib.lua")
 
-print(md5.sumhexa("wuxiangan"))
+local nws = NPL.load("nws.nws")
+
+log(nws)

@@ -20,13 +20,12 @@ function file_exist(filename)
 	return file ~= nil
 end
 
-local router = {
-	handler={
-		pathHandler={},
-		controllerHandler={},
-		groupHandler={},
-		fileHandler={},
-	}
+local router = commonlib.gettable("nws.router")
+router.handler = {
+	pathHandler={},
+	controllerHandler={},
+	groupHandler={},
+	fileHandler={},
 }
 
 

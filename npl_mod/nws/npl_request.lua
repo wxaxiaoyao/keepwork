@@ -1,7 +1,7 @@
 --NPL.load("(gl)script/ide/Json.lua");
 
-local util = NPL.load("./npl_util.lua");
-local request = {}
+local util = commonlib.gettable("nws.util")
+local request = commonlib.gettable("nws.request")
 
 -- 将头部统一转小写
 local function format_headers(headers)

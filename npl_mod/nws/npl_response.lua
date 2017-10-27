@@ -1,6 +1,6 @@
 NPL.load('script/ide/commonlib.lua')
 NPL.load('script/ide/Json.lua')
-local mimetype = require('mimetype')
+local mimetype = commonlib.gettable("nws.mimetype")
 local template = require("resty.template")
 
 local status_strings = {
@@ -23,7 +23,7 @@ local status_strings = {
 }
 
 
-local response = {}
+local response = commonlib.gettable("nws.response")
 
 
 function response:new(req)

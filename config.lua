@@ -1,10 +1,10 @@
 
 -- 全局配置
 local config = {
-	--server_type = "npl",   -- 服务器类型 npl, lua(lua-nginx)
-	server_type = "lua",   -- 服务器类型 npl, lua(lua-nginx)
+	server_type = "npl",   -- 服务器类型 npl, lua(lua-nginx)
+	--server_type = "lua",   -- 服务器类型 npl, lua(lua-nginx)
 	server_ip = nil,
-	server_port = 88,
+	server_port = 8888,
 
 	-- 数据库配置
 	database = {

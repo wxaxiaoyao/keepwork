@@ -1,3 +1,5 @@
+
+local nws = commonlib.gettable("nws")
 local mime = {
 	["html"] = "text/html",
 	["htm"] = "text/html",
@@ -106,5 +108,7 @@ local mime = {
 	wmv = 'video/x-ms-wmv',
     avi = 'video/x-msvideo'
 }
+
+nws.mimetype = mime
 
 return mime
