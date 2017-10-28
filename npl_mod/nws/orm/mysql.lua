@@ -26,6 +26,7 @@ end
 
 function mysql:init(config)
 	if l_is_inited then
+		log("mysql already init")
 		return
 	end
 

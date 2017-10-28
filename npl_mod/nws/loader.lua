@@ -2,7 +2,7 @@
 
 
 --local nws = commonlib.gettable("nws")
-local nws = {
+nws = {
 	is_start = false,
 }
 
@@ -14,6 +14,23 @@ local server_type_npl = "npl"
 
 local default_config = {
 	server_type = "npl",
+	server_ip = nil,
+	server_port = 8888,
+	database = {
+		--db_type = "mysql",
+		tabledb = {             -- tabledb 数据库配置
+			path = "database/", -- 数据库路径
+			-- sync_mode = true,   -- 是否为异步模式
+		},
+
+		mysql = {                   -- mysql 数据库配置
+			db_name = "keepwork",   -- 数据库名
+			username = "wuxiangan", -- 账号名
+			password = "wuxiangan", -- 账号密码
+			host = "127.0.0.1",     -- 数据库ip地址
+			port = 3306,            -- 数据库端口
+		}
+	}
 }
 
 function nws.import(modname)
@@ -25,6 +42,7 @@ function nws.import(modname)
 		return NPL.load(modname)
 	end
 end
+
 
 function nws:init(config)
 	config = config or default_config 
@@ -39,14 +57,19 @@ function nws:init(config)
 		commonlib = require("nws.commonlib")
 	end
 
+	self.gettable = commonlib.gettable
+
 	self.config = config
-	self.orm = self.import("orm.orm")
+	self.orm = self.import("orm")
 	self.router = self.import("router")
 	self.mimetype = self.import("mimetype")
 	self.request = self.import(server_type .. "_request")
 	self.response = self.import(server_type .. "_response")
 	self.http = self.import(server_type .. "_http")
 	self.util = self.import(server_type .. "_util")
+	self.log = self.import(server_type .. "_log")
+
+	self.orm:init(config)
 end
 
 function nws:start()

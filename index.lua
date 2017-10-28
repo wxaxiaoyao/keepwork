@@ -6,14 +6,11 @@ local nws = require("nws.loader")
 local config = require("config")
 nws:init(config)
 
-log(nws)
-
 local router = nws.router
+local log = nws.log
 
-log(router)
-router:path("/test", function(req, resp)
-	log("----------------")
-	resp:send("hello world")
+router:path("/hello", function(req, resp)
+	resp:send("hello world test")
 end)
 
 
@@ -22,7 +19,13 @@ end)
 
 
 
-
+nws.log.debug("this is debug log, %s, %s", "----------------", "-----------")
+nws.log.info("this is info log")
+nws.log.info({key="test"})
+nws.log.warn("this is warn log")
+nws.log.error("this is error log")
+nws.log.fatal("this is fatal log")
+nws.log.trace("this is trace log")
 
 
 

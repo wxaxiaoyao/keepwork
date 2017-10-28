@@ -1,10 +1,10 @@
 
-local mysql = nil
-local tabledb = nil
+local _db = nil
 --local mysql = require("orm/mysql")
 --local tabledb = require("orm/tabledb")
 
-local orm = {}
+local nws = commonlib.gettable("nws")
+local orm = commonlib.gettable("nws.orm")
 
 orm.LIMIT = "$limit"
 orm.OFFSET = "$offset"
@@ -41,13 +41,10 @@ end
 
 
 local function get_db(db_type)
-	if db_type == "mysql" then
-		mysql = mysql or require("orm/mysql")
-		return mysql
-	else
-		tabledb = tabledb or require("orm/tabledb")
-		return tabledb
-	end
+	--_ = db_type or error(db_type)
+	db_type = db_type or "mysql"
+	_db = _db or nws.import("orm." .. db_type)
+	return _db
 end
 
 function orm:ctor()

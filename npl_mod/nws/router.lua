@@ -28,6 +28,35 @@ router.handler = {
 	fileHandler={},
 }
 
+router.regexp_handler = {}
+router.normal_handler = {}
+local function parse_path(path)
+	-- 是否正则path 正则串  路径参数名列表
+	return false, regstr, argslist
+end
+
+function router:router(path, controller, handle)
+	local is_reg, regstr, argslist = parse_path(path)
+
+	local regexp_handler = self.regexp_handler
+	local normal_handler = self.normal_handler
+
+	local h = {
+		regstr = regstr,
+		path = path,
+		argslist = argslist
+		controller = controller,
+		handle = handle,
+	}
+
+	if is_reg then
+		regexp_handler[#regexp_handler+1] = h
+	else
+		normal_handler[path] = h
+	end
+
+	return self
+end
 
 function router:new()
 	local obj = {}

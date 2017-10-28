@@ -2,14 +2,34 @@
 
 local common = {}
 
+---- get a table f, where f is a string
+---- @param f: f is a string like "a.b.c.d"
+---- @param rootEnv: it can be a table from which to search for f, if nil, the global table _G is used.
+--function nws.gettable(f, root_table, default_value)
+    --local t = root_table or _G    -- start with the table of globals
+    --if not f then 
+		--return t
+	--end 
+
+	--default_value = default_value or {}
+    --for w, d in string.gfind(f, "([%w_]+)(.?)") do
+        --t[w] = t[w] or default_value  -- create table if absent
+        --t = t[w]            -- get the table
+    --end 
+    --return t;
+--end
+--
 --common.util = util
 
 -- get a table f, where f is a string
 -- @param f: f is a string like "a.b.c.d"
 -- @param rootEnv: it can be a table from which to search for f, if nil, the global table _G is used.
 function common.gettable(f, rootEnv)
-    if(not f) then return end 
     local t = rootEnv or _G    -- start with the table of globals
+    if not f then 
+		return t
+	end 
+
     for w, d in string.gfind(f, "([%w_]+)(.?)") do
         t[w] = t[w] or {}   -- create table if absent
         t = t[w]            -- get the table
