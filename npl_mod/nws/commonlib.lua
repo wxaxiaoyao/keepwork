@@ -1,6 +1,4 @@
---local util = require("util")
-
-local common = {}
+commonlib = {}
 
 ---- get a table f, where f is a string
 ---- @param f: f is a string like "a.b.c.d"
@@ -19,12 +17,12 @@ local common = {}
     --return t;
 --end
 --
---common.util = util
+--commonlib.util = util
 
 -- get a table f, where f is a string
 -- @param f: f is a string like "a.b.c.d"
 -- @param rootEnv: it can be a table from which to search for f, if nil, the global table _G is used.
-function common.gettable(f, rootEnv)
+function commonlib.gettable(f, rootEnv)
     local t = rootEnv or _G    -- start with the table of globals
     if not f then 
 		return t
@@ -37,10 +35,10 @@ function common.gettable(f, rootEnv)
     return t;
 end
 
-common.object = {}
+commonlib.object = {}
 
 -- 对象继承
-function common.inherit(base, derived)
+function commonlib.inherit(base, derived)
 	derived = derived or {}
 	
 	-- 创建子类
@@ -107,7 +105,7 @@ function common.inherit(base, derived)
 end
 
 -- 对象导出
-function common.export(obj, list)
+function commonlib.export(obj, list)
 	return setmetatable({}, {
 		__index = function(t,k)
 			for _, key in ipairs(list or {}) do
@@ -172,7 +170,7 @@ local function console(obj, out)
 end
 
 -- 控制台输出
-function common.console(...)
+function commonlib.console(...)
 	local count = select("#", ...)
 	for i=1, count,1 do
 		--print((select(i, ...)))
@@ -181,16 +179,16 @@ function common.console(...)
 end
 
 -- 获取当前日期
-function common.get_date()
+function commonlib.get_date()
 	return os.date("%Y-%m-%d")
 end
 
-function common.get_time()
+function commonlib.get_time()
 	return os.date("%H:%M:%S")
 end
 
-function common.get_datetime()
-	return common.get_date() .. " " .. common.get_time()
+function commonlib.get_datetime()
+	return commonlib.get_date() .. " " .. commonlib.get_time()
 end
 
 function string_split(str, sep)
@@ -232,7 +230,7 @@ function test()
 	console(debug.getinfo(2))
 end
 
---return common
+--return commonlib
 
 function ngx_log(...)
 	local count = select("#", ...)
@@ -245,4 +243,4 @@ function ngx_log(...)
 end
 
 
-return common
+return commonlib

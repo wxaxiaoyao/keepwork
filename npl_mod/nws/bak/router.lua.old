@@ -1,5 +1,14 @@
 --require("helper")
 function string_split(str, sep)
+	local list = {}
+
+	for word in string.gmatch(str, sep .. '?([^' .. sep .. ']*)') do
+		if word ~= "" then
+			list[#list+1] = word
+		end
+	end
+
+	return list
 end
 
 function file_exist(filename)
@@ -12,60 +21,18 @@ function file_exist(filename)
 end
 
 local router = commonlib.gettable("nws.router")
+router.handler = {
+	pathHandler={},
+	controllerHandler={},
+	groupHandler={},
+	fileHandler={},
+}
 
 router.regexp_handler = {}
 router.normal_handler = {}
-router.controller_path = "controllers/"
-
-local method_list = {
-	get = "get",
-	post = "post",
-	delete = "delete",
-	put = "put",
-	head = "head",
-	patch = "patch",
-	options = "options",
-}
-
 local function parse_path(path)
 	-- 是否正则path 正则串  路径参数名列表
-	local regexp_handler = self.regexp_handler
-	local normal_handler = self.normal_handler
-	local number = '[%d]+'
-	local string = '[%w]+'
-	local none = '[%d%w]+'
-	local regpath = "/"
-	local argslist = {}
-	local argscount = 1
-	local isregpath = false
-	for word in string.gmatch(path, '([^/]+)') do
-		local argname = string.match(word, '(:[%w]+)')
-		local regstr = string.match(word, '(%(.*%))')
-		word = string.gsub(word, argname, "")
-		word = string.gsub(word, '(%(.*%))', regstr or none)
-		argslist[argscount] = argname
-		argscount = argscount + 1
-		
-		if argname or regstr then
-			isregpath = true
-		end
-
-		regpath = regpath .. '/' .. word 
-	end
 	return false, regstr, argslist
-end
-
-local function get_controller(ctrl_name)
-	if not ctrl_name or ctrl_name == "" then
-		return nil
-	end
-
-	local ctrl = nil
-	pcall(function(module_name)
-		ctrl = require(module_name)
-	end, 'controllers.' .. ctrl_name)
-
-	return ctrl
 end
 
 -- path: url路劲
@@ -80,7 +47,7 @@ function router:router(path, controller, handles)
 	local h = {
 		regstr = regstr,
 		path = path,
-		argslist = argslist,
+		argslist = argslist
 		controller = controller,
 		handle = handle,
 	}
@@ -89,12 +56,8 @@ function router:router(path, controller, handles)
 	for handle in string.gmatch(handles, '([^,]+)') do
 		method, funcname = string.match(handle, "(.*):(.*)")
 		if not method or method == "" then
-			method = method_list[string.lower(handle)] or "all"
+			method = "all"
 			funcname = handle
-		end
-
-		if not funcname or funcname == "" then
-			funcname = method
 		end
 
 		h[method] = funcname
@@ -110,44 +73,8 @@ function router:router(path, controller, handles)
 end
 
 function router:handle(path, ctx)
-	local normal_handle = self.normal_handler[path]
-	--local regexp_handler = self.regexp_handler
-	local method = string.lower(ctx.request.method)
-	local paths = {}
-	local url_params = {}
-
-	-- 普通完整匹配
-	local funcname = normal_handle[method] or normal_handle["all"]
-	local controller = normal_handle.controller
-	if funcname then
-		if type(controller)	== "function" then
-			return controller(ctx)
-		elseif type(controller) == "table" and controller[funcname] then
-			return (controller[funcname])(controller, ctx)
-		else
-			--error("controller type error")
-		end
-	end
-
-	-- 控制器自动匹配
-	for word in string.gmatch(path, '([^/]+)') do
-		paths[#paths+1] = word
-		if #paths > 2 then
-			url_params[#url_params+1] = word
-		end
-	end
 	
-	ctx.request.url_params = url_params
-	controller = get_controller(paths[1]) 
-	funcname = paths[2] or method
-	if type(controllerj) == "table" and controller[funcname] then
-		return (controller[funcname])(controller, ctx)
-	end
-
-	-- 正则路由
 end
-
-
 --function router:new()
 	--local obj = {}
 
@@ -293,4 +220,4 @@ end
 	--end
 --end
 
-return router
+--return router
