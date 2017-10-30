@@ -22,7 +22,7 @@ end
 function route:get_by_paths(root, paths)
 	root = root or root:new()
 	for _, path in ipairs(paths or {}) do
-		root.next_map[path] = root.next_map[path] or root:new()
+		root.next_map[path] = root.next_map[path] or route:new()
 		root = root.next_map[path]
 	end
 
@@ -106,7 +106,7 @@ function router:get_handle(is_reg, path)
 		handler = self.normal_handler
 	end
 
-	handler[path] = handle[path] or {}
+	handler[path] = handler[path] or {}
 
 	return handler[path]
 end
@@ -125,22 +125,21 @@ function router:router(path, controller, handles)
 	handle.path = path
 	handle.argslist = argslist
 	handle.controller = controller
-	handle.handle = handle,
+	handle.handle = handle
 	handle.paths = paths
 
-	handles = handles or "any:"
-	for handle in string.gmatch(handles, '([^,]+)') do
-		method, funcname = string.match(handle, "(.*):(.*)")
+	for handle_str in string.gmatch(handles or "any", '([^,]+)') do
+		method, funcname = string.match(handle_str, "(.*):(.*)")
 		if not method or method == "" then
-			method = method_list[string.lower(handle)] or "any"
-			funcname = handle
+			method = method_list[string.lower(handle_str)] or "any"
+			funcname = handle_str
 		end
 
 		if not funcname or funcname == "" then
 			funcname = method
 		end
 
-		h[method] = funcname
+		handle[method] = funcname
 	end
 
 	-- 注册控制器路由
@@ -187,10 +186,9 @@ function router:handle(path, ctx)
 	end
 	
 	-- 控制器路径匹配
-	handle = self.controller_handler[(string.gsub(path, '/[%w%d]+', '')) or ""]
+	handle = self.controller_handler[(string.gsub(path, '/[%w%d]+$', '')) or ""]
 	if handle then
-		paths = handle.paths
-		funcname = paths[#paths]
+		funcname = string.match(path,'/([%w%d]+)$')
 		controller = handle.controller
 		if controller[funcname] then
 			return (controller[funcname])(controller, ctx)
@@ -202,12 +200,17 @@ function router:handle(path, ctx)
 	for word in string.gmatch(path, '([^/]+)') do
 		paths[#paths+1] = word
 	end
+
+	route_handle = tree_handler
+	--commonlib.console(route_handle)
 	for _, x in ipairs(paths) do
-		route_handle = tree_handler.next_map[x]
 		url_params[#url_params+1] = x
-		if route_handle and route_handle.handle then
-			handle = route_handle.handle
-			url_params = {}
+		if route_handle then
+			route_handle = route_handle.next_map[x]
+			if route_handle and route_handle.handle then
+				handle = route_handle.handle
+				url_params = {}
+			end
 		end
 	end
 	if handle then
@@ -220,32 +223,31 @@ function router:handle(path, ctx)
 		end
 	end
 
-
 	url_params = {}
-	handle = nil
 	for word in string.gmatch(path, '([^/]+)') do
-		paths[#paths+1] = word
-		if #paths > 2 then
-			url_params[#url_params+1] = word
-		end
+		url_params[#url_params+1] = word
 	end
 	-- 控制器自动匹配
 	ctx.request.url_params = url_params
-	controller = self:get_controller(paths[1]) 
-	funcname = paths[2] or method
+	controller = self:get_controller(url_params[1]) 
+	funcname = url_params[2] or method
 	if type(controllerj) == "table" and controller[funcname] then
+		table.remove(url_params,1)
+		table.remove(url_params,1)
+		ctx.request.url_params = url_params
 		return (controller[funcname])(controller, ctx)
 	end
 
 	-- 正则路由
-	for _, handle in ipairs(regexp_handler) do
+	for _, handle in pairs(regexp_handler) do
 		url_params = {string.match(path, handle.regstr)}
-		if #url_params then
+		if #url_params > 0 then
 			for i, v in ipairs(handle.argslist) do
 				url_params[v] = url_params[i] 
 			end
 			ctx.request.url_params = url_params
 			
+			--ctx.handle = handle
 			return handle_func(handle, ctx)
 		end
 	end
@@ -253,151 +255,5 @@ function router:handle(path, ctx)
 	print("no router match")
 	return nil
 end
-
-
---function router:new()
-	--local obj = {}
-
-	--setmetatable(obj, self)
-	--self.__index = self
-	
-	--return obj
---end
-
-----path 为路径
-----handle 为处理链
---function router:path(path, handle)
-	--local h = nil
-
-	--if type(handle) == "function" then
-		--h = {handle}
-	--elseif type(handle) ~= "object" then
-		--h = {function() return handle end}
-	--else
-		--h = handle
-	--end
-
-	--self.handler.pathHandler[path] = h
---end
-
---function router:terminal()
-	--self.is_terminal = true
---end
-
---function router:group(path, handle)
-
---end
-
---function router:controller(path, handle)
-	
---end
-
-
---function router:filemap(path, dir, is_api, before, after) 
-	--local handle = function(req, resp)
-		--local uri = req.uri
-		--local pos = string.find(uri, path)
-		--if 1 ~= pos then
-			--return false
-		--end
-		
-		--local filename, funcname = string.match(uri, '^' .. path .. '/([^/]*)/(.*)')
-		--if not filename or not funcname then
-			--return false
-		--end
-
-		--filename = dir .. '/' .. filename
-		--funcname = string.gsub(funcname, '/','_')
-		---- 文件不存在
-		--if not file_exist(filename .. '.lua') then
-			--ngx_log("file not exist:" .. filename)
-			--return false
-		--end
-		---- 加载模块
-		--local module = require(filename)
-		--local func = module[funcname]
-		--if not func or type(func) ~= "function" then
-			--ngx_log("request url nox exist")
-			--return false
-		--end
-		
-		--if is_api then
-			--local params = req:get_params()
-			--local result = func(module, params, req, resp)
-			--local data = result.data 
-			
-			--if result.data  then
-				--result.data = nil
-			--end
-
-			--resp:send({error = result, data = data})
-		--else
-			--return func(module, req, resp)
-		--end
-	--end
-
-	--local handles = {}
-	--for _, h in ipairs(before or {}) do
-		--if type(h) == "function" then
-			--handles[#handles+1] = h
-		--end
-	--end
-
-	--handles[#handles+1] = handle
-
-	--for _, h in ipairs(after or {}) do
-		--if type(h) == "function" then
-			--handles[#handles+1] = h
-		--end
-	--end
-
-	--self.handler.fileHandler[path] = handles
---end
-
----- 默认处理程序
---function router:setDefaultHandle(handle)
-	--self.defaultHandle = handle
---end
-
----- 获取处理程序
---function router:getHandle(path)
-	---- 优先路径匹配
-	--local handle = self.handler.pathHandler[path]
-	
-	--if handle then 
-		--return handle
-	--end
-
-	---- 组匹配
-	--for key, value in pairs(self.handler.groupHandler) do
-		--local pos = string.find(path, key)
-		--if pos == 1 then 
-			--return value
-		--end
-	--end
-
-	---- 文件匹配
-	--for key, value in pairs(self.handler.fileHandler) do
-		--local pos = string.find(path, key)
-		--if pos == 1 then 
-			--return value
-		--end
-	--end
-
-	--return {self.defaultHandle}
---end
-
----- 处理请求
---function router:handle(req, resp)
-	--local handle = self:getHandle(req.uri)
-
-	--for _, func in ipairs(handle or {}) do
-		--func(req, resp)
-
-		--if not self.is_terminal then
-			--break
-		--end
-	--end
---end
 
 return router

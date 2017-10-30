@@ -9,46 +9,112 @@ local ctx = {
 	}
 }
 
--- 常用路由
-router:router("/api/v0/user/login", function(ctx) end) -- 任意方法请求
-router:router("/api/v0/user/login", function(ctx) end, 'any') -- 任意方法请求
-router:router("/api/v0/user/login", function(ctx) end, 'get')
-router:router("/api/v0/user/login", function(ctx) end, 'post')
-router:router("/api/v0/user/login", function(ctx) end, 'delete')
-router:router("/api/v0/user/login", function(ctx) end, 'put')
-router:router("/api/v0/user/login", function(ctx) end, 'head')
-router:router("/api/v0/user/login", function(ctx) end, 'patch')
-router:router("/api/v0/user/login", function(ctx) end, 'options')
+function print_request(ctx)
+	print(ctx.request.uri, "  ", ctx.request.method)
+	commonlib.console(ctx)
+end
 
--- 控制器路由
-local userController = {}
-router:router("/api/v0/user", userController) -- get => userController:get()  post => userController:post() ...
-router:router("/api/v0/user/register", userController, "post:register") -- post =>  userController:register()
-router:router("/api/v0/user/1", userController, "get") -- get =>  userController:get()
-router:router("/api/v0/user/getByName", userController, "getByName") -- get =>  userController:getByName()
+function normal_router_test()
+	print("----------normal router test-----------")
+	router:router("/api/v0/user/login", function(ctx) print_request(ctx) end, 'get')
+	ctx.request.method = "get"
+	ctx.request.uri = "/api/v0/user/login"
+	router:handle(ctx.request.uri, ctx)
+	ctx.request.method = "post"
+	router:handle(ctx.request.uri, ctx)
 
-router:router("/api/v0/user/login", function(ctx)
-	print("------------")
-	assert(ctx.request.method == "post", "method error:" .. ctx.request.method)
-end, "post")
+	router:router("/api/v0/user/login", function(ctx) print_request(ctx) end)
+	ctx.request.method = "delete"
+	router:handle(ctx.request.uri, ctx)
+end
 
-router:router("/api/:version/user/login", function(ctx)
-	print("------------")
-	assert(ctx.request.method == "post", "method error:" .. ctx.request.method)
-end, "post")
---router:router("/api/v0/user/login", function(ctx)
-	--assert(ctx.request.method == "get", "method error")
---end, "get")
+--normal_router_test()
 
+function controller_router_test()
+	local userController = {}
+
+	function userController:login(ctx) print_request(ctx) end
+	function userController:api_register(ctx) print_request(ctx) end
+
+	local uri_prefix = "/controller/router/user"
+	ctx.request.uri = uri_prefix .. "/login"
+	ctx.request.method = "get"
+	router:router(uri_prefix, userController)
+	router:handle(ctx.request.uri, ctx)
+
+	ctx.request.uri = uri_prefix .. "/login/test"
+	ctx.request.method = "get"
+	router:router(uri_prefix, userController)
+	router:handle(ctx.request.uri, ctx)
+	--ctx.request.uri = uri_prefix .. "/register"
+	--ctx.request.method = "get"
+	--router:router(ctx.request.uri, userController, "post:api_register")
+	--router:handle(ctx.request.uri, ctx)
+end
+--controller_router_test()
+
+function regexp_router_test()
+	local uri_prefix = "/regexp/router/test"
+	
+	router:router(uri_prefix .. "/:id(int)", function(ctx) print_request(ctx) end)
+	ctx.request.uri = uri_prefix .. "/123"
+	router:handle(ctx.request.uri, ctx)
+	ctx.request.uri = uri_prefix .. "/123.23"
+	router:handle(ctx.request.uri, ctx)
+
+	router:router(uri_prefix .. "/:id(number)", function(ctx) print_request(ctx) end)
+	ctx.request.uri = uri_prefix .. "/123.12"
+	router:handle(ctx.request.uri, ctx)
+
+	router:router(uri_prefix .. "/:str(string)", function(ctx) print_request(ctx) end)
+	ctx.request.uri = uri_prefix .. "/hello"
+	router:handle(ctx.request.uri, ctx)
+	
+	router:router(uri_prefix .. "/abc/:str([abc]+)", function(ctx) print_request(ctx) end)
+	ctx.request.uri = uri_prefix .. "/abc/test"
+	router:handle(ctx.request.uri, ctx)
+	ctx.request.uri = uri_prefix .. "/abc/ab"
+	router:handle(ctx.request.uri, ctx)
+end
+
+regexp_router_test()
 
 commonlib.console(router)
 
-ctx.request.method = "get"
-router:handle("/api/v0/user/login", ctx)
-ctx.request.method = "post"
-router:handle("/api/v0/user/login", ctx)
+-- 常规路由
+--router:router("/api/v0/user/login", function(ctx) print_request(ctx) end) -- 任意方法请求
+--router:router("/api/v0/user/login", function(ctx) print_request(ctx) end, 'any') -- 任意方法请求
+--router:router("/api/v0/user/login", function(ctx) print_request(ctx) end, 'get')
+--router:router("/api/v0/user/login", function(ctx) print_request(ctx) end, 'post')
+--router:router("/api/v0/user/login", function(ctx) print_request(ctx) end, 'delete')
+--router:router("/api/v0/user/login", function(ctx) print_request(ctx) end, 'put')
+--router:router("/api/v0/user/login", function(ctx) print_request(ctx) end, 'head')
+--router:router("/api/v0/user/login", function(ctx) print_request(ctx) end, 'patch')
+--router:router("/api/v0/user/login", function(ctx) print_request(ctx) end, 'options')
+
+---- 控制器路由
+--local userController = {}
+--router:router("/api/v0/user", userController) -- get => userController:get()  post => userController:post() ...
+--router:router("/api/v0/user/register", userController, "post:api_register") -- post =>  userController:register()
+--router:router("/api/v0/user/getByName", userController, "get_by_name") -- get =>  userController:getByName()
+
+---- 正则路由
+--router:router("/api/v0/user/(int)", userController, 'get')
+--router:router("/api/:ver/:username(string)/:userid(int)/regstr([%w]+)", function()end)
 
 
-local is_reg, regstr, argslist = router:parse_path("/api/:ver/:user(string)/(int)/login")
-print(regstr)
-print(string.match("/api/v2/user/3/login", regstr))
+--ctx.request.method = "get"
+--ctx.request.uri = "/api/v0/user/login"
+--router:handle(ctx.request.uri, ctx)
+--ctx.request.method = "unknow_method"
+--router:handle(ctx.request.uri, ctx)
+
+--ctx.request.method = "get"
+--router:handle("/api/v0/user/login", ctx)
+--ctx.request.method = "post"
+--router:handle("/api/v0/user/login", ctx)
+
+
+--local is_reg, regstr, argslist = router:parse_path("/api/:ver/:user(string)/(int)/login")
+--print(regstr)
+--print(string.match("/api/v2/user/3/login", regstr))
