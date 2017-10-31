@@ -36,7 +36,7 @@ router.regexp_handler = {}
 router.normal_handler = {}
 router.controller_handler = {}
 router.tree_handler = route:new()
-router.controller_path = "controllers/"
+router.controller_paths = {""}
 
 local method_list = {
 	get = "get",
@@ -48,6 +48,10 @@ local method_list = {
 	options = "options",
 	any = "any",
 }
+
+function router:add_controller_path(path)
+	self.controller_paths[#self.controller_paths] = path
+end
 
 function router:parse_path(path)
 	-- 是否正则path 正则串  路径参数名列表
@@ -90,9 +94,16 @@ function router:get_controller(ctrl_name)
 	end
 
 	local ctrl = nil
-	pcall(function(module_name)
-		ctrl = require(module_name)
-	end, 'controllers.' .. ctrl_name)
+	for _, path in ipairs(self.controller_paths) do
+		if ctrl then
+			return ctrl
+		end
+
+		--ctrl = require(path .. "controller." .. ctrl_name)
+		pcall(function(module_name)
+			ctrl = require(path .. module_name)
+		end, 'controller.' .. ctrl_name)
+	end
 
 	return ctrl
 end
@@ -152,12 +163,14 @@ function router:router(path, controller, handles)
 	return self
 end
 
-function router:handle(path, ctx)
+function router:handle(ctx)
+	local path = ctx.request.uri
 	local normal_handler = self.normal_handler
 	local regexp_handler = self.regexp_handler
 	local tree_handler = self.tree_handler
 	local method = string.lower(ctx.request.method)
 	local paths = {}
+	local temp = nil
 	local url_params = {}
 	local funcname = nil
 	local controller = nil
@@ -186,7 +199,7 @@ function router:handle(path, ctx)
 	end
 	
 	-- 控制器路径匹配
-	handle = self.controller_handler[(string.gsub(path, '/[%w%d]+$', '')) or ""]
+	handle = self.controller_handler[(string.gsub(path, '/[%w%d]+$', ''))]
 	if handle then
 		funcname = string.match(path,'/([%w%d]+)$')
 		controller = handle.controller
@@ -230,8 +243,11 @@ function router:handle(path, ctx)
 	-- 控制器自动匹配
 	ctx.request.url_params = url_params
 	controller = self:get_controller(url_params[1]) 
+	--log(url_params)
+	--log(controller)
 	funcname = url_params[2] or method
-	if type(controllerj) == "table" and controller[funcname] then
+	if type(controller) == "table" and controller[funcname] then
+		log("-------------------")
 		table.remove(url_params,1)
 		table.remove(url_params,1)
 		ctx.request.url_params = url_params
@@ -253,6 +269,7 @@ function router:handle(path, ctx)
 	end
 
 	print("no router match")
+	ctx.response:send(nil, 204)
 	return nil
 end
 

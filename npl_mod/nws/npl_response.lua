@@ -30,6 +30,7 @@ function response:new(req)
 	local obj = {}
 	setmetatable(obj, self)
 	self.__index = self
+	obj._is_send = false
 	obj.request = req
 	obj.charset = 'utf-8'
 	obj.status = '200'
@@ -43,7 +44,7 @@ end
 
 
 function response:set_status(status)
-	self.status = tostring(status)
+	if status then 	self.status = tostring(status) end
 end
 
 
@@ -92,7 +93,15 @@ function response:append_cookie(cookie)
 	self.cookies[#(self.cookies) + 1] = cookie
 end
 
+function response:is_send()
+	return self._is_send
+end
+
 function response:_send()
+	if self._is_send then
+		return 
+	end
+
 	local out = {}
     out[#out+1] = status_strings[self.status]
 
@@ -110,6 +119,8 @@ function response:_send()
 
     out[#out+1] = "\r\n"
     out[#out+1] = self.data
+
+	self._is_send = true
 
     NPL.activate(format("%s:http", self.request.nid), table.concat(out))
 end
@@ -135,6 +146,7 @@ function response:send(data, status_code)
 		data = tostring(data)
 	end
 
+	self:set_status(status_code)
 	self:set_content(data)
 
 	self:_send()

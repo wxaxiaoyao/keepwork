@@ -1,13 +1,5 @@
 
-
-
---local nws = commonlib.gettable("nws")
-nws = {
-	is_start = false,
-}
-
 commonlib = commonlib or nil
-local mod_prefix = "nws"
 local server_type = "npl"
 local server_type_lua = "lua"
 local server_type_npl = "npl"
@@ -17,7 +9,7 @@ local default_config = {
 	server_ip = nil,
 	server_port = 8888,
 	database = {
-		--db_type = "mysql",
+		db_type = "mysql",
 		tabledb = {             -- tabledb 数据库配置
 			path = "database/", -- 数据库路径
 			-- sync_mode = true,   -- 是否为异步模式
@@ -33,18 +25,11 @@ local default_config = {
 	}
 }
 
-function nws.import(modname)
-	modname = mod_prefix .. "." .. modname
-	if server_type == server_type_lua then
-		return require(modname)
-	else
-		--return require(modname)
-		return NPL.load(modname)
-	end
-end
+local nws = require("nws.nws")
 
+nws.init = function(config)
+	self = nws
 
-function nws:init(config)
 	config = config or default_config 
 
 	-- 服务器类型 npl lua
@@ -57,22 +42,24 @@ function nws:init(config)
 		commonlib = require("nws.commonlib")
 	end
 
-	self.gettable = commonlib.gettable
-
+	self.is_start = false
 	self.config = config
-	self.orm = self.import("orm")
-	self.router = self.import("router")
-	self.mimetype = self.import("mimetype")
-	self.request = self.import(server_type .. "_request")
-	self.response = self.import(server_type .. "_response")
-	self.http = self.import(server_type .. "_http")
-	self.util = self.import(server_type .. "_util")
-	self.log = self.import(server_type .. "_log")
+	self.orm = self.import("nws.orm")
+	self.router = self.import("nws.router")
+	self.controller = self.import("nws.controller")
+	self.mimetype = self.import("nws.mimetype")
+	self.request = self.import("nws." .. server_type .. "_request")
+	self.response = self.import("nws." .. server_type .. "_response")
+	self.http = self.import("nws." .. server_type .. "_http")
+	self.util = self.import("nws." .. server_type .. "_util")
+	self.log = self.import("nws." .. server_type .. "_log")
 
 	self.orm:init(config)
 end
 
-function nws:start()
+nws.start = function()
+	self = nws
+
 	if self.is_start then
 		print("服务器已启动...")
 		return 

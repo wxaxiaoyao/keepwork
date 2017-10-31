@@ -3,6 +3,8 @@ local util = commonlib.gettable("nws.util")
 local request = commonlib.gettable("nws.request")
 local response = commonlib.gettable("nws.response")
 local router = commonlib.gettable("nws.router")
+local filter = commonlib.gettable("nws.filter")
+
 --local log = import("log")
 
 local http = {
@@ -14,6 +16,7 @@ http.response = response
 http.router = router
 --http.log = log
 http.util = util
+http.filter = filter
 
 function http:init(config)
 
@@ -50,6 +53,11 @@ function http:handle(config)
 	NPL.StartNetServer("0.0.0.0", tostring(port))
 end
 
+-- 注册过滤器
+function http:registerFilter(filter_func)
+	table.insert(self.filter, filter_func)
+end
+
 function activate()
 	if not msg then
 		return 
@@ -57,7 +65,10 @@ function activate()
 
 	local req = request:new(msg)
 	local resp = response:new(req)
-	local route = router:new()
+	local ctx = {
+		request = req,
+		response = resp,
+	}
 
 	log(req.uri .. "\n")
 	
@@ -65,7 +76,15 @@ function activate()
 		return
 	end
 
-	route:handle(req, resp)
+	local data, manual_send = router:handle(ctx)
+
+
+
+
+	-- 确保成功发送
+	if not manual_send then
+		ctx.response:send(data)
+	end
 end
 
 --NPL.export(http)

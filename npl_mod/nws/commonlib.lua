@@ -28,7 +28,7 @@ function commonlib.gettable(f, rootEnv)
 		return t
 	end 
 
-    for w, d in string.gfind(f, "([%w_]+)(.?)") do
+    for w, d in string.gmatch(f, "([%w_]+)(.?)") do
         t[w] = t[w] or {}   -- create table if absent
         t = t[w]            -- get the table
     end 

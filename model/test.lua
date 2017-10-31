@@ -1,6 +1,7 @@
 
-local orm = require("orm/orm")
-local test = common.inherit(orm)
+local nws = commonlib.gettable("nws")
+local orm = commonlib.gettable("nws.orm")
+local test = nws.inherit(orm)
 
 test:tablename("test")
 test:addfield("test_id", "number")
