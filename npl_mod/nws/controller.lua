@@ -27,7 +27,11 @@ function controller:set_model_name(model_name)
 
 	self.model_name = model_name
 	--self.model = nws.import('model.' .. model_name)
-	self.model = require('model.' .. model_name)
+	xpcall(function()
+		self.model = nws.import('model.' .. model_name)
+	end, function(e)
+		log(e)
+	end)
 end
 
 -- 设置模型

@@ -36,7 +36,7 @@ router.regexp_handler = {}
 router.normal_handler = {}
 router.controller_handler = {}
 router.tree_handler = route:new()
-router.controller_paths = {""}
+router.controller_paths = {"controller."}
 
 local method_list = {
 	get = "get",
@@ -100,9 +100,11 @@ function router:get_controller(ctrl_name)
 		end
 
 		--ctrl = require(path .. "controller." .. ctrl_name)
-		pcall(function(module_name)
-			ctrl = require(path .. module_name)
-		end, 'controller.' .. ctrl_name)
+		xpcall(function()
+			ctrl = require(path .. ctrl_name)
+		end, function(e)
+			log(e)
+		end)
 	end
 
 	return ctrl
@@ -247,7 +249,7 @@ function router:handle(ctx)
 	--log(controller)
 	funcname = url_params[2] or method
 	if type(controller) == "table" and controller[funcname] then
-		log("-------------------")
+		--log("-------------------")
 		table.remove(url_params,1)
 		table.remove(url_params,1)
 		ctx.request.url_params = url_params

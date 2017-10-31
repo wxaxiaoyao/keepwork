@@ -188,6 +188,7 @@ function mysql:_type_convert(obj)
 		end
 	end
 
+	new_obj[self.table_name .. "_id"] = tonumber(obj.id)
 	--commonlib.console(new_obj)
 	return new_obj
 end
