@@ -29,7 +29,8 @@ function request:new(msg)
 	obj.nid = msg.tid or msg.nid
 	obj.headers= msg
 	obj.method = msg.method
-	obj.uri = msg.url
+	obj.url = msg.url
+	obj.path = string.gsub(obj.url, '?.*$', '') 
 	
 	return obj
 end
@@ -177,8 +178,8 @@ function request:get_params()
 		return self.params
 	end
 
-	local uri = self.uri
-	local args_str = string.match(uri, "?(.+)$")
+	local url = self.url
+	local args_str = string.match(url, "?(.+)$")
 
 	if args_str then
 		self.params = util.parse_url_args(args_str)

@@ -1,9 +1,11 @@
 -- 将mod放lua搜索路径中
 package.path = package.path .. ";/root/workspace/lua/keepwork/npl_mod/?.lua;"
 
+--NPL.load("(gl)script/ide/commonlib.lua")
 --local nws = NPL.load("nws.nws")
 local nws = require("nws.loader")
 local config = require("config")
+--log(config)
 nws.init(config)
 
 local router = nws.router

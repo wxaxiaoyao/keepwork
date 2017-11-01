@@ -29,7 +29,10 @@ function route:get_by_paths(root, paths)
 	return root
 end
 
+local nws = commonlib.gettable("nws")
 local router = commonlib.gettable("nws.router")
+local controller = commonlib.gettable("nws.controller")
+
 
 
 router.regexp_handler = {}
@@ -37,6 +40,7 @@ router.normal_handler = {}
 router.controller_handler = {}
 router.tree_handler = route:new()
 router.controller_paths = {"controller."}
+router.auto_match_url_prefix = ""
 
 local method_list = {
 	get = "get",
@@ -48,6 +52,10 @@ local method_list = {
 	options = "options",
 	any = "any",
 }
+
+function router:set_auto_match_url_prefix(url_prefix)
+	self.auto_match_url_prefix = url_prefix
+end
 
 function router:add_controller_path(path)
 	self.controller_paths[#self.controller_paths] = path
@@ -84,7 +92,7 @@ function router:parse_path(path)
 		end
 		regpath = regpath .. '/' .. word 
 	end
-	regpath = '^' ..regpath .. '$'
+	regpath = '^' .. regpath .. '$'
 	return isregpath, regpath, paths, argslist
 end
 
@@ -106,7 +114,12 @@ function router:get_controller(ctrl_name)
 			log(e)
 		end)
 	end
-
+	
+	-- TODO 添加配置选项 是否开启自动构建控制
+	if not ctrl then
+		ctrl = controller:new(ctrl_name)
+	end
+	
 	return ctrl
 end
 
@@ -123,6 +136,7 @@ function router:get_handle(is_reg, path)
 
 	return handler[path]
 end
+
 -- path: url路劲
 -- controller: table|function
 -- handle: string 处理方式
@@ -166,7 +180,7 @@ function router:router(path, controller, handles)
 end
 
 function router:handle(ctx)
-	local path = ctx.request.uri
+	local path = ctx.request.path
 	local normal_handler = self.normal_handler
 	local regexp_handler = self.regexp_handler
 	local tree_handler = self.tree_handler
@@ -239,19 +253,23 @@ function router:handle(ctx)
 	end
 
 	url_params = {}
-	for word in string.gmatch(path, '([^/]+)') do
+	temp = string.gsub(path, self.auto_match_url_prefix, "")
+	for word in string.gmatch(temp, '([^/]+)') do
 		url_params[#url_params+1] = word
 	end
 	-- 控制器自动匹配
-	ctx.request.url_params = url_params
 	controller = self:get_controller(url_params[1]) 
+	table.remove(url_params, 1)
+	
 	--log(url_params)
 	--log(controller)
-	funcname = url_params[2] or method
+	if url_params[1] == nil or tonumber(url_params[1]) then
+		funcname = method
+	else
+		funcname = url_params
+		table.remove(url_params,1)
+	end
 	if type(controller) == "table" and controller[funcname] then
-		--log("-------------------")
-		table.remove(url_params,1)
-		table.remove(url_params,1)
 		ctx.request.url_params = url_params
 		return (controller[funcname])(controller, ctx)
 	end

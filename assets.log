@@ -1,4 +1,5 @@
-2017-10-31 18:17:32|1176176384|Async Processing Thread BigFile(3) Started
-2017-10-31 18:17:32|1209992960|CAsyncLoader IO Thread started2017-10-31 18:17:32|1167722240|Async Processing Thread AudioFile(4) Started
-2017-10-31 18:17:32|1184630528|Async Processing Thread Web(2) Started
-2017-10-31 18:17:32|1193084672|Async Processing Thread Asset(1) Started
+2017-11-01 15:23:00|326960896|Async Processing Thread Asset(1) Started
+2017-11-01 15:23:00|335415040|Async Processing Thread Local(0) Started
+2017-11-01 15:23:00|343869184|CAsyncLoader IO Thread started2017-11-01 15:23:00|318506752|Async Processing Thread Web(2) Started
+2017-11-01 15:23:00|310052608|Async Processing Thread BigFile(3) Started
+2017-11-01 15:23:00|301598464|Async Processing Thread AudioFile(4) Started

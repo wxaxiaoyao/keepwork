@@ -54,7 +54,7 @@ nws.init = function(config)
 	self.util = self.import("nws." .. server_type .. "_util")
 	self.log = self.import("nws." .. server_type .. "_log")
 
-	self.orm:init(config)
+	self.orm:init(config.database)
 end
 
 nws.start = function()

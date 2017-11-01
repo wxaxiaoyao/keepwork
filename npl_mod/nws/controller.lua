@@ -46,7 +46,7 @@ function controller:get(ctx)
 	end
 
 	local url_params = ctx.request.url_params or {}
-	local params = ctx.request.get_params()
+	local params = ctx.request:get_params()
 
 	params.id = url_params[1] or params.id
 
@@ -65,14 +65,14 @@ function controller:put(ctx)
 	end
 	
 	local url_params = ctx.request.url_params or {}
-	local params = ctx.request.get_params()
+	local params = ctx.request:get_params()
 	local id = url_params[1] or params.id
 
 	if not id then
 		ctx.response:send("缺少资源id", 400)
 	end
 
-	local err = self.model:update({id=id})
+	local err = self.model:update({id=id}, params)
 
 	if err then
 		ctx.response:send(err, 400)
@@ -89,7 +89,7 @@ function controller:post(ctx)
 		ctx.response:send("无效model", 500)
 	end
 
-	local params = ctx.request.get_params()
+	local params = ctx.request:get_params()
 
 	local err = self.model:insert(params)
 
@@ -109,7 +109,7 @@ function controller:delete(ctx)
 	end
 
 	local url_params = ctx.request.url_params or {}
-	local params = ctx.request.get_params()
+	local params = ctx.request:get_params()
 
 	local id = url_params[1] or params.id
 

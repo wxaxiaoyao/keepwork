@@ -160,12 +160,18 @@ function tabledb:_get_query_object(t, is_pagination)
 	local offset = t[tabledb.OFFSET] or 0
 	local key = ""
 	local value = {}
+	local id = t["id"] or t["_id"]
+	local nt = self:_filter_field(t)
 
-	t["_id"] = nil
-	t[tabledb.LIMIT] = nil
-	t[tabledb.OFFSET] = nil
+	--t["_id"] = nil
+	--t[tabledb.LIMIT] = nil
+	--t[tabledb.OFFSET] = nil
+	
+	if id then
+		return {_id = tonumber(id)}
+	end
 
-	for k, v in pairs(t) do
+	for k, v in pairs(nt) do
 		if string.match(k, '^[+-]') then
 			key = key .. k
 		else

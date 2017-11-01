@@ -5,6 +5,14 @@
 -- use keepwork;
 -- show tables;
 
+-- test table
+drop table if exists `test`;
+create table if not exists `test` (
+	`test_id` bigint auto_increment primary key,
+    `username` varchar(48),
+    `password` varchar(48)
+) character set = utf8;
+
 -- 删除用户表
 drop table if exists `user`;
 -- 创建用户表
