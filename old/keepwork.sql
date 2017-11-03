@@ -1,11 +1,5 @@
-﻿-- show databases;
+use keepwork;
 
--- create database keepwork;
-
--- use keepwork;
--- show tables;
-
--- test table
 drop table if exists `test`;
 create table if not exists `test` (
 	`test_id` bigint auto_increment primary key,

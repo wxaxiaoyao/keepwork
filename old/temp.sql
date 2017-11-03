@@ -36,3 +36,5 @@ select * from group_user;
 select * from site_group;
 
 select * from fans;
+
+select * from test;
