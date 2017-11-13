@@ -6,10 +6,13 @@ local config = {
 	server_ip = nil,
 	server_port = 8888,
 
+	index = "index",
+	use_inner_server = true,
+
 	-- 数据库配置
 	database = {
-		--db_type = "tabledb",  --  数据库类型: tabledb, mysql
-		db_type = "mysql",  --  数据库类型: tabledb, mysql
+		db_type = "tabledb",  --  数据库类型: tabledb, mysql
+		--db_type = "mysql",  --  数据库类型: tabledb, mysql
 
 		tabledb = {             -- tabledb 数据库配置
 			path = "database/", -- 数据库路径

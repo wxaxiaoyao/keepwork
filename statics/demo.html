@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>KEEPWORK后台管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"></title>
+
+		<!-- 新 Bootstrap 核心 CSS 文件 -->
+		<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		 
+		<!-- 可选的Bootstrap主题文件（一般不使用） -->
+		<!--<script src="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"></script>-->
+		 
+		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+		<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+		 
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+<body>
+	<div>
+		<form role="form" class="form-inline">
+			{% for _, obj in ipairs(querylist or {}) do %}
+			<div class="form-group">
+				<label>{{obj.aliasname or obj.fieldname}}:</label>
+				<input type="text" class="form-control" id="{{obj.fieldname}}">
+			</div>
+			{% end %}
+			<button type="submit" class="btn btn-default" onclick="select(event)">查询</button>
+		</form>
+	</div>
+	<table class="table table-striped">
+		<thead>
+			{% for _, obj in ipairs(fieldlist) do %}
+			<th>{{obj.aliasname or obj.fieldname}}</th>
+			{% end %}
+		</thead>
+		<tbody>
+			{% for _, value in ipairs(valuelist) do %}
+			<tr>
+				{% for _, v in ipairs(value) do %}
+				<td>{{v}}</td>
+				{% end %}
+			</tr>
+			{% end %}
+		</tbody>
+	</table>
+</body>
+
+<script>window.self_data={* self_data *}</script>
+<script>
+window.select = function(e){
+	e.preventDefault();
+
+	var params = {};
+	var ob = {};
+	for(var i = 0; i < self_data.querylist.length; i++) {
+		obj = self_data.querylist[i];
+		params[obj.fieldname] = $("#" + obj.fieldname).val() || undefined;
+	}
+	console.log(params);
+	$.ajax({
+		url:"/demo/view",
+		type:"POST",
+		dataType: "json",
+		data: params,
+		success: function(result, status, xhr){
+			console.log(result);
+			console.log(status);
+			console.log(xhr);
+		},
+		error: function(xhr, status, xhr){
+
+		},
+	});
+}
+</script>
+</html>

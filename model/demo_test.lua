@@ -1,4 +1,4 @@
-require("nws/src/test_loader")
+--require("nws/src/test_loader")
 
 local demo_model = nws.import("model/demo")
 local test = nws.gettable("nws.test")

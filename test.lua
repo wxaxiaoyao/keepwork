@@ -1,4 +1,4 @@
-require("nws/src/test_loader")
+require("npl_packages/nws/npl_mod/nws/loader")
 
 local test = nws.gettable("nws.test")
 
@@ -8,3 +8,6 @@ nws.import("model/demo1_test")
 
 -- 输出测试结果
 test:output()
+
+nws.log("单元测试结束")
+nws.exit()
