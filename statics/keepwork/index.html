@@ -10,11 +10,13 @@
     <link href="assets/css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-
-<div>
-
+<div ng-controller="mainController">
+    <!--<hello-world id="test"></hello-world>-->
+    <div ng-repeat="htmlContent in list track by $index">
+        <div kp-html="htmlContent"></div>
+    </div>
+    {{a.a.a}}
 </div>
-
 <!-- lib脚本 -->
 <script data-main="js/main.js" src="js/lib/requirejs/require.js"></script>
 </body>

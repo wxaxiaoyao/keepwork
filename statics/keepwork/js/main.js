@@ -24,6 +24,10 @@
             'js-base64': libPathPrefix + 'js-base64/base64.min',
             'text': libPathPrefix + 'requirejs/text',
             'domReady': libPathPrefix + 'requirejs/domReady',
+
+            'app':'js/app',
+            'controller':'js/app/controller',
+            'helper':'js/app/helper',
         },
         shim: {
             'bootstrap':{
@@ -59,7 +63,7 @@
     });
 
 
-    require(['domReady', 'js/app'], function (domReady, app) {
+    require(['domReady', 'app'], function (domReady, app) {
         // ***在angular启动之前加载页面内容，目的是内容js完全兼容之前angular书写方式，否则angular启动后，之前书写方式很多功能失效***
         // 加载页面主体内容
         domReady(function () {
