@@ -115,17 +115,19 @@ define([
     //     $rootScope.$apply();
     //
     // }, 10000);
-    // app.registerComponent("helloWorld", {
-    //     template: '<div> test My name is {{name}}</div>',
-    //     controller: ['$http','$scope', '$element', '$attrs', function($http, $scope, $element, $atts) {
-    //         this.name = 'shahar';
-    //         console.log($http);
-    //         console.log($scope);
-    //         console.log($atts);
-    //         console.log($element);
-    //         //$scope.name = "test";
-    //     }],
-    // });
+    app.registerComponent("wikiBlock", {
+        template: '<div> My name is {{name}}</div><div kp-html="htmlContent"></div><div ng-transclude></div>',
+        // transclude:true,
+        controller: ['$http','$scope', '$element', '$attrs', function($http, $scope, $element, $atts) {
+            this.name = 'shahar';
+            console.log($http);
+            console.log($scope);
+            console.log($atts);
+            console.log($element);
+            $scope.name = "test";
+            $scope.htmlContent = "this is test {{name}}";
+        }],
+    });
 
     window.app = app;
     return app;

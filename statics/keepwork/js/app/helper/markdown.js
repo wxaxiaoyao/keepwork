@@ -31,12 +31,11 @@ define([
         md.parseBlock = function (block, token) {
             var content = block.content;
             var isWikiBlock = token.type == "fence" && token.tag == "code" && /^\s*([\/@][\w_\/]+)/.test(token.info);
-            var htmlContent = '<div id="' + idx + '"' + '></div>';
 
-            block.htmlContent = '<div>' + md.md.render(content) + '</div>';
             block.isWikiBlock = isWikiBlock;
-
-            if (isWikiBlock) {
+            if (!isWikiBlock) {
+                block.htmlContent = '<div>' + md.md.render(content) + '</div>';
+            } else {
                 var wikiModNameRE = /^\s*@([\w]+)/;
                 var modName = token.info.match(wikiModNameRE)[1];
                 var modParams = undefined;
@@ -46,13 +45,22 @@ define([
                 catch (e) {
                     modParams = mdconf.mdToJson(token.content) || token.content;
                 }
-
+                // var tagName = modName[0].toLowerCase();
+                // for (var i = 1; i < modName.length; i++) {
+                //     if (modName[i] >= "A" && modName[i] <= "Z") {
+                //         tagName += "-" + modName[i];
+                //     } else {
+                //         tagName += modName[i];
+                //     }
+                // }
                 block.wikiBlock = {
+                    // tagName:tagName,
                     modName: modName,
                     modParams: modParams,
                     isTemplate: modName == "template",
-                }
+                };
             }
+
         }
 
         md.parse = function (text, theme) {

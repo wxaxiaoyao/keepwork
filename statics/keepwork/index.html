@@ -11,11 +11,14 @@
 </head>
 <body>
 <div ng-controller="mainController">
-    <!--<hello-world id="test"></hello-world>-->
+    <wiki-block id="test">
+        <div>
+            {{name}}
+        </div>
+    </wiki-block>
     <div ng-repeat="htmlContent in list track by $index">
         <div kp-html="htmlContent"></div>
     </div>
-    {{a.a.a}}
 </div>
 <!-- lib脚本 -->
 <script data-main="js/main.js" src="js/lib/requirejs/require.js"></script>
