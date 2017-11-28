@@ -11,14 +11,11 @@
 </head>
 <body>
 <div ng-controller="mainController">
-    <wiki-block id="test">
-        <div>
-            {{name}}
-        </div>
-    </wiki-block>
-    <div ng-repeat="htmlContent in list track by $index">
-        <div kp-html="htmlContent"></div>
-    </div>
+    <!--<div ng-repeat="htmlContent in list track by $index">-->
+        <!--<wiki-block data-content="{{htmlContent}}" data-content-type="html"></wiki-block>-->
+    <!--</div>-->
+    <div id="editor"></div>
+    <wiki-html data-params="test"></wiki-html>
 </div>
 <!-- lib脚本 -->
 <script data-main="js/main.js" src="js/lib/requirejs/require.js"></script>

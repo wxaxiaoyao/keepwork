@@ -1,8 +1,7 @@
 
 define([
-    'helper/util',
     'markdown-it',
-], function (util, markdownit) {
+], function (markdownit) {
 	var mdconf = {};
 
 	// md 转json对象

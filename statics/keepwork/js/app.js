@@ -69,17 +69,7 @@ define([
         app.ng_objects.directive_map[name] = directiveFactory;
     }
 
-    // 注册一个扩展html指令
-    app.registerDirective("kpHtml", ['$compile', function ($compile) {
-        return function ($scope, $element, $attrs) {
-            $scope.$watch(function ($scope) {
-                return $scope.$eval($attrs.kpHtml);
-            }, function (newVal) {
-                $element.html(newVal);
-                $compile($element.contents())($scope);
-            });
-        }
-    }]);
+
 
     // 判断控制器，指令，组件是否存在
     // app.has = function(typ, name) {
@@ -89,6 +79,7 @@ define([
     // 启动框架
     app.bootstrap = function () {
         require([
+            "directive/wikiblock",
             "js/app/controller/mainController",
         ], function () {
             angular.bootstrap(document, [app.appName]);
@@ -96,38 +87,7 @@ define([
     }
 
 
-    // setTimeout(function () {
-    //     app.registerComponent("helloWorld", {
-    //         template: '<div>My name is {{name}}</div>',
-    //         controller: ['$http','$scope', '$element', '$attrs', function($http, $scope, $element, $atts) {
-    //             this.name = 'shahar';
-    //             console.log($http);
-    //             console.log($scope);
-    //             console.log($atts);
-    //             console.log($element);
-    //             //$scope.name = "test";
-    //         }],
-    //     });
-    //
-    //     var $compile = app.ng_objects.$compile;
-    //     var $rootScope = app.ng_objects.$rootScope;
-    //     $("body").append($compile("<hello-world></hello-world>")($rootScope));
-    //     $rootScope.$apply();
-    //
-    // }, 10000);
-    app.registerComponent("wikiBlock", {
-        template: '<div> My name is {{name}}</div><div kp-html="htmlContent"></div><div ng-transclude></div>',
-        // transclude:true,
-        controller: ['$http','$scope', '$element', '$attrs', function($http, $scope, $element, $atts) {
-            this.name = 'shahar';
-            console.log($http);
-            console.log($scope);
-            console.log($atts);
-            console.log($element);
-            $scope.name = "test";
-            $scope.htmlContent = "this is test {{name}}";
-        }],
-    });
+
 
     window.app = app;
     return app;

@@ -27,6 +27,7 @@
 
             'app':'js/app',
             'controller':'js/app/controller',
+            'directive': 'js/app/directive',
             'helper':'js/app/helper',
         },
         shim: {
