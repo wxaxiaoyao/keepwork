@@ -16,7 +16,7 @@ define([
         // },2000);
 
         var md = markdown();
-        $("#editor").html($compile(md.render("# test"))($scope));
+        $("#editor").html($compile(md.render("# test\n## test"))($scope));
         setTimeout(function () {
             $scope.$apply();
         });
