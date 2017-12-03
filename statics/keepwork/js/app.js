@@ -25,9 +25,12 @@ define([
         component_map:{},
     };
 
-    app.ng_app.config(['$controllerProvider', '$compileProvider','$authProvider', function ($controllerProvider, $compileProvider, $authProvider) {
+    app.ng_app.config(['$controllerProvider', '$compileProvider', '$locationProvider','$authProvider', function ($controllerProvider, $compileProvider, $locationProvider, $authProvider) {
         app.ng_objects.$controllerProvider = $controllerProvider;
         app.ng_objects.$compileProvider = $compileProvider;
+		app.ng_objects.$locationProvider = $locationProvider;
+
+		$locationProvider.html5Mode(true);
     }]);
 
     // 提供动态注册控制器接口

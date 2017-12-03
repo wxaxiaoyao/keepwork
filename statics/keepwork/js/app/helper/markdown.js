@@ -60,8 +60,8 @@ define([
         return {
             restrict:'E',
             controller: ['$scope', '$attrs', function ($scope, $attrs) {
-                console.log($scope);
-                console.log($attrs);
+                //console.log($scope);
+                //console.log($attrs);
                 var block = undefined;
                 try {
                     block = $attrs.params && angular.fromJson(decodeURI($attrs.params));
@@ -75,7 +75,7 @@ define([
                 var md = getMd(block.mdName);
                 extendBlock(md, block, $scope);
 
-                console.log($scope);
+                //console.log($scope);
                 // 不是wiki block 直接渲染
                 if (block.htmlContent) {
                     $scope.$kp_wiki_block_content = block.htmlContent;
