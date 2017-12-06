@@ -10,14 +10,20 @@
     <link href="assets/css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div ng-controller="mainController">
-    <!--<div ng-repeat="htmlContent in list track by $index">-->
-        <!--<wiki-block data-content="{{htmlContent}}" data-content-type="html"></wiki-block>-->
-    <!--</div>-->
-    <div id="editor"></div>
-    <wiki-html data-params="test"></wiki-html>
-
-
+<div ng-controller="mainController" class="container-fluid">
+	<div class="row">
+		<div class="col-sm-6">
+			<textarea id="source"></textarea>
+		</div>
+		<div class="col-sm-6" style="border-left: 5px solid #eee; height:800px">
+			<div id="preview">
+				hello world
+			</div>
+			<div id="preview1">
+				hello world
+			</div>
+		</div>
+	</div>
 </div>
 <!-- lib脚本 -->
 <script data-main="js/main.js" src="js/lib/requirejs/require.js"></script>
