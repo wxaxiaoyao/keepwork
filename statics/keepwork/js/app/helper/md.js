@@ -40,7 +40,7 @@ define([
 				i++;
 				continue;
 			} 
-			if (ch == "@" && nextch && special_str.indexOf(nextch) >= 0) {
+			if (ch == escape_ch && nextch && special_str.indexOf(nextch) >= 0) {
 				new_text += nextch;
 				i++;	
 				continue;
@@ -49,9 +49,6 @@ define([
 		}
 		return new_text;
 	}
-
-	window.md_special_char_escape = md_special_char_escape;
-	window.md_special_char_unescape = md_special_char_unescape;
 
 	// 是否是空行
 	function is_empty_list(line) {
@@ -67,7 +64,7 @@ define([
 			//return true;
 		//}
 
-		line_trim = line.trim();
+		var line_trim = line.trim();
 		if (line_trim == "@*@*@*" && line.indexOf("@*@*@*") == 0) {
 			return true;
 		}
@@ -90,7 +87,7 @@ define([
 		if (line.indexOf("@* ") == 0 ||
 				line.indexOf("@- ") == 0 ||
 				line.indexOf("@+ ") == 0 || 
-				line.match(/^\d+\./)) {
+				line.match(/^\d+\. /)) {
 			return true;
 		}
 		return false;
@@ -118,7 +115,8 @@ define([
 		return false;
 	}
 
-	function link(text) {
+	function link(obj) {
+		var text = obj.text;
 		var reg_str = /@\[(.*?)@\]@\((.*?)@\)/;
 		var regs = text.match(reg_str);
 			
@@ -126,19 +124,23 @@ define([
 			return text;
 		}
 		
-		console.log(text, regs);	
-
 		var match_str = regs[0];
 		var link_text = regs[1];
 		var link_href = regs[2];
 		var link_str = '<a href="'+ link_href +'">' + link_text + '</a>';
+		var link_render = obj.md.rule_render["a"];
+		if (link_render) {
+			link_str = link_render({md:obj.md, text:match_str, link_text:link_text, link_href:link_href}) || link_str;
+		}
 		
 		text = text.replace(reg_str, link_str)
 
-		return link(text);
+		obj.text = text;
+		return link(obj);
 	}
 
-	function image(text) {
+	function image(obj) {
+		var text = obj.text;
 		var reg_str = /@!@\[(.*?)@\]@\((.*?)@\)/;
 		var regs = text.match(reg_str);
 			
@@ -151,69 +153,104 @@ define([
 		var image_href = regs[2];
 		var image_str = '<img src="'+ image_href +'" alt="'+ image_text + '"/>';
 		
+		var image_render = obj.md.rule_render["img"];
+		if (image_render) {
+			image_str = image_render({md:obj.md, text:match_str, image_href:image_href, image_text:image_text}) || image_str;
+		}
 		text = text.replace(reg_str, image_str)
 
-		return image(text);
+		obj.text = text;
+		return image(obj);
 	}
 
-	function image_link(text) {
-		return link(image(text));
+	function image_link(obj) {
+		obj.text = image(obj);
+		return link(obj);
 	}
 
-	function em(text) {
+	function em(obj) {
+		var text = obj.text;
 		var reg_str = /@\*(.+?)@\*/;
 		var regs = text.match(reg_str);
-		var htmlstr = "";	
+		var htmlstr = "", em_render;	
 		if (regs){
 			htmlstr = '<em>' + regs[1] + '</em>';
+			em_render = obj.md.rule_render["em"];
+			if (em_render) {
+				htmlstr = em_render({md:obj.md, content:regs[1], text:regs[0]}) || htmlstr; 
+			}
 			text = text.replace(reg_str, htmlstr);
-			return em(text);
+			obj.text = text;
+			return em(obj);
 		}
 
 		reg_str = /@_(.*?)@_/;
 		regs = text.match(reg_str);
 		if (regs){
 			htmlstr = '<em>' + regs[1] + '</em>';
+			em_render = obj.md.rule_render["em"];
+			if (em_render) {
+				htmlstr = em_render({md:obj.md, content:regs[1], text:regs[0]}) || htmlstr; 
+			}
 			text = text.replace(reg_str, htmlstr);
-			return em(text);
+			obj.text = text;
+			return em(obj);
 		}
 
 		return text;
 	}
 
-	function strong(text) {
+	function strong(obj) {
+		var text = obj.text;
 		var reg_str = /@\*@\*(.+?)@\*@\*/;
 		var regs = text.match(reg_str);
-		var htmlstr = "";	
+		var htmlstr = "", strong_render;	
 		if (regs){
 			htmlstr = '<strong>' + regs[1] + '</strong>';
+			strong_render = obj.md.rule_render["strong"];
+			if (strong_render) {
+				htmlstr = strong_render({md:obj.md, content:regs[1], text:regs[0]}) || htmlstr;
+			}
 			text = text.replace(reg_str, htmlstr);
-			return strong(text);
+			obj.text = text;
+			return strong(obj);
 		}
 
 		reg_str = /@_@_(.*?)@_@_/;
 		regs = text.match(reg_str);
 		if (regs){
 			htmlstr = '<strong>' + regs[1] + '</strong>';
+			strong_render = obj.md.rule_render["strong"];
+			if (strong_render) {
+				htmlstr = strong_render({md:obj.md, content: regs[1], text:regs[0]}) || htmlstr;
+			}
 			text = text.replace(reg_str, htmlstr);
-			return strong(text);
+			obj.text = text;
+			return strong(obj);
 		}
 
 		return text;
 	}
 
-	function strong_em(text) {
-		return	em(strong(text))
+	function strong_em(obj) {
+		obj.text = strong(obj);
+		return em(obj);
 	}
 
-	function inline_code(text) {
+	function inline_code(obj) {
+		var text = obj.text;
 		var reg_str = /@`(.*?)@`/;
 		var regs = text.match(reg_str);
 		var htmlstr = "";	
 		if (regs){
-			htmlstr = '<code>' + regs[1] + '</code>';
+			var htmlstr = '<code>' + regs[1] + '</code>';
+			var code_render = obj.md.rule_render["code"];
+			if (code_render) {
+				htmlstr = code_render({md:obj.md, content:regs[1], text:regs[0]}) || htmlstr;
+			}
 			text = text.replace(reg_str, htmlstr);
-			return strong(text);
+			obj.text = text;
+			return inline_code(obj);
 		}
 
 		return text;
@@ -226,11 +263,11 @@ define([
 		if (cur_line.indexOf(flag_str) != 0) {
 			return ;
 		}
-		var content = cur_line, i = 0;
+		var text = cur_line, i = 0;
 		var codeContent = "";
 		for (i = obj.start + 1; i < obj.lines.length; i++) {
 			var line = obj.lines[i];
-			content += "\n" + line;
+			text += "\n" + line;
 			if (line.indexOf(flag_str) == 0) {
 				i++;
 				break;
@@ -238,9 +275,16 @@ define([
 			codeContent += "\n" + line;
 		}
 
+		var pre_render = obj.md.rule_render["pre"];
+		var htmlContent = '<pre>' + codeContent + '</pre>';
+		if (pre_render) {
+			htmlContent = pre_render({md:obj.md, content: codeContent, text:text}) || htmlContent;
+		}
+
 		return {
 			tag:'pre',
-			content:content,
+			text:text,
+			content:codeContent,
 			start: obj.start,
 			end: i,
 			htmlContent: '<pre>' + codeContent + '</pre>',
@@ -261,21 +305,29 @@ define([
 			return ;
 		}
 
-		var content = cur_line[0] == " " ? cur_line.substring(4) : cur_line.substring(1), i = 0;
+		var content = cur_line[0] == " " ? cur_line.substring(4) : cur_line.substring(1), i = 0, text = cur_line;
 		for (i = obj.start + 1; i < obj.lines.length; i++) {
 			var line = obj.lines[i];
 			if (!is_blockcode_flag(line)) {
 				break;
 			}
 			content += "\n" + (line[0] == " " ? line.substring(4) : line.substring(1));
+			text += "\n" + line;
+		}
+
+		var pre_render = obj.md.rule_render["pre"];
+		var htmlContent = '<pre>' + content + '</pre>';
+		if (pre_render) {
+			htmlContent = pre_render({md:obj.md, content:content, text:text}) || htmlContent;
 		}
 
 		return {
-			tag:'pre',
-			content:content,
+			tag: 'pre',
+			content: content,
+			text: text,
 			start: obj.start,
 			end: i,
-			htmlContent: '<pre>' + content + '</pre>',
+			htmlContent: htmlContent,
 		}
 	}
 
@@ -300,38 +352,47 @@ define([
 		if (i == header_list.length) {
 			return ;
 		}
+		var content = cur_line.substring(header_list[i].length);
+		var text = cur_line;
+		var tag = "h" + (i+1);
+		var hn_render = obj.md.rule_render["hn"];
+		var htmlContent = '<' + tag + '>' + obj.md.line_parse(content) + '</' + tag + '>';
+		if (hn_render) {
+			htmlContent = hn_render({md:obj.md, content:content, text:text}) || htmlContent;
+		}
 		var token = {
-			tag:"h" + (i+1),
-			content: cur_line.substring(header_list[i].length),
+			tag:tag,
+			content: content,
+			text: text,
 			start: obj.start,
 			end: obj.start + 1,
+			htmlContent: htmlContent,
 		}
 
-		token.htmlContent = '<' + token.tag + '>' + obj.md.line_parse(token.content) + '</' + token.tag + '>';
 		return token;
 	}
 
 	// 换行
 	function br(obj) {
 		var cur_line = obj.lines[obj.start];
-		var i = 0, htmlContent = "";	
-		if (!is_empty_list(cur_line)) {
+		var i = 0, htmlContent = "", text = cur_line , content="";	
+		if (!is_empty_list(cur_line) || obj.lines.length == (obj.start + 1) || !is_empty_list(obj.lines[obj.start+1])) {
 			return;
 		}
 
-		for (i = obj.start + 1; i < obj.length; i++) {
+		for (i = obj.start + 1; i < obj.lines.length; i++) {
 			if (!is_empty_list(obj.lines[i])) {
 				break;
 			}
 			htmlContent += "<br/>";
-		}
-
-		if (i == obj.start + 1) {
-			return;
+			text += "\n" + obj.lines[i];
+			content += "\n" + obj.lines[i];
 		}
 
 		return {
 			tag: "div",
+			text: text,
+			content: content,
 			htmlContent: htmlContent,
 			start: obj.start+1,
 			end: i,
@@ -342,7 +403,7 @@ define([
 	function paragraph(obj, env) {
 		var is_paragraph_line = function(line) {
 			if (is_hr(line)
-				   	|| is_list(line) 
+					|| is_list(line) 
 					|| is_blockquote(line) 
 					|| is_header(line) 
 					|| line.indexOf("```") == 0
@@ -370,13 +431,20 @@ define([
 		var token = {
 			tag: "p",
 			content: content,
+			text: content,
 			start: obj.start,
 			end:i,
 		}
+		
 		if (env && env.is_sub_tag) {
 			token.htmlContent = obj.md.line_parse(token.content);
 		} else {
 			token.htmlContent = '<' + token.tag + '>' + obj.md.line_parse(token.content) + '</' + token.tag + '>';
+		}
+
+		var paragraph_render = obj.md.rule_render["paragraph"];
+		if (paragraph_render) {
+			token.htmlContent = paragraph_render({md:obj.md, content: content, text:content, is_sub_tag:env.is_sub_tag})  || token.htmlContent;
 		}
 		return token;
 	}
@@ -388,22 +456,30 @@ define([
 			return ;
 		}
 		
-		var content = cur_line.substring(2), i = 0;
+		var content = cur_line.substring(2), i = 0, text = cur_line;
 		for (i = obj.start + 1; i < obj.lines.length; i++) {
 			var line = obj.lines[i];
 			if (is_empty_list(line)) {
 				break;
 			}
+			text += "\n" + line;
 			line = line.trim();
 			content += "\n" + ((line.indexOf("@>") == 0) ? line.substring(2) : line);
 		}
 
+		var blockquote_render = obj.md.rule_render["blockquote"];
+		var htmlContent = undefined;
+		if (blockquote_render) {
+			htmlContent = blockquote_render({md:obj.md, content:content, text:text});
+		}
 		return {
 			tag: "blockquote",
+			text: text,
 			content: content,
 			start: obj.start,
 			end: i,
 			subtokens: obj.md.block_parse(content, {start: obj.start, is_sub_tag:true}),
+			htmlContent: htmlContent,
 		}
 	}
 
@@ -414,7 +490,7 @@ define([
 			if (line.indexOf("@* ") == 0 || line.indexOf("@- ") == 0 || line.indexOf("@+ ") == 0) {
 				return {is_list: true, is_sort: false};
 			}
-			if (line.match(/^\d+\./)) {
+			if (line.match(/^\d+\. /)) {
 				return {is_list:true, is_sort: true};
 			}
 
@@ -426,12 +502,12 @@ define([
 			return;
 		}
 
-		var content = cur_line, i = 0;
+		var content = "", text = cur_line, i = 0;
 		var subtokens = [];
 		var token = {
 			tag: "li",
 			start: obj.start,
-			content: cur_line.substring(2).trim(),
+			content: cur_line.substring(3).trim(),
 		}
 		for (i = obj.start + 1; i <= obj.lines.length; i++) {
 			var line = obj.lines[i] || "";
@@ -440,33 +516,43 @@ define([
 				token.end = i;
 				token.subtokens = obj.md.block_parse(token.content, {start:i, is_sub_tag:true});
 				subtokens.push(token);
+				content += (content == "" ? "" : "\n") + token.content;
 				break;
 			}
 			if (ret.is_list) {
 				token.end = i;
 				token.subtokens = obj.md.block_parse(token.content, {start:i, is_sub_tag:true});
 				subtokens.push(token);
+				content += (content == "" ? "" : "\n") + token.content;
 				if (cur_ret.is_sort != ret.is_sort) {
 					break;
 				} else {
 					token = {
 						tag: "li",
 						start: i,
-						content: line.substring(2).trim(),
+						content: line.substring(3).trim(),
 					}
 				}
 			} else {
 				token.content += "\n" + line.trim();
 			}
-			content += "\n" + line;
+			text += "\n" + line;
 		}
 
+		var tag = (cur_line[1] == "*" || cur_line[1] == "+" || cur_line[1] == "-") ? "ul" : "ol";
+		var list_render = obj.md.rule_render[tag];
+		var htmlContent = undefined;
+		if (list_render) {
+			htmlContent = list_render({md:obj.md, text:text, content:content});
+		}
 		return {
-			tag: (cur_line[1] == "*" || cur_line[1] == "+" || cur_line[1] == "-") ? "ul" : "ol",
+			tag:tag,
 			content: content,
+			text: text,
 			start: obj.start,
 			end: i,
 			subtokens: subtokens,
+			htmlContent:htmlContent,
 		} 
 	}	
 
@@ -478,10 +564,17 @@ define([
 			return ;
 		}
 
+		var hr_render = obj.md.rule_render["hr"];
+		var htmlContent = "<hr>";
+		if (hr_render) {
+			htmlContent = hr_render({md:obj.md, text:cur_line}) || htmlContent;
+		}
+		
 		return {
 			tag: "div",
-			htmlContent:"<hr>",
 			content: cur_line,
+			text: cur_line,
+			htmlContent: htmlContent,
 			start: obj.start,
 			end: obj.start+1,
 		}
@@ -524,7 +617,8 @@ define([
 			}
 		}
 
-		var content = cur_line + '\n' + next_line + '\n';
+		var text = obj.lines[obj.start] + '\n' + obj.lines[obj.start+1];
+		var content = cur_line + '\n' + next_line;
 		var htmlContent = "<table><thead><tr>";
 		for (var i = 0; i < cur_line_fields.length; i++) {
 			field = cur_line_fields[i].trim();
@@ -549,13 +643,20 @@ define([
 			}
 			htmlContent += "</tr>";
 			content += "\n" + line;
+			text += "\n" + obj.lines[i];
 		}
 
 		htmlContent += "</tbody></table>";
 
+		var table_render = obj.md.rule_render["table"];
+		if (table_render) {
+			htmlContent = table_render({md:obj.md, content:content, text:text}) || htmlContent;
+		}
+
 		return {
 			tag:"table",
 			content: content,
+			text: text,
 			htmlContent: htmlContent,
 			start: obj.start,
 			end: i,
@@ -585,9 +686,12 @@ define([
 		var md = {
 			block_rule_list:[],
 			inline_rule_list:[],
+			rule_render:{},
 			options: options,
 		};
 
+		md.md_special_char_escape = md_special_char_escape;
+		md.md_special_char_unescape = md_special_char_unescape;
 
 		md.register_inline_rule = function(rule) {
 			this.inline_rule_list.push(rule);
@@ -609,13 +713,14 @@ define([
 		md.register_block_rule(blockquote);
 		md.register_block_rule(list);
 		md.register_block_rule(table);
+
 		// 段落需放最后
 		md.register_block_rule(paragraph);
 
 		md.line_parse = function(text) {
 			for (var i = 0; i < md.inline_rule_list.length; i++) {
 				var rule = md.inline_rule_list[i];
-				text = rule(text);
+				text = rule({text:text, md: md});
 			}
 			return text;
 		}
@@ -634,9 +739,6 @@ define([
 					var token = block_rule(params, env);
 					if (token) {
 						tokens.push(token);
-						console.log(token);
-						if (start >= token.end) 
-							break;
 						start = token.end - 1;
 						break;
 					}
@@ -648,12 +750,22 @@ define([
 		}
 
 		md.parse = function(text) {
-			return this.block_parse(text);
+			var tokens = this.block_parse(text);
+			for (var i = 0; i < tokens.length; i++) {
+				var token = tokens[i];
+				token.content = md.md_special_char_unescape(token.content);
+				token.text = md.md_special_char_unescape(token.text);
+				token.start++;
+				token.end++;
+			}
+			return tokens;
 		}
 
 		md.render = function(text) {
 			text = md_special_char_escape(text);
 			var tokens = this.parse(text || "");
+
+			console.log(tokens);
 
 			var htmlContent = "";
 			for (var i = 0; i < tokens.length; i++) {

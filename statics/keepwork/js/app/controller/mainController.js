@@ -53,12 +53,12 @@ define([
 			editor.setValue(content);
 			$("#preview").html(md.render(content));
 			$("#preview1").html(mdwiki.md.render(content));
-			console.log(md_special_char_escape(content));
-			console.log(md_special_char_unescape(md_special_char_escape(content)));
+			//console.log(md_special_char_escape(content));
+			//console.log(md_special_char_unescape(md_special_char_escape(content)));
 			editor.on("change", function(cm, changeObj){
 				content = editor.getValue();
-				console.log(md_special_char_escape(content));
-				console.log(md_special_char_unescape(md_special_char_escape(content)));
+				//console.log(md_special_char_escape(content));
+				//console.log(md_special_char_unescape(md_special_char_escape(content)));
 				localStorage.setItem("content", content);
 				console.log(content);
 				$("#preview").html(md.render(content));
