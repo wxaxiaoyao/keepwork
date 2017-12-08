@@ -287,7 +287,7 @@ define([
 			content:codeContent,
 			start: obj.start,
 			end: i,
-			htmlContent: '<pre>' + codeContent + '</pre>',
+			htmlContent: htmlContent,
 		}
 	}
 
@@ -406,7 +406,7 @@ define([
 					|| is_list(line) 
 					|| is_blockquote(line) 
 					|| is_header(line) 
-					|| line.indexOf("```") == 0
+					|| line.indexOf("@`@`@`") == 0
 					|| is_empty_list(line)) {
 				return false;
 			}
@@ -701,6 +701,10 @@ define([
 			this.block_rule_list.push(rule);
 		}
 
+		md.register_rule_render = function(tag, render) {
+			this.rule_render[tag] = render
+		}
+
 		md.register_inline_rule(image_link);
 		md.register_inline_rule(strong_em);
 		md.register_inline_rule(inline_code);
@@ -753,6 +757,7 @@ define([
 			var tokens = this.block_parse(text);
 			for (var i = 0; i < tokens.length; i++) {
 				var token = tokens[i];
+				token.htmlContent = render_token(token)
 				token.content = md.md_special_char_unescape(token.content);
 				token.text = md.md_special_char_unescape(token.text);
 				token.start++;
@@ -769,7 +774,7 @@ define([
 
 			var htmlContent = "";
 			for (var i = 0; i < tokens.length; i++) {
-				htmlContent += render_token(tokens[i]);	
+				htmlContent += tokens[i].htmlContent;	
 			}
 
 			htmlContent = md_special_char_unescape(htmlContent);

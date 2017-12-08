@@ -1,7 +1,6 @@
 
 define([
-    'markdown-it',
-], function (markdownit) {
+], function () {
 	var mdconf = {};
 
 	// md 转json对象

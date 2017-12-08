@@ -1,2 +1,3 @@
+local a, b, c
 
-print(string.match("abab",'(ab)+')) 
+a = 1
