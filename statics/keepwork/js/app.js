@@ -25,12 +25,30 @@ define([
         component_map:{},
     };
 
-    app.ng_app.config(['$controllerProvider', '$compileProvider', '$locationProvider','$authProvider', function ($controllerProvider, $compileProvider, $locationProvider, $authProvider) {
-        app.ng_objects.$controllerProvider = $controllerProvider;
-        app.ng_objects.$compileProvider = $compileProvider;
-		app.ng_objects.$locationProvider = $locationProvider;
+    app.ng_app.config([
+			'$controllerProvider',
+		   	'$compileProvider',
+		   	'$locationProvider',
+			//'$routeProvider',
+			'$authProvider',
+		   	function (
+				$controllerProvider, 
+				$compileProvider, 
+				$locationProvider, 
+				//$routeProvider,
+				$authProvider) {
+				
+				app.ng_objects.$controllerProvider = $controllerProvider;
+				app.ng_objects.$compileProvider = $compileProvider;
+				app.ng_objects.$locationProvider = $locationProvider;
+				//app.ng_objects.$routeProvider = $routeProvider;
 
-		$locationProvider.html5Mode(true);
+				//$routeProvider.when('/page1',{
+					//template:"<div>page1</div>",
+				//}).when('/page2',{
+					//template:"<div>page2</div>"
+				//});
+				$locationProvider.html5Mode(true);
     }]);
 
     // 提供动态注册控制器接口

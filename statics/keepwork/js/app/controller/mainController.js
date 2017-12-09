@@ -1,9 +1,9 @@
 
 define([
 	'app',
-	'helper/md',
 	'codemirror',
-    'helper/markdown',
+    'helper/mdwiki',
+	'markdown-it',
 
     'codemirror/mode/markdown/markdown',
     // 代码折叠
@@ -21,7 +21,7 @@ define([
     'codemirror/addon/search/jump-to-line',
     'codemirror/addon/scroll/annotatescrollbar',
     'codemirror/addon/display/fullscreen',
-], function (app, md, CodeMirror,  markdown) {
+], function (app, CodeMirror,  mdwiki, markdownit) {
     app.registerController("mainController", ['$rootScope', '$compile','$scope', function ($rootScope, $compile, $scope) {
         app.ng_objects.$rootScope = $rootScope;
         app.ng_objects.$compile = $compile;
@@ -46,13 +46,15 @@ define([
 
 			editor.setSize("auto", "2000px");
 
-			md = md();
-			var mdwiki = markdown();
+			var md = markdownit();
+			var wiki = mdwiki({containerId:"preview"});
 			var content = localStorage.getItem("content") || "";
-			console.log(content);
+			window.wiki = wiki;
 			editor.setValue(content);
-			$("#preview").html(md.render(content));
-			$("#preview1").html(mdwiki.md.render(content));
+			//$("#preview").html(wiki.render(content));
+			wiki.render(content);
+			$("#preview1").html(md.render(content));
+			//setTimeout(function(){$scope.$apply()});
 			//console.log(md_special_char_escape(content));
 			//console.log(md_special_char_unescape(md_special_char_escape(content)));
 			editor.on("change", function(cm, changeObj){
@@ -60,9 +62,10 @@ define([
 				//console.log(md_special_char_escape(content));
 				//console.log(md_special_char_unescape(md_special_char_escape(content)));
 				localStorage.setItem("content", content);
-				console.log(content);
-				$("#preview").html(md.render(content));
-				$("#preview1").html(mdwiki.md.render(content));
+				wiki.render(content);
+				//$("#preview").html(wiki.render(content));
+				$("#preview1").html(md.render(content));
+				//setTimeout(function(){$scope.$apply()});
 			});
 		}
 

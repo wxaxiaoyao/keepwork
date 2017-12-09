@@ -754,6 +754,7 @@ define([
 		}
 
 		md.parse = function(text) {
+			text = md_special_char_escape(text || "");
 			var tokens = this.block_parse(text);
 			for (var i = 0; i < tokens.length; i++) {
 				var token = tokens[i];
@@ -762,13 +763,13 @@ define([
 				token.text = md.md_special_char_unescape(token.text);
 				token.start++;
 				token.end++;
+				token.htmlContent = md.md_special_char_unescape(token.htmlContent);
 			}
 			return tokens;
 		}
 
 		md.render = function(text) {
-			text = md_special_char_escape(text);
-			var tokens = this.parse(text || "");
+			var tokens = this.parse(text);
 
 			console.log(tokens);
 
@@ -777,7 +778,6 @@ define([
 				htmlContent += tokens[i].htmlContent;	
 			}
 
-			htmlContent = md_special_char_unescape(htmlContent);
 			return htmlContent;
 		}
 

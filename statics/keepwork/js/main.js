@@ -29,6 +29,7 @@
             'controller':'js/app/controller',
             'directive': 'js/app/directive',
             'helper':'js/app/helper',
+            'wikimod':'js/mod',
         },
         shim: {
             'bootstrap':{

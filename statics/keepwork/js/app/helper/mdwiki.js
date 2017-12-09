@@ -14,12 +14,14 @@ define([
 
     // 加载mod
     function loadMod(block, cb, errcb) {
-        var defaultModPath = "js/mod/wiki/js/";
+        var defaultModPath = "wikimod/";
         var requireUrl = block.cmdName;
 
         if (block.cmdName == block.modName) {
-            requireUrl = defaultModPath + block.modName;
-        }
+            requireUrl = defaultModPath + block.modName + "/index";
+		} else {
+			requireUrl = defaultModPath + block.cmdName;
+		}
 
         require([requireUrl], function (mod) {
             cb && cb(mod);
@@ -29,13 +31,24 @@ define([
     }
 
     function extendBlock(md, block, $scope) {
-        block.$scope = $scope;
-        if (md.editable && block.isTemplate) {
+        if (block.isTemplate) {
             $scope.$kp_block = md.template;
-        } else {
-            $scope.$kp_block = block;
-        }
+			md.template.$scope = $scope;
 
+			md.template.$apply = function() {
+				setTimeout(function(){
+					md.template.$scope && md.template.$scope.$apply();
+					for (var i = 0; i < md.template.blockList; i++) {
+						var tempBlock = md.template.blockList[i];
+						tempBlock.$scope && tempBlock.$scope.$apply();
+					}
+				})
+			};
+        } else {
+			$scope.$kp_block = block;
+			block.$scope = $scope;
+        }
+		
         if (!md.editable || !md.editor) {
             return;
         }
@@ -59,7 +72,7 @@ define([
     app.registerDirective("wikiBlock", ['$compile', function ($compile) {
         return {
             restrict:'E',
-            controller: ['$scope', '$attrs', function ($scope, $attrs) {
+            controller: ['$scope', '$attrs', '$element', function ($scope, $attrs, $element) {
                 //console.log($scope);
                 //console.log($attrs);
                 var block = undefined;
@@ -72,48 +85,37 @@ define([
                     return;
                 }
 
+				var oldHtmlContent = undefined;
                 var md = getMd(block.mdName);
-                extendBlock(md, block, $scope);
+                extendBlock(md, block, $scope, $element);
+				block = $scope.$kp_block;
 
-                //console.log($scope);
-                // 不是wiki block 直接渲染
-                if (block.htmlContent) {
-                    $scope.$kp_wiki_block_content = block.htmlContent;
-                    return;
-                }
-                // wiki render
-                if (block.isWikiBlock) {
-                    loadMod(block, function (mod) {
-                        $scope.$kp_wiki_block_content = mod.render(block);
-                        $scope.$apply();
-                    }, function () {
-                        console.log("加载模块" + wikiBlock.modName + "失败");
-                    });
-                }
+				var render = function(newVal) {
+					if (!newVal || oldHtmlContent == newVal) {
+						return;
+					}
+					//console.log(block, newVal);
+					$element.html($compile(newVal)($scope));
+					setTimeout(function() { $scope.$apply(); });
+				}
+				if (block.isTemplate) {
+					$scope.$watch('$kp_block.htmlContent', render);
+				} else {
+					$scope.$watch('wikiBlock.htmlContent', render);
+				}
             }],
-            link: function ($scope, $element) {
-                $scope.$watch('$kp_wiki_block_content', function (newVal) {
-                    $element.html(newVal);
-                    $compile($element.contents())($scope);
-                });
-            }
         };
     }]);
 
     // md 构造函数
     function mdwiki(options) {
-        var mdName = "md" + instCount++;
-        var md = getMd(mdName);
+		options = options || {};
 
-        options = options || {};
-        // Enable HTML tags in source
-        options.html = options.html == null ? true : options.html;
-        // Autoconvert URL-like text to links
-        options.linkify = options.linkify == null ? true : options.linkify;
-        // Enable some language-neutral replacement + quotes beautification
-        options.typographer = options.typographer == null ? true : options.typographer;
-        // Convert '\n' in paragraphs into <br>
-        options.breaks = options.breaks == null ? true : options.breaks;
+        var mdName = "md" + instCount++;
+		var templateContent = '<div ng-repeat="wikiBlock in $kp_block.blockList track by $index" ng-if="!wikiBlock.isTemplate"><wiki-block data-params="wikiBlock"></wiki-block></div>';
+		var $compile = app.ng_objects.$compile;
+		var $scope = options.$scope || app.ng_objects.$rootScope;
+        var md = getMd(mdName);
 
         md.mdName = mdName;
         md.md = markdown(options);
@@ -122,25 +124,32 @@ define([
         md.editor = options.editor;
         md.$scope = options.$scope;
 
+		md.template = {
+			mdName: mdName,
+			isTemplate: true,
+			isWikiBlock: true,
+			templateContent:templateContent,
+			htmlContent: "<div>" + templateContent + "</div>",
+			blockList:[],
+		}
+
         md.setEditor = function(editor) {
             md.editor = editor;
         }
 
-        // 获取默认模板
-        md.getDefaultTemplate = function () {
-            return {
-                isTemplate: true,
-                isWikiBlock: true,
-                htmlContent:'<div><div ng-repeat="wikiBlock in $kp_block.blockList track by $index"><wiki-block data-params="wikiBlock"></wiki-block></div></div>'
-            };
-        }
+		md.bindContainer = function(containerId) {
+			$("#" + containerId).html($compile('<wiki-block data-params="' + encodeURI(angular.toJson(md.template)) + '"></wiki-block>')($scope));
+		}
+
+		if (md.containerId) {
+			md.bindContainer(md.containerId);
+		}
 
         // 渲染
         md.render = function (text, theme) {
             var blockList = md.parse(text, theme);
-            var template = md.getDefaultTemplate();
             var list = [];
-            var old_template = md.template;
+			var template = undefined;
             for (var i = 0; i < blockList.length; i++) {
                 if (blockList[i].isWikiBlock && blockList[i].isTemplate) {
                     template = blockList[i];
@@ -149,29 +158,18 @@ define([
                 }
             }
 
-            template.templateContent = '<div ng-repeat="wikiBlock in $kp_block.blockList track by $index"><wiki-block data-params="wikiBlock"></wiki-block></div>';
-            // template.htmlContent = '<div>' + template.templateContent + '</div>';
-            template.blockList = list;
-            template.mdName = md.mdName;
+            //md.template.blockList = list;
+			if (template) {
+				md.template.htmlContent = template.htmlContent;
+				md.template.modName = template.modName;
+				md.template.cmdName = template.cmdName;
+				md.template.modParams = template.modParams;
+			} else {
+				md.template.htmlContent = '<div>' + templateContent + '</div>';
+			}
 
-            md.template = template;
-
-            if (!md.containerId) {
-                return '<wiki-block data-params="' + encodeURI(angular.toJson(template)) + '"></wiki-block>';
-            }
-
-            loadMod(template, function (mod) {
-                var templateHtmlContent = mod(template);
-                // 切换模板需要重新编辑
-                if (!old_template || old_template.htmlContent != templateHtmlContent) {
-                    var $compile = app.ng_objects.$compile;
-                    var $scope = md.$scope || app.ng_objects.$rootScope;
-                    $('#' + md.containerId).html($compile(templateHtmlContent)($scope));
-                    setTimeout(function () {
-                        $scope.$apply();
-                    });
-                }
-            })
+			//md.template.$apply && md.template.$apply();
+			//return $compile('<wiki-block data-params="' + encodeURI(angular.toJson(md.template)) + '"></wiki-block>')($scope);
         }
 
         // md.bind
@@ -194,26 +192,44 @@ define([
                     modParams = angular.fromJson(content)
                 }
                 catch (e) {
-                    modParams = mdconf.mdToJson(.content) || content;
+                    modParams = mdconf.mdToJson(content) || content;
                 }
 
+				block.htmlContent = undefined;
                 block.modName = modName;
                 block.cmdName = cmdName;
                 block.modParams = modParams;
                 block.isTemplate = modName == "template";
+				block.templateContent = block.isTemplate ? templateContent : undefined;
+				loadMod(block, function (mod) {
+					var htmlContent = mod.render(block);
+					if (block.isTemplate) {
+						md.template.htmlContent = htmlContent;
+						md.template.$scope && md.template.$scope.$apply();
+					} else {
+						block.htmlContent = htmlContent;
+						block.$scope && block.$scope.$apply();
+					}
+				}, function () {
+					console.log("加载模块" + block.modName + "失败");
+				});
             }
         }
 
         md.parse = function (text) {
             var tokenList = md.md.parse(text);
-            var blockList = [];
+            var blockList = md.template.blockList;
             for (var i = 0; i < tokenList.length; i++) {
                 var token = tokenList[i];
-				var block = { token:token, mdName: md.mdName};
+				var block = blockList[i] || {};
+
+				block.token = token;
+				block.mdName = mdName;
 
 				md.parseBlock(block, token);
-				blockList.push(block);
+				blockList[i] = block;
             }
+			console.log(blockList);
             return blockList;
         }
 

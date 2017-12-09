@@ -864,29 +864,25 @@ function md:block_parse(text, env)
 end
 
 function md:parse(text) 
+	text = md_special_char_escape(text or "")
 	local tokens = self:block_parse(text)
 	for _, token in ipairs(tokens) do
 		token.content = md.md_special_char_unescape(token.content)
 		token.text = md.md_special_char_unescape(token.text)
-		--token.start = token.start + 1
-		--token._end = token._end + 1
 		token.htmlContent = render_token(token)
+		token.htmlContent = md.md_special_char_unescape(token.htmlContent)
 	end
-	--console(tokens)
 	return tokens
 end
 
 function md:render(text) 
-	text = md_special_char_escape(text)
-
-	local tokens = self:parse(text or "")
+	local tokens = self:parse(text)
 	local htmlContent = ""
 
 	for _, token in ipairs(tokens) do
 		htmlContent = htmlContent .. token.htmlContent	
 	end
 
-	htmlContent = md_special_char_unescape(htmlContent)
 	return htmlContent
 end
 
