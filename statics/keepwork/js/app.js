@@ -3,52 +3,64 @@
  */
 
 define([
-    "js/config",
     'angular',
     'angular-ui-bootstrap',
     'satellizer',
-], function (config, angular) {
-    var app = config.get("app");
+], function (angular) {
+	window._G = window._G || {};
 
-    app.get = config.get;
+    function get(key, obj) {
+        var g = window._G;
+        if (!key) {
+            return g;
+        }
+
+        var ks = key.split(".");
+        var length = ks.length;
+        for (var i = 0; i < length - 1; i++) {
+            g[ks[i]] = g[ks[i]] || {};
+            g = g[ks[i]];
+        }
+        g = g[ks[length-1]] = obj || {};
+        return g;
+    }
+
+	var app = get("app");
+	app.get = get;
     app.appName = "keepwork";
-
-    // 定义angular app模块
-    app.ng_app = angular.module(app.appName, ['ui.bootstrap', 'satellizer']).run(function () {
-        app.angularBootstrap = true;
-    });
-
-    // angular配置
     app.ng_objects = {
         controller_map:{},
         directive_map:{},
         component_map:{},
     };
 
+    // 定义angular app模块
+    app.ng_app = angular.module(app.appName, ['ui.bootstrap', 'satellizer']).run(["$injector", function($injector) {
+        app.angularBootstrap = true;
+		app.ng_objects.$injector = $injector;
+		app.ng_objects.$rootScope = $injector.get("$rootScope");
+		app.ng_objects.$compile = $injector.get("$compile");
+		app.ng_objects.$http = $injector.get("$http");
+    }]);
+
+	//ng_app = app.get("app.ng_app", ng_app);
+    // angular配置
+
     app.ng_app.config([
 			'$controllerProvider',
 		   	'$compileProvider',
 		   	'$locationProvider',
-			//'$routeProvider',
 			'$authProvider',
 		   	function (
 				$controllerProvider, 
 				$compileProvider, 
 				$locationProvider, 
-				//$routeProvider,
 				$authProvider) {
 				
 				app.ng_objects.$controllerProvider = $controllerProvider;
 				app.ng_objects.$compileProvider = $compileProvider;
 				app.ng_objects.$locationProvider = $locationProvider;
-				//app.ng_objects.$routeProvider = $routeProvider;
-
-				//$routeProvider.when('/page1',{
-					//template:"<div>page1</div>",
-				//}).when('/page2',{
-					//template:"<div>page2</div>"
-				//});
-				$locationProvider.html5Mode(true);
+				app.ng_objects.$authProvider = $authProvider;
     }]);
 
     // 提供动态注册控制器接口
@@ -90,8 +102,6 @@ define([
         app.ng_objects.directive_map[name] = directiveFactory;
     }
 
-
-
     // 判断控制器，指令，组件是否存在
     // app.has = function(typ, name) {
     //     return app.ng_objects[type][name];
@@ -100,8 +110,7 @@ define([
     // 启动框架
     app.bootstrap = function () {
         require([
-            "directive/wikiblock",
-            "js/app/controller/mainController",
+			"directive/wikiPage",
         ], function () {
             angular.bootstrap(document, [app.appName]);
         });

@@ -65,7 +65,7 @@
     });
 
 
-    require(['domReady', 'app'], function (domReady, app) {
+    require(['domReady', 'app', 'controller/mainController'], function (domReady, app) {
         // ***在angular启动之前加载页面内容，目的是内容js完全兼容之前angular书写方式，否则angular启动后，之前书写方式很多功能失效***
         // 加载页面主体内容
         domReady(function () {

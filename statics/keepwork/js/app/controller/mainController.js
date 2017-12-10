@@ -1,74 +1,22 @@
 
 define([
 	'app',
-	'codemirror',
     'helper/mdwiki',
-	'markdown-it',
+    'helper/util',
+], function (app, mdwiki, util) {
+    app.registerController("mainController",['$scope', function ($scope) {
+		console.log($scope);
 
-    'codemirror/mode/markdown/markdown',
-    // 代码折叠
-    'codemirror/addon/fold/foldgutter',
-    'codemirror/addon/fold/foldcode',
-    'codemirror/addon/fold/markdown-fold',
-    'codemirror/addon/fold/xml-fold',
-    // 错误提示
-    'codemirror/addon/lint/json-lint',
-    'codemirror/addon/search/search',
-    'codemirror/addon/dialog/dialog',
-    'codemirror/addon/edit/continuelist',
-    'codemirror/addon/search/searchcursor',
-    'codemirror/addon/search/matchesonscrollbar',
-    'codemirror/addon/search/jump-to-line',
-    'codemirror/addon/scroll/annotatescrollbar',
-    'codemirror/addon/display/fullscreen',
-], function (app, CodeMirror,  mdwiki, markdownit) {
-    app.registerController("mainController", ['$rootScope', '$compile','$scope', function ($rootScope, $compile, $scope) {
-        app.ng_objects.$rootScope = $rootScope;
-        app.ng_objects.$compile = $compile;
+		var urlObj = util.parseUrl();
 
-
-		function init() {
-			editor = CodeMirror.fromTextArea(document.getElementById("source"), {
-				mode: 'markdown',
-				lineNumbers: true,
-				theme: "default",
-				viewportMargin: Infinity,
-				//绑定Vim
-				//keyMap:"vim",
-				//代码折叠
-				lineWrapping: true,
-				indentUnit:1,
-				smartIndent:true,
-
-				foldGutter: true,
-
-			});
-
-			editor.setSize("auto", "2000px");
-
-			var md = markdownit();
-			var wiki = mdwiki({containerId:"preview"});
-			var content = localStorage.getItem("content") || "";
-			window.wiki = wiki;
-			editor.setValue(content);
-			//$("#preview").html(wiki.render(content));
-			wiki.render(content);
-			$("#preview1").html(md.render(content));
-			//setTimeout(function(){$scope.$apply()});
-			//console.log(md_special_char_escape(content));
-			//console.log(md_special_char_unescape(md_special_char_escape(content)));
-			editor.on("change", function(cm, changeObj){
-				content = editor.getValue();
-				//console.log(md_special_char_escape(content));
-				//console.log(md_special_char_unescape(md_special_char_escape(content)));
-				localStorage.setItem("content", content);
-				wiki.render(content);
-				//$("#preview").html(wiki.render(content));
-				$("#preview1").html(md.render(content));
-				//setTimeout(function(){$scope.$apply()});
+		if (urlObj.username || urlObj.username == "www") {
+			var controllerName = "controller/" + (urlObj.sitename || "test") + "Controller";
+			require([
+				controllerName,
+			], function(htmlContent){
+				$scope.content = htmlContent;
+				$scope.$apply();
 			});
 		}
-
-		$scope.$watch("$viewContentLoaded", init);
-		}]);
+	}]);
 });

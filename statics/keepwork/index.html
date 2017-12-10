@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
+	<base href="/" />
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,21 +10,15 @@
     <!-- lib css -->
     <link href="assets/css/main.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
 <div ng-controller="mainController" class="container-fluid">
-	<div class="row">
-		<div class="col-sm-6">
-			<textarea id="source"></textarea>
-		</div>
-		<div class="col-sm-6" style="border-left: 5px solid #eee; height:800px">
-			<div id="preview">
-				hello world
-			</div>
-			<div id="preview1">
-				hello world
-			</div>
-		</div>
-	</div>
+	<wiki-page data-content="headerContent" data-content-url="headerContentUrl">
+	</wiki-page>
+	<wiki-page data-content="content" data-content-url="contentUrl">
+	</wiki-page>
+	<wiki-page data-content="footerContent" data-content-url="footerContentUrl">
+	</wiki-page>
 </div>
 <!-- lib脚本 -->
 <script data-main="js/main.js" src="js/lib/requirejs/require.js"></script>
