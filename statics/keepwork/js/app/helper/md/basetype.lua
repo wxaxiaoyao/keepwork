@@ -1,5 +1,6 @@
 
 local string_meta_table = getmetatable("")
+local string_meta_table__index = string_meta_table.__index
 
 -- 子串查找
 local function string_indexOf(str, substr) 
@@ -68,57 +69,13 @@ string_meta_table.__index = function(self, key)
 		return function(pattern) return string_match(self, pattern) end
 	elseif key == "replace" then
 		return function(pattern, dststr) return string_replace(self, pattern, dststr) end
+	else
+		return string_meta_table__index[key];
 	end
 	return nil
 end
 
 string_meta_table.__add = function(str1, str2) 
 	return str1 .. str2
-end
-
-function console(obj, out)
-	out = out or print
-
-	local outlist = {}
-	function _print(obj, level, flag)
-		-- 避免循环输出
-		local obj_str = tostring(obj)
-		for _, str in ipairs(outlist) do
-			if str == obj_str then
-				return
-			end
-		end
-		outlist[#outlist+1] = obj_str
-
-		level = level or 0
-		local indent_str = ""
-		for i = 1, level do
-		  indent_str = indent_str.."    "
-		end
-	  
-		if not flag then
-			out(indent_str.."{")
-		end
-	  
-		for k,v in pairs(obj) do
-			if type(v) == "table" then 
-				out(string.format("%s    %s = {", indent_str, tostring(k)))
-				_print(v, level + 1, true)
-			elseif type(v) == "string" then
-				out(string.format('%s    %s = "%s"', indent_str, tostring(k), tostring(v)))
-			else
-				out(string.format("%s    %s = %s", indent_str, tostring(k), tostring(v)))
-			end
-		end
-		out(indent_str.."}")
-	end
-	
-	if type(obj) == "table" then
-		_print(obj)
-	elseif type(obj) == "string" then
-		out('"' .. obj .. '"')
-	else
-		out(tostring(obj))
-	end
 end
 

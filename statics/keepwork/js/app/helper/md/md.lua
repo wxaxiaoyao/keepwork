@@ -1,6 +1,6 @@
-require("basetype")
+--require("md/basetype")
 
-function console(obj, out)
+local function console(obj, out)
 	out = out or print
 
 	local outlist = {}
@@ -46,7 +46,7 @@ function console(obj, out)
 	end
 end
 
-function strings_split(str, sep) 
+local function strings_split(str, sep) 
 	local list = {}
 	local str = str .. sep
 
@@ -57,7 +57,11 @@ function strings_split(str, sep)
 	return list
 end
 
-function strings_indexOf(str, substr) 
+local function strings_substring(str, s, e) 
+	return string.sub(str, s, e)
+end
+
+local function strings_indexOf(str, substr) 
 	for i = 1, #str do
 		if strings_substring(str, i, i + #substr - 1) == substr  then
 			return i
@@ -66,15 +70,11 @@ function strings_indexOf(str, substr)
 	return nil
 end
 
-function strings_substring(str, s, e) 
-	return string.sub(str, s, e)
-end
-
-function strings_trim(str)
+local function strings_trim(str)
 	return string.match(str, '^%s*(.-)%s*$')
 end
 
-function strings_at(str, i)
+local function strings_at(str, i)
 	return string.char(string.byte(str,i))
 end
 
@@ -82,7 +82,7 @@ local escape_ch = "@"
 local special_str = '`*_{}[]()#+-.!>\\'
 
 -- markdown 特殊字符转义
-function md_special_char_escape(text) 
+local function md_special_char_escape(text) 
 	local new_text = ""
 	local i = 1
 	while i <= #text do
@@ -108,7 +108,7 @@ function md_special_char_escape(text)
 	return new_text
 end
 
-function md_special_char_unescape(text) 
+local function md_special_char_unescape(text) 
 	local new_text = ""
 	local i = 1
 	while i <= #text do
@@ -132,7 +132,7 @@ end
 
 
  --是否是空行
-function is_empty_list(line) 
+local function is_empty_list(line) 
 	if strings_trim(line or "") == "" then
 		return true
 	end
@@ -140,7 +140,7 @@ function is_empty_list(line)
 end
 
 --是否是水平线
-function is_hr(line) 
+local function is_hr(line) 
 	local line_trim = strings_trim(line)
 	if line_trim == "@*@*@*" and strings_indexOf(line_trim, "@*@*@*") == 1 then
 		return true
@@ -154,7 +154,7 @@ end
 
 
 -- 是否是列表 
-function is_list(line) 
+local function is_list(line) 
 	if strings_indexOf(line, "@* ") == 1 or
 			strings_indexOf(line, "@- ") == 1 or
 			strings_indexOf(line, "@+ ") == 1 or 
@@ -165,7 +165,7 @@ function is_list(line)
 end
 
 -- 是否是引用
-function is_blockquote(line)
+local function is_blockquote(line)
 	if (strings_indexOf(line, "@>") == 1) then
 		return true
 	end
@@ -173,7 +173,7 @@ function is_blockquote(line)
 end
 
 -- 是否是标题
-function is_header(line) 
+local function is_header(line) 
 	local header_list = {
 		"@# ",
 		"@#@# ",
@@ -190,7 +190,7 @@ function is_header(line)
 	return false
 end
 
-function link(obj)
+local function link(obj)
 	local text = obj.text
 	local reg_str = '(@%[(.-)@%]@%((.-)@%))'
 	local match_str, link_text, link_href = string.match(text, reg_str)
@@ -211,7 +211,7 @@ function link(obj)
 	return link(obj)
 end
 
-function image(obj)
+local function image(obj)
 	local text = obj.text
 	local reg_str = '(@!@%[(.-)@%]@%((.-)@%))'
 	local match_str, image_text, image_href = string.match(text, reg_str)
@@ -232,12 +232,12 @@ function image(obj)
 	return image(obj)
 end
 
-function image_link(obj)
+local function image_link(obj)
 	obj.text = image(obj)
 	return link(obj)
 end
 
-function em(obj) 
+local function em(obj) 
 	local text = obj.text
 	local reg_str = '(@%*(.-)@%*)'
 	local htmlstr, em_render = "", nil	
@@ -269,7 +269,7 @@ function em(obj)
 	return text
 end
 
-function strong(obj) 
+local function strong(obj) 
 	local text = obj.text
 	local reg_str = '(@%*@%*(.-)@%*@%*)'
 	local htmlstr, strong_renderr = "", nil	
@@ -301,12 +301,12 @@ function strong(obj)
 	return text
 end
 
-function strong_em(obj)
+local function strong_em(obj)
 	obj.text = strong(obj)
 	return em(obj)
 end
 
-function inline_code(obj)
+local function inline_code(obj)
 	local text = obj.text
 	local reg_str = '(@`(.-)@`)'
 	local _text, content = string.match(text, reg_str)
@@ -326,7 +326,7 @@ function inline_code(obj)
 end
 
  --头部判断
-function header(obj) 
+local function header(obj) 
 	local cur_line = obj.lines[obj.start]
 	local header_list = {
 		"@# ",
@@ -371,7 +371,7 @@ function header(obj)
 end
 
  --换行
-function br(obj) 
+local function br(obj) 
 	local cur_line = obj.lines[obj.start]
 	local _end, htmlContent, text, content=#obj.lines+1, "", cur_line, ""	
 	if not is_empty_list(cur_line) or #obj.lines <= obj.start or not is_empty_list(obj.lines[obj.start+1]) then
@@ -400,7 +400,7 @@ function br(obj)
 end
 
  --分割线
-function horizontal_line(obj) 
+local function horizontal_line(obj) 
 	local cur_line = obj.lines[obj.start]
 	if not is_hr(cur_line) then
 		return
@@ -423,14 +423,14 @@ function horizontal_line(obj)
 end
 
 -- 代码块
-function block_code(obj) 
+local function block_code(obj) 
 	local cur_line = obj.lines[obj.start]
 	local flag_str = '@`@`@`'
 	if strings_indexOf(cur_line, flag_str) ~= 1 then
 		return 
 	end
 	local text = cur_line
-	local _end = #obj.lines
+	local _end = #obj.lines + 1
 	local codeContent = ""
 	for i = obj.start + 1, #obj.lines do
 		local line = obj.lines[i]
@@ -458,7 +458,7 @@ function block_code(obj)
 	}
 end
 
-function block_code_tab(obj)
+local function block_code_tab(obj)
 	local last_line = obj.lines[obj.start-1] or ""
 	local cur_line = obj.lines[obj.start]
 	local is_blockcode_flag = function(line)
@@ -479,7 +479,7 @@ function block_code_tab(obj)
 		cur_line = strings_substring(cur_line, 2)
 	end
 	local content = cur_line
-	local _end = #obj.lines
+	local _end = #obj.lines + 1
 	for i = obj.start + 1, #obj.lines do
 		local line = obj.lines[i]
 		if not is_blockcode_flag(line) then
@@ -513,7 +513,7 @@ function block_code_tab(obj)
 end
 
 -- 段落
-function paragraph(obj, env)
+local function paragraph(obj, env)
 	local is_paragraph_line = function(line)
 		if (is_hr(line)
 				or is_list(line) 
@@ -563,7 +563,7 @@ function paragraph(obj, env)
 	return token
 end
 -- 引用
-function blockquote(obj)
+local function blockquote(obj)
 	local cur_line = obj.lines[obj.start]
 	if not is_blockquote(cur_line) then
 		return 
@@ -602,7 +602,7 @@ function blockquote(obj)
 end
 
 -- 列表
-function list(obj)
+local function list(obj)
 	local cur_line = obj.lines[obj.start]
 	local is_list = function(line)
 		if strings_indexOf(line, "@* ") == 1 or strings_indexOf(line, "@- ") == 1 or strings_indexOf(line, "@.. ") == 1 then
@@ -661,7 +661,7 @@ function list(obj)
 				}
 			end
 		else
-			token.content = token.content .. "\n" .. line.trim()
+			token.content = token.content .. "\n" .. strings_trim(line)
 		end
 		text = text .. "\n" .. line
 	end
@@ -669,9 +669,6 @@ function list(obj)
 	local tag = "ol"
 	local list_render = obj.md.rule_render[tag]
 	local htmlContent = undefined
-	if string.match(cur_line, '^[%-%*%+]') then
-		tag = "ul"
-	end
 	if list_render then
 		htmlContent = list_render({md=obj.md, text=text, content=content})
 	end
@@ -686,7 +683,7 @@ function list(obj)
 	} 
 end	
 -- 表
-function table(obj)
+local function md_table(obj)
 	local cur_line = obj.lines[obj.start]
 	local next_line = obj.lines[obj.start + 1] or ""
 	local format_line = function(line)
@@ -736,11 +733,13 @@ function table(obj)
 	end
 	htmlContent = htmlContent .. "</tr></thead><tbody>"
 
+	local _end = #obj.lines + 1
 	for i = obj.start + 2, #obj.lines do
 		line = obj.lines[i]
 		line = format_line(line)
 		line_fields = strings_split(line, "|")
 		if #line_fields ~= #cur_line_fields then
+			_end = i + 1
 			break
 		end
 
@@ -768,12 +767,12 @@ function table(obj)
 		text= text,
 		htmlContent= htmlContent,
 		start= obj.start,
-		_end= i,
+		_end= _end,
 	}
 end
 
 -- 渲染token
-function render_token(token) 
+local function render_token(token) 
 	local htmlContent = ""
 
 	if token.htmlContent then
@@ -828,7 +827,7 @@ md:register_block_rule(block_code)
 md:register_block_rule(block_code_tab)
 md:register_block_rule(blockquote)
 md:register_block_rule(list)
-md:register_block_rule(table)
+md:register_block_rule(md_table)
 
 -- 段落需放最后
 md:register_block_rule(paragraph)
@@ -861,7 +860,7 @@ function md:block_parse(text, env)
 		end
 		start = start + 1
 	end
-	console(tokens)
+	--console(tokens)
 
 	return tokens
 end
@@ -889,9 +888,11 @@ function md:render(text)
 	return htmlContent
 end
 
+function md:test()
+	file = io.open("md/text", "r")
+	str = file:read("*a")
+	io.close(file)
+	print(md:render(str))
+end
 
---file = io.open("text", "r")
---str = file:read("*a")
---io.close(file)
---print(md:render(str))
 return md
