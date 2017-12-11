@@ -1,8 +1,8 @@
 
 define([
     'app',
-	"helper/mdconf",
-	"helper/md",
+	"helper/md/mdconf",
+	"helper/md/md",
 ], function(app, mdconf, markdown){
     var instCount = 0;
     var mds = {};

@@ -4,31 +4,35 @@
 
 define([
     'app',
-	'helper/mdwiki',
+	'helper/md/mdwiki',
 	'markdown-it',
     'codemirror',
 	'text!html/editor.html',
 
-    'codemirror/mode/markdown/markdown',
+	'codemirror/mode/markdown/markdown',
     // 代码折叠
-    'codemirror/addon/fold/foldgutter',
-    'codemirror/addon/fold/foldcode',
-    'codemirror/addon/fold/markdown-fold',
-    'codemirror/addon/fold/xml-fold',
+    //'codemirror/addon/fold/foldgutter',
+    //'codemirror/addon/fold/foldcode',
+    //'codemirror/addon/fold/markdown-fold',
+    //'codemirror/addon/fold/xml-fold',
     // 错误提示
-    'codemirror/addon/lint/json-lint',
-    'codemirror/addon/search/search',
-    'codemirror/addon/dialog/dialog',
-    'codemirror/addon/edit/continuelist',
-    'codemirror/addon/search/searchcursor',
-    'codemirror/addon/search/matchesonscrollbar',
-    'codemirror/addon/search/jump-to-line',
-    'codemirror/addon/scroll/annotatescrollbar',
-    'codemirror/addon/display/fullscreen',
+    //'codemirror/addon/lint/json-lint',
+    //'codemirror/addon/search/search',
+    //'codemirror/addon/dialog/dialog',
+    //'codemirror/addon/edit/continuelist',
+    //'codemirror/addon/search/searchcursor',
+    //'codemirror/addon/search/matchesonscrollbar',
+    //'codemirror/addon/search/jump-to-line',
+    //'codemirror/addon/scroll/annotatescrollbar',
+    //'codemirror/addon/display/fullscreen',
 ], function (app, mdwiki, markdownit, CodeMirror, htmlContent) {
 
 	app.registerController("editorController", ["$scope", function($scope){
 		function init() {
+			if (!document.getElementById("source")) {
+				return setTimeout(init);
+			}
+			console.log(document.getElementById("source"));
 			editor = CodeMirror.fromTextArea(document.getElementById("source"), {
 				mode: 'markdown',
 				lineNumbers: true,
@@ -65,7 +69,7 @@ define([
 			});
 		}
 
-		$scope.$watch("$viewContentLoaded", init);
+		$scope.$watch("$viewContentLoaded", function(){ setTimeout(init, 10) });
 
 	}]);
 
