@@ -38,15 +38,20 @@ define([
 			md.template.$apply = function() {
 				setTimeout(function(){
 					md.template.$scope && md.template.$scope.$apply();
-					for (var i = 0; i < md.template.blockList; i++) {
-						var tempBlock = md.template.blockList[i];
-						tempBlock.$scope && tempBlock.$scope.$apply();
-					}
+					//for (var i = 0; i < md.template.blockList; i++) {
+						//var tempBlock = md.template.blockList[i];
+						//tempBlock.$scope && tempBlock.$scope.$apply();
+					//}
 				})
 			};
         } else {
 			$scope.$kp_block = block;
 			block.$scope = $scope;
+			block.$apply = function() {
+				setTimeout(function(){
+					block.$scope && block.$scope.$apply();
+				});
+			};
         }
 		
         if (!md.editable || !md.editor) {
@@ -123,6 +128,7 @@ define([
         md.containerId = options.containerId;
         md.editor = options.editor;
         md.$scope = options.$scope;
+		md.isBindContainer = false;
 
 		md.template = {
 			mdName: mdName,
@@ -137,12 +143,11 @@ define([
             md.editor = editor;
         }
 
-		md.bindContainer = function(containerId) {
-			$("#" + containerId).html($compile('<wiki-block data-params="' + encodeURI(angular.toJson(md.template)) + '"></wiki-block>')($scope));
-		}
-
-		if (md.containerId) {
-			md.bindContainer(md.containerId);
+		md.bindContainer = function() {
+			if (!md.isBindContainer && md.containerId && $('#' + md.containerId)) {
+				$("#" + md.containerId).html($compile('<wiki-block data-params="' + encodeURI(angular.toJson(md.template)) + '"></wiki-block>')($scope));
+				md.isBindContainer = true;
+			}
 		}
 
         // 渲染
@@ -168,8 +173,11 @@ define([
 				md.template.htmlContent = '<div>' + templateContent + '</div>';
 			}
 
-			//md.template.$apply && md.template.$apply();
-			//return $compile('<wiki-block data-params="' + encodeURI(angular.toJson(md.template)) + '"></wiki-block>')($scope);
+			md.bindContainer();
+
+			md.template.$apply && md.template.$apply();
+			//md.template.$scope && md.template.$scope.$apply();
+			return '<wiki-block data-params="' + encodeURI(angular.toJson(md.template)) + '"></wiki-block>';
         }
 
         // md.bind

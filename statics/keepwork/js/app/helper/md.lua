@@ -445,7 +445,6 @@ function block_code(obj)
 	local pre_render = obj.md.rule_render["pre"]
 	local htmlContent = '<pre>' .. codeContent .. '</pre>'
 	if pre_render then
-		print(pre_render({md=obj.md, content= codeContent, text=text}))
 		htmlContent = pre_render({md=obj.md, content= codeContent, text=text}) or htmlContent
 	end
 
@@ -812,7 +811,10 @@ function md:register_block_rule(rule)
 end
 
 function md:register_rule_render(tag, render) 
-	self.rule_render[tag] = render
+	local default_render = self.rule_render[tag] or (function() end)
+	self.rule_render[tag] = function(obj)
+		return render(obj, default_render)
+	end
 end
 
 md:register_inline_rule(image_link)
@@ -859,6 +861,7 @@ function md:block_parse(text, env)
 		end
 		start = start + 1
 	end
+	console(tokens)
 
 	return tokens
 end

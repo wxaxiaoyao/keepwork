@@ -4,13 +4,13 @@ local md = require("md")
 
 local wiki_mod_path = ""
 
-md:register_rule_render("pre", function(obj)
+md:register_rule_render("pre", function(obj, default_render)
 	local text = obj.md.md_special_char_unescape(obj.text)
 	local content = obj.md.md_special_char_unescape(obj.content)
 	local line = text.split("\n")[1]
 	local cmdName = line.match('^```@([%w_/]+)')
 	if not cmdName then
-		return
+		return default_render(obj)
 	end
 
 	local modName = cmdName.split('/')[1]
@@ -22,9 +22,7 @@ md:register_rule_render("pre", function(obj)
 	if type(mod_obj) == "table" and type(mod_obj.render) == "function" then
 		return mod_obj:render(mod)
 	end
-	print(mod_obj)
-	console.log(mod_obj)
-	return
+	return default_render(obj)
 end)
 
 local html = md:render([[

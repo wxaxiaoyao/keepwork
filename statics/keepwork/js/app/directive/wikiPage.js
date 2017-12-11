@@ -12,7 +12,6 @@ define([
 
 				function render() {
 					$element.html($compile(content)($scope));
-					console.log("----------");
 				}
 
 				$scope.$watch($attrs.content, function(newVal) {

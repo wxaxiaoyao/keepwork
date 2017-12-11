@@ -4,8 +4,11 @@
 
 define([
     'app',
+	'helper/mdwiki',
 	'markdown-it',
     'codemirror',
+	'text!html/editor.html',
+
     'codemirror/mode/markdown/markdown',
     // 代码折叠
     'codemirror/addon/fold/foldgutter',
@@ -22,7 +25,7 @@ define([
     'codemirror/addon/search/jump-to-line',
     'codemirror/addon/scroll/annotatescrollbar',
     'codemirror/addon/display/fullscreen',
-], function (app, codemirror) {
+], function (app, mdwiki, markdownit, CodeMirror, htmlContent) {
 
 	app.registerController("editorController", ["$scope", function($scope){
 		function init() {
@@ -30,16 +33,14 @@ define([
 				mode: 'markdown',
 				lineNumbers: true,
 				theme: "default",
-				viewportMargin: Infinity,
+				//viewportMargin: Infinity,
 				//绑定Vim
 				//keyMap:"vim",
 				//代码折叠
 				lineWrapping: true,
-				indentUnit:1,
-				smartIndent:true,
-
+				//indentUnit:1,
+				//smartIndent:true,
 				foldGutter: true,
-
 			});
 
 			editor.setSize("auto", "2000px");
@@ -52,9 +53,6 @@ define([
 			//$("#preview").html(wiki.render(content));
 			wiki.render(content);
 			$("#preview1").html(md.render(content));
-			//setTimeout(function(){$scope.$apply()});
-			//console.log(md_special_char_escape(content));
-			//console.log(md_special_char_unescape(md_special_char_escape(content)));
 			editor.on("change", function(cm, changeObj){
 				content = editor.getValue();
 				//console.log(md_special_char_escape(content));
@@ -70,4 +68,6 @@ define([
 		$scope.$watch("$viewContentLoaded", init);
 
 	}]);
+
+	return htmlContent;
 })
