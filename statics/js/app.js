@@ -110,8 +110,11 @@ define([
     // 启动框架
     app.bootstrap = function () {
         require([
+			"helper/storage",
 			"directive/wikiPage",
-        ], function () {
+        ], function (storage) {
+			app.get("app.helper.storage", storage);
+
             angular.bootstrap(document, [app.appName]);
         });
     }

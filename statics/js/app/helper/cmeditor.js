@@ -2,6 +2,7 @@
 define([
 	'app',
 	'helper/mdwiki',
+	'helper/storage',
     'codemirror',
 	'text!html/cmeditor.html',
 	// 样式
@@ -25,7 +26,7 @@ define([
     //'codemirror/addon/search/jump-to-line',
     //'codemirror/addon/scroll/annotatescrollbar',
     //'codemirror/addon/display/fullscreen',
-], function(app, mdwiki, CodeMirror, cmeditorHtml, cmeditorCss, CodeMirrorCss, foldGutterCss) {
+], function(app, mdwiki, storage, CodeMirror, cmeditorHtml, cmeditorCss, CodeMirrorCss, foldGutterCss) {
 	var htmlStr = '<style>';
 	htmlStr += cmeditorCss;
    	htmlStr += CodeMirrorCss;
@@ -143,7 +144,16 @@ define([
 			// 代码折叠
 			foldWikiBlock(cm, changeObj);
 			// 文本渲染
-			editorObj.change();
+			change(editorObj);
+		});
+
+		editor.on("scroll", function(cm) {
+			sourceScroll(editorObj);
+		});
+		
+		editorObj.editorPreview.on("scroll mouseenter mouseleave", function(e){
+			previewScroll(editorObj, e);
+
 		});
 
 		var height = $(selector).css("height");
@@ -154,26 +164,135 @@ define([
 		return editor;
 	}
 
+	function getScaleSize(scroll) {
+		return 1;
+		//var winWidth = $(window).width();
+		//var boxWidth = $("#preview").width();//30为#preview的padding宽度
+		//var resultWidth=getResultSize(winWidth,boxWidth);
+		//var scaleSize = boxWidth / resultWidth;
+		//if(!scroll || scroll!="scroll"){
+			//resizeResult(resultWidth);//设置result-html宽度
 
+			//var len=$scope.scales.length-1;
+			//if(!$scope.scales[len].resultWidth || ($scope.scales[len].resultWidth != winWidth && $scope.scales[len].showValue == "实际大小")){//设置实际大小的result-html的宽度为浏览器窗口大小宽度
+				//$scope.scales[len].resultWidth = winWidth;
+			//}
+			//if($scope.scales[len].showValue!="适合宽度"){
+				//$scope.scales.push({
+					//"id":$scope.scales.length,
+					//"showValue":"适合宽度",
+					//"scaleValue":scaleSize,
+					//"special":true,
+					//"resultWidth":resultWidth
+				//});
+			//}else if ($scope.scales[len].showValue=="适合宽度" && $scope.scales[len].resultWidth!=resultWidth){
+				//$scope.scales[len].resultWidth=resultWidth;
+			//}else if ($scope.scales[len].showValue=="适合宽度" && $scope.scales[len].scaleValue!=scaleSize){
+				//$scope.scales[len].scaleValue=scaleSize;
+			//}
+		//}
+		//return scaleSize;
+	}
+
+	function getResultSize(winWidth, boxWidth){ 
+		return resultSize = boxWidth < 1200 ? boxWidth : (winWidth > 1200 ? 1200 : winWidth);
+	}
+
+	function resizeResult(resultWidth) {
+		if(resultWidth){
+			$(".result-html").css("width", resultWidth + "px");
+		}
+	}
+	// 代码滚动
+	function sourceScroll(editor) {
+		if (editor.isPreviewScroll)
+			return;
+		//console.log(scrollTimer);
+		editor.scrollTimer && clearTimeout(editor.scrollTimer);
+		editor.scrollTimer = setTimeout(function () {
+			var scaleSize = getScaleSize("scroll");
+			var initHegiht = editor.editor.getScrollInfo().top + editor.editor.heightAtLine(0);
+			console.log(initHegiht);
+			var index = 0;
+			var block;
+			var blockList = editor.md.template.blockList;
+			for (index = 0; index < blockList.length - 1; index++) {
+				block = blockList[index];
+				if (block.isTemplate)
+					continue;
+
+				console.log(editor.editor.heightAtLine(block.token.start));
+				if (editor.editor.heightAtLine(block.token.start) >= initHegiht)
+					break;
+			}
+			block = blockList[index];
+			editor.editorPreview.scrollTop(block.$element[0].offsetTop * scaleSize);
+			editor.scrollTimer = undefined;
+		}, 100);
+	}
+
+	// 预览滚动
+	function previewScroll(editor, e) {
+		if (e.type == 'mouseenter') {
+			editor.isPreviewScroll = true;
+			return;
+		}
+	    if (e.type == 'mouseleave') {
+			editor.isPreviewScroll = false;
+			return;
+		}
+	  	if (e.type == 'scroll') {
+			if (!editor.isPreviewScroll) {
+				return;
+			}
+	    }
+		editor.scrollTimer && clearTimeout(editor.scrollTimer);
+		editor.scrollTimer = setTimeout(function () {
+			var scaleSize = getScaleSize("scroll");
+			var initHeight = editor.editor.getScrollInfo().top + editor.editor.heightAtLine(0);
+			var index = 0, block, blockList = editor.md.template.blockList;
+			var scrollTop = editor.editorPreview[0].scrollTop;
+			for (index = 0; index < blockList.length - 1; index++) {
+				block = blockList[index];
+				if (block.isTemplate)
+					continue;
+				if (scrollTop <= block.$element[0].offsetTop * scaleSize) {
+					break;
+				}
+			}
+			block = blockList[index];
+			editor.editor.scrollTo(0, editor.editor.getScrollInfo().top + editor.editor.heightAtLine(block.token.start) - initHeight);
+			editor.scrollTimer = undefined;
+		}, 100);
+	}
+
+
+	function change(editor){
+		var text = editor.editor.getValue();
+		storage.sessionStorageSetItem("cmeditor_temp_content", text);
+
+		//console.log(text);
+		editor.md.render(text);
+	}
 	// codemirror editor constructor
 	function cmeditor(selector, $scope) {
 		//var height = $(selector).css("height");
-		var editor = {selector: selector, $scope:$scope};
+		var editor = {
+			selector: selector, 
+			$scope:$scope,
+		};
 
-		editor.md = mdwiki({containerId: "editor-preview"});
-		editor.editor = initEditor(editor);
+
 		//if (!editor.editor) {
 			//console.log("编辑器创建失败...");
 			//return;
 		//}
+		editor.md = mdwiki({containerId: "editor-preview"});
+		editor.editor = initEditor(editor);
 
-		editor.change = function(){
-			var text = editor.editor.getValue();
 
-			console.log(text);
-			editor.md.render(text);
-		}
-
+		var text = storage.sessionStorageGetItem("cmeditor_temp_content") || ("");
+		editor.editor.setValue(text);
 		return editor;
 	}
 

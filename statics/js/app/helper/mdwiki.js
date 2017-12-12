@@ -117,7 +117,8 @@ define([
 			//scope: true,
 			template: '<div><div>this is test</div><wiki-block data-params="$kp_block"></wiki-block></div>',
 			controller:['$scope', '$attrs', '$element', function($scope, $attrs, $element) {
-				extendBlock($scope, $attrs.params);
+				var block = extendBlock($scope, $attrs.params);
+				block.$element = $element;
 			}],
 		}
 	}]);
