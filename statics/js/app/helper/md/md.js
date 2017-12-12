@@ -1,6 +1,5 @@
 
 define([
-	
 ], function(){
 	var escape_ch = "@";
 	var special_str = '`*_{}[]()#+-.!>\\';

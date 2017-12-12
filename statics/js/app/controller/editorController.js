@@ -4,11 +4,12 @@
 
 define([
     'app',
-	'helper/md/mdwiki',
+	'helper/mdwiki',
 	'markdown-it',
     'codemirror',
 	'text!html/editor.html',
-
+	'text!css/editor.css',
+	'text!lib/codemirror/lib/codemirror.css',
 	'codemirror/mode/markdown/markdown',
     // 代码折叠
     //'codemirror/addon/fold/foldgutter',
@@ -25,7 +26,7 @@ define([
     //'codemirror/addon/search/jump-to-line',
     //'codemirror/addon/scroll/annotatescrollbar',
     //'codemirror/addon/display/fullscreen',
-], function (app, mdwiki, markdownit, CodeMirror, htmlContent) {
+], function (app, mdwiki, markdownit, CodeMirror, htmlContent, editorCss, codemirrorCss) {
 
 	app.registerController("editorController", ["$scope", function($scope){
 		function init() {
@@ -47,7 +48,7 @@ define([
 				foldGutter: true,
 			});
 
-			editor.setSize("auto", "2000px");
+			editor.setSize("auto", "800px");
 
 			var md = markdownit();
 			var wiki = mdwiki({containerId:"preview"});
@@ -69,9 +70,10 @@ define([
 			});
 		}
 
-		$scope.$watch("$viewContentLoaded", function(){ setTimeout(init, 10) });
+		$scope.$watch("$viewContentLoaded", init);
 
 	}]);
 
-	return htmlContent;
+	return '<style>' + editorCss + codemirrorCss + '</style>' + htmlContent;
+	//return htmlContent;
 })

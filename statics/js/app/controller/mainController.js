@@ -1,7 +1,7 @@
 
 define([
 	'app',
-    'helper/md/mdwiki',
+    'helper/mdwiki',
     'helper/util',
 ], function (app, mdwiki, util) {
     app.registerController("mainController",['$scope', function ($scope) {

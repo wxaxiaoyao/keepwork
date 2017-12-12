@@ -1,7 +1,7 @@
 
 define([
 	'app',
-    'helper/md/mdwiki',
+    'helper/mdwiki',
     'helper/util',
 	'text!html/test.html',
 ], function (app, mdwiki, util, htmlContent) {

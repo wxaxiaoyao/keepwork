@@ -25,6 +25,8 @@
             'text': libPathPrefix + 'requirejs/text',
             'domReady': libPathPrefix + 'requirejs/domReady',
 
+			'lib': 'js/lib',
+			'css': 'assets/css',
             'app':'js/app',
             'controller':'js/app/controller',
             'directive': 'js/app/directive',
