@@ -89,7 +89,7 @@ define([
         app.ng_objects.component_map[name] = option;
     }
 
-    // 注册控制器
+    // 注册控指令
     app.registerDirective = function(name, directiveFactory) {
         if (app.ng_objects.directive_map[name]) {
             return;

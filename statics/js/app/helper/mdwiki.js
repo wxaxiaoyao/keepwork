@@ -64,9 +64,6 @@ define([
 			});
 		};
 		
-		if (typeof(block.modParams) == "string" && !block.modParams.trim()) {
-			block.modParams = undefined;
-		}
 
         if (!md.editable || !md.editor) {
             return block;
@@ -221,6 +218,11 @@ define([
                 block.modParams = modParams;
                 block.isTemplate = modName == "template";
 				block.templateContent = block.isTemplate ? templateContent : undefined;
+
+				if (typeof(block.modParams) == "string" && !block.modParams.trim()) {
+					block.modParams = undefined;
+				}
+
 				loadMod(block, function (mod) {
 					var htmlContent = mod.render(block);
 					if (block.isTemplate) {

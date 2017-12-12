@@ -1,0 +1,31 @@
+
+<style>
+.kp-editor-container {
+	height:100%;
+	display:flex;
+	flex-direction:row;
+}
+
+.kp-editor-item {
+	height:100%;
+	<!--flex-grow:1;-->
+	border:0px;
+	margin:0px;
+}
+
+#editor-split-strip {
+	height:100%;
+	width:5px;
+	background-color:rgb(168,168,168);
+}
+</style>
+
+<div class="kp-editor-container">
+	<div id="editor-source-container" class="kp-editor-item col-sm-6">
+		<textarea id="editor-source" style="display:none"></textarea>
+	</div>
+	<div id="editor-split-strip"></div>
+	<div id="editor-preview-container" class="kp-editor-item col-sm-6">
+		<div id="editor-preview"></div>
+	</div>
+</div>
