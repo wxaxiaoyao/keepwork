@@ -259,7 +259,7 @@ define([
 			for (var i = tokenList.length; i < size; i++) {
 				blockList.pop();
 			}
-			//console.log(blockList);
+			console.log(blockList);
             return blockList;
         }
 

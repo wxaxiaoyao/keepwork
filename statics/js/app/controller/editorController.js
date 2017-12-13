@@ -14,7 +14,7 @@ define([
 			//if (!document.getElementById("source")) {
 				//return setTimeout(init);
 			//}
-			var editor = cmeditor("#editor", $scope);
+			var editor = cmeditor({selector:"#editor", $scope:$scope});
 
 			//var md = markdownit();
 			//var wiki = mdwiki({containerId:"preview"});

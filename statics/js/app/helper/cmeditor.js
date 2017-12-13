@@ -103,10 +103,13 @@ define([
 		var htmlContent = $compile(htmlStr)($scope);
 		var textarea = $(selector).html(htmlContent).find('textarea')[0];
 
-		console.log(textarea);
-
-		editorObj.editorSource = $("#editor-source");
-		editorObj.editorPreview = $("#editor-preview");
+		editorObj.editorSource = $("#kp-editor-source");
+		editorObj.editorPreview = $("#kp-editor-preview");
+		editorObj.editorSourceContainer = $("#kp-editor-source-container");
+		editorObj.editorPreviewContainer = $("#kp-editor-preview-container");
+		editorObj.editorContainer = $("#kp-editor-container");
+		editorObj.editorSplitStrip = $("#kp-editor-split-strip");
+		initSplitStrip(editorObj);
 
 		var editor = CodeMirror.fromTextArea(textarea, {
 			mode: 'markdown',
@@ -151,7 +154,7 @@ define([
 			sourceScroll(editorObj);
 		});
 		
-		editorObj.editorPreview.on("scroll mouseenter mouseleave", function(e){
+		editorObj.editorPreviewContainer.on("scroll mouseenter mouseleave", function(e){
 			previewScroll(editorObj, e);
 
 		});
@@ -159,60 +162,89 @@ define([
 		var height = $(selector).css("height");
 		editor.setSize("auto", height);
 		editorObj.editorPreview.css("height", height);
+		setPreviewScale(editorObj);
 
 		editorObj.editor = editor;
 		return editor;
 	}
+	// 拖拽分隔条
+	function initSplitStrip(editor) {
+		var col1=editor.editorSourceContainer;
+		var col2=editor.editorPreviewContainer;
+		var col1Width=col1.width();
+		var col2Width=col2.width();
+		var startX=0;
+		var mousemoveEvent=function(event){
+			col1.width(col1Width + event.clientX - startX);
+			col2.width(col2Width - event.clientX + startX);
+		};
+		var mouseupEvent = function(){
+			editor.editorContainer.off("mouseup", mouseupEvent);
+			editor.editorContainer.off("mousemove mouseleave", mousemoveEvent);
+			if (col1.width()<200){
+				col2.width("100%");
+				col1.width(0);
+				col1.hide();
+			}
+			if(col2.width()<200){
+				col1.width("100%");
+				col2.width(0);
+				col2.hide();
+			}
 
-	function getScaleSize(scroll) {
-		return 1;
-		//var winWidth = $(window).width();
-		//var boxWidth = $("#preview").width();//30为#preview的padding宽度
-		//var resultWidth=getResultSize(winWidth,boxWidth);
-		//var scaleSize = boxWidth / resultWidth;
-		//if(!scroll || scroll!="scroll"){
-			//resizeResult(resultWidth);//设置result-html宽度
+			editor.viewChange && editor.viewChange();
+		};
 
-			//var len=$scope.scales.length-1;
-			//if(!$scope.scales[len].resultWidth || ($scope.scales[len].resultWidth != winWidth && $scope.scales[len].showValue == "实际大小")){//设置实际大小的result-html的宽度为浏览器窗口大小宽度
-				//$scope.scales[len].resultWidth = winWidth;
-			//}
-			//if($scope.scales[len].showValue!="适合宽度"){
-				//$scope.scales.push({
-					//"id":$scope.scales.length,
-					//"showValue":"适合宽度",
-					//"scaleValue":scaleSize,
-					//"special":true,
-					//"resultWidth":resultWidth
-				//});
-			//}else if ($scope.scales[len].showValue=="适合宽度" && $scope.scales[len].resultWidth!=resultWidth){
-				//$scope.scales[len].resultWidth=resultWidth;
-			//}else if ($scope.scales[len].showValue=="适合宽度" && $scope.scales[len].scaleValue!=scaleSize){
-				//$scope.scales[len].scaleValue=scaleSize;
-			//}
-		//}
-		//return scaleSize;
+		editor.editorSplitStrip.on("mousedown", function(event){
+			//console.log(col1Width, col2Width);
+			col1Width=col1.width();
+			col2Width=col2.width();
+			col1.show();
+			col2.show();
+			startX = event.clientX;
+			editor.editorContainer.on("mouseup mouseleave", mouseupEvent);
+			editor.editorContainer.on("mousemove", mousemoveEvent);
+		});
+		//editor.editorSplitStrip.on("mouseup", mouseupEvent);
 	}
 
-	function getResultSize(winWidth, boxWidth){ 
-		return resultSize = boxWidth < 1200 ? boxWidth : (winWidth > 1200 ? 1200 : winWidth);
-	}
-
-	function resizeResult(resultWidth) {
-		if(resultWidth){
-			$(".result-html").css("width", resultWidth + "px");
+	// 设置预览缩放
+	function setPreviewScale(editor, scaleX, scaleY) {
+		var baseWidthValue = 1200;
+		var winWidth = $(window).width();
+		var winHeight = $(window).height();
+		var previewWidth = editor.editorPreviewContainer.width();
+		var previewHeight = editor.editorPreviewContainer.height();
+		var scaleWidth = winWidth < baseWidthValue ? winWidth : (previewWidth < baseWidthValue ? baseWidthValue : previewWidth);  // 限定预览窗口的最小宽度
+		var scaleHeight = winHeight;
+		if (scaleX) {
+			scaleWidth = baseWidthValue;
+			editor.editorPreviewContainer.css("overflow-x", "auto");
+		} else {
+			editor.editorPreviewContainer.css("overflow-x", "hidden");
 		}
+
+		scaleX = scaleX || (previewWidth / scaleWidth);
+		scaleY = scaleY || (previewHeight / scaleHeight);
+
+		editor.editorPreview.css("width", scaleWidth + "px");
+		editor.editorPreview.css("height", scaleHeight + "px");
+		editor.editorPreview.css("transform", 'scale(' + scaleX + ',' + scaleY +')');
+		editor.editorPreview.css("transform-origin", 'left top');
+
+		editor.editorPreviewScaleX = scaleX;
+		editor.editorPreviewScaleY = scaleY;
 	}
+
 	// 代码滚动
 	function sourceScroll(editor) {
 		if (editor.isPreviewScroll)
 			return;
-		//console.log(scrollTimer);
+		var scaleSize = editor.editorPreviewScaleY || 1;
 		editor.scrollTimer && clearTimeout(editor.scrollTimer);
 		editor.scrollTimer = setTimeout(function () {
-			var scaleSize = getScaleSize("scroll");
 			var initHegiht = editor.editor.getScrollInfo().top + editor.editor.heightAtLine(0);
-			console.log(initHegiht);
+			//console.log(initHegiht);
 			var index = 0;
 			var block;
 			var blockList = editor.md.template.blockList;
@@ -221,12 +253,12 @@ define([
 				if (block.isTemplate)
 					continue;
 
-				console.log(editor.editor.heightAtLine(block.token.start));
+				//console.log(editor.editor.heightAtLine(block.token.start));
 				if (editor.editor.heightAtLine(block.token.start) >= initHegiht)
 					break;
 			}
 			block = blockList[index];
-			editor.editorPreview.scrollTop(block.$element[0].offsetTop * scaleSize);
+			editor.editorPreviewContainer.scrollTop(block.$element[0].offsetTop * scaleSize);
 			editor.scrollTimer = undefined;
 		}, 100);
 	}
@@ -246,40 +278,85 @@ define([
 				return;
 			}
 	    }
+		var scaleSize = editor.editorPreviewScaleY || 1;
 		editor.scrollTimer && clearTimeout(editor.scrollTimer);
 		editor.scrollTimer = setTimeout(function () {
-			var scaleSize = getScaleSize("scroll");
 			var initHeight = editor.editor.getScrollInfo().top + editor.editor.heightAtLine(0);
 			var index = 0, block, blockList = editor.md.template.blockList;
-			var scrollTop = editor.editorPreview[0].scrollTop;
+			var scrollTop = editor.editorPreviewContainer[0].scrollTop;
 			for (index = 0; index < blockList.length - 1; index++) {
 				block = blockList[index];
 				if (block.isTemplate)
 					continue;
+				//console.log(scrollTop, block.$element);
 				if (scrollTop <= block.$element[0].offsetTop * scaleSize) {
 					break;
 				}
 			}
+			//console.log(block, index);
 			block = blockList[index];
 			editor.editor.scrollTo(0, editor.editor.getScrollInfo().top + editor.editor.heightAtLine(block.token.start) - initHeight);
 			editor.scrollTimer = undefined;
 		}, 100);
 	}
 
-
+	// 编辑器内容改变处理
 	function change(editor){
 		var text = editor.editor.getValue();
 		storage.sessionStorageSetItem("cmeditor_temp_content", text);
 
 		//console.log(text);
 		editor.md.render(text);
+
+		setPreviewScale(editor);
+
+		editor.change && editor.change();
 	}
+
+	// 导出编辑器接口
+	function exportInterface(editor) {
+		editor.showSource = function() {
+			editor.editorSourceContainer.show();
+		}
+		editor.hideSource = function() {
+			editor.editorSourceContainer.hide();
+		}
+		editor.showPreview = function() {
+			editor.editorPreviewContainer.show();
+		}
+		editor.hidePreview = function() {
+			editor.editorPreviewContainer.hide();
+		}
+		editor.setValue = function(text) {
+			editor.editor.setValue(text);
+		}
+		editor.setPreviewScale = function(scaleX, scaleY) {
+			setPreviewScale(editor, scaleX, scaleY);
+		}
+		editor.swapDoc = function(filename, text) {
+			if (!editor.docMap[filename]) {
+				editor.docMap[filename] = CodeMirror.Doc(text, 'markdown');
+			}
+			editor.editor.swapDoc(editor.docMap[filename]);
+			if (!text) {
+				editor.editor.setValue(text);
+			}
+		}
+		editor.getValue = function() {
+			return editor.editor.getValue();
+		}
+
+	}
+
 	// codemirror editor constructor
-	function cmeditor(selector, $scope) {
+	function cmeditor(options) {
 		//var height = $(selector).css("height");
 		var editor = {
-			selector: selector, 
-			$scope:$scope,
+			docMap: {},
+			selector: options.selector, 
+			$scope: options.$scope,
+			change: options.change,
+			viewChange: options.viewChange,
 		};
 
 
@@ -287,7 +364,7 @@ define([
 			//console.log("编辑器创建失败...");
 			//return;
 		//}
-		editor.md = mdwiki({containerId: "editor-preview"});
+		editor.md = mdwiki({containerId: "kp-editor-preview"});
 		editor.editor = initEditor(editor);
 
 
