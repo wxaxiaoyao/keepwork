@@ -112,6 +112,7 @@ define([
         require([
 			"helper/storage",
 			"directive/wikiPage",
+			//'directive/treeview',
         ], function (storage) {
 			app.get("app.helper.storage", storage);
 

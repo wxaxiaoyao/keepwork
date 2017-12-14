@@ -228,8 +228,9 @@ define([
 		scaleY = scaleY || (previewHeight / scaleHeight);
 
 		editor.editorPreview.css("width", scaleWidth + "px");
-		editor.editorPreview.css("height", scaleHeight + "px");
+		//editor.editorPreview.css("height", scaleHeight + "px");
 		editor.editorPreview.css("transform", 'scale(' + scaleX + ',' + scaleY +')');
+		//editor.editorPreview.css("transform", 'scale(' + scaleX + ',' + 1 +')');
 		editor.editorPreview.css("transform-origin", 'left top');
 
 		editor.editorPreviewScaleX = scaleX;
