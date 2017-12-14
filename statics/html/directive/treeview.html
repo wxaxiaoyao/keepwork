@@ -1,11 +1,11 @@
 
 <div class="kp_treeview_container">
 	<div ng-repeat="node in node.nodes">
-		<div ng-click="clickItem(node)">
+		<div ng-click="clickItem(node)" ng-style="node.$kp_style">
 			<i ng-class="node.$kp_selected ? (node.selectedIcon || selectedIcon) : (node.icon || icon)" class="fa fa-chevron-right"  aria-hidden="true"></i>
 			<span>{{node.text}}</span>
 		</div>
-		<div ng-show="node.$kp_selected" style="padding-left:40px">
+		<div ng-show="node.$kp_expanded" style="padding-left:40px">
 			<div data-treenode="node"></div>
 		</div>
 	</div>

@@ -18,19 +18,26 @@ define([
 				nodes: [
 				{
 					text:"list21",
-				},{
+				},
+				{
 					text:"list22",
-				}, {
-					text:"list3",
+				}, 
+				{
+					text:"listi23",
 					nodes:[
 					{
-						text:"list31",
+						text:"list231",
 					}
 					]
 				}
 				]
 			}],
 		}
+
+		setTimeout(function(){
+			$scope.trees.nodes.push({text:"list3"});
+			$scope.$apply();
+		},2000);
 	}]);
 
 	return htmlContent;

@@ -2,7 +2,7 @@
 define([
 	"app",
 ], function(app) {
-	app.registerDirective("wikiPage", ["$compile", function($compile){
+	app.registerDirective("wikipage", ["$compile", function($compile){
 		return {
 			restrict:"E",
 			scope: true,

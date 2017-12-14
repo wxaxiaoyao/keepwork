@@ -111,7 +111,7 @@ define([
     app.bootstrap = function () {
         require([
 			"helper/storage",
-			"directive/wikiPage",
+			"directive/wikipage",
 			//'directive/treeview',
         ], function (storage) {
 			app.get("app.helper.storage", storage);
