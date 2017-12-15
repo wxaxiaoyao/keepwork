@@ -10,7 +10,7 @@ define([
 			"keepwork.com",
 		];
 
-		var result = {isOfficialHostname:true};
+		var result = {isOfficialHostname:true, pathname_prefix:""};
         if (hostname.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/)) {
 			result.isOfficialHostname = true;
 			return result;
@@ -24,35 +24,80 @@ define([
 			}
 
 			if (hostname.indexOf(officialHostname) > 0) {
-				result.officialHostname =officialHostname; 
+				result.officialHostname = officialHostname; 
+				result.pathname_prefix = "/" +  hostname.substring(0, hostname.indexOf(officialHostname) - 1).replace(".", "/");
 			}
 		}
 		result.isOfficialHostname = false;
 		return result;
 	}
 
-	util.parseUrl = function(hostname, pathname) {
+	util.parseUrl = function(url) {
         var hostname = window.location.hostname;
-        var pathname = window.location.pathname;
-        pathname = decodeURI(pathname);
-
-        var paths = undefined;
-		var temp = util.parseHostname(hostname);
-		if (temp.isOfficialHostname) {
-			paths = pathname.split("/").slice(1);
-		} else {
-			pathname = hostname.substring(0, hostname.indexOf(temp.officialHostname) - 1).replace(".", "/") + pathname;
-			paths = pathname.split("/");
-		}
+        var pathname = decodeURI(window.location.pathname);
+		var url = url || util.getAbsoluteUrl(pathname);
+        var paths = url.split("/").slice(1);
 
         return {
+			url:url,
 			hostname:hostname,
 			pathname:pathname,
 			username:paths[0], 
 			sitename:paths[1], 
-			pagename:paths.slice(2).join("/"), 
+			pagename:paths.length > 2 ? paths.slice(2).join("/") : undefined, 
 		};
 	}
 
+	util.getAbsoluteUrl = function(url) {
+		return util.parseHostname(window.location.hostname).pathname_prefix + (url || window.location.pathname);	
+	}
+
+	util.getRelativeUrl = function(url) {
+        var hostname = window.location.hostname;
+		var temp = util.parseHostname(hostname);
+
+		return url.substring(temp.pathname_prefix.length);
+	}
+
+	util.$apply = function($scope) {
+		$scope = app.ng_objects.$rootScope;
+		setTimeout(function(){
+			$scope.$apply();
+		});
+	}
+
+	util.setPageContentUrl = function(url) {
+		app.ng_objects.$rootScope.contentUrl = state.url;
+		util.$apply();
+	}
+
+	util.pushState = function(state) {
+		if (!state || !state.url) {
+			return ;
+		}
+		var relativeUrl = util.getRelativeUrl(state.url);
+		window.history.pushState(state,"keepwork", relativeUrl);
+		app.ng_objects.$rootScope.contentUrl = state.url;
+		util.$apply();
+	}
+
+	util.replaceState = function(state) {
+		if (!state || !state.url) {
+			return ;
+		}
+		var relativeUrl = util.getRelativeUrl(state.url);
+		window.history.replaceState(state, "keepwork", relativeUrl);
+		app.ng_objects.$rootScope.contentUrl = state.url;
+		util.$apply();
+	}
+	
+	window.onpopstate = function() {
+		console.log(window.history.state);
+		var state = window.history.state;
+		app.ng_objects.$rootScope.contentUrl = state.url;
+		util.$apply();
+	}
+
+	window.util = util;
 	return util;
 });

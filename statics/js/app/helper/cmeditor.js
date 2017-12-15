@@ -4,7 +4,7 @@ define([
 	'helper/mdwiki',
 	'helper/storage',
     'codemirror',
-	'text!html/cmeditor.html',
+	'text!html/helper/cmeditor.html',
 	// 样式
 	'text!assets/css/cmeditor.css',
 	'text!lib/codemirror/lib/codemirror.css',

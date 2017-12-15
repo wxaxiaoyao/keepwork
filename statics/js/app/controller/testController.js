@@ -3,7 +3,7 @@ define([
 	'app',
     'helper/mdwiki',
     'helper/util',
-	'text!html/test.html',
+	'text!html/controller/test.html',
 	'directive/treeview',
 ], function (app, mdwiki, util, htmlContent) {
     app.registerController("testController",['$scope', function ($scope) {
@@ -34,10 +34,13 @@ define([
 			}],
 		}
 
-		setTimeout(function(){
-			$scope.trees.nodes.push({text:"list3"});
-			$scope.$apply();
-		},2000);
+		$scope.click = function() {
+			util.pushState({url:"/www/editor"});
+		}
+		//setTimeout(function(){
+			//$scope.trees.nodes.push({text:"list3"});
+			//$scope.$apply();
+		//},2000);
 	}]);
 
 	return htmlContent;

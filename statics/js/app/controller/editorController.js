@@ -6,7 +6,7 @@ define([
     'app',
 	'markdown-it',
 	'helper/cmeditor',
-	'text!html/editor.html',
+	'text!html/controller/editor.html',
 ], function (app, markdownit, cmeditor, htmlContent, editorCss) {
 
 	app.registerController("editorController", ["$scope", "$compile", function($scope, $compile){

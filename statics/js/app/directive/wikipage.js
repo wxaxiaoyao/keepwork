@@ -1,6 +1,7 @@
 
 define([
 	"app",
+	"helper/util",
 ], function(app) {
 	app.registerDirective("wikipage", ["$compile", function($compile){
 		return {
@@ -11,7 +12,25 @@ define([
 				var content, contentUrl;
 
 				function render() {
-					$element.html($compile(content)($scope));
+					if (content) {
+						$element.html($compile(content)($scope));
+						return;
+					}
+
+					if (!contentUrl) {
+						return;
+					}
+
+					var urlobj = util.parseUrl(contentUrl);
+					if (!urlobj.username || urlobj.username == "www") {
+						var ctrlPath = "controller/" + (urlobj.sitename || "test") + "Controller";
+						require([
+							ctrlPath,
+						], function(content) {
+							$element.html($compile(content)($scope));
+							$scope.$apply();
+						});
+					}
 				}
 
 				$scope.$watch($attrs.content, function(newVal) {
