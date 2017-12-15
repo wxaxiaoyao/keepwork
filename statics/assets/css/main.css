@@ -5,3 +5,13 @@
 a:hover{
     cursor: pointer;
 }
+
+.kp_vertical_box {
+	display: flex;
+	flex-direction:column;
+}
+
+.kp_horizontal_box {
+	display: flex;
+	flex-direction:row;
+}

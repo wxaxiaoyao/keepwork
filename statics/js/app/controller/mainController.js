@@ -3,8 +3,12 @@ define([
 	'app',
     'helper/mdwiki',
     'helper/util',
-], function (app, mdwiki, util) {
+	'controller/headerController',
+], function (app, mdwiki, util, headerContent) {
 	app.registerController("mainController",['$scope', function ($scope) {
+		$scope.headerContent = headerContent;
+		$scope.imgsPath = "/assets/imgs/";
+		
 		util.replaceState({url:util.getAbsoluteUrl()});
 		//var urlObj = util.parseUrl();
 		//console.log(urlObj);

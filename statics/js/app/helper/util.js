@@ -92,7 +92,7 @@ define([
 	}
 	
 	window.onpopstate = function() {
-		console.log(window.history.state);
+		//console.log(window.history.state);
 		var state = window.history.state;
 		app.ng_objects.$rootScope.contentUrl = state.url;
 		util.$apply();
