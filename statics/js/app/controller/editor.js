@@ -7,14 +7,14 @@ define([
 	'markdown-it',
 	'helper/cmeditor',
 	'text!html/controller/editor.html',
-], function (app, markdownit, cmeditor, htmlContent, editorCss) {
+], function (app, markdownit, cmeditor, htmlContent) {
 
 	app.registerController("editorController", ["$scope", "$compile", function($scope, $compile){
 		function init() {
-			//if (!document.getElementById("source")) {
-				//return setTimeout(init);
-			//}
+			var $rootScope = app.ng_objects.$rootScope;
 			var editor = cmeditor({selector:"#editor", $scope:$scope});
+
+			$rootScope.isShowHeader = false;
 
 			//var md = markdownit();
 			//var wiki = mdwiki({containerId:"preview"});
@@ -37,6 +37,6 @@ define([
 
 	}]);
 
-	return '<style>' + '</style>' + htmlContent;
+	return htmlContent;
 	//return htmlContent;
 })

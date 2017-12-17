@@ -259,6 +259,9 @@ define([
 					break;
 			}
 			block = blockList[index];
+			if (!block) {
+				return;
+			}
 			editor.editorPreviewContainer.scrollTop(block.$element[0].offsetTop * scaleSize);
 			editor.scrollTimer = undefined;
 		}, 100);
@@ -296,6 +299,9 @@ define([
 			}
 			//console.log(block, index);
 			block = blockList[index];
+			if (!block) {
+				return;
+			}
 			editor.editor.scrollTo(0, editor.editor.getScrollInfo().top + editor.editor.heightAtLine(block.token.start) - initHeight);
 			editor.scrollTimer = undefined;
 		}, 100);

@@ -7,27 +7,9 @@ define([
     'angular-ui-bootstrap',
     'satellizer',
 ], function (angular) {
-	window._G = window._G || {};
-
-    function get(key, obj) {
-        var g = window._G;
-        if (!key) {
-            return g;
-        }
-
-        var ks = key.split(".");
-        var length = ks.length;
-        for (var i = 0; i < length - 1; i++) {
-            g[ks[i]] = g[ks[i]] || {};
-            g = g[ks[i]];
-        }
-        g = g[ks[length-1]] = obj || {};
-        return g;
-    }
-
-	var app = get("app");
-	app.get = get;
+	var app = {};
     app.appName = "keepwork";
+	app.objects = {};
     app.ng_objects = {
         controller_map:{},
         directive_map:{},
@@ -41,6 +23,7 @@ define([
 		app.ng_objects.$rootScope = $injector.get("$rootScope");
 		app.ng_objects.$compile = $injector.get("$compile");
 		app.ng_objects.$http = $injector.get("$http");
+		app.ng_objects.$auth = $injector.get("$auth");
     }]);
 
 	//ng_app = app.get("app.ng_app", ng_app);
@@ -111,16 +94,62 @@ define([
     app.bootstrap = function () {
         require([
 			"helper/storage",
+			"helper/config",
+			"helper/util",
+			"helper/mdwiki",
+
 			"directive/wikipage",
+
+			"controller/main",
 			//'directive/treeview',
-        ], function (storage) {
-			app.get("app.helper.storage", storage);
+        ], function (storage, config, util, mdwiki) {
+			app.objects.storage = storage;
+			app.objects.config = config;
+			app.objects.util = util;
+			app.objects.mdwiki = mdwiki;
 
             angular.bootstrap(document, [app.appName]);
         });
     }
 
+	// 获取用户信息
+	app.getUser = function(success, error) {
+		var $auth = app.ng_objects.$auth;
+		var util = app.objects.util;
+		var config = app.objects.config;
+		if (!$auth.isAuthenticated()) {
+			error && error();
+			return;
+		}
+		var authUseinfo = $auth.getPayload();
+		var userinfo = app.objects.user || storage.sessionStorageGetItem("userinfo");
+		if (userinfo && authUseinfo && userinfo.username == authUseinfo.username) {
+			success && success(userinfo);
+			return;
+		}
+		
+		util.$http({
+			url: config.apiUrlPrefix + "user", 
+			method: "GET",
+			success: function(data) {
+				if (data) {
+					success && success(data);	
+					app.setUser(data);
+				}
+			},
+			error: error,
+		});
 
+		return userinfo;
+	}
+	// 设置用户信息
+	app.setUser = function(userinfo) {
+		var $rootScope = app.ng_objects.$rootScope;
+		var storage = app.objects.storage;
+		app.objects.user = $rootScope.user = userinfo;
+		$rootScope.$broadcast("userinfo", userinfo);
+		storage.sessionStorageSetItem("userinfo", userinfo);	
+	}
 
 
     window.app = app;

@@ -15,12 +15,12 @@
 
 <body>
 <div ng-controller="mainController">
-	<wikipage data-content="headerContent" data-content-url="headerContentUrl">
+	<wikipage ng-if="isShowHeader" data-content="headerContent" data-content-url="headerContentUrl">
 	</wikipage>
 	<wikipage data-content="content" data-content-url="contentUrl">
 		{* content *}
 	</wikipage>
-	<wikipage data-content="footerContent" data-content-url="footerContentUrl">
+	<wikipage ng-if-"isShowFooter" data-content="footerContent" data-content-url="footerContentUrl">
 	</wikipage>
 </div>
 <!-- lib脚本 -->

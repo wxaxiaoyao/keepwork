@@ -15,3 +15,8 @@ a:hover{
 	display: flex;
 	flex-direction:row;
 }
+
+.kp_navbar {
+	z-index: 10;
+	height:50px;
+}

@@ -9,6 +9,7 @@ local config = {
 	index = "index",
 	use_inner_server = true,
 
+	api_url_prefix = "/api/v1/",
 	-- 数据库配置
 	database = {
 		db_type = "tabledb",  --  数据库类型: tabledb, mysql
@@ -27,6 +28,11 @@ local config = {
 			port = 3306,            -- 数据库端口
 		}
 	},
+	-- GITLAB配置
+	gitlab={
+		host = "39.106.11.114:8800",
+		token = "uc7ammyzzAru6YG22L7B",
+	}
 }
 
 

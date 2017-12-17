@@ -2,7 +2,7 @@
 define([
 	'app',	
 ], function(app) {
-	var util = app.get("app.helper.util");
+	var util = app.objects.util = {};
 
 	util.parseHostname = function(hostname) {
 		var officialHostnameList = [
@@ -71,6 +71,10 @@ define([
 		util.$apply();
 	}
 
+	util.go = function(url) {
+		util.pushState({url:url});
+	}
+
 	util.pushState = function(state) {
 		if (!state || !state.url) {
 			return ;
@@ -94,10 +98,46 @@ define([
 	window.onpopstate = function() {
 		//console.log(window.history.state);
 		var state = window.history.state;
+		if (!state || !state.url) {
+			return;
+		}
 		app.ng_objects.$rootScope.contentUrl = state.url;
 		util.$apply();
 	}
 
+	util.$http = function(obj) {
+        var $http = app.ng_objects.$http;
+		var config = obj.config || {};
+		var success = obj.success;
+		var error = obj.error;
+
+		config.method = obj.method;
+		config.url = obj.url;
+		config.cache = obj.cache;
+		config.isShowLoading = obj.isShowLoading;
+		config.withCredentials = obj.withCredentials;
+
+        // 在此带上认证参数
+        if (obj.method == 'POST') {
+			config.data = obj.params;
+        } else {
+			config.params = obj.params;
+        }
+
+        $http(config).then(function (response) {
+            var data = response.data;
+			if (!data || !data.error || data.error.id != 0) {
+                console.log(obj.url, data);
+				error && error(data.error);
+			} else {
+				success && success(data.data);
+			}
+        }).catch(function (response) {
+            console.log(obj.url, response);
+			error && error();
+        });
+
+	}
 	window.util = util;
 	return util;
 });

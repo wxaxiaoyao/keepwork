@@ -1,13 +1,17 @@
 
 define([
 	'app',
-    'helper/mdwiki',
-    'helper/util',
-	'controller/headerController',
-], function (app, mdwiki, util, headerContent) {
+	'controller/header',
+], function (app, headerContent) {
 	app.registerController("mainController",['$scope', function ($scope) {
-		$scope.headerContent = headerContent;
-		$scope.imgsPath = "/assets/imgs/";
+		var util = app.objects.util;
+		var config = app.objects.config;
+		var mdwiki = app.objects.mdwiki;
+		var $rootScope = app.ng_objects.$rootScope;
+		$rootScope.isShowHeader = true;
+		$rootScope.isShowFooter = true;
+		$rootScope.headerContent = headerContent;
+		$rootScope.imgsPath = "/assets/imgs/";
 		
 		util.replaceState({url:util.getAbsoluteUrl()});
 		//var urlObj = util.parseUrl();

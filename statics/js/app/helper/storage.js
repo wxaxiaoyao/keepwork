@@ -264,5 +264,6 @@ define([
     // 打开数据库
     storage.indexedDBOpen();
 
+	app.objects.storage = storage;
     return storage;
 });

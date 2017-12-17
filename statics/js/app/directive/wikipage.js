@@ -23,7 +23,7 @@ define([
 
 					var urlobj = util.parseUrl(contentUrl);
 					if (!urlobj.username || urlobj.username == "www") {
-						var ctrlPath = "controller/" + (urlobj.sitename || "test") + "Controller";
+						var ctrlPath = "controller/" + (urlobj.sitename || "test");
 						require([
 							ctrlPath,
 						], function(content) {

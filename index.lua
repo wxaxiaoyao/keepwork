@@ -1,11 +1,10 @@
+nws.import("helper/errors")
+nws.import("helper/const")
+nws.import("helper/filter")
 
---local mdwiki = require("md/mdwiki")
+local user = nws.import("controller/user")
 
--- 业务代码开始
---nws.router("/", function(ctx)
-	--ctx.response:render("index.html", {});
-	----ctx.response:send(mdwiki:render("# test this  \n`@wiki`"))
---end)
+nws.router(nws.config.api_url_prefix .. "user", user)
 
 nws.router.default_handler = function(ctx) 
 	ctx.response:render("index.html", {});
