@@ -4,23 +4,19 @@ define([
 ], function(app){
 	var $http = app.ng_objects.$http;
 	var config = app.objects.config;
-	var gitlabMap = {};
-	function getGitlab(name) {
-		gitlabMap[name] = gitlabMap[name] || {
-			inited: false,                                          // is already init
-			username: '',   // gitlab 用户名                        // gitlab username
-			lastCommitId: "master",                                // 最新commitId  替代master  用于cdn加速
-			projectId: undefined,                                  // project id
-			projectName: 'keepworkdatasource',                   // repository name
-			projectMap:{},                                      // 项目列表
-			apiBaseUrl: 'http://git.keepwork.com/api/v4',     // api base url
-			rawBaseUrl: 'http://git.keepwork.com',              // raw base url
-			rootPath: '',                                           // 根路径
-			httpHeader: {},
-		}
-
-		return gitlabMap[name];
+	var gitlab = {
+		inited: false,                                          // is already init
+		username: '',   // gitlab 用户名                        // gitlab username
+		lastCommitId: "master",                                // 最新commitId  替代master  用于cdn加速
+		projectId: undefined,                                  // project id
+		projectName: 'keepworkdatasource',                   // repository name
+		projectMap:{},                                      // 项目列表
+		apiBaseUrl: 'http://git.keepwork.com/api/v4',     // api base url
+		rawBaseUrl: 'http://git.keepwork.com',              // raw base url
+		rootPath: '',                                           // 根路径
+		httpHeader: {},
 	}
+
 	// http请求
 	function httpRequest(self, method, url, data, success, error) {
 		self.dataSource.dataSourceToken && (self.httpHeader["PRIVATE-TOKEN"] = self.dataSource.dataSourceToken);
@@ -215,6 +211,11 @@ define([
 		return;
 	};
 
+	function getRawContentUrlPrefix(self, params) {
+		params = params || {};
+		var authStr = self.dataSource.visibility == "private" ? "?private_token=" + (params.token || self.dataSource.dataSourceToken) : "";
+		return self.rawBaseUrl + '/' + (params.username || self.username) + '/' + (params.projectName || self.projectName).toLowerCase() + '/raw/' + (params.sha || self.lastCommitId) + params.path + authStr;
+	}
 
 	function getFileUrlPrefix(self) {
 		return '/projects/' + self.projectId + '/repository/files/';
@@ -227,69 +228,134 @@ define([
 		return "keepwork commit: ";
 	}
 
-	return {
-		registerDataSource: function(name, dataSource, success, error) {
-			var inst = getGitlab(name);
-			inst.getLastCommitId = function(success, error) {
-				getLastCommitId(inst, success, error);
-			}
-			inst.setLastCommitId = function(lastCommitId) {
-				inst.lastCommitId = lastCommitId;
-			}
-			inst.getTree = function(params, success, error) {
-				var self = this;
-				var url = '/projects/' + self.projectId + '/repository/tree';
-				var path = params.path || "";
-				params.path = path.substring(1);
-				params.recursive = params.recursive == undefined ? true : params.recursive;
-				params.isFetchAll = params.recursive;
-				httpRequest(self, "GET", url, params, function (data) {
-					var pagelist = [];
-					for (var i = 0; i < data.length; i++) {
-						var path = '/' + data[i].path;
-						var page = {pagename: data[i].name};
-						var suffixIndex = path.lastIndexOf(".md");
-						// 不是md文件不编辑
-						if (suffixIndex < 0)
-							continue;
+	inst.getLastCommitId = function(success, error) {
+		getLastCommitId(inst, success, error);
+	}
+	inst.setLastCommitId = function(lastCommitId) {
+		inst.lastCommitId = lastCommitId;
+	}
+	inst.getTree = function(params, success, error) {
+		var self = this;
+		var url = '/projects/' + self.projectId + '/repository/tree';
+		var path = params.path || "";
+		params.path = path.substring(1);
+		params.recursive = params.recursive == undefined ? true : params.recursive;
+		params.isFetchAll = params.recursive;
+		httpRequest(self, "GET", url, params, function (data) {
+			var pagelist = [];
+			for (var i = 0; i < data.length; i++) {
+				var path = '/' + data[i].path;
+				var page = {pagename: data[i].name};
+				var suffixIndex = path.lastIndexOf(".md");
+				// 不是md文件不编辑
+				if (suffixIndex < 0)
+					continue;
 
-						page.url = path.substring(0, path.lastIndexOf('.'));
-						var paths = page.url.split('/');
-						if (paths.length < 3)
-							continue;
+				page.url = path.substring(0, path.lastIndexOf('.'));
+				var paths = page.url.split('/');
+				if (paths.length < 3)
+					continue;
 
-						page.username = paths[1];
-						page.sitename = paths[2];
-						page.pagename = paths[paths.length - 1];
-						page.blobId = data[i].id; // 文档sha
+				page.username = paths[1];
+				page.sitename = paths[2];
+				page.pagename = paths[paths.length - 1];
+				page.blobId = data[i].id; // 文档sha
 
-						pagelist.push(page);
-					}
-					success && success(pagelist);
-				}, error);
+				pagelist.push(page);
 			}
-			inst.writeFile = function(params, success, error) {
-				var self = this;
-				params.path = params.path.substring(1);
-				var url = getFileUrlPrefix(self) + _encodeURIComponent(params.path);
-				params.commit_message = getCommitMessagePrefix() + params.path;
-				params.branch = params.branch || "master";
-				httpRequest(self, "GET", url, {path: params.path, ref: params.branch, isShowLoading:params.isShowLoading}, function (data) {
-					// 已存在
-					if (data && data.blob_id) {
-						httpRequest(self, "PUT", url, params, success, error)
-					} else {
-						httpRequest(self, "POST", url, params, success, error);
-					}
-				}, function () {
-					httpRequest(self, "POST", url, params, success, error);
-				});
-		
+			success && success(pagelist);
+		}, error);
+	}
+	inst.writeFile = function(params, success, error) {
+		var self = this;
+		params.path = params.path.substring(1);
+		var url = getFileUrlPrefix(self) + _encodeURIComponent(params.path);
+		params.commit_message = getCommitMessagePrefix() + params.path;
+		params.branch = params.branch || "master";
+		httpRequest(self, "GET", url, {path: params.path, ref: params.branch, isShowLoading:params.isShowLoading}, function (data) {
+			// 已存在
+			if (data && data.blob_id) {
+				httpRequest(self, "PUT", url, params, success, error)
+			} else {
+				httpRequest(self, "POST", url, params, success, error);
 			}
-			init(inst, dataSource, success, error);
-		},
-		getDataSource: function(name) {
-			return getGitlab(name);
-		},
+		}, function () {
+			httpRequest(self, "POST", url, params, success, error);
+		});
+
+	}
+	inst.deleteFile = function(params, success, error) {
+		var self = this;
+		params.path = params.path.substring(1);
+		var url = getFileUrlPrefix(self) + _encodeURIComponent(params.path);
+		params.commit_message = getCommitMessagePrefix() + params.path;
+		params.branch = params.branch || "master";
+		httpRequest(self, "DELETE", url, params, success, error)
+	}
+
+	inst.getContent = function (params, success, error) {
+		var self = this;
+		params.path = params.path.substring(1);
+		var url = getFileUrlPrefix(self) + _encodeURIComponent(params.path);
+		params.ref = params.ref || self.lastCommitId;
+		httpRequest(self, "GET", url, params, function (data) {
+			data.content = data.content && Base64.decode(data.content);
+			success && success(data.content);
+		}, error);
+	}
+	// 上传图片
+	inst.uploadImage = function (params, success, error) {
+		var self = this;
+		//params path, content
+		var path = params.path;
+		var content = params.content;
+		if (!path) {
+			path = 'img_' + (new Date()).getTime();
+		}
+		path = '/'+ self.dataSource.username +'_images/' + path;
+		/*data:image/png;base64,iVBORw0KGgoAAAANS*/
+		content = content.split(',');
+		if (content.length > 1) {
+			var imgType = content[0];
+			content = content[1];
+			imgType = imgType.match(/image\/([\w]+)/);
+			imgType = imgType && imgType[1];
+			if (imgType) {
+				path = path + '.' + imgType;
+			}
+		} else {
+			content = content[0];
+		}
+		//console.log(content);
+		self.writeFile({
+			path: path,
+			message: getCommitMessagePrefix() + path,
+			content: content,
+			encoding: 'base64',
+			isShowLoading: params.isShowLoading || false,
+		}, function (data) {
+			//var imgUrl = self.getRawContentUrlPrefix({sha:"master"}) + '/' + data.file_path + (self.dataSource.visibility  == "private" ? ("?private_token=" + self.dataSource.dataSourceToken) : ""); 
+			var imgUrl = getRawContentUrlPrefix(self, {sha:"master", path:path, token:"visitortoken"}); 
+			success && success(imgUrl);
+		}, error);
+	}
+	// 上传文件
+	inst.uploadFile = function(params, success, error) {
+		var self = this;
+		var path = '/' + self.dataSource.username + '_files/' + params.path;
+		var content = params.content || "";
+		content = content.split(',');
+		//console.log(content);
+		content = content.length > 1 ? content[1] : content[0];
+		//content = Base64.decode(content);
+		//console.log(content);
+		self.writeFile({path:path, content:content, encoding: "base64"},function(){
+			var linkUrl = self.getRawContentUrlPrefix({sha:"master", path:path, token:"visitortoken"});
+			success && success(linkUrl);
+		}, error);
+	}
+
+	return function() {
+		angular.copy(gitlab);
 	}
 })

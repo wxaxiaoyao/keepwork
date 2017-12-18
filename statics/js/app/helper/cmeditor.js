@@ -103,6 +103,7 @@ define([
 		var htmlContent = $compile(htmlStr)($scope);
 		var textarea = $(selector).html(htmlContent).find('textarea')[0];
 
+		//console.log(textarea, $(selector));
 		editorObj.editorSource = $("#kp-editor-source");
 		editorObj.editorPreview = $("#kp-editor-preview");
 		editorObj.editorSourceContainer = $("#kp-editor-source-container");

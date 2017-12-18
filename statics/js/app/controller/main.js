@@ -13,7 +13,17 @@ define([
 		$rootScope.headerContent = headerContent;
 		$rootScope.imgsPath = "/assets/imgs/";
 		
-		util.replaceState({url:util.getAbsoluteUrl()});
+
+		function init(){
+			util.replaceState({url:util.getAbsoluteUrl()});
+		}
+
+		app.getUser(function(userinfo){
+			$rootScope.user = userinfo;
+			init();
+		}, function(){
+			init();
+		});
 		//var urlObj = util.parseUrl();
 		//console.log(urlObj);
 		//util.replaceState()

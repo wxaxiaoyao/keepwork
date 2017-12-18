@@ -46,7 +46,7 @@ function user:register(ctx)
 	end
 
 	local err, userinfo = user_model:register({username=params.username, password=params.password})
-	if err then
+	if not userinfo then
 		return (errors:wrap(err))
 	end
 	
@@ -69,8 +69,14 @@ function user:get(ctx)
 	end
 	
 	local err, userinfo = user_model:get_by_username({username=token.username})
+	if not userinfo then
+		return (errors:wrap(err))
+	end
 
-	return (errors:wrap(err, userinfo))
+	local default_data_source = data_source_model:get_default_by_username({username=userinfo.username}).data
+	userinfo.default_data_source = default_data_source
+
+	return (errors:wrap(nil, userinfo))
 end
 
 function user:get_by_username(ctx) 

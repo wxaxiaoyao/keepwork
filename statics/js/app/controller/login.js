@@ -19,7 +19,6 @@ define([
 				url: config.apiUrlPrefix + "user/login",
 				params: params,
 				success: function(data) {
-					console.log(data);
 					$auth.setToken(data.token);
 					app.setUser(data.userinfo);
 					util.go("/www/editor");

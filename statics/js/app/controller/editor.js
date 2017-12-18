@@ -6,34 +6,44 @@ define([
     'app',
 	'markdown-it',
 	'helper/cmeditor',
+	'helper/dataSource/gitlab',
 	'text!html/controller/editor.html',
-], function (app, markdownit, cmeditor, htmlContent) {
+], function (app, markdownit, cmeditor, gitlab, htmlContent) {
+	var $auth = app.ng_objects.$auth;
+	var util = app.objects.util;
+	var config = app.objects.config;
+	// git数据源
+	var git = gitlab();
 
+
+	//function format
 	app.registerController("editorController", ["$scope", "$compile", function($scope, $compile){
 		function init() {
 			var $rootScope = app.ng_objects.$rootScope;
+			var $scope.user = $scope.user || $rootScope.user;
 			var editor = cmeditor({selector:"#editor", $scope:$scope});
 
 			$rootScope.isShowHeader = false;
 
-			//var md = markdownit();
-			//var wiki = mdwiki({containerId:"preview"});
-			//var content = localStorage.getItem("content") || "";
-			//window.wiki = wiki;
-			//editor.setValue(content);
-			////$("#preview").html(wiki.render(content));
-			//wiki.render(content);
-			//$("#preview1").html(md.render(content));
-			//editor.on("change", function(cm, changeObj){
-				//content = editor.getValue();
-				////console.log(md_special_char_escape(content));
-				////console.log(md_special_char_unescape(md_special_char_escape(content)));
-				//localStorage.setItem("content", content);
-				//wiki.render(content);
-			//});
+			git.init($scope.user.default_data_source);
+
+			git.getTree({
+				recursive: true,
+				isFetchAll: true,
+				path: "xiaoyao_site",
+			}, function(datas){
+
+			});
 		}
 
-		$scope.$watch("$viewContentLoaded", init);
+
+		$scope.$watch("$viewContentLoaded", function(){
+			if ($auth.isAuthenticated()) {
+				init();
+			} else {
+				util.go("/www/login");
+			}
+		});
 
 	}]);
 

@@ -115,6 +115,7 @@ define([
 	// 获取用户信息
 	app.getUser = function(success, error) {
 		var $auth = app.ng_objects.$auth;
+		var storage = app.objects.storage;
 		var util = app.objects.util;
 		var config = app.objects.config;
 		if (!$auth.isAuthenticated()) {

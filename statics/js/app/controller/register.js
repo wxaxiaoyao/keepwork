@@ -1,7 +1,7 @@
 
 define([
 	'app',
-	'text!html/controller/regiser.html',
+	'text!html/controller/register.html',
 ], function (app, htmlContent) {
 	var util = app.objects.util;
 	var config = app.objects.config;
@@ -19,7 +19,9 @@ define([
 				url: config.apiUrlPrefix + "user/register",
 				params: params,
 				success: function(data) {
-
+					$auth.setToken(data.token);
+					app.setUser(data.userinfo);
+					util.go("/www/editor");
 				},
 				error: function(err) {
 

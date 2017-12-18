@@ -136,8 +136,8 @@ function user:register(params)
 	end
 
 	local userinfo = self:find_one({username=params.username})
-	if not userinfo then
-		return errors:wrap("获取用户信息失败")
+	if userinfo then
+		user:simplify(userinfo)
 	end
 
 	return nil, userinfo
@@ -162,7 +162,9 @@ function user:login(params)
 		userinfo = self:find_one({username=string.lower(username), password=password})
 	end
 
-	user:simplify(userinfo)
+	if userinfo then
+		user:simplify(userinfo)
+	end
 
 	return nil, userinfo
 end
