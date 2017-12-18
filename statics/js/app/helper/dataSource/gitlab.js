@@ -103,10 +103,23 @@ define([
 			});
 		}
 
-		gitlab.getTree = function(params, success, error) {
+		gitlab.getTree = function(params, success, error, filter) {
 			var self = this;
 			var url = "/projects/" + self.projectId + "/repository/tree";
 			params.ref = self.lastCommitId;
+
+			filter = filter || function(node) {
+				var path = node.path;
+				if (node.type == "tree") {
+					node.text = node.name;
+					return true;
+				}
+				if (path.indexOf(".md") == path.length - 3) {
+					node.text = node.name.substring(0, node.name.length-3);
+					return true;
+				}
+				return false;
+			}
 			//params.isFetchAll = params.recursive;
 			self.httpRequest("GET", url, params, function(datas){
 				var roottree = [], i, j, k, name;
@@ -114,6 +127,12 @@ define([
 					var node = datas[i];
 					var paths = node.path.split("/");
 					var tree = roottree;
+					var path = "";
+
+					if (filter && !filter(node)) {
+						continue;
+					}
+
 					for (j = 0; j < paths.length - 1; j++) {
 						name = paths[j];
 						for (k = 0; k < tree.length; k++) {
@@ -122,7 +141,7 @@ define([
 							}
 						}
 						if (k == tree.length) {
-							tree.push({name:name, type:"tree", nodes:[]});
+							tree.push({path: paths.slice(0,j+1).join("/"), text:name, name:name, type:"tree", nodes:[]});
 						}
 						tree = tree[k].nodes;
 					}

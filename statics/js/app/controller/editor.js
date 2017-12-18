@@ -15,13 +15,14 @@ define([
 	// git数据源
 	var git = gitlab();
 
-
 	//function format
 	app.registerController("editorController", ["$scope", "$compile", function($scope, $compile){
+		var stack = [];
 		function init() {
 			var $rootScope = app.ng_objects.$rootScope;
-			var $scope.user = $scope.user || $rootScope.user;
 			var editor = cmeditor({selector:"#editor", $scope:$scope});
+
+			$scope.user = $scope.user || $rootScope.user;
 
 			$rootScope.isShowHeader = false;
 
@@ -30,12 +31,63 @@ define([
 			git.getTree({
 				recursive: true,
 				isFetchAll: true,
-				path: "xiaoyao_site",
+				path: "xiaoyao",
 			}, function(datas){
+				console.log(datas);
+				$scope.nodes = datas;
+			}, function(){
 
 			});
 		}
 
+
+		$scope.clickItem = function(node) {
+			stack.push($scope.nodes);
+			if (!node.nodes || node.nodes.length == 0) {
+				return ;
+			}
+			$scope.nodes = node.nodes;
+		}
+
+		$scope.clickNewFile = function(node) {
+			$scope.isCreateItem = true;
+			$scope.createItemType = "blob";
+		}
+
+		$scope.clickNewDir = function(node) {
+			$scope.isCreateItem = true;
+			$scope.createItemType = "tree";
+		}
+
+		$scope.clickCreateItem = function(node) {
+			if (!$scope.newItemName) {
+				return;
+			}
+			for (var i = 0; i < $scope.nodes.length; i++) {
+				var temp = $scope.nodes[i];
+				if (temp.name == $scope.newItemName && temp.type == $scope.createItemType) {
+					console.log("文件已存在");
+					return;
+				}
+			}
+			console.log($scope.createItemType, node, $scope.newItemName);
+			var path = node.path + "/" + $scope.newItemName + ($scope.createItemType == "tree" ? "/.gitkeep":".md");
+			git.writeFile({
+				path:path,
+				content:"",
+			}, function(node) {
+				$scope.nodes.push({
+					path: node.file_path,
+					name: $scope.newItemName,
+					type: $scope.createItemType,
+				});
+				$scope.clickCancelCreateItem();
+			});
+		}
+
+		$scope.clickCancelCreateItem = function() {
+			$scope.isCreateItem = false;
+		}
 
 		$scope.$watch("$viewContentLoaded", function(){
 			if ($auth.isAuthenticated()) {

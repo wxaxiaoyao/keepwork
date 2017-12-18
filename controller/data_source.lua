@@ -1,7 +1,7 @@
-local data_source = common.inherit()
 
-local data_source_model = require("model/data_source")
-local convert_model = require("model/convert")
+local controller = nws.gettable("nws.controller")
+local data_source = controller:new("data_source")
+local data_source_model = nws.import("model/data_source")
 
 
 function data_source:getByUsername(params)

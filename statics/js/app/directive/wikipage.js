@@ -10,6 +10,9 @@ define([
 			//template:'<input ng-model="message"><div>{{message}}</div>',
 			controller: ["$scope", "$element", "$attrs", function($scope, $element, $attrs){
 				var content, contentUrl;
+				var $rootScope = app.ng_objects.$rootScope;
+
+				$scope.imgsPath = $rootScope.imgsPath;
 
 				function render() {
 					if (content) {

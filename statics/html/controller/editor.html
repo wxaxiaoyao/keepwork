@@ -9,12 +9,34 @@
 	right: 0px;
 	padding-top:100px;
 }
+
 </style>
 <div ng-controller="editorController" class="kp_editor_container">
 	<div>
+	
 	</div>
 	<div style="height:100%; display:flex;"> 
-		<div style="min-width:200px; height:100%; flex-grow:2"></div>
+		<div style="min-width:200px; height:100%; flex-grow:2">
+			<div ng-repeat="node in nodes track by $index">
+				<div class="kp_horizontal_box" style="justify-content:space-between; padding:0px 4px;">
+					<div></div>
+					<div>
+						<span ng-click="clickItem(node)">{{node.text}}</span>
+					</div>
+					<div>
+						<div ng-show='node.type == "tree"'>
+							<img ng-click="clickNewFile(node)" ng-src='{{imgsPath + "new_file.png"}}'/>
+							<img ng-click="clickNewDir(node)"ng-src='{{imgsPath + "new_dir.png"}}'/>
+						</div>
+					</div>
+				</div>
+				<div ng-show="isCreateItem">
+					<input type="text" ng-model="$parent.newItemName"/>
+					<button ng-click="clickCreateItem(node)">创建</button>
+					<button ng-click="clickCancelCreateItem(node)">取消</button>
+				</div>
+			</div>
+		</div>
 		<div id="editor" style="height:100%; flex-grow:10"></div>
 	</div>
 </div>

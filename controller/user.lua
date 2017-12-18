@@ -16,7 +16,7 @@ local data_source_model = nws.import("model/data_source")
 function user:login(ctx)
 	local params = ctx.request:get_params()
 	if not params.username or not params.password then
-		return (errors:wrap(errors.PARAMS_ERROR))
+		return (errors:wrap(errors.PARAMS_ERROR, params))
 	end
 
 	local err, userinfo = user_model:login(params)
