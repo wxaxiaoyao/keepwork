@@ -53,7 +53,7 @@ define([
 				return;
 			}
 			
-			console.log(filename, text);
+			//console.log(filename, text);
 			curPage.content = text;
 		}
 
