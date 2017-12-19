@@ -135,6 +135,8 @@ define([
 			return;
 		}
 
+		editor.setOption("extraKeys", editorObj.keyMap);
+
 		editor.on('fold', function (cm, from, to) {
 			cm.getDoc().addLineClass(from.line, 'wrap', 'CodeMirrorFold');
 			//console.log("--------------------fold--------------------");
@@ -145,6 +147,7 @@ define([
 		});
 
 		editor.on("change", function (cm, changeObj) {
+			//console.log(changeObj);
 			// 代码折叠
 			foldWikiBlock(cm, changeObj);
 			// 文本渲染
@@ -153,6 +156,10 @@ define([
 
 		editor.on("scroll", function(cm) {
 			sourceScroll(editorObj);
+		});
+
+		editor.on("cursorActivity", function(cm){
+			//console.log(cm);
 		});
 		
 		editorObj.editorPreviewContainer.on("scroll mouseenter mouseleave", function(e){
@@ -166,8 +173,76 @@ define([
 		setPreviewScale(editorObj);
 
 		editorObj.editor = editor;
+
+		exportInterface(editorObj);
 		return editor;
 	}
+
+	function font_style(editorObj, leftChar, rightChar) {
+		var editor = editorObj.editor;
+		if (editor.somethingSelected()) {
+			var sel = editor.getSelection();
+			var desStr = leftChar + sel.replace(/\n/g, rightChar + "\n" + leftChar) + rightChar;
+			editor.replaceSelection(desStr);
+		} else {
+			var cursor = editor.getCursor();
+			var content = editor.getLine(cursor.line);
+
+			editor.replaceRange(rightChar, CodeMirror.Pos(cursor.line, content.length), CodeMirror.Pos(cursor.line, content.length));
+			editor.replaceRange(leftChar, CodeMirror.Pos(cursor.line, 0), CodeMirror.Pos(cursor.line, 0));
+			editor.setCursor(CodeMirror.Pos(cursor.line, content.length + leftChar.length));
+		}
+		editor.focus();
+	}
+
+
+	function getKeyMap(editorObj) {
+		// 字体样式
+		return {
+			"Ctrl-S": function(cm) {
+			},
+			"Ctrl-B": function(cm) {
+				font_style(editorObj, "**", "**");
+			}, 
+			"Ctrl-I": function(cm) {
+				font_style(editorObj, "*", "*");
+			},
+			"Ctrl--": function(cm) {
+				font_style(editorObj, "---", "");
+			},
+			"Shift-Ctrl-.": function(cm) {
+				font_style(editorObj, "> ", "");
+			},
+			"Shift-Ctrl-8": function(cm) {
+				font_style(editorObj, "* ", "");
+			},
+			"Shift-Ctrl-1": function(cm) {
+				font_style(editorObj, "# ", "");
+			},
+			"Shift-Ctrl-2": function(cm) {
+				font_style(editorObj, "## ", "");
+			},
+			"Shift-Ctrl-3": function(cm) {
+				font_style(editorObj, "### ", "");
+			},
+			"Shift-Ctrl-4": function(cm) {
+				font_style(editorObj, "#### ", "");
+			},
+			"Shift-Ctrl-5": function(cm) {
+				font_style(editorObj, "##### ", "");
+			},
+			"Shift-Ctrl-6": function(cm) {
+				font_style(editorObj, "###### ", "");
+			},
+			"Ctrl-Home": function(cm) {
+				cm.setCursor(CodeMirror.Pos(0));
+			},
+			"Ctrl-End":function(cm) {
+				cm.setCursor(CodeMirror.Pos(cm.lastLine()));
+			},
+		}
+	}
+
 	// 拖拽分隔条
 	function initSplitStrip(editor) {
 		var col1=editor.editorSourceContainer;
@@ -318,7 +393,7 @@ define([
 
 		setPreviewScale(editor);
 
-		editor.change && editor.change();
+		editor.change && editor.change(editor.currentFilename, text);
 	}
 
 	// 导出编辑器接口
@@ -346,10 +421,14 @@ define([
 				editor.docMap[filename] = CodeMirror.Doc(text, 'markdown');
 			}
 			editor.editor.swapDoc(editor.docMap[filename]);
-			if (!text) {
+			editor.currentFilename = filename;
+			if (text) {
 				editor.editor.setValue(text);
+			} else {
+				CodeMirror.signal(editor.editor, "change", editor.editor);
 			}
 		}
+
 		editor.getValue = function() {
 			return editor.editor.getValue();
 		}
@@ -365,8 +444,10 @@ define([
 			$scope: options.$scope,
 			change: options.change,
 			viewChange: options.viewChange,
+			options: options,
 		};
 
+		editor.keyMap = angular.merge(getKeyMap(editor), options.keyMap || {}),
 
 		//if (!editor.editor) {
 			//console.log("编辑器创建失败...");

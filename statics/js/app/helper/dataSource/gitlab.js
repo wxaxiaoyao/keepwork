@@ -88,6 +88,16 @@ define([
 			}, error);
 		}
 
+		gitlab.deleteFile = function(params, success, error) {
+			var self = this;
+			var path = encodeUrl(params.path);
+			var url = "/projects/" + self.projectId + "/repository/files/" + path;
+
+			params.branch = params.branch || "master";
+			params.commit_message = "keepwork commit:" + params.path;
+			self.httpRequest("DELETE", url, params, success, error);
+		}
+
 		gitlab.writeFile = function(params, success, error) {
 			var self = this;
 			var path = encodeUrl(params.path);
@@ -112,10 +122,12 @@ define([
 				var path = node.path;
 				if (node.type == "tree") {
 					node.text = node.name;
+					node.url = node.path;
 					return true;
 				}
 				if (path.indexOf(".md") == path.length - 3) {
 					node.text = node.name.substring(0, node.name.length-3);
+					node.url = node.path.substring(0, node.path.length-3);
 					return true;
 				}
 				return false;
@@ -141,9 +153,17 @@ define([
 							}
 						}
 						if (k == tree.length) {
-							tree.push({path: paths.slice(0,j+1).join("/"), text:name, name:name, type:"tree", nodes:[]});
+							tree.push({
+								path: paths.slice(0,j+1).join("/"), 
+								text:name, 
+								name:name, 
+								type:"tree", 
+								nodes:[]
+							});
+							tree[k].url = tree[k].path;
 						}
 						tree = tree[k].nodes;
+						
 					}
 					for (k = 0; k < tree.length; k++) {
 						if (tree[k].name == node.name && tree[k].type == node.type){
@@ -163,7 +183,7 @@ define([
 					tree.name = node.name;
 					tree.username = paths[0];
 					tree.sitename = paths[1];
-					tree.username = tree.username.substring(0, tree.username.length-5);					
+					//tree.username = tree.username.substring(0, tree.username.length-5);					
 				}
 				success && success(roottree);
 			}, error);

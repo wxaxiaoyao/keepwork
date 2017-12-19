@@ -12,13 +12,14 @@
 
 .kp-editor-item {
 	height:100%;
-	width:50%;
+	<!--width:50%;-->
 	border:0px;
 	margin:0px;
+	padding:0px;
 }
 
 #kp-editor-source-container {
-	width:50%;
+	<!--width:50%;-->
 }
 
 #kp-editor-preview-container {
@@ -38,11 +39,11 @@
 </style>
 
  <div id="kp-editor-container" class="kp-editor-container">
-	<div id="kp-editor-source-container" class="kp-editor-item">
+	<div id="kp-editor-source-container" class="kp-editor-item col-sm-6">
 		<textarea id="kp-editor-source" style="display:none"></textarea>
 	</div>
 	<div id="kp-editor-split-strip"></div>
-	<div id="kp-editor-preview-container" class="kp-editor-item">
+	<div id="kp-editor-preview-container" class="kp-editor-item col-sm-6">
 		<div id="kp-editor-preview"></div>
 	</div>
 </div>

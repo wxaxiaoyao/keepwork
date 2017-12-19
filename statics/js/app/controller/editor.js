@@ -14,14 +14,19 @@ define([
 	var config = app.objects.config;
 	// git数据源
 	var git = gitlab();
+	var editor = undefined;
 
+	var allPageMap = {};
+	var curPage = undefined;
 	//function format
 	app.registerController("editorController", ["$scope", "$compile", function($scope, $compile){
 		var stack = [];
+		
+		$scope.openedPageMap = {};
 		function init() {
 			var $rootScope = app.ng_objects.$rootScope;
-			var editor = cmeditor({selector:"#editor", $scope:$scope});
 
+			initEditor();
 			$scope.user = $scope.user || $rootScope.user;
 
 			$rootScope.isShowHeader = false;
@@ -34,19 +39,89 @@ define([
 				path: "xiaoyao",
 			}, function(datas){
 				console.log(datas);
-				$scope.nodes = datas;
+				if (datas.length == 1) {
+					$scope.node = datas[0];
+					$scope.node.text = "我的站点";
+				}
 			}, function(){
 
 			});
 		}
 
-
-		$scope.clickItem = function(node) {
-			stack.push($scope.nodes);
-			if (!node.nodes || node.nodes.length == 0) {
-				return ;
+		function change(filename, text) {
+			if (!curPage) {
+				return;
 			}
-			$scope.nodes = node.nodes;
+			
+			console.log(filename, text);
+			curPage.content = text;
+		}
+
+		function initEditor() {
+			editor = cmeditor({
+				selector:"#editor", 
+				$scope:$scope,
+				change: change,
+				keyMap:{
+					"F11": function(cm) {
+						console.log("---------");
+					},
+					"ESC": function(cm) {
+
+					},
+					"Ctrl-S": function(cm) {
+						$scope.cmd_save();
+					},
+				}
+			});
+		}
+
+		$scope.cmd_save = function() {
+			if (!curPage) {
+				return;
+			}
+
+			git.writeFile({
+				path:curPage.path, 
+				content:curPage.content
+			}, function(){
+				console.log("保存成功!!!");
+			});
+		}
+
+		$scope.clickBackwardBtn = function() {
+			if (stack.length == 0) {
+				return;
+			}
+			$scope.node = stack.pop();
+		}
+
+		// 打开站点页
+		function openPage(node) {
+			$scope.openedPageMap[node.path] = node;
+			curPage = node;
+			editor.swapDoc(node.path, node.content);
+		}
+		
+		$scope.clickItem = function(node) {
+			console.log("点击文件项:", node);
+			if (node.type == "tree") {
+				stack.push($scope.node);
+				$scope.node = node;
+				return;
+			}
+			
+			if (node.content != undefined) {
+				openPage(node);
+				return;
+			}
+
+			git.getContent({path:node.path}, function(content) {
+				node.content = content || "";
+				openPage(node);
+			}, function(){
+				console.log("获取文件内容失败:" + node.path);
+			});
 		}
 
 		$scope.clickNewFile = function(node) {
@@ -63,8 +138,8 @@ define([
 			if (!$scope.newItemName) {
 				return;
 			}
-			for (var i = 0; i < $scope.nodes.length; i++) {
-				var temp = $scope.nodes[i];
+			for (var i = 0; i < node.nodes.length; i++) {
+				var temp = node.nodes[i];
 				if (temp.name == $scope.newItemName && temp.type == $scope.createItemType) {
 					console.log("文件已存在");
 					return;
@@ -75,14 +150,28 @@ define([
 			git.writeFile({
 				path:path,
 				content:"",
-			}, function(node) {
-				$scope.nodes.push({
-					path: node.file_path,
+			}, function(data) {
+				node.nodes.push({
+					path: data.file_path,
 					name: $scope.newItemName,
+					text: $scope.newItemName,
 					type: $scope.createItemType,
 				});
 				$scope.clickCancelCreateItem();
+				util.$apply();
 			});
+		}
+
+		$scope.clickDeleteItem = function(node, index) {
+			console.log(index, node);
+			var x = node.nodes[index];
+			git.deleteFile({
+				path: x.path,
+			}, function(){
+				node.nodes.splice(index,1);	
+			}, function(resp){
+				console.log(resp);
+			});	
 		}
 
 		$scope.clickCancelCreateItem = function() {
