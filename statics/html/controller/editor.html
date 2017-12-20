@@ -30,6 +30,7 @@
 	padding-right: 10px;
 }
 </style>
+
 <div ng-controller="editorController" class="kp_editor_container">
 	<div>
 	
@@ -42,10 +43,10 @@
 					<span>已打开</span>
 				</div>
 				<div ng-repeat="(key, value) in openedPageMap">
-					<div class="kp_file_item_container">
+					<div class="kp_file_item_container" ng-click="clickItem(value)">
 						<span>{{value.text}}</span>
 						<span class="pull-right kp_padding_right_10">
-							<i class="fa fa-times" aria-hidden="true"></i>
+							<i ng-click="clickCloseBtn(value, $event)" class="fa fa-times" aria-hidden="true"></i>
 						</span>
 					</div>
 				</div>
@@ -76,10 +77,10 @@
 				</div>
 				<div>
 					<div ng-repeat="x in node.nodes track by $index">
-						<div class="kp_file_item_container">
-							<span ng-click="clickItem(x)">{{x.text}}</span>
+						<div ng-click="clickItem(x)" class="kp_file_item_container">
+							<span>{{x.text}}</span>
 							<span class="pull-right kp_padding_right_10">
-								<i ng-show="!x.nodes || x.nodes.length == 0" ng-click='clickDeleteItem(node, $index)' class="fa fa-trash-o" aria-hidden="true"></i>
+								<i ng-show="!x.nodes || x.nodes.length == 0" ng-click='clickDeleteItem(node, $index, $event)' class="fa fa-trash-o" aria-hidden="true"></i>
 							</span>
 						</div>
 					</div>

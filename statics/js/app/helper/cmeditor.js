@@ -173,6 +173,7 @@ define([
 		setPreviewScale(editorObj);
 
 		editorObj.editor = editor;
+		editorObj.originDoc = editor.getDoc();
 
 		exportInterface(editorObj);
 		return editor;
@@ -417,10 +418,14 @@ define([
 			setPreviewScale(editor, scaleX, scaleY);
 		}
 		editor.swapDoc = function(filename, text) {
-			if (!editor.docMap[filename]) {
-				editor.docMap[filename] = CodeMirror.Doc(text, 'markdown');
+			if (filename) {
+				if (!editor.docMap[filename]) {
+					editor.docMap[filename] = CodeMirror.Doc(text, 'markdown');
+				}
+				editor.editor.swapDoc(editor.docMap[filename]);
+			} else {
+				editor.editor.swapDoc(editor.originDoc);
 			}
-			editor.editor.swapDoc(editor.docMap[filename]);
 			editor.currentFilename = filename;
 			if (text) {
 				editor.editor.setValue(text);

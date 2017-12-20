@@ -98,6 +98,11 @@ define([
 
 		// 打开站点页
 		function openPage(node) {
+			if (!node) {
+				editor.swapDoc(undefined);
+				return;
+			}
+
 			$scope.openedPageMap[node.path] = node;
 			curPage = node;
 			editor.swapDoc(node.path, node.content);
@@ -122,6 +127,22 @@ define([
 			}, function(){
 				console.log("获取文件内容失败:" + node.path);
 			});
+		}
+
+		$scope.clickCloseBtn = function(node, $event) {
+			delete $scope.openedPageMap[node.path];
+			if ($event) {
+				$event.stopPropagation();
+			}
+
+			if (curPage.path == node.path) {
+				curPage = undefined;
+				for (var key in $scope.openedPageMap) {
+					curPage = $scope.openedPageMap[key];
+				}
+			}
+
+			openPage(curPage);
 		}
 
 		$scope.clickNewFile = function(node) {
@@ -162,7 +183,11 @@ define([
 			});
 		}
 
-		$scope.clickDeleteItem = function(node, index) {
+		$scope.clickDeleteItem = function(node, index, $event) {
+			if ($event) {
+				$event.stopPropagation();
+			}
+
 			console.log(index, node);
 			var x = node.nodes[index];
 			git.deleteFile({
