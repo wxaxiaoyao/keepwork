@@ -9,9 +9,10 @@ local util = nws.util
 
 function gitlab:init(config)
 	self.api_base_url = config.api_base_url
-	self.raw_base_url = config.api_base_url
+	self.raw_base_url = config.raw_base_url
 	self.token = config.token
 	self.project_name = config.project_name
+	self.project_id = config.project_id
 
 	return self
 end
@@ -156,11 +157,13 @@ function gitlab:create_project(params)
 		return "创建项目失败"
 	end
 	
+	--self.project_id = res.data.id
 	return nil, res.data
 end
 
 -- 写文件
 function gitlab:write_file(params)
+	params.project_id = params.project_id or self.project_id
 	if not params.path or not params.content or not params.project_id then
 		return "参数错误"
 	end
@@ -199,6 +202,7 @@ end
 
 -- 读文件
 function gitlab:get_file(params)
+	params.project_id = params.project_id or self.project_id
 	if not params.path or not params.project_id then
 		return "参数错误"
 	end
@@ -229,7 +233,7 @@ function gitlab:get_content(params)
 end
 
 
-
+return gitlab
 
 
 

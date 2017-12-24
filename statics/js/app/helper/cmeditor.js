@@ -254,6 +254,7 @@ define([
 		var mousemoveEvent=function(event){
 			col1.width(col1Width + event.clientX - startX);
 			col2.width(col2Width - event.clientX + startX);
+			setPreviewScale(editor);
 		};
 		var mouseupEvent = function(){
 			editor.editorContainer.off("mouseup", mouseupEvent);

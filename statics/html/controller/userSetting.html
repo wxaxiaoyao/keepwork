@@ -1,0 +1,37 @@
+
+<style>
+.kp_user_setting_sidebar_container ul {
+	margin:0px;
+	padding:0px;
+}
+
+.kp_user_setting_sidebar_container li {
+	margin:0px;
+	padding:0px;
+	list-style-type:none;
+}
+.kp_user_setting_container{
+}
+.kp_user_setting_sidebar_container {
+	border:1px solid #ccc;
+	text-align: center;
+}
+.kp_user_setting_item_container {
+
+}
+</style>
+
+<div ng-controller="userSettingController" class="container">
+	<div class="kp_user_setting_container row">
+		<div class="col-sm-2">
+			<div class="kp_user_setting_sidebar_container">
+				<ul>
+					<li >GIT数据源</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-10">
+			<wikipage content="settingHtml"></wikipage>
+		</div>
+	</div>
+</div>

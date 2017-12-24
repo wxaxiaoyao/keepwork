@@ -42,6 +42,7 @@ define([
 				if (datas.length == 1) {
 					$scope.node = datas[0];
 					$scope.node.text = "我的站点";
+					$scope.node.isRootNode = true;
 				}
 			}, function(){
 
@@ -53,8 +54,15 @@ define([
 				return;
 			}
 			
+			if (curPage.path != filename) {
+				console.log("文件不匹配");
+				return;
+			}
 			//console.log(filename, text);
-			curPage.content = text;
+			if (curPage.content != text) {
+				curPage.content = text;
+				curPage.isModify = true;
+			}
 		}
 
 		function initEditor() {
@@ -81,11 +89,14 @@ define([
 				return;
 			}
 
+			var page = curPage;
+
 			git.writeFile({
-				path:curPage.path, 
-				content:curPage.content
+				path:page.path, 
+				content:page.content
 			}, function(){
 				console.log("保存成功!!!");
+				page.isModify = false;
 			});
 		}
 
@@ -106,6 +117,7 @@ define([
 			$scope.openedPageMap[node.path] = node;
 			curPage = node;
 			editor.swapDoc(node.path, node.content);
+			$scope.curPage = curPage;
 		}
 		
 		$scope.clickItem = function(node) {
@@ -129,6 +141,13 @@ define([
 			});
 		}
 
+		$scope.clickAccessPage = function(node, $event) {
+			if ($event) {
+				$event.stopPropagation();
+			}
+			window.open(node.url);
+		}
+
 		$scope.clickCloseBtn = function(node, $event) {
 			delete $scope.openedPageMap[node.path];
 			if ($event) {
@@ -143,6 +162,7 @@ define([
 			}
 
 			openPage(curPage);
+			$scope.curPage = curPage;
 		}
 
 		$scope.clickNewFile = function(node) {

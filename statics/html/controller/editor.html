@@ -7,16 +7,25 @@
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
-	padding-top:100px;
 }
 
+.kp_toolbar_container {
+	height:100px;
+	display:flex;
+	align-items:center;
+}
 .kp_filelist_container {
 	float: left;
 	width:200px;
 	padding-left:10px;
 	cursor: pointer;
+	height:100%;
+	position: relative;
 }
-
+.kp_cmeditor_container {
+	height:100%;
+	margin-left:200px;
+}
 .kp_dir_item_container {
 
 }
@@ -26,67 +35,107 @@
 	padding-left: 20px;
 }
 
+.kp_file_item_container:hover{
+	background-color:#E6E6E6;
+}
 .kp_padding_right_10 {
 	padding-right: 10px;
+}
+.kp_view_mode {
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	right:0px;
+	height:30px;
 }
 </style>
 
 <div ng-controller="editorController" class="kp_editor_container">
-	<div>
-	
-	</div>
+	<!--<div class="kp_toolbar_container">-->
+	<!--</div>-->
 	<div style="height:100%;"> 
 		<div class="kp_filelist_container">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#filelist" data-toggle="tab">文件</a>
+				</li>
+				<li>
+					<a href="#toolbar" data-toggle="tab">工具</a>
+				</li>
+			</ul>
 			<!--已打开文件列表-->
-			<div>
-				<div>
-					<span>已打开</span>
-				</div>
-				<div ng-repeat="(key, value) in openedPageMap">
-					<div class="kp_file_item_container" ng-click="clickItem(value)">
-						<span>{{value.text}}</span>
-						<span class="pull-right kp_padding_right_10">
-							<i ng-click="clickCloseBtn(value, $event)" class="fa fa-times" aria-hidden="true"></i>
-						</span>
+			<div class="tab-content">
+				<div class="tab-pane fade in active" id="filelist">
+					<div>
+						<div>
+							<span>已打开</span>
+						</div>
+						<div ng-repeat="(k, x) in openedPageMap">
+							<div class="kp_file_item_container" ng-click="clickItem(x)" ng-style='x.path == curPage.path && {"background-color":"gray"}'>
+								<span data-toggle="tooltip" title="{{x.url}}" >
+									<i ng-class='x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"' aria-hidden="true"></i>
+									<span>{{x.text}}</span>
+								</span>
+								<span class="pull-right kp_padding_right_10">
+									<i class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
+									<i ng-click="clickCloseBtn(x, $event)" class="fa fa-times" aria-hidden="true" data-toggle="tooltip" title="关闭"></i>
+								</span>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-			<!--用户文件列表-->
-			<div style="margin-top:20px">
-				<div style="text-align:center">
-					<div class="pull-left" ng-click="clickBackwardBtn()">
-						<!--<i class="fa fa-arrow-left" aria-hidden="true"></i>-->
-						<span>
-							{{node.text}}
-						</span>
-					</div>
-					<div class="pull-right">
-						<img ng-click="clickNewFile(node)" ng-src='{{imgsPath + "new_file.png"}}'/>
-						<img ng-click="clickNewDir(node)" ng-src='{{imgsPath + "new_dir.png"}}'/>
-					</div>
-				</div>
-				<div class="clearfix"></div>
-				<div ng-show="isCreateItem">
-					<div style="display:inline-block; width:80%; margin:0px; padding:0px;">
-						<input type="text" style="width:100%" ng-model="$parent.newItemName"/>
-					</div>
-					<div style="display:inline; width:20%; margin:0px; padding:0px;">
-						<i ng-click="clickCreateItem(node)" class="fa fa-check" aria-hidden="true"></i>
-						<i ng-click="clickCancelCreateItem(node)" class="fa fa-times" aria-hidden="true"></i>
-					</div>
-				</div>
-				<div>
-					<div ng-repeat="x in node.nodes track by $index">
-						<div ng-click="clickItem(x)" class="kp_file_item_container">
-							<span>{{x.text}}</span>
-							<span class="pull-right kp_padding_right_10">
-								<i ng-show="!x.nodes || x.nodes.length == 0" ng-click='clickDeleteItem(node, $index, $event)' class="fa fa-trash-o" aria-hidden="true"></i>
-							</span>
+					<!--用户文件列表-->
+					<div style="margin-top:20px">
+						<div style="text-align:center">
+							<div class="pull-left" ng-click="clickBackwardBtn()">
+								<i ng-class='node.isRootNode ? "fa fa-globe" : "fa fa-folder-o"' aria-hidden="true"></i>
+								<span>
+									{{node.text}}
+								</span>
+							</div>
+							<div class="pull-right">
+								<img ng-click="clickNewFile(node)" ng-src='{{imgsPath + "new_file.png"}}'/>
+								<img ng-click="clickNewDir(node)" ng-src='{{imgsPath + "new_dir.png"}}'/>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<div ng-show="isCreateItem">
+							<div style="display:inline-block; width:80%; margin:0px; padding:0px;">
+								<input type="text" style="width:100%" ng-model="$parent.newItemName"/>
+							</div>
+							<div style="display:inline; width:20%; margin:0px; padding:0px;">
+								<i ng-click="clickCreateItem(node)" class="fa fa-check" aria-hidden="true"></i>
+								<i ng-click="clickCancelCreateItem(node)" class="fa fa-times" aria-hidden="true"></i>
+							</div>
+						</div>
+						<div>
+							<div ng-repeat="x in node.nodes track by $index">
+								<div ng-click="clickItem(x)" class="kp_file_item_container" ng-style='x.path == curPage.path && {"background-color":"gray"}'>
+									<span data-toggle="tooltip" title="{{x.url}}">
+										<i ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isModify ? "fa fa-pencil-square-o" :"fa fa-file-o")' aria-hidden="true"></i>
+										<span>{{x.text}}</span>
+									</span>
+									<span class="pull-right kp_padding_right_10">
+										<i ng-click="clickAccessPage(x, $event)" ng-show='x.type != "tree"' class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
+										<i ng-show="!x.nodes || x.nodes.length == 0" ng-click='clickDeleteItem(node, $index, $event)' class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>
+									</span>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="tab-pane fade" id="toolbar">
+					this is a test toolbar
+				</div>
+			</div>
+			<div class="kp_view_mode">
+				<div class="btn-group">
+					<button class="btn-sm btn-md btn btn-default">主页</button>
+					<button class="btn-sm btn-md btn btn-default">代码</button>
+					<button class="btn-sm btn-md btn btn-default">拆分</button>
+					<button class="btn-sm btn-md btn btn-default">预览</button>
+				</div>	
 			</div>
 		</div>
-		<div id="editor" style="height:100%; margin-left:200px;"></div>
+		<div id="editor" class="kp_cmeditor_container"></div>
 	</div>
 </div>

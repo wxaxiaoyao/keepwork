@@ -4,9 +4,9 @@
 
 
 local orm = commonlib.gettable("nws.orm")
+local gitlab = nws.import("helper/gitlab")
 -- user 表
 local data_source = nws.inherit(orm)
-
 -- define table
 data_source:tablename("data_source")
 data_source:addfield("data_source_id", "number")
@@ -33,6 +33,24 @@ local l_admin_token = nws.config.gitlab.token
 local l_gitlab_host = "http://" .. nws.config.gitlab.host
 local l_default_project_name = "keepworkdatasource"
 local util = nws.util
+
+function data_source:get_default_git_by_username(params)
+	if not params.username then
+		return (errors:wrap(errors.PARAMS_ERROR, params))
+	end
+
+	local data = self:find_one({username=params.username, is_default=1})
+	if not data then
+		return (errors:wrap(errors.NOT_FOUND))
+	end
+
+	local git = nil
+	if data.type == "gitlab" then
+		git = gitlab:init(data)
+	end
+
+	return nil, git
+end
 
 function data_source:create_gitlab_project(params)
 	if not params.token or not params.api_base_url then
@@ -289,7 +307,7 @@ function data_source:get_by_username(params)
 
 	local data = self:find({username=params.username})
 
-	return errors:wrap(nil, data)
+	return nil, data
 end
 
 -- 获取默认数据源

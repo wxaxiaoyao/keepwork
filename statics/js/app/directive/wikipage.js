@@ -1,9 +1,11 @@
 
 define([
 	"app",
-	"helper/util",
 ], function(app) {
 	app.registerDirective("wikipage", ["$compile", function($compile){
+		var util = app.objects.util;
+		var config = app.objects.config;
+		var mdwiki = app.objects.mdwiki;
 		return {
 			restrict:"E",
 			scope: true,
@@ -33,6 +35,27 @@ define([
 							$element.html($compile(content)($scope));
 							$scope.$apply();
 						});
+					} else {
+						var url = urlobj.url;
+						util.$http({
+							url:config.apiUrlPrefix + 'page/get_content_by_path',
+							method:"GET",
+							params: {
+								path: url.substring(1) + ".md",
+							},
+							success:function(data) {
+								if (!data) {
+									return;
+								}
+								var md = mdwiki();
+								var htmlstr = md.render(data);
+								$element.html($compile(htmlstr)($scope));
+								util.$apply($scope);
+							},
+							error: function() {
+
+							}
+						})
 					}
 				}
 

@@ -181,7 +181,7 @@ define([
 				md.template.cmdName = template.cmdName;
 				md.template.modParams = template.modParams;
 			} else {
-				md.template.htmlContent = '<div>' + templateContent + '</div>';
+				md.template.htmlContent = '<div class="container">' + templateContent + '</div>';
 			}
 
 			md.bindContainer();

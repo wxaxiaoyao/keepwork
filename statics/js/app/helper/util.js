@@ -60,7 +60,7 @@ define([
 	}
 
 	util.$apply = function($scope) {
-		$scope = app.ng_objects.$rootScope;
+		$scope = $scope || app.ng_objects.$rootScope;
 		setTimeout(function(){
 			$scope.$apply();
 		});
@@ -105,6 +105,15 @@ define([
 		util.$apply();
 	}
 
+	util.http = function(method, url, params, success, error) {
+		util.$http({
+			url:url,
+			method:method,
+			params:params,
+			success:success,
+			error:error,
+		});
+	}
 	util.$http = function(obj) {
         var $http = app.ng_objects.$http;
 		var config = obj.config || {};

@@ -4,40 +4,26 @@ local data_source = controller:new("data_source")
 local data_source_model = nws.import("model/data_source")
 
 
-function data_source:getByUsername(params)
-	if not params.username then
-		return errors:wrap(errors.PARAMS_ERROR)
+-- 获取用户所有数据源信息
+function data_source:get(ctx)
+	local username = ctx.username
+	if not username then
+		return (errors:wrap(errors.PARAMS_ERROR))
 	end
 
-	local result = data_source_model:get_by_username(params)
+	local err, datas = data_source_model:get_by_username({username=username})
 
-	result.data = convert_model.list_convert(result.data, convert_model.data_source_new_to_old)
-
-	return result
+	return errors:wrap(err, datas)
 end
 
-
--- 
-function data_source:setDataSource(params)
-	params = convert_model.data_source_old_to_new(params)
-
+-- 增改数据源
+function data_source:set_data_source(params)
 	local result = data_source_model:set_data_source(params)
 	if result:is_error() then
 		return result
 	end
 	
 	local data = data_source_model:get_by_name(params).data
-
-	data = convert_model.data_source_new_to_old(data)
-
-	return errors:wrap(nil, data)
-end
-
--- 获取数据源记录
-function data_source:get(params)
-	local data = data_source_model:get(params).data
-
-	data = convert_model.list_convert(data, convert_model.data_source_new_to_old)
 
 	return errors:wrap(nil, data)
 end
