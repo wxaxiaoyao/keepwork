@@ -25,7 +25,7 @@ end
 
 -- 判断是否正确
 function errors:is_ok() 
-	return not self.error or self.errors.id == 0
+	return not self.error or self.error.id == 0
 end
 
 -- 判断是否出错

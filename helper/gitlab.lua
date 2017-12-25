@@ -11,7 +11,7 @@ function gitlab:init(config)
 	self.api_base_url = config.api_base_url
 	self.raw_base_url = config.raw_base_url
 	self.token = config.token
-	self.project_name = config.project_name
+	self.project_name = config.project_name or l_default_project_name
 	self.project_id = config.project_id
 
 	return self
@@ -26,6 +26,20 @@ function gitlab:new(config)
 	obj:init(config)
 
 	return obj
+end
+
+function gitlab:get_user() 
+	local res = util.get_url({
+		url = self.api_base_url .. "/user",
+		method = "GET",
+		headers = {['PRIVATE-TOKEN'] = self.token},
+	})
+
+	if not res or res.status_code ~= 200 then
+		return "get gitlab user error"
+	end
+
+	return nil, res.data
 end
 
 -- 创建gitlab用户
@@ -115,6 +129,7 @@ end
 
 -- 创建项目
 function gitlab:create_project(params)
+	params.project_name = params.project_name or self.project_name
 	if not params.project_name then
 		return "project name is null"
 	end
@@ -157,7 +172,9 @@ function gitlab:create_project(params)
 		return "创建项目失败"
 	end
 	
-	--self.project_id = res.data.id
+	self.project_id = res.data.id
+
+	self:write_file({path="README.md", content=" "})
 	return nil, res.data
 end
 

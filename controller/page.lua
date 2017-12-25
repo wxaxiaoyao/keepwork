@@ -16,7 +16,6 @@ local function get_content_by_path(path)
 end
 
 function page:get_content_by_path(ctx)
-	nws.log("00000000000000");
 	local username = ctx.username
 	local params = ctx.request:get_params()
 

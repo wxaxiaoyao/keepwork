@@ -71,7 +71,7 @@
 							<span>已打开</span>
 						</div>
 						<div ng-repeat="(k, x) in openedPageMap">
-							<div class="kp_file_item_container" ng-click="clickItem(x)" ng-style='x.path == curPage.path && {"background-color":"gray"}'>
+							<div class="kp_file_item_container" ng-click="clickItem(x)" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 								<span data-toggle="tooltip" title="{{x.url}}" >
 									<i ng-class='x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"' aria-hidden="true"></i>
 									<span>{{x.text}}</span>
@@ -109,7 +109,7 @@
 						</div>
 						<div>
 							<div ng-repeat="x in node.nodes track by $index">
-								<div ng-click="clickItem(x)" class="kp_file_item_container" ng-style='x.path == curPage.path && {"background-color":"gray"}'>
+								<div ng-click="clickItem(x)" class="kp_file_item_container" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 									<span data-toggle="tooltip" title="{{x.url}}">
 										<i ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isModify ? "fa fa-pencil-square-o" :"fa fa-file-o")' aria-hidden="true"></i>
 										<span>{{x.text}}</span>

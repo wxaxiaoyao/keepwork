@@ -1,7 +1,7 @@
 
-local orm = commonlib.gettable("nws.orm")
+local orm = nws.gettable("nws.orm")
 
-local user_file = commonlib.inherit(orm)
+local user_file = nws.inherit(orm)
 
 user_file:tablename("user_file")
 user_file:addfield("user_file_id", "number")

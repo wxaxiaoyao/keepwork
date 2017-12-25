@@ -2,7 +2,7 @@
 -- author: xiaoyao
 -- date: 2017-9-28
 
-local orm = commonlib.gettable("nws.orm")
+local orm = nws.gettable("nws.orm")
 --local data_source_db = nws.import("model/data_source")
 --local site_data_source_db = nws.import("model/site_data_source")
 

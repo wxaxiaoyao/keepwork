@@ -31,21 +31,24 @@ define([
 
 			$rootScope.isShowHeader = false;
 
-			git.init($scope.user.default_data_source);
+			util.http("GET", config.apiUrlPrefix + "data_source/get_default_data_source", {}, function(data){
+				console.log(data);
+				git.init(data);
 
-			git.getTree({
-				recursive: true,
-				isFetchAll: true,
-				path: "xiaoyao",
-			}, function(datas){
-				console.log(datas);
-				if (datas.length == 1) {
-					$scope.node = datas[0];
-					$scope.node.text = "我的站点";
-					$scope.node.isRootNode = true;
-				}
-			}, function(){
+				git.getTree({
+					recursive: true,
+					isFetchAll: true,
+					path: "xiaoyao",
+				}, function(datas){
+					console.log(datas);
+					if (datas.length == 1) {
+						$scope.node = datas[0];
+						$scope.node.text = "我的站点";
+						$scope.node.isRootNode = true;
+					}
+				}, function(){
 
+				});
 			});
 		}
 
