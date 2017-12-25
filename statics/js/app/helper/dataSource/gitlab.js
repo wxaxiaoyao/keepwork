@@ -20,6 +20,7 @@ define([
 			self.apiBaseUrl = config.api_base_url;
 			self.rawBaseUrl = config.raw_base_url;
 			self.token = config.token;
+			self.username = config.external_username;
 			self.projectName = config.project_name;
 			self.projectId = config.project_id;
 			self.lastCommitId = config.last_commit_id || "master";
@@ -189,6 +190,10 @@ define([
 			}, error);
 		}
 
+		gitlab.getGitFilePath = function(params) {
+			params.ref = params.ref || "master";
+			return this.rawBaseUrl + "/" + (params.username || this.username) + "/" + (params.projectName || this.projectName) + '/blob/' + params.ref + '/' + params.path;
+		}
 		//gitlab.uploadImage = function(params, success, error)
 
 		gitlab.init(config);

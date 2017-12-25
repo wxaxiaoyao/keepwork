@@ -191,19 +191,31 @@ define([
 			}
 			console.log($scope.createItemType, node, $scope.newItemName);
 			var path = node.path + "/" + $scope.newItemName + ($scope.createItemType == "tree" ? "/.gitkeep":".md");
-			git.writeFile({
-				path:path,
+			node.nodes.push({
+				path: path,
 				content:"",
-			}, function(data) {
-				node.nodes.push({
-					path: data.file_path,
-					name: $scope.newItemName,
-					text: $scope.newItemName,
-					type: $scope.createItemType,
-				});
-				$scope.clickCancelCreateItem();
-				util.$apply();
+				name: $scope.newItemName,
+				text: $scope.newItemName,
+				type: $scope.createItemType,
 			});
+
+			$scope.clickCancelCreateItem();
+			if ($scope.createItemType == "tree") {
+				git.writefile({
+					path:path,
+					content:"",
+				}, function(data) {
+					//util.$apply();
+				});
+			}
+		}
+
+		$scope.clickGitBtn = function(node, $event) {
+			if ($event) {
+				$event.stopPropagation();
+			}
+			
+			window.open(git.getGitFilePath({path:node.path}));
 		}
 
 		$scope.clickDeleteItem = function(node, index, $event) {

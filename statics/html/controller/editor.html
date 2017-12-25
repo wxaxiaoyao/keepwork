@@ -35,9 +35,18 @@
 	padding-left: 20px;
 }
 
+.kp_file_item_btn_group {
+	display:none;
+}
+
 .kp_file_item_container:hover{
 	background-color:#E6E6E6;
 }
+
+.kp_file_item_container:hover .kp_file_item_btn_group {
+	display:inline;
+}
+
 .kp_padding_right_10 {
 	padding-right: 10px;
 }
@@ -76,8 +85,9 @@
 									<i ng-class='x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"' aria-hidden="true"></i>
 									<span>{{x.text}}</span>
 								</span>
-								<span class="pull-right kp_padding_right_10">
+								<span class="pull-right kp_padding_right_10 kp_file_item_btn_group">
 									<i class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
+									<i ng-click="clickGitBtn(x, $event)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
 									<i ng-click="clickCloseBtn(x, $event)" class="fa fa-times" aria-hidden="true" data-toggle="tooltip" title="关闭"></i>
 								</span>
 							</div>
@@ -114,8 +124,9 @@
 										<i ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isModify ? "fa fa-pencil-square-o" :"fa fa-file-o")' aria-hidden="true"></i>
 										<span>{{x.text}}</span>
 									</span>
-									<span class="pull-right kp_padding_right_10">
+									<span class="pull-right kp_padding_right_10 kp_file_item_btn_group">
 										<i ng-click="clickAccessPage(x, $event)" ng-show='x.type != "tree"' class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
+										<i ng-click="clickGitBtn(x, $event)" ng-hide='x.type == "tree"' class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
 										<i ng-show="!x.nodes || x.nodes.length == 0" ng-click='clickDeleteItem(node, $index, $event)' class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>
 									</span>
 								</div>
