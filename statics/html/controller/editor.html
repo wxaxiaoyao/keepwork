@@ -86,7 +86,8 @@
 									<span>{{x.text}}</span>
 								</span>
 								<span class="pull-right kp_padding_right_10 kp_file_item_btn_group">
-									<i class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
+									<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
+									<i ng-click="clickAccessPage(x, $event)" class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
 									<i ng-click="clickGitBtn(x, $event)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
 									<i ng-click="clickCloseBtn(x, $event)" class="fa fa-times" aria-hidden="true" data-toggle="tooltip" title="关闭"></i>
 								</span>
@@ -125,6 +126,7 @@
 										<span>{{x.text}}</span>
 									</span>
 									<span class="pull-right kp_padding_right_10 kp_file_item_btn_group">
+										<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" ng-show='x.type != "tree"' class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
 										<i ng-click="clickAccessPage(x, $event)" ng-show='x.type != "tree"' class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
 										<i ng-click="clickGitBtn(x, $event)" ng-hide='x.type == "tree"' class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
 										<i ng-show="!x.nodes || x.nodes.length == 0" ng-click='clickDeleteItem(node, $index, $event)' class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>
@@ -139,12 +141,31 @@
 				</div>
 			</div>
 			<div class="kp_view_mode">
-				<div class="btn-group">
-					<button class="btn-sm btn-md btn btn-default">主页</button>
-					<button class="btn-sm btn-md btn btn-default">代码</button>
-					<button class="btn-sm btn-md btn btn-default">拆分</button>
-					<button class="btn-sm btn-md btn btn-default">预览</button>
-				</div>	
+				<div style="display:flex; justify-content:space-between;">
+					<div class="btn-group dropup">
+						<button class="btn-sm btn-md btn btn-default dropdown-toggle" data-toggle="dropdown">
+							逍遥
+							<span class="caret"></span>
+						</button>	
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a ng-click="clickMyHomeBtn()">我的主页</a>
+							</li>
+							<li>
+								<a ng-click="clickSettingBtn()">设置</a>
+							</li>
+							<!--<li class="divider"></li>-->
+							<!--<li>-->
+								<!--<a ng-click="clickLogoutBtn()">设置</a>-->
+							<!--</li>-->
+						</ul>
+					</div>
+					<div class="btn-group">
+						<button ng-click="clickViewModeCode()" class="btn-sm btn-md btn btn-default">代码</button>
+						<button ng-click="clickViewModeCodePreview()" class="btn-sm btn-md btn btn-default">拆分</button>
+						<button ng-click="clickViewModePreview()" class="btn-sm btn-md btn btn-default">预览</button>
+					</div>	
+				</div>
 			</div>
 		</div>
 		<div id="editor" class="kp_cmeditor_container"></div>

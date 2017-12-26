@@ -261,6 +261,26 @@ define([
         indexedDB.registerOpenCallback(cb);
     }
 
+	storage.indexedDBGetStore = function(storeName) {
+		return {
+			storeName:storeName,
+			get: function(success, error, finish) {
+				storage.indexedDBGet(storeName, success, error, finish);
+			},
+			getItem: function(key, success, error) {
+				storage.indexedDBGetItem(storeName, key, success, error);
+			},
+			setItem: function(value, success, error) {
+				storage.indexedDBSetItem(storeName, value, success, error);
+			},
+			deleteItem: function(key, success, error) {
+				storage.indexedDBDeleteItem(storeName, key, success, error);
+			},
+			clear: function(success, error) {
+				storage.indexedDBClear(success, error);
+			},
+		}
+	}
     // 打开数据库
     storage.indexedDBOpen();
 

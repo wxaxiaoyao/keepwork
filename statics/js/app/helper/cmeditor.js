@@ -162,21 +162,30 @@ define([
 			//console.log(cm);
 		});
 		
+		window.onresize = function() {
+			initEditorSize(editorObj);
+		}
+
 		editorObj.editorPreviewContainer.on("scroll mouseenter mouseleave", function(e){
 			previewScroll(editorObj, e);
 
 		});
 
-		var height = $(selector).css("height");
-		editor.setSize("auto", height);
-		editorObj.editorPreview.css("height", height);
-		setPreviewScale(editorObj);
-
 		editorObj.editor = editor;
 		editorObj.originDoc = editor.getDoc();
 
+		initEditorSize(editorObj);
+
 		exportInterface(editorObj);
 		return editor;
+	}
+
+	function initEditorSize(editorObj) {
+		var height = $(editorObj.selector).css("height");
+		editorObj.editor.setSize("100%", height);
+		editorObj.editorPreview.css("width", "100%");
+		editorObj.editorPreview.css("height", height);
+		setPreviewScale(editorObj);
 	}
 
 	function font_style(editorObj, leftChar, rightChar) {
@@ -305,6 +314,7 @@ define([
 		scaleX = scaleX || (previewWidth / scaleWidth);
 		scaleY = scaleY || (previewHeight / scaleHeight);
 
+		//console.log(scaleWidth);
 		editor.editorPreview.css("width", scaleWidth + "px");
 		//editor.editorPreview.css("height", scaleHeight + "px");
 		editor.editorPreview.css("transform", 'scale(' + scaleX + ',' + scaleY +')');
@@ -388,7 +398,9 @@ define([
 	// 编辑器内容改变处理
 	function change(editor){
 		var text = editor.editor.getValue();
-		storage.sessionStorageSetItem("cmeditor_temp_content", text);
+		if (!editor.currentFilename) {
+			storage.sessionStorageSetItem("cmeditor_temp_content", text);
+		}
 
 		//console.log(text);
 		editor.md.render(text);
@@ -400,6 +412,28 @@ define([
 
 	// 导出编辑器接口
 	function exportInterface(editor) {
+		editor.setViewMode = function(showSource, showPreview) {
+			if (!showSource && !showPreview) {
+				return;
+			}
+			if (showSource && showPreview) {
+				editor.editorSourceContainer.width("50%");
+				editor.editorPreviewContainer.width("50%");
+				editor.editorSourceContainer.show();
+				editor.editorPreviewContainer.show();
+			} else if (showSource && !showPreview) {
+				editor.editorSourceContainer.width("100%");
+				editor.editorPreviewContainer.width(0);
+				editor.editorSourceContainer.show();
+				editor.editorPreviewContainer.hide();
+			} else if(!showSource && showPreview) {
+				editor.editorSourceContainer.width(0);
+				editor.editorPreviewContainer.width("100%");
+				editor.editorSourceContainer.hide();
+				editor.editorPreviewContainer.show();
+			}
+			setPreviewScale(editor);
+		}
 		editor.showSource = function() {
 			editor.editorSourceContainer.show();
 		}
