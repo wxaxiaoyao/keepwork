@@ -26,9 +26,26 @@ define([
 						return;
 					}
 
+					//console.log(contentUrl);
+
 					var urlobj = util.parseUrl(contentUrl);
-					if (!urlobj.username || urlobj.username == "www") {
-						var ctrlPath = "controller/" + (urlobj.sitename || "home");
+					if (!urlobj.username || urlobj.username == "www" || !urlobj.pagename) {
+						var ctrlPath = "controller/";
+						if (urlobj.username != "www") {
+							ctrlPath = ctrlPath + "user";
+						} else if(urlobj.pagename) {
+							var pagename = urlobj.pagename;
+							for (var i = 0; i < pagename.length; i++) {
+								if (pagename[i] == "/"  && (i+1) < pagename.length) {
+									ctrlPath += pagename[i+1].toUpperCase();
+									i++;
+									continue;
+								}
+								ctrlPath += pagename[i];
+							}
+						} else {
+							ctrlPath = ctrlPath + "home"; // 默认页
+						}
 						require([
 							ctrlPath,
 						], function(content) {

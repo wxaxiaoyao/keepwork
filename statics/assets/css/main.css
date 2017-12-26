@@ -6,6 +6,13 @@ a:hover{
     cursor: pointer;
 }
 
+.kp_forbit_copy {
+	-moz-user-select: none;  
+	-webkit-user-select: none;  
+	-ms-user-select: none;
+	user-select: none;
+}
+
 .kp_vertical_box {
 	display: flex;
 	flex-direction:column;

@@ -359,6 +359,17 @@ define([
 		$scope.clickViewModeCodePreview = function() {
 			editor.setViewMode(true, true);
 		}
+		$scope.clickMyHomeBtn = function(){
+			util.go("/" + $scope.user.username);
+		}
+		$scope.clickSettingBtn = function() {
+			util.go("/www/user/setting");
+		}
+		$scope.clickLogoutBtn = function() {
+			$auth.logout();
+			$rootScope.user = undefined;
+			util.go("/www/login");
+		}
 
 		$scope.$watch("$viewContentLoaded", function(){
 			if ($auth.isAuthenticated()) {

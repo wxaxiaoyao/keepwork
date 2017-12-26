@@ -7,6 +7,7 @@ define([
 	var config = app.objects.config;
     app.registerController("headerController",['$scope', function ($scope) {
 		var $auth =app.ng_objects.$auth;
+		var $rootScope = app.ng_objects.$rootScope;
 
 		$scope.clickMyHomeBtn = function(){
 			util.go("/" + $scope.user.username);
@@ -15,6 +16,7 @@ define([
 		$scope.clickLogoutBtn = function() {
 			$auth.logout();
 			$rootScope.user = undefined;
+			util.go("/www/login");
 		}
 	}]);
 

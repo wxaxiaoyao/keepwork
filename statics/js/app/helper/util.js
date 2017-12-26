@@ -43,8 +43,8 @@ define([
 			hostname:hostname,
 			pathname:pathname,
 			username:paths[0], 
-			sitename:paths[1], 
-			pagename:paths.length > 2 ? paths.slice(2).join("/") : undefined, 
+			//sitename:paths[1], 
+			pagename:paths.length > 1 ? paths.slice(1).join("/") : undefined, 
 		};
 	}
 

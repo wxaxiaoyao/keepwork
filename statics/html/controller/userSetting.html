@@ -8,16 +8,26 @@
 .kp_user_setting_sidebar_container li {
 	margin:0px;
 	padding:0px;
-	list-style-type:none;
+   	list-style-type:none;
 }
 .kp_user_setting_container{
 }
+
 .kp_user_setting_sidebar_container {
-	border:1px solid #ccc;
-	text-align: center;
+	text-align: left;
 }
 .kp_user_setting_item_container {
+	border:1px solid #ccc;
+	padding:10px 15px;
+}
 
+.kp_user_setting_item_container_active {
+	border-left: 2px solid blue;
+	font-weight: bold;
+}
+.kp_user_setting_item_container:hover {
+	cursor: pointer;
+	background-color:#ccc;
 }
 </style>
 
@@ -25,10 +35,14 @@
 	<div class="kp_user_setting_container row">
 		<div class="col-sm-2">
 			<div class="kp_user_setting_sidebar_container">
-				<ul>
-					<li >页面管理</li>
-					<li >用户组</li>
-					<li >GIT数据源</li>
+				<ul class="kp_forbit_copy">
+					<li ng-repeat="x in settingItemList track by $index">
+						<div class="kp_user_setting_item_container" 
+							ng-class='{"kp_user_setting_item_container_active": selectedSettingItem == x.type}'
+							ng-click='clickSettingItem(x)'>
+							{{x.name}}
+						</div>
+					</li>
 				</ul>
 			</div>
 		</div>
