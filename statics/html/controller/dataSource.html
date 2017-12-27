@@ -1,12 +1,12 @@
 
 <div ng-controller="dataSourceController">
-	<div id="dataSourceGroup">
+	<div class="panel-group" id="dataSourceGroup">
 		<div>
 			<h4>
 				数据源列表:
 			</h4>
 		</div>
-		<div ng-repeat="x in dataSourceList track by $index">
+		<div class="panel" ng-repeat="x in dataSourceList track by $index">
 			<div>
 				<a href='{{"#dataSourceItemId_" + $index}}' data-toggle="collapse" data-parent="#dataSourceGroup">{{x.data_source_name}}</a>
 				<span class="badge">{{x.is_default ? "默认" : ""}}</span>

@@ -13,6 +13,13 @@ define([
 			util.go("/" + $scope.user.username);
 		}
 
+		$scope.clickSettingBtn = function() {
+			util.go("/www/user/setting");
+		}
+		$scope.clickEditorBtn = function() {
+			util.go("/www/editor");
+		}
+
 		$scope.clickLogoutBtn = function() {
 			$auth.logout();
 			$rootScope.user = undefined;

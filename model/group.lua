@@ -12,6 +12,7 @@ group:tablename("group")
 group:addfield("group_id", "number")
 group:addfield("username","string")
 group:addfield("groupname","string")
+group:addfield("visibility","string")
 group:addfield("create_time", "string")
 group:addfield("update_time", "string")
 --end
@@ -30,9 +31,18 @@ function group:set_group(params)
 	return nil
 end
 
+function group:get_by_username(params) 
+	if not params.username then
+		return (errors:wrap(errors.PARAMS_ERROR))
+	end
+
+	local datas = self:find({username=params.username})
+
+	return nil, datas
+end
 
 -- 删除组
-function group:delete_by_name(params)
+function group:delete_by_groupname(params)
 	if not params.username or not params.groupname then
 		return (errors:wrap(errors.PARAMS_ERROR))
 	end

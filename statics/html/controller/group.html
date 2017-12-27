@@ -1,4 +1,93 @@
 
 <div ng-controller="groupController">
-	<div>this is a group page</div>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#myGroupId" data-toggle="tab">拥有组</a></li>
+		<li><a href="#joinGroupId" data-toggle="tab">加入组</a></li>
+		<!--<li><a href="#joinGroupId" data-toggle="tab">添加组</a></li>-->
+	</ul>
+	
+	<div class="tab-content">
+		<div class="tab-pane fade in active" id="myGroupId">
+			<div class="panel" ng-repeat="x in myGroupList track by $index">
+				<div>
+					<span>{{"组名:" + x.groupname}}</span>
+					<span>{{"人数:" + (x.user_count || 0)}}</span>
+					<span><a href='{{"#myGroupId_" + $index}}' ng-click="clickGroupMemberList(x)" data-parent="#myGroupId" data-toggle="collapse">成员列表</a></span>
+					<span><a href='{{"#setGroupUserId_" + $index}}' data-toggle="collapse">添加组成员</a></span>
+				</div>
+				<div id='{{"setGroupUserId_" + $index}}' class="collapse">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-xs-3 control-label">成员名:</label>
+							<div class="col-xs-6">
+								<input ng-model="$parent.member.membername" type="text" class="form-control" placeholder="成员名">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3 control-label">权限:</label>
+							<div class="col-xs-6">
+								<select class="form-control" ng-model="$parent.member.level">
+									<option ng-repeat="level in levelList" value="{{level.level}}">{{level.name}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-xs-offset-3 col-xs-6">
+								<button class="btn btn-primary" ng-click="clickSubmitMember(x)">提交</button>
+								<span style="color: red">{{errMsg}}</span>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div id='{{"myGroupId_" + $index}}' class="collapse">
+					<div ng-repeat="user in x.userList ">
+						<div class="pull-left">
+							<label>成员名:</label>
+							<span>{{user.membername}}</span>
+							<label>权限:</label>
+							<span>{{getLevelName(user.level)}}</span>
+						</div>
+						<div class="pull-right">
+							<a ng-click="clickSetGroupUserBtn(user)">修改</a>
+							<a ng-click="clickDeleteGroupUserBtn(user)">删除</a>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div style="text-align:center">
+					<a href="#newGroupId" data-toggle="collapse">新增组</a>
+				</div>
+				<div id="newGroupId" class="collapse">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-xs-3 control-label">组名:</label>
+							<div class="col-xs-6">
+								<input ng-model="group.groupname" type="text" class="form-control" placeholder="组名">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3 control-label">类型:</label>
+							<div class="col-xs-6">
+								<select class="form-control" ng-model="group.visibility">
+									<option ng-repeat="x in ['public', 'private']" value="{{x}}">{{x == "public" ? "公开" : "私有"}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-xs-offset-3 col-xs-6">
+								<button class="btn btn-primary" ng-click="clickSubmitGroup()">提交</button>
+								<span style="color: red">{{errMsg}}</span>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="tab-pane fade" id="joinGroupId">
+			<div>加入的组列表</div>
+		</div>
+	</div>
 </div>
