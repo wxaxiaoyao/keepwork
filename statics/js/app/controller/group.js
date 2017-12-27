@@ -27,9 +27,16 @@ define([
 			name:"所属",
 		}];
 
-		$scope.clickSetGroupUserBtn = function(member) {
-			$scope.member = member;
-			console.log($scope);
+		$scope.clickDeleteGroupUserBtn = function(user, group) {
+			util.http("POST", config.apiUrlPrefix + "group_user/delete_group_membername", user, function(){
+				getGroupUser(group);
+			})
+		}
+		$scope.clickSetGroupUserBtn = function(member, index) {
+			$scope.member = member || {};
+			//if (index) {
+				//$("#setGroupUserId_" + index).collapse("show");
+			//}
 		}
 		$scope.clickSubmitMember = function(group) {
 			var params = {
@@ -54,7 +61,7 @@ define([
 		}
 
 		$scope.clickGroupMemberList = function(x) {
-			console.log(x);	
+			//console.log(x);	
 			getGroupUser(x);
 		}
 

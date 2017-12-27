@@ -1,3 +1,12 @@
+<style>
+.kp_group_item_container{
+
+}
+
+.kp_group_item_container:hover{
+	cursor:pointer;
+}
+</style>
 
 <div ng-controller="groupController">
 	<ul class="nav nav-tabs">
@@ -7,37 +16,11 @@
 	</ul>
 	
 	<div class="tab-content">
-		<div class="tab-pane fade in active" id="myGroupId">
+		<div class="tab-pane fade in active panel-group" id="myGroupId">
 			<div class="panel" ng-repeat="x in myGroupList track by $index">
-				<div>
+				<div class="kp_group_item_container" data-target='{{"#myGroupId_" + $index}}' data-toggle="collapse" data-parent="#myGroupId" ng-click="clickGroupMemberList(x)">
 					<span>{{"组名:" + x.groupname}}</span>
 					<span>{{"人数:" + (x.user_count || 0)}}</span>
-					<span><a href='{{"#myGroupId_" + $index}}' ng-click="clickGroupMemberList(x)" data-parent="#myGroupId" data-toggle="collapse">成员列表</a></span>
-					<span><a href='{{"#setGroupUserId_" + $index}}' data-toggle="collapse">添加组成员</a></span>
-				</div>
-				<div id='{{"setGroupUserId_" + $index}}' class="collapse">
-					<form class="form-horizontal" role="form">
-						<div class="form-group">
-							<label class="col-xs-3 control-label">成员名:</label>
-							<div class="col-xs-6">
-								<input ng-model="$parent.member.membername" type="text" class="form-control" placeholder="成员名">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-xs-3 control-label">权限:</label>
-							<div class="col-xs-6">
-								<select class="form-control" ng-model="$parent.member.level">
-									<option ng-repeat="level in levelList" value="{{level.level}}">{{level.name}}</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-xs-offset-3 col-xs-6">
-								<button class="btn btn-primary" ng-click="clickSubmitMember(x)">提交</button>
-								<span style="color: red">{{errMsg}}</span>
-							</div>
-						</div>
-					</form>
 				</div>
 				<div id='{{"myGroupId_" + $index}}' class="collapse">
 					<div ng-repeat="user in x.userList ">
@@ -48,10 +31,37 @@
 							<span>{{getLevelName(user.level)}}</span>
 						</div>
 						<div class="pull-right">
-							<a ng-click="clickSetGroupUserBtn(user)">修改</a>
-							<a ng-click="clickDeleteGroupUserBtn(user)">删除</a>
+							<a href='{{"#setGroupUserId_" + $index}}' data-toggle="collapse" ng-click="clickSetGroupUserBtn(user, $index)">修改</a>
+							<a ng-click="clickDeleteGroupUserBtn(user, x)">删除</a>
 						</div>
 						<div class="clearfix"></div>
+					</div>
+					<div>
+						<span><a href='{{"#setGroupUserId_" + $index}}' ng-click="clickSetGroupUserBtn({}, $index)" data-toggle="collapse">添加组成员</a></span>
+					</div>
+					<div id='{{"setGroupUserId_" + $index}}' class="collapse">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="col-xs-3 control-label">成员名:</label>
+								<div class="col-xs-6">
+									<input ng-model="$parent.member.membername" type="text" class="form-control" placeholder="成员名">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3 control-label">权限:</label>
+								<div class="col-xs-6">
+									<select class="form-control" ng-model="$parent.member.level">
+										<option ng-repeat="level in levelList" value="{{level.level}}">{{level.name}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-xs-offset-3 col-xs-6">
+									<button class="btn btn-primary" ng-click="clickSubmitMember(x)">提交</button>
+									<span style="color: red">{{errMsg}}</span>
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>

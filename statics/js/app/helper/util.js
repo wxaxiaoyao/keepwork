@@ -4,6 +4,14 @@ define([
 ], function(app) {
 	var util = app.objects.util = {};
 
+	// 是否是空对象
+	util.isEmptyObject = function(obj) {
+		for (var key in obj) {
+			return false;
+		}
+
+		return true;
+	}
 	util.parseHostname = function(hostname) {
 		var officialHostnameList = [
 			"localhost",
