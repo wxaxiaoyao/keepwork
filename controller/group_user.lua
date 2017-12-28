@@ -45,4 +45,18 @@ function group_user:get_by_user_group_name(ctx)
 	return errors:wrap(nil, data)
 end
 
+-- 获取用户所在组
+function group_user:get_by_membername(ctx)
+	local username = ctx.username
+
+	if not username then
+		return (errors:wrap(errors.PARAMS_ERROR))
+	end
+
+	local err, data = group_user_model:get_by_membername({membername=username})
+
+
+	return errors:wrap(err, data)
+end
+
 return group_user

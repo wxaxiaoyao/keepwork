@@ -10,6 +10,7 @@ define([
 	'text!html/controller/editor.html',
 ], function (app, markdownit, cmeditor, gitlab, htmlContent) {
 	var $auth = app.ng_objects.$auth;
+	var $rootScope = app.ng_objects.$rootScope;
 	var util = app.objects.util;
 	var config = app.objects.config;
 	var storage = app.objects.storage;

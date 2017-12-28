@@ -71,12 +71,8 @@ function group_user:get_by_membername(params)
 
 	local data = self:find({membername=params.membername})
 
-	return errors:wrap(nil, data)
+	return nil, data
 end
-
-
-
-
 
 -- 删除组
 function group_user:delete_by_groupname(params)
@@ -89,7 +85,7 @@ function group_user:delete_by_groupname(params)
 		groupname = params.groupname, 
 	})
 
-	return errors:wrap(err)
+	return err
 end
 
 -- 删除用户组
@@ -102,7 +98,7 @@ function group_user:delete_by_username(params)
 		username = params.username, 
 	})
 
-	return errors:wrap(err)
+	return err
 end
 
 return group_user

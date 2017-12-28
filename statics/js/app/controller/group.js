@@ -37,6 +37,7 @@ define([
 			//if (index) {
 				//$("#setGroupUserId_" + index).collapse("show");
 			//}
+			$("#newGroupId").collapse("hide");
 		}
 		$scope.clickSubmitMember = function(group) {
 			var params = {
@@ -48,6 +49,16 @@ define([
 			}
 			util.http("POST", config.apiUrlPrefix + "group_user/set_group_user", params, function() {
 				getGroupUser(group);
+			});
+		}
+
+		$scope.clickDeleteGroupBtn = function(group, $event) {
+			if ($event) {
+				$event.stopPropagation();
+			}
+
+			util.http("POST", config.apiUrlPrefix + "group/delete_group", group, function(){
+				getUserGroup();
 			});
 		}
 
@@ -75,6 +86,10 @@ define([
 			return "unknow";
 		}
 
+		$scope.clickJoinGroupBtn = function() {
+			getJoinGroup();
+		}
+
 		// 获取组用户列表
 		function getGroupUser(group) {
 			util.http("GET", config.apiUrlPrefix + "group_user/get_by_user_group_name", {
@@ -90,6 +105,12 @@ define([
 			});
 		}
 
+		// 获取加入的组列表
+		function getJoinGroup() {
+			util.http("GET", config.apiUrlPrefix + "group_user/get_by_membername", {}, function(data){
+				$scope.joinGroupList = data || [];
+			});
+		}
 		function init() {
 			getUserGroup();	
 		}

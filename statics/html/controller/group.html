@@ -11,19 +11,20 @@
 <div ng-controller="groupController">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#myGroupId" data-toggle="tab">拥有组</a></li>
-		<li><a href="#joinGroupId" data-toggle="tab">加入组</a></li>
+		<li><a href="#joinGroupId" ng-click="clickJoinGroupBtn()" data-toggle="tab">加入组</a></li>
 		<!--<li><a href="#joinGroupId" data-toggle="tab">添加组</a></li>-->
 	</ul>
 	
 	<div class="tab-content">
 		<div class="tab-pane fade in active panel-group" id="myGroupId">
-			<div class="panel" ng-repeat="x in myGroupList track by $index">
+			<div class="panel" ng-repeat="x in myGroupList track by $index" ng-init='groupIndex = $index'>
 				<div class="kp_group_item_container" data-target='{{"#myGroupId_" + $index}}' data-toggle="collapse" data-parent="#myGroupId" ng-click="clickGroupMemberList(x)">
 					<span>{{"组名:" + x.groupname}}</span>
-					<span>{{"人数:" + (x.user_count || 0)}}</span>
+					<span class="pull-right"><a ng-click="clickDeleteGroupBtn(x, $event)">删除</a></span>
+					<span class="clearfix"></span>
 				</div>
 				<div id='{{"myGroupId_" + $index}}' class="collapse">
-					<div ng-repeat="user in x.userList ">
+					<div ng-repeat="user in x.userList track by $index">
 						<div class="pull-left">
 							<label>成员名:</label>
 							<span>{{user.membername}}</span>
@@ -31,7 +32,7 @@
 							<span>{{getLevelName(user.level)}}</span>
 						</div>
 						<div class="pull-right">
-							<a href='{{"#setGroupUserId_" + $index}}' data-toggle="collapse" ng-click="clickSetGroupUserBtn(user, $index)">修改</a>
+							<a href='{{"#setGroupUserId_" + groupIndex}}' data-toggle="collapse" ng-click="clickSetGroupUserBtn(user, groupIndex)">修改</a>
 							<a ng-click="clickDeleteGroupUserBtn(user, x)">删除</a>
 						</div>
 						<div class="clearfix"></div>
@@ -50,8 +51,7 @@
 							<div class="form-group">
 								<label class="col-xs-3 control-label">权限:</label>
 								<div class="col-xs-6">
-									<select class="form-control" ng-model="$parent.member.level">
-										<option ng-repeat="level in levelList" value="{{level.level}}">{{level.name}}</option>
+									<select class="form-control" ng-model="$parent.member.level" ng-options="level.level as level.name for level in levelList">
 									</select>
 								</div>
 							</div>
@@ -97,7 +97,14 @@
 		</div>
 
 		<div class="tab-pane fade" id="joinGroupId">
-			<div>加入的组列表</div>
+			<div ng-repeat="x in joinGroupList track by $index">
+				<label>组名:</label>
+				<span>{{x.groupname}}</span>
+				<label>所属用户:</label>
+				<span>{{x.username}}</span>
+				<label>权限:</label>
+				<span>{{getLevelName(x.level)}}</span>
+			</div>
 		</div>
 	</div>
 </div>
