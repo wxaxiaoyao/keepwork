@@ -2,10 +2,13 @@
 
 define([
 	'app',
+	'helper/dataSource/gitlab',
 	'text!html/controller/group.html',
-], function (app, htmlContent) {
+], function (app, gitlab, htmlContent) {
 	var util = app.objects.util;
 	var config = app.objects.config;
+	var storage = app.objects.storage;
+	var git = gitlab();
 
     app.registerController("groupController",['$scope', function ($scope) {
 		var $auth = app.ng_objects.$auth;
@@ -26,6 +29,86 @@ define([
 			level:50,
 			name:"所属",
 		}];
+
+		function getDefaultDataSource(success, error) {
+			var dataSource = storage.sessionStorageGetItem("user_default_data_source");
+			if (dataSource) {
+				success && success(dataSource);
+				return;
+			}
+
+			util.http("GET", config.apiUrlPrefix + "data_source/get_default_data_source", {}, function(data){
+				if (!data) {
+					error && error(data);
+					return;
+				}
+
+				storage.sessionStorageSetItem("user_default_data_source", data);
+				success && success(data);
+			}, error);
+		}
+
+		function getFolderList() {
+			function _getFolderList(node, list) {
+				list = list || [];
+
+				if (node.type == "tree") {
+					list.push(node);
+				} else {
+					return list;
+				}
+				
+				for (var i = 0; i < node.nodes.length; i++) {
+					_getFolderList(node.nodes[i], list);
+				}
+
+				return list;
+			}
+
+			getDefaultDataSource(function(data) {
+				git.init(data);
+				git.getTree({
+					recursive: true,
+					isFetchAll: true,
+					path: "xiaoyao",
+				}, function(datas){
+					console.log(datas);
+					var node = datas[0];
+					node.text = "我的页面";
+					$scope.folderList = _getFolderList(node);
+				}, function(){
+
+				});
+			});
+		}
+
+		function getUserGroupList() {
+			util.http("GET", config.apiUrlPrefix + "group/get_all", {}, function(data){
+				$scope.userGroupList = data;
+			});
+		}
+
+		// 获取组用户列表
+		function getGroupUser(group) {
+			util.http("GET", config.apiUrlPrefix + "group_user/get_by_user_group_name", {
+				groupname:group.groupname,
+			}, function(data) {
+				group.userList = data || [];
+			});
+		}
+		// 获取用户组列表
+		function getUserGroup() {
+			util.http("GET", config.apiUrlPrefix + "group/get", {}, function(data){
+				$scope.myGroupList = data || [];
+			});
+		}
+
+		// 获取加入的组列表
+		function getJoinGroup() {
+			util.http("GET", config.apiUrlPrefix + "group_user/get_by_membername", {}, function(data){
+				$scope.joinGroupList = data || [];
+			});
+		}
 
 		$scope.clickDeleteGroupUserBtn = function(user, group) {
 			util.http("POST", config.apiUrlPrefix + "group_user/delete_group_membername", user, function(){
@@ -90,27 +173,11 @@ define([
 			getJoinGroup();
 		}
 
-		// 获取组用户列表
-		function getGroupUser(group) {
-			util.http("GET", config.apiUrlPrefix + "group_user/get_by_user_group_name", {
-				groupname:group.groupname,
-			}, function(data) {
-				group.userList = data || [];
-			});
-		}
-		// 获取用户组列表
-		function getUserGroup() {
-			util.http("GET", config.apiUrlPrefix + "group/get", {}, function(data){
-				$scope.myGroupList = data || [];
-			});
+		$scope.clickGroupApplyBtn = function() {
+			getFolderList();
+			getUserGroupList();
 		}
 
-		// 获取加入的组列表
-		function getJoinGroup() {
-			util.http("GET", config.apiUrlPrefix + "group_user/get_by_membername", {}, function(data){
-				$scope.joinGroupList = data || [];
-			});
-		}
 		function init() {
 			getUserGroup();	
 		}

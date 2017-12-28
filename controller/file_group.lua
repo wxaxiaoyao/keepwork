@@ -1,8 +1,8 @@
 
 local controller = nws.gettable("nws.controller")
-local page = controller:new("page")
+local file_group = controller:new("file_group")
 
-local user_file_model = nws.import("model/user_file")
+local file_group_model = nws.import("model/file_group")
 local data_source_model = nws.import("model/data_source")
 
 local function get_content_by_path(path) 

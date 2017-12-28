@@ -196,11 +196,6 @@ define([
 			}
 			// 获取服务器对应文件内容
 			function getGitContent() {
-				if (!git) {
-					error && error();
-					return;
-				}
-
 				git.getContent({path:node.path}, function(content) {
 					//node.content = content || "";
 					success && success(content);

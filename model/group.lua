@@ -31,6 +31,7 @@ function group:set_group(params)
 	return nil
 end
 
+-- 获取用户自己的组
 function group:get_by_username(params) 
 	if not params.username then
 		return (errors:wrap(errors.PARAMS_ERROR))

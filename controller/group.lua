@@ -49,4 +49,27 @@ function group:get(ctx)
 	return errors:wrap(err, data)
 end
 
+-- 获取用户可用的组
+function group:get_all(ctx) 
+	local username = ctx.username
+
+	local list = {}
+	local err, data = group_model:get_by_username({username=username})
+
+	for _, x in ipairs(data or {}) do
+		list[#list+1] = x
+	end
+
+
+	err, data = group_user_model:get_by_membername({membername=username})
+	for _, x in ipairs(data or {}) do
+		local tmp = group_model:find_one({username=x.username, groupname=x.groupname, visibility="public"})
+		if tmp then
+			list[#list+1] = tmp
+		end
+	end
+
+	return errors:wrap(nil, list)
+end
+
 return group

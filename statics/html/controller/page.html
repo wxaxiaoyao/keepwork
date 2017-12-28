@@ -1,0 +1,40 @@
+
+<style>
+</style>
+<div ng-controller="pageController">
+	<div>
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-xs-3 control-label">路径:</label>
+				<div class="col-xs-6">
+					<select class="form-control" ng-model="folder.url" ng-options="x.url as x.url for x in folderList"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-3 control-label">组名:</label>
+				<div class="col-xs-6">
+					<select class="form-control" ng-model="folder.groupname" ng-options="x.groupname as (x.username + '/' + x.groupname) for x in userGroupList"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-3 control-label">权限</label>
+				<div class="col-xs-6">
+					<select class="form-control" ng-model="folder.level" ng-options="x.level as x.name for x in levelList"></select>
+				</div>
+			</div>
+			<!--<div class="form-group">-->
+				<!--<label class="col-xs-3 control-label">THEME URL:</label>-->
+				<!--<div class="col-xs-6">-->
+					<!--<input ng-model="dataSource.raw_base_url" type="text" class="form-control" placeholder="https://gitlab.com">-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">
+				<div class="col-xs-offset-3 col-xs-6">
+					<button class="btn btn-primary" ng-click="clickSetDataSource()">提交</button>
+					<span style="color: red">{{errMsg}}</span>
+				</div>
+			</div>
+		</form>
+		
+	</div>
+</div>

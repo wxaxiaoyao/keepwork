@@ -8,16 +8,16 @@ define([
     app.registerController("userSettingController",['$scope', function ($scope) {
 		var $rootScope = app.ng_objects.$rootScope;
 		$scope.user = $scope.user || $rootScope.user;
-		$scope.settingItemList = [{
-			type:"page",
-			name:"页面",
-		}, {
+		$scope.settingItemList = [
+	   	{
 			type:"group",
 			name:"组",
-		}, {
+		},
+	   	{
 			type:"dataSource",
 			name:"数据源",
-		}];
+		}
+		];
 
 		function init(){
 			setSettingContent();
@@ -31,8 +31,6 @@ define([
 				$scope.settingHtml = groupHtml;
 			} else if(type == "dataSource") {
 				$scope.settingHtml = dataSourceHtml;
-			} else if(type == "page]") {
-
 			}
 		}
 

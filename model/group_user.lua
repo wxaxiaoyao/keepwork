@@ -15,6 +15,7 @@ group_user:addfield("username","string")
 group_user:addfield("groupname","string")
 group_user:addfield("membername","string")
 group_user:addfield("level","number")
+group_user:addfield("desc","string")
 group_user:addfield("create_time", "string")
 group_user:addfield("update_time", "string")
 --end

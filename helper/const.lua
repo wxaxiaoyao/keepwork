@@ -20,8 +20,8 @@ const.SITE_TYPE_GAME = 2
 const.SITE_TYPE_COMPANY = 3
 
 -- 站点权限级别
-const.USER_PRIVILEGE_NONE_LEVEL=10     -- 禁止读写
-const.USER_PRIVILEGE_READ_LEVEL=20     -- 读
-const.USER_PRIVILEGE_WRITE_LEVEL=40    -- 读写
+const.FILE_ACCESS_FORBIT_LEVEL=10     -- 禁止读写
+const.FILE_ACCESS_READ_LEVEL=20     -- 读
+const.FILE_ACCESS_WRITE_LEVEL=30    -- 读写
 
 return const
