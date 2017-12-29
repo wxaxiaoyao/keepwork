@@ -3,33 +3,45 @@ local controller = nws.gettable("nws.controller")
 local file_group = controller:new("file_group")
 
 local file_group_model = nws.import("model/file_group")
-local data_source_model = nws.import("model/data_source")
 
-local function get_content_by_path(path) 
-	local username = string.match(path, '([^/]+)')
-	local err, git = data_source_model:get_default_git_by_username({username=username})
-	if not git then
-		return (errors:wrap(err))
-	end
-
-	return git:get_content({path=path})
-end
-
-function page:get_content_by_path(ctx)
-	local username = ctx.username
+-- 设置文件组
+function file_group:set_file_group(ctx)
 	local params = ctx.request:get_params()
+	local username = ctx.username
 
-	nws.log(params)
-	nws.log(username)
-	if not params.path then
-		return (errors:wrap(errors.PARAMS_ERROR, params))
-	end
+	params.username = username
 
-	if (string.find(params.path, username)) == 1 then
-		return (errors:wrap(get_content_by_path(params.path)))
-	end
+	local err = file_group_model:set_file_group(params)
 
-	return errors:wrap(nil)
+	return (errors:wrap(err))
 end
 
-return page
+-- 获取用户文件组
+function file_group:get_by_username(ctx)
+	local username = ctx.username
+
+	local err, data = file_group_model:get_by_username({username=username})
+
+	return (errors:wrap(err, data))
+end
+
+-- 通过id删除
+function file_group:delete_by_id(ctx)
+	local params = ctx.request:get_params()
+	local username = ctx.username
+
+	if not username then
+		return (errors:wrap(errors.PARAMS_ERROR))
+	end
+
+	local err, data = file_group_model:get_by_id(params)
+	if not data or data.username ~= username then
+		return (errors:wrap(errors.PARAMS_ERROR))
+	end
+
+	local err = file_group_model:delete_by_id(params)
+
+	return (errors:wrap(err))
+end
+
+return file_group

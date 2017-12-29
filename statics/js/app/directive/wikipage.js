@@ -55,7 +55,7 @@ define([
 					} else {
 						var url = urlobj.url;
 						util.$http({
-							url:config.apiUrlPrefix + 'page/get_content_by_path',
+							url:config.apiUrlPrefix + 'file/get_content_by_path',
 							method:"GET",
 							params: {
 								path: url.substring(1) + ".md",

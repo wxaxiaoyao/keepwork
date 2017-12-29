@@ -10,9 +10,8 @@ file_group:addfield("file_group_id", "number")
 file_group:addfield("username", "string")
 file_group:addfield("path", "string")
 file_group:addfield("group_username", "string")
-file_group:addfield("groupname", "number")
-file_group:addfield("level", "string")
-
+file_group:addfield("groupname", "string")
+file_group:addfield("level", "number")
 
 -- 添加记录
 function file_group:set_file_group(params)
@@ -25,7 +24,7 @@ function file_group:set_file_group(params)
 	local idvalue = params[idname]
 
 	local err = nil
-	if idname then
+	if idvalue then
 		err = self:update({[idname]=idvalue}, params)
 	else 
 		err = self:insert(params)
@@ -43,6 +42,32 @@ function file_group:get_by_username(params)
 	local data = self:find({username=params.username})
 
 	return nil, data
+end
+
+-- 通过id获取记录
+function file_group:get_by_id(params)
+	local idname = self:get_idname()
+
+	if not params[idname] then
+		return (errors:wrap(errors.PARAMS_ERROR))
+	end
+
+	local data = self:find_one(params)
+
+	return err, data
+end
+
+-- 通过id删除
+function file_group:delete_by_id(params)
+	local idname = self:get_idname()
+
+	if not idname or not params[idname] then
+		return (errors:wrap(errors.PARAMS_ERROR))
+	end
+
+	local err = self:delete(params)
+
+	return err
 end
 
 return file_group

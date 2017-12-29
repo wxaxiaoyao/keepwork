@@ -12,7 +12,7 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#myGroupId" data-toggle="tab">拥有组</a></li>
 		<li><a href="#joinGroupId" ng-click="clickJoinGroupBtn()" data-toggle="tab">加入组</a></li>
-		<li><a href="#GroupApplyId" ng-click="clickGroupApplyBtn()" data-toggle="tab">组应用</a></li>
+		<li><a href="#fileGroupId" ng-click="clickFileGroupBtn()" data-toggle="tab">组应用</a></li>
 	</ul>
 	
 	<div class="tab-content">
@@ -113,42 +113,59 @@
 			</div>
 		</div>
 
-		<div class="tab-pane fade" id="GroupApplyId">
-			<div>
-
+		<div class="tab-pane fade" id="fileGroupId">
+			<div ng-repeat="file_group in fileGroupList track by $index">
+				<div class="pull-left">
+					<label>路径:</label>
+					<span>{{file_group.path}}</span>
+					<label>组名:</label>
+					<span>{{file_group.group_username + '/' + file_group.groupname}}</span>
+					<label>权限:</label>
+					<span>{{getLevelName(file_group.level)}}</span>
+				</div>
+				<div class="pull-right">
+					<a href="#newFileGroupId" data-toggle="collapse" ng-click="clickFileGroupModifyBtn(file_group)">修改</a>
+					<a ng-click="clickFileGroupDeleteBtn(file_group)">删除</a>
+				</div>
+				<div class="clearfix"></div>
 			</div>
-			<form class="form-horizontal" role="form">
-				<div class="form-group">
-					<label class="col-xs-3 control-label">路径:</label>
-					<div class="col-xs-6">
-						<select class="form-control" ng-model="folder.url" ng-options="x.url as x.url for x in folderList"></select>
+			<div style="text-align:center">
+				<a href="#newFileGroupId" ng-click="clickFileGroupNewBtn()" data-toggle="collapse">新增组</a>
+			</div>
+			<div id="newFileGroupId" class="collapse">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-xs-3 control-label">路径:</label>
+						<div class="col-xs-6">
+							<select class="form-control" ng-model="fileGroup.path" ng-options="x.url as x.url for x in folderList"></select>
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-xs-3 control-label">组名:</label>
-					<div class="col-xs-6">
-						<select class="form-control" ng-model="folder.groupname" ng-options="x.groupname as (x.username + '/' + x.groupname) for x in userGroupList"></select>
+					<div class="form-group">
+						<label class="col-xs-3 control-label">组名:</label>
+						<div class="col-xs-6">
+							<select class="form-control" ng-model="fileGroup.group" ng-options="(x.username + '/' + x.groupname) as (x.username + '/' + x.groupname) for x in userGroupList"></select>
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-xs-3 control-label">权限</label>
-					<div class="col-xs-6">
-						<select class="form-control" ng-model="folder.level" ng-options="x.level as x.name for x in levelList"></select>
+					<div class="form-group">
+						<label class="col-xs-3 control-label">权限</label>
+						<div class="col-xs-6">
+							<select class="form-control" ng-model="fileGroup.level" ng-options="x.level as x.name for x in levelList"></select>
+						</div>
 					</div>
-				</div>
-				<!--<div class="form-group">-->
-					<!--<label class="col-xs-3 control-label">THEME URL:</label>-->
-					<!--<div class="col-xs-6">-->
-						<!--<input ng-model="dataSource.raw_base_url" type="text" class="form-control" placeholder="https://gitlab.com">-->
+					<!--<div class="form-group">-->
+						<!--<label class="col-xs-3 control-label">THEME URL:</label>-->
+						<!--<div class="col-xs-6">-->
+							<!--<input ng-model="dataSource.raw_base_url" type="text" class="form-control" placeholder="https://gitlab.com">-->
+						<!--</div>-->
 					<!--</div>-->
-				<!--</div>-->
-				<div class="form-group">
-					<div class="col-xs-offset-3 col-xs-6">
-						<button class="btn btn-primary" ng-click="clickGroupApplySubmitBtn()">提交</button>
-						<span style="color: red">{{errMsg}}</span>
+					<div class="form-group">
+						<div class="col-xs-offset-3 col-xs-6">
+							<button class="btn btn-primary" ng-click="clickFileGroupSubmitBtn()">提交</button>
+							<span style="color: red">{{errMsg}}</span>
+						</div>
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>

@@ -82,6 +82,12 @@ define([
 			});
 		}
 
+		function getFileGroupList() {
+			util.http("GET", config.apiUrlPrefix + "file_group/get_by_username", {}, function(data){
+				$scope.fileGroupList = data || [];
+			});
+		}
+
 		function getUserGroupList() {
 			util.http("GET", config.apiUrlPrefix + "group/get_all", {}, function(data){
 				$scope.userGroupList = data;
@@ -173,9 +179,41 @@ define([
 			getJoinGroup();
 		}
 
-		$scope.clickGroupApplyBtn = function() {
+		$scope.clickFileGroupBtn = function() {
 			getFolderList();
 			getUserGroupList();
+			getFileGroupList();
+		}
+
+		$scope.clickFileGroupNewBtn = function() {
+			$scope.fileGroup = {};
+		}
+		$scope.clickFileGroupModifyBtn = function(fileGroup) {
+			fileGroup.group = fileGroup.group_username + "/" + fileGroup.groupname;
+			$scope.fileGroup = fileGroup;
+			console.log($scope.fileGroup);
+			//$("#newFileGroupId").collapse("show");
+		}
+
+		$scope.clickFileGroupDeleteBtn = function(fileGroup) {
+			util.http("POST", config.apiUrlPrefix + "file_group/delete_by_id", fileGroup, function(){
+				getFileGroupList();
+			});	
+		}
+
+		$scope.clickFileGroupSubmitBtn = function() {
+			var x = $scope.fileGroup;
+			var groups = x.group.split("/");
+
+			x.groupname = groups[1];
+			x.group_username = groups[0];
+			
+			util.http("POST", config.apiUrlPrefix + "file_group/set_file_group", x, function(){
+				getFileGroupList();
+			}, function(){
+				
+			});
+			console.log(x);
 		}
 
 		function init() {
