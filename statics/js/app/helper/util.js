@@ -88,6 +88,12 @@ define([
 			return ;
 		}
 		var relativeUrl = util.getRelativeUrl(state.url);
+
+		// 当前页面已是所需页面
+		if (window.location.pathname == relativeUrl) {
+			return;
+		}
+
 		window.history.pushState(state,"keepwork", relativeUrl);
 		app.ng_objects.$rootScope.contentUrl = state.url;
 		util.$apply();

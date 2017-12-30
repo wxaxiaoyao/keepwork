@@ -1,4 +1,12 @@
 
+<style>
+#kp_login_register_container_id:hover{
+	color:#777;
+}
+#kp_login_register_container_id>span:hover{
+	color:#333;
+}
+</style>
 <div ng-controller="headerController">
 	<div>
 		<nav class="navbar navbar-default kp_navbar" role="navigation">
@@ -8,7 +16,13 @@
 				</div>
 				<div class="pull-right">
 					<ul class="nav navbar-nav">
-						<li class="dropdown">
+						<li ng-hide="isAuth">
+							<a id="kp_login_register_container_id">
+								<span ng-click="clickLoginBtn()">登陆</span>|
+								<span ng-click="clickRegisterBtn()">注册</span>
+							</a>
+						</li>
+						<li ng-show="isAuth" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								逍遥
 								<b class="caret"></b>

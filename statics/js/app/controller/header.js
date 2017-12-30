@@ -9,6 +9,8 @@ define([
 		var $auth =app.ng_objects.$auth;
 		var $rootScope = app.ng_objects.$rootScope;
 
+		$scope.isAuth = $auth.isAuthenticated();
+
 		$scope.clickMyHomeBtn = function(){
 			util.go("/" + $scope.user.username);
 		}
@@ -19,6 +21,20 @@ define([
 		$scope.clickEditorBtn = function() {
 			util.go("/www/editor");
 		}
+
+		$scope.clickLoginBtn = function() {
+			util.go("/www/login");
+		}
+
+		$scope.clickRegisterBtn = function() {
+			util.go("/www/register");
+		}
+
+		$rootScope.$watch("user", function(user) {
+			console.log("---------------", user);
+			$scope.user = user;
+			$scope.isAuth = user != undefined;
+		});
 
 		$scope.clickLogoutBtn = function() {
 			$auth.logout();

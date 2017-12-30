@@ -148,7 +148,7 @@ define([
 		var $rootScope = app.ng_objects.$rootScope;
 		var storage = app.objects.storage;
 		app.objects.user = $rootScope.user = userinfo;
-		$rootScope.$broadcast("userinfo", userinfo);
+		//$rootScope.$broadcast("userinfo", userinfo);
 		storage.sessionStorageSetItem("userinfo", userinfo);	
 	}
 

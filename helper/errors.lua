@@ -52,7 +52,7 @@ function errors:wrap(err, data)
 		err.data = data
 	end
 
-	self.log(data)
+	--self.log(data)
 	return err
 end
 

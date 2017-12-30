@@ -120,13 +120,13 @@ function data_source:create_gitlab_project(params)
 end
 
 -- 创建gitlab用户
-function data_source:create_inner_gitlab_data_source(params)
+function data_source:create_gitlab_data_source(params)
 	if not params.username then
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 	
 	-- 已存在直接返回
-	local data = self:get_by_username(params).data
+	local _, data = self:get_by_username(params)
 	if data and #data ~= 0 then
 		return errors:wrap(nil, data)
 	end
@@ -142,6 +142,11 @@ function data_source:create_inner_gitlab_data_source(params)
 
 	local api_base_url = l_gitlab_host .. "/api/v4"
 	local raw_base_url = l_gitlab_host 
+	--gitlab:init({
+		--api_base_url = api_base_url,
+		--raw_base_url = raw_base_url,
+		--token = l_admin_token,
+	--})
 
 	local gitlab_user = {
 		username = params.username,
@@ -322,7 +327,7 @@ function data_source:get_default_by_username(params)
 
 	local data = self:find_one({username=params.username, is_default = 1})
 	if not data then
-		self:create_inner_gitlab_data_source(params)
+		self:create_gitlab_data_source(params)
 		data = self:find_one({username=params.username, is_default = 1})
 	end
 

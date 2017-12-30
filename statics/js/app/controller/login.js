@@ -21,7 +21,7 @@ define([
 				success: function(data) {
 					$auth.setToken(data.token);
 					app.setUser(data.userinfo);
-					util.go("/www/editor");
+					util.go("/" + data.userinfo.username);
 				},
 				error: function(err) {
 
