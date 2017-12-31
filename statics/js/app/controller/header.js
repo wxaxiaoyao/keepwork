@@ -31,7 +31,7 @@ define([
 		}
 
 		$rootScope.$watch("user", function(user) {
-			console.log("---------------", user);
+			console.log("userinfo:", user);
 			$scope.user = user;
 			$scope.isAuth = user != undefined;
 		});

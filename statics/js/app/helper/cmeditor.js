@@ -312,17 +312,19 @@ define([
 		}
 
 		scaleX = scaleX || (previewWidth / scaleWidth);
-		scaleY = scaleY || (previewHeight / scaleHeight);
+		//scaleY = scaleY || (previewHeight / scaleHeight);
 
 		//console.log(scaleWidth);
 		editor.editorPreview.css("width", scaleWidth + "px");
 		//editor.editorPreview.css("height", scaleHeight + "px");
-		editor.editorPreview.css("transform", 'scale(' + scaleX + ',' + scaleY +')');
+		//editor.editorPreview.css("transform", 'scale(' + scaleX + ',' + scaleY +')');
+		editor.editorPreview.css("transform", 'scale(' + scaleX + ',' + scaleX +')');
 		//editor.editorPreview.css("transform", 'scale(' + scaleX + ',' + 1 +')');
 		editor.editorPreview.css("transform-origin", 'left top');
 
 		editor.editorPreviewScaleX = scaleX;
-		editor.editorPreviewScaleY = scaleY;
+		//editor.editorPreviewScaleY = scaleY;
+		editor.editorPreviewScaleY = scaleX;
 	}
 
 	// 代码滚动

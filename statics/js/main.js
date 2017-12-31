@@ -24,14 +24,15 @@
             'js-base64': libPathPrefix + 'js-base64/base64.min',
             'text': libPathPrefix + 'requirejs/text',
             'domReady': libPathPrefix + 'requirejs/domReady',
+			'cropper': libPathPrefix + 'cropper/cropper.min',
 
-			'lib': 'js/lib',
-			'css': 'assets/css',
-            'app':'js/app',
-            'controller':'js/app/controller',
-            'directive': 'js/app/directive',
-            'helper':'js/app/helper',
-            'wikimod':'js/mod',
+			'lib': pathPrefix + 'js/lib',
+			'css': pathPrefix + 'assets/css',
+            'app': pathPrefix + 'js/app',
+            'controller': pathPrefix + 'js/app/controller',
+            'directive': pathPrefix + 'js/app/directive',
+            'helper': pathPrefix + 'js/app/helper',
+            'wikimod': pathPrefix + 'js/mod',
         },
         shim: {
             'bootstrap':{

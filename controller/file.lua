@@ -9,6 +9,7 @@ local group_user_model = nws.import("model/group_user")
 
 local function get_content(path) 
 	local username = string.match(path, '([^/]+)')
+	local username = string.match(username,'([^_]+)')
 	local err, git = data_source_model:get_default_git_by_username({username=username})
 	if not git then
 		return (errors:wrap(err))
@@ -67,6 +68,18 @@ local function get_access_level(username, path)
 	return access_level
 end
 
+function file:_get_content_by_path(username, path)
+	local access_level = get_access_level(username, path)
+
+	if access_level < const.FILE_ACCESS_READ_LEVEL then
+		return (errors:wrap("权限不足"))
+	end
+
+	local err, content = get_content(path)
+
+	return err, content
+end
+
 function file:get_content_by_path(ctx)
 	local username = ctx.username
 	local params = ctx.request:get_params()
@@ -75,13 +88,7 @@ function file:get_content_by_path(ctx)
 		return (errors:wrap(errors.PARAMS_ERROR, params))
 	end
 
-	local access_level = get_access_level(username, params.path)
-
-	if access_level < const.FILE_ACCESS_READ_LEVEL then
-		return (errors:wrap("权限不足"))
-	end
-
-	local err, content = get_content(params.path)
+	local err, content = self:_get_content_by_path(username, params.path)
 	return (errors:wrap(err, content))
 end
 

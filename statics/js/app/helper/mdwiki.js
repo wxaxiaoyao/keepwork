@@ -31,25 +31,25 @@ define([
         });
     }
 
-    function extendBlock($scope, params) {
+    function extendBlock($scope, params, isTemplate) {
 		//if ($scope.$kp_block) {
 			//return $scope.$kp_block;
 		//}
 
 		var block = undefined;
-		try {
-			block = params && angular.fromJson(decodeURI(params));
-		} catch(e) {
+		var mdName = undefined;
+		var md = undefined;
+		if (isTemplate) {
+			mdName = decodeURI(params);
+			md = getMd(mdName);
+			block = md.template;
+		} else {
 			block = $scope.$eval(params);
 		}
 		if(!block) {
             return block;
 		}
 		
-		var md = getMd(block.mdName);
-        if (block.isTemplate) {
-			block = md.template;
-        }
 		$scope.$kp_block = block;
 		block.$scope = $scope;
 		block.$apply = function() {
@@ -64,7 +64,7 @@ define([
 			});
 		};
 		
-
+		md = getMd(block.mdName);
         if (!md.editable || !md.editor) {
             return block;
         }
@@ -117,7 +117,7 @@ define([
 			//scope: true,
 			template: '<div><wiki-block data-params="$kp_block"></wiki-block></div>',
 			controller:['$scope', '$attrs', '$element', function($scope, $attrs, $element) {
-				var block = extendBlock($scope, $attrs.params);
+				var block = extendBlock($scope, $attrs.params, $attrs.template);
 				block.$element = $element;
 			}],
 		}
@@ -156,7 +156,7 @@ define([
 
 		md.bindContainer = function() {
 			if (!md.isBindContainer && md.containerId && $('#' + md.containerId)) {
-				$("#" + md.containerId).html($compile('<wiki-block-container data-params="' + encodeURI(angular.toJson(md.template)) + '"></wiki-block-container>')($scope));
+				$("#" + md.containerId).html($compile('<wiki-block-container data-template="true" data-params="' + encodeURI(md.mdName) + '"></wiki-block-container>')($scope));
 				md.isBindContainer = true;
 			}
 		}
@@ -187,7 +187,7 @@ define([
 			md.bindContainer();
 
 			md.template.$apply && md.template.$apply();
-			return '<wiki-block data-params="' + encodeURI(angular.toJson(md.template)) + '"></wiki-block>';
+			return '<wiki-block-container data-template="true" data-params="' + encodeURI(md.mdName) + '"></wiki-block-container>';
         }
 
         // md.bind

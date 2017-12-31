@@ -12,11 +12,29 @@ define([
 
 		return true;
 	}
+
+	util.getOfficialHost = function() {
+		var config = app.objects.config;
+		var officialHostnameList = config.officialHostnameList;
+
+		var host = window.location.host;
+		var officialHost = undefined;
+
+		for (var i = 0; i < officialHostnameList.length; i++) {
+			var officialHost = officialHostnameList[i];
+			var index = host.indexOf(officialHost);
+			if (index >= 0) {
+				officialHost = host.substring(index);
+				break;
+			}
+		}
+
+		return officialHost;
+	}
+
 	util.parseHostname = function(hostname) {
-		var officialHostnameList = [
-			"localhost",
-			"keepwork.com",
-		];
+		var config = app.objects.config;
+		var officialHostnameList = config.officialHostnameList;
 
 		var result = {isOfficialHostname:true, pathname_prefix:""};
         if (hostname.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/)) {

@@ -28,6 +28,12 @@ define([
 				}
 			});
 		}
+
+		$(document).keyup(function(event){
+			if (event.keyCode == "13") {
+				$scope.clickLogin();
+			}
+		});
 	}]);
 
 	return htmlContent;

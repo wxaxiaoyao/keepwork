@@ -97,16 +97,18 @@ define([
 			"helper/config",
 			"helper/util",
 			"helper/mdwiki",
+			"helper/dataSource/dataSource",
 
 			"directive/wikipage",
 
 			"controller/main",
 			//'directive/treeview',
-        ], function (storage, config, util, mdwiki) {
+        ], function (storage, config, util, mdwiki, dataSource) {
 			app.objects.storage = storage;
 			app.objects.config = config;
 			app.objects.util = util;
 			app.objects.mdwiki = mdwiki;
+			app.objects.dataSource = dataSource;
 
             angular.bootstrap(document, [app.appName]);
         });
@@ -125,6 +127,7 @@ define([
 		var authUseinfo = $auth.getPayload();
 		var userinfo = app.objects.user || storage.sessionStorageGetItem("userinfo");
 		if (userinfo && authUseinfo && userinfo.username == authUseinfo.username) {
+			app.setUser(userinfo);
 			success && success(userinfo);
 			return;
 		}
@@ -134,8 +137,8 @@ define([
 			method: "GET",
 			success: function(data) {
 				if (data) {
-					success && success(data);	
 					app.setUser(data);
+					success && success(data);	
 				}
 			},
 			error: error,
@@ -148,6 +151,11 @@ define([
 		var $rootScope = app.ng_objects.$rootScope;
 		var storage = app.objects.storage;
 		app.objects.user = $rootScope.user = userinfo;
+
+		if (userinfo.default_data_source) {
+			app.objects.git = app.objects.dataSource(userinfo.default_data_source);
+		}
+
 		//$rootScope.$broadcast("userinfo", userinfo);
 		storage.sessionStorageSetItem("userinfo", userinfo);	
 	}

@@ -3,14 +3,8 @@ local controller = nws.gettable("nws.controller")
 --  创建test控制器
 local user = controller:new("user")
 
---local convert_model = require("model/convert")
 local user_model = nws.import("model/user")
 local data_source_model = nws.import("model/data_source")
---local user_active_model = require("model/user_active")
---local site_model = require("model/site")
---local site_data_source_model = require("model/site_data_source")
---local vip_model = require("model/vip")
---local fans_model = require("model/fans")
 
 -- 用户登录
 function user:login(ctx)
@@ -83,24 +77,26 @@ function user:get_by_username(ctx)
 	local params = ctx.request:get_params()
 end
 
-function user:updateUserInfo(params, req, resp)
-	params = convert_model.user_old_to_new(params)
+function user:update_by_username(ctx)
+	local username = ctx.username;
+	local params = ctx.request:get_params()
+	local err, data = user_model:update_by_username(params)
 
-	return user_model:update_by_username(params)
+	return (errors:wrap(err, data))
 end
 
-function user:changepw(params, req, resp)
-	local payload = req.payload
+function user:changepw(ctx)
+	local username = ctx.username
+	local params = ctx.request:get_params()
+	params.username = username
 
-	if not payload or not payload.username or not params.oldpassword or not params.newpassword then
-		return errors:wrap(errors.PARAMS_ERROR)
+	if not params.username or not params.oldpassword or not params.newpassword then
+		return (errors:wrap(errors.PARAMS_ERROR))
 	end
 
-	return user_model:modify_password({
-		username = payload.username,
-		oldpassword = params.oldpassword,
-		newpassword = params.newpassword,
-	})
+	local err = user_model:modify_password(params)
+
+	return (errors:wrap(err))
 end
 
 function user:getDetailByName(params)

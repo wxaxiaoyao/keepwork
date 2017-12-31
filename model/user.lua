@@ -25,11 +25,6 @@ user:addfield("create_time", "string")
 user:addfield("update_time", "string")
 --end
 
-
-function user:test(params)
-	return self:count()
-end
-
 -- 用户信息过滤
 function user:filter(userinfo)
 	return {
@@ -177,10 +172,12 @@ function user:update_by_username(params)
 
 	params.password = nil
 	params.role_id = nil
+	params.cellphone = nil
+	params.email = nil
 
-	local err = self:update({username=params.username}, params)
+	local err, data = self:update({username=params.username}, params)
 
-	return err
+	return err, data
 end
 
 -- 修改用户密码
@@ -191,14 +188,14 @@ function user:modify_password(params)
 
 	local data = self:find_one({
 		username = params.username,
-		password = util.md5(params.oldpassword),
+		password = nws.util.md5(params.oldpassword),
 	})
 
 	if not data then
 		return (errors:wrap(errors.NOT_FOUND))
 	end
 
-	local err = self:update({username=params.username}, {password=util.md5(params.newpassword)})
+	local err = self:update({username=params.username}, {password=nws.util.md5(params.newpassword)})
 
 	return err
 end

@@ -3,7 +3,6 @@ define([
 	"app",
     'js-base64',
 ], function(app){
-	
     function encodeUrl(url) {
 		return encodeURIComponent(url).replace(/\./g,'%2E')
     }
@@ -17,14 +16,25 @@ define([
 				return ;
 			}
 			var self = this;
+			self.username = config.username;
 			self.apiBaseUrl = config.api_base_url;
 			self.rawBaseUrl = config.raw_base_url;
 			self.token = config.token;
-			self.username = config.external_username;
+			self.externalUsername = config.external_username;
 			self.projectName = config.project_name;
 			self.projectId = config.project_id;
 			self.lastCommitId = config.last_commit_id || "master";
 			self.httpHeader = {"PRIVATE-TOKEN": config.token}
+		}
+
+
+		gitlab.getRawContentUrl = function(params) {
+			return this.rawBaseUrl + '/' + this.externalUsername + '/' + this.projectName.toLowerCase() + '/raw/' +(params.ref || "master") + '/' + params.path;
+		}
+
+		gitlab.getGitFilePath = function(params) {
+			params.ref = params.ref || "master";
+			return this.rawBaseUrl + "/" + (params.externalUsername || this.externalUsername) + "/" + (params.projectName || this.projectName) + '/blob/' + params.ref + '/' + params.path;
 		}
 
 		gitlab.httpRequest = function(method, url, data, success, error) {
@@ -190,11 +200,36 @@ define([
 			}, error);
 		}
 
-		gitlab.getGitFilePath = function(params) {
-			params.ref = params.ref || "master";
-			return this.rawBaseUrl + "/" + (params.username || this.username) + "/" + (params.projectName || this.projectName) + '/blob/' + params.ref + '/' + params.path;
-		}
 		//gitlab.uploadImage = function(params, success, error)
+
+		gitlab.upload = function(params, success, error) {
+			var self = this;
+			var path = params.path;
+			var content = params.content;
+			content = content.split(',');
+			content = content.length > 1 ? content[1] : content[0];
+
+			self.writeFile({path:path, content:content, encoding:"base64"}, function(data) {
+				//var url = self.getRawContentUrl({path:path});
+				//success && success(url);
+				var util = app.objects.util;
+				path = window.location.protocol + "//" + util.getOfficialHost() + "/" + path;
+				success && success(path);
+			}, error);
+		}
+
+		gitlab.uploadImage = function(params, success, error) {
+			var self = this;
+			params.path = self.username + '_images/' + params.path;
+			self.upload(params, success, error);
+		}
+
+
+		gitlab.uploadFile = function(params, success, error) {
+			var self = this;
+			params.path = self.username + '_files/' + params.path;
+			self.upload(params, success, error);
+		}
 
 		gitlab.init(config);
 		return gitlab;

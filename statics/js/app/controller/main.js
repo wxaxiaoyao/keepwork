@@ -11,15 +11,13 @@ define([
 		$rootScope.isShowHeader = true;
 		$rootScope.isShowFooter = true;
 		$rootScope.headerContent = headerContent;
-		$rootScope.imgsPath = "/assets/imgs/";
+		$rootScope.imgsPath = "assets/imgs/";
 		
-
 		function init(){
 			util.replaceState({url:util.getAbsoluteUrl()});
 		}
 
 		app.getUser(function(userinfo){
-			$rootScope.user = userinfo;
 			init();
 		}, function(){
 			init();

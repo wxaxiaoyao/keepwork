@@ -315,7 +315,7 @@ define([
 			if ($event) {
 				$event.stopPropagation();
 			}
-			window.open(node.url);
+			window.open("/" + node.url);
 		}
 
 		$scope.clickGitBtn = function(node, $event) {

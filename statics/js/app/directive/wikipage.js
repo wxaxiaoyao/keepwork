@@ -13,10 +13,21 @@ define([
 			controller: ["$scope", "$element", "$attrs", function($scope, $element, $attrs){
 				var content, contentUrl;
 				var $rootScope = app.ng_objects.$rootScope;
+				var $auth =app.ng_objects.$auth;
 
 				$scope.imgsPath = $rootScope.imgsPath;
 
 				function render() {
+					var md = mdwiki();
+					var text = $("#noscriptId").text();
+					if (text) {
+						var htmlstr = md.render(text);
+						console.log(htmlstr);
+						$element.html($compile(htmlstr)($scope));
+						util.$apply($scope);
+						$("#noscriptId").html("");
+						return;
+					}
 					if (content) {
 						$element.html($compile(content)($scope));
 						return;
@@ -26,13 +37,15 @@ define([
 						return;
 					}
 
-					//console.log(contentUrl);
-
 					var urlobj = util.parseUrl(contentUrl);
 					if (!urlobj.username || urlobj.username == "www" || !urlobj.pagename) {
 						var ctrlPath = "controller/";
-						if (urlobj.username != "www") {
-							ctrlPath = ctrlPath + "user";
+						if (!urlobj.pagename) {
+							if (urlobj.username == "www" || (!urlobj.username && !$auth.isAuthenticated())) {
+								ctrlPath = ctrlPath + 'home';
+							} else {
+								ctrlPath = ctrlPath + "user";
+							}
 						} else if(urlobj.pagename) {
 							var pagename = urlobj.pagename;
 							for (var i = 0; i < pagename.length; i++) {
@@ -46,6 +59,7 @@ define([
 						} else {
 							ctrlPath = ctrlPath + "home"; // 默认页
 						}
+
 						require([
 							ctrlPath,
 						], function(content) {
@@ -64,7 +78,6 @@ define([
 								if (!data) {
 									return;
 								}
-								var md = mdwiki();
 								var htmlstr = md.render(data);
 								$element.html($compile(htmlstr)($scope));
 								util.$apply($scope);

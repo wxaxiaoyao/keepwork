@@ -2,13 +2,23 @@ define([
 	'app',
 	'text!html/controller/userSetting.html',
 
+	'controller/file',
+	'controller/profile',
 	'controller/group',
 	'controller/dataSource',
-], function (app, userSettingHtml, groupHtml, dataSourceHtml) {
+], function (app, userSettingHtml, fileHtml, profileHtml, groupHtml, dataSourceHtml) {
     app.registerController("userSettingController",['$scope', function ($scope) {
 		var $rootScope = app.ng_objects.$rootScope;
 		$scope.user = $scope.user || $rootScope.user;
 		$scope.settingItemList = [
+	   	{
+			type:"profile",
+			name:"我的资料",
+		},
+	   	{
+			type:"file",
+			name:"文件",
+		},
 	   	{
 			type:"group",
 			name:"组",
@@ -24,10 +34,14 @@ define([
 		}
 
 		function setSettingContent(type) {
-			type = type || "group";
+			type = type || "profile";
 			$scope.selectedSettingItem = type;
 
-			if (type == "group") {
+			if (type == "profile") {
+				$scope.settingHtml = profileHtml;
+			} else if(type == "file") {
+				$scope.settingHtml = fileHtml;
+			} else if (type == "group") {
 				$scope.settingHtml = groupHtml;
 			} else if(type == "dataSource") {
 				$scope.settingHtml = dataSourceHtml;
