@@ -9,6 +9,7 @@ define([
 	config.officialHostnameList = [
 		"localhost",
 		"keepwork.com",
+		"wxaxiaoyao.cn",
 	];
 	return config;
 })

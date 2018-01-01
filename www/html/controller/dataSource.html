@@ -7,11 +7,6 @@
 	</ul>
 	<div class="tab-content">
 		<div class="panel-group tab-pane fade in active" id="dataSourceGroup">
-			<div>
-				<h4>
-					数据源列表:
-				</h4>
-			</div>
 			<div class="panel" ng-repeat="x in dataSourceList track by $index">
 				<div>
 					<a href='{{"#dataSourceItemId_" + $index}}' data-toggle="collapse" data-parent="#dataSourceGroup">{{x.data_source_name}}</a>

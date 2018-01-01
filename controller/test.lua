@@ -20,9 +20,15 @@
 --err = errors:new("test")
 --common.console(err:is_error())
 
-local test = common.inherit()
+local controller = nws.gettable("nws.controller")
+local test = controller:new("test")
 
-local test_model = require("model/test")
+local test_model = nws.import("model/test")
+
+function test:test(ctx)
+	nws.log(ctx.request.headers)
+	nws.log("--------------")
+end
 
 function test:tabledbCount()
 	local data = test_model:count({
