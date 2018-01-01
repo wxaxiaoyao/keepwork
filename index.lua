@@ -24,7 +24,7 @@ nws.router.default_handler = function(ctx)
 	local ext = path:match('^.+%.([a-zA-Z0-9]+)$')
 	local dst_username = string.match(url, "/([^/]+)")
 	if not dst_username or dst_username == "www" or url == ("/" .. dst_username) then
-		ctx.response:render("index.html", {})
+		ctx.response:render("www/index.html", {})
 		return
 	end
 
@@ -38,7 +38,7 @@ nws.router.default_handler = function(ctx)
 
 	--local err, content = file:_get_content_by_path(ctx.username, path .. ".md")
 	-- 用户页面
-	ctx.response:render("index.html", {content = content})
+	ctx.response:render("www/index.html", {content = content})
 	return
 end
 

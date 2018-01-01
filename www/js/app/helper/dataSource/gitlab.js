@@ -16,15 +16,19 @@ define([
 				return ;
 			}
 			var self = this;
+			var proxyUrlPrefix = app.objects.config.gitApiProxyUrlPrefix;
 			self.username = config.username;
 			self.apiBaseUrl = config.api_base_url;
 			self.rawBaseUrl = config.raw_base_url;
+			self.proxyApiBaseUrl = config.api_base_url.replace(/http[s]:\/\/[^\/]+/, proxyUrlPrefix);
+			self.proxyRawBaseUrl = proxyUrlPrefix;
 			self.token = config.token;
 			self.externalUsername = config.external_username;
 			self.projectName = config.project_name;
 			self.projectId = config.project_id;
 			self.lastCommitId = config.last_commit_id || "master";
-			self.httpHeader = {"PRIVATE-TOKEN": config.token}
+			self.proxyToken = app.ng_objects.$auth.getToken();
+			self.proxyUrlPrefix = self.apiBaseUrl.match(/(http[s]:\/\/[^\/]+)/)[1];
 		}
 
 
@@ -41,8 +45,12 @@ define([
 			var self = this;
 			var config = {
 				method: method,
-				url: self.apiBaseUrl + url,
-				headers: {"PRIVATE-TOKEN":self.token},
+				url: self.proxyApiBaseUrl + url,
+				headers: {
+					"PRIVATE-TOKEN":self.token,
+					//"PROXY_TOKEN": self.proxyToken,
+					//"PROXY_URL_PREFIX": self.proxyUrlPrefix,
+				},
 				skipAuthorization: true,  // 跳过插件satellizer认证
 				isShowLoading:data.isShowLoading == undefined ? true : data.isShowLoading,
 			};

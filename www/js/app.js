@@ -34,16 +34,25 @@ define([
 		   	'$compileProvider',
 		   	'$locationProvider',
 			'$authProvider',
+			'$sceDelegateProvider',
 		   	function (
 				$controllerProvider, 
 				$compileProvider, 
 				$locationProvider, 
-				$authProvider) {
+				$authProvider,
+				$sceDelegateProvider) {
 				
 				app.ng_objects.$controllerProvider = $controllerProvider;
 				app.ng_objects.$compileProvider = $compileProvider;
 				app.ng_objects.$locationProvider = $locationProvider;
 				app.ng_objects.$authProvider = $authProvider;
+				app.ng_objects.$sceDelegateProvider = $sceDelegateProvider;
+
+				//$sceDelegateProvider.resourceUrlWhitelist([
+					//"http://gitlab.com", 
+					//"http://gitapi.localhost",
+				//]);
+
     }]);
 
     // 提供动态注册控制器接口
