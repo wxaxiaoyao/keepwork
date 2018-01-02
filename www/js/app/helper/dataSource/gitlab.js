@@ -33,7 +33,8 @@ define([
 
 
 		gitlab.getRawContentUrl = function(params) {
-			return this.rawBaseUrl + '/' + this.externalUsername + '/' + this.projectName.toLowerCase() + '/raw/' +(params.ref || "master") + '/' + params.path;
+			//return this.rawBaseUrl + '/' + this.externalUsername + '/' + this.projectName.toLowerCase() + '/raw/' +(params.ref || "master") + '/' + params.path;
+			return this.proxyRawBaseUrl + '/' + this.externalUsername + '/' + this.projectName.toLowerCase() + '/raw/' +(params.ref || "master") + '/' + params.path + "?proxyurlprefix=" + this.proxyUrlPrefix;
 		}
 
 		gitlab.getGitFilePath = function(params) {
@@ -48,9 +49,11 @@ define([
 				url: self.proxyApiBaseUrl + url,
 				headers: {
 					"PRIVATE-TOKEN":self.token,
-					//"PROXY_TOKEN": self.proxyToken,
-					//"PROXY_URL_PREFIX": self.proxyUrlPrefix,
+					"PROXYTOKEN": self.proxyToken,
+					"PROXYURLPREFIX": self.proxyUrlPrefix,
+					"PROXYGITTYPE": "gitlab",
 				},
+
 				skipAuthorization: true,  // 跳过插件satellizer认证
 				isShowLoading:data.isShowLoading == undefined ? true : data.isShowLoading,
 			};
@@ -218,11 +221,11 @@ define([
 			content = content.length > 1 ? content[1] : content[0];
 
 			self.writeFile({path:path, content:content, encoding:"base64"}, function(data) {
-				//var url = self.getRawContentUrl({path:path});
-				//success && success(url);
-				var util = app.objects.util;
-				path = window.location.protocol + "//" + util.getOfficialHost() + "/" + path;
-				success && success(path);
+				var url = self.getRawContentUrl({path:path});
+				success && success(url);
+				//var util = app.objects.util;
+				//path = window.location.protocol + "//" + util.getOfficialHost() + "/" + path;
+				//success && success(path);
 			}, error);
 		}
 

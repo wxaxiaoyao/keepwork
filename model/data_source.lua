@@ -331,7 +331,7 @@ function data_source:get_default_by_username(params)
 		data = self:find_one({username=params.username, is_default = 1})
 	end
 
-	return errors:wrap(nil, data)
+	return nil, data
 end
 
 -- 获取用户指定的数据源

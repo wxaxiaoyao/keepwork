@@ -14,20 +14,9 @@ define([
 				var content, contentUrl;
 				var $rootScope = app.ng_objects.$rootScope;
 				var $auth =app.ng_objects.$auth;
-
 				$scope.imgsPath = $rootScope.imgsPath;
 
 				function render() {
-					var md = mdwiki();
-					var text = $("#noscriptId").text();
-					if (text) {
-						var htmlstr = md.render(text);
-						console.log(htmlstr);
-						$element.html($compile(htmlstr)($scope));
-						util.$apply($scope);
-						$("#noscriptId").html("");
-						return;
-					}
 					if (content) {
 						$element.html($compile(content)($scope));
 						return;
@@ -35,57 +24,6 @@ define([
 
 					if (!contentUrl) {
 						return;
-					}
-
-					var urlobj = util.parseUrl(contentUrl);
-					if (!urlobj.username || urlobj.username == "www" || !urlobj.pagename) {
-						var ctrlPath = "controller/";
-						if (!urlobj.pagename) {
-							if (urlobj.username == "www" || (!urlobj.username && !$auth.isAuthenticated())) {
-								ctrlPath = ctrlPath + 'home';
-							} else {
-								ctrlPath = ctrlPath + "user";
-							}
-						} else if(urlobj.pagename) {
-							var pagename = urlobj.pagename;
-							for (var i = 0; i < pagename.length; i++) {
-								if (pagename[i] == "/"  && (i+1) < pagename.length) {
-									ctrlPath += pagename[i+1].toUpperCase();
-									i++;
-									continue;
-								}
-								ctrlPath += pagename[i];
-							}
-						} else {
-							ctrlPath = ctrlPath + "home"; // 默认页
-						}
-
-						require([
-							ctrlPath,
-						], function(content) {
-							$element.html($compile(content)($scope));
-							$scope.$apply();
-						});
-					} else {
-						var url = urlobj.url;
-						util.$http({
-							url:config.apiUrlPrefix + 'file/get_content_by_path',
-							method:"GET",
-							params: {
-								path: url.substring(1) + ".md",
-							},
-							success:function(data) {
-								if (!data) {
-									return;
-								}
-								var htmlstr = md.render(data);
-								$element.html($compile(htmlstr)($scope));
-								util.$apply($scope);
-							},
-							error: function() {
-
-							}
-						})
 					}
 				}
 

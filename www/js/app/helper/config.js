@@ -6,6 +6,7 @@ define([
 
 	config.apiUrlPrefix = "/api/v1/";
 	config.gitApiProxyUrlPrefix = "http://gitapi.localhost";
+	//config.gitApiProxyUrlPrefix = "https://gitlab.com";
 
 	config.officialHostnameList = [
 		"localhost",

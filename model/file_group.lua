@@ -2,7 +2,7 @@
 -- author: xiaoyao
 -- date: 2017-9-28
 
-local orm = commonlib.gettable("nws.orm")
+local orm = nws.gettable("nws.orm")
 local file_group = nws.inherit(orm)
 
 file_group:tablename("file_group")
@@ -69,5 +69,9 @@ function file_group:delete_by_id(params)
 
 	return err
 end
+
+---- 通过用户名获取访问级别
+--function file_group:get_username_access_level_by_path(params)
+--end
 
 return file_group

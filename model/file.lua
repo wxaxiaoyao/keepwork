@@ -9,6 +9,7 @@ file:addfield("file_id", "number")
 file:addfield("username","string")
 file:addfield("path","string")
 file:addfield("content","string")
+file:addfield("visit_count", "number")
 file:addfield("create_time", "string")
 file:addfield("update_time", "string")
 

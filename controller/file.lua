@@ -7,18 +7,18 @@ local data_source_model = nws.import("model/data_source")
 local file_group_model = nws.import("model/file_group")
 local group_user_model = nws.import("model/group_user")
 
-local function get_content(path) 
+function file:get_content(path) 
 	local username = string.match(path, '([^/]+)')
 	local username = string.match(username,'([^_]+)')
 	local err, git = data_source_model:get_default_git_by_username({username=username})
 	if not git then
-		return (errors:wrap(err))
+		return (errors:wrap(errors.NOT_FOUND))
 	end
 
 	return git:get_content({path=path})
 end
 
-local function get_access_level(username, path) 
+function file:get_access_level(username, path) 
 	local dst_username = string.match(path, "[^/]+")
 
 	if not dst_username or dst_username == "" then
@@ -28,6 +28,8 @@ local function get_access_level(username, path)
 	if username and username == dst_username then
 		return const.FILE_ACCESS_WRITE_LEVEL
 	end
+
+	dst_username = string.match("[^_]*")
 
 	local file_group_list = file_group_model:get_by_username({username = dst_username})
 	local group_path_len = 0
@@ -69,13 +71,13 @@ local function get_access_level(username, path)
 end
 
 function file:_get_content_by_path(username, path)
-	local access_level = get_access_level(username, path)
+	local access_level = self:get_access_level(username, path)
 
 	if access_level < const.FILE_ACCESS_READ_LEVEL then
 		return (errors:wrap("权限不足"))
 	end
 
-	local err, content = get_content(path)
+	local err, content = self:get_content(path)
 
 	return err, content
 end
@@ -92,4 +94,6 @@ function file:get_content_by_path(ctx)
 	return (errors:wrap(err, content))
 end
 
+function file:is_can_access()
+end
 return file

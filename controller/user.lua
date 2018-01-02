@@ -19,7 +19,7 @@ function user:login(ctx)
 	end
 
 	-- 数据源相关信息
-	local default_data_source = data_source_model:get_default_by_username(params).data
+	local err, default_data_source = data_source_model:get_default_by_username(params)
 	userinfo.default_data_source = default_data_source
 
 	-- 生成token
@@ -45,7 +45,7 @@ function user:register(ctx)
 	end
 	
 	-- 数据源相关信息
-	local default_data_source = data_source_model:get_default_by_username(params).data
+	local err, default_data_source = data_source_model:get_default_by_username(params)
 	userinfo.default_data_source = default_data_source
 
 	-- 生成token
@@ -67,7 +67,7 @@ function user:get(ctx)
 		return (errors:wrap(err))
 	end
 
-	local default_data_source = data_source_model:get_default_by_username({username=userinfo.username}).data
+	local err, default_data_source = data_source_model:get_default_by_username({username=userinfo.username})
 	userinfo.default_data_source = default_data_source
 
 	return (errors:wrap(nil, userinfo))

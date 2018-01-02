@@ -113,7 +113,8 @@ define([
 		}
 
 		window.history.pushState(state,"keepwork", relativeUrl);
-		app.ng_objects.$rootScope.contentUrl = state.url;
+		//app.ng_objects.$rootScope.contentUrl = state.url;
+		app.ng_objects.$rootScope.loadContent(state.url);
 		util.$apply();
 	}
 
@@ -123,7 +124,8 @@ define([
 		}
 		var relativeUrl = util.getRelativeUrl(state.url);
 		window.history.replaceState(state, "keepwork", relativeUrl);
-		app.ng_objects.$rootScope.contentUrl = state.url;
+		//app.ng_objects.$rootScope.contentUrl = state.url;
+		app.ng_objects.$rootScope.loadContent(state.url);
 		util.$apply();
 	}
 	
@@ -133,7 +135,8 @@ define([
 		if (!state || !state.url) {
 			return;
 		}
-		app.ng_objects.$rootScope.contentUrl = state.url;
+		//app.ng_objects.$rootScope.contentUrl = state.url;
+		app.ng_objects.$rootScope.loadContent(state.url);
 		util.$apply();
 	}
 
