@@ -8,6 +8,7 @@ define([
 		var config = app.objects.config;
 		var mdwiki = app.objects.mdwiki;
 		var $rootScope = app.ng_objects.$rootScope;
+		var $auth = app.ng_objects.$auth;
 		$rootScope.isShowHeader = true;
 		$rootScope.isShowFooter = true;
 		$rootScope.headerContent = headerContent;

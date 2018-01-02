@@ -9,7 +9,7 @@ local group_user_model = nws.import("model/group_user")
 local file_ctrl = nws.import("controller/file")
 local user_theme_ctrl = nws.import("controller/user_theme")
 
-function page:page:visit_by_url(ctx)
+function page:visit_by_url(ctx)
 	local username = ctx.username
 	local params = ctx.request:get_params()
 
