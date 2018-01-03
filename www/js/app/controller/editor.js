@@ -35,7 +35,7 @@ define([
 		function loadFilelist() {
 			function loadUnSavePageContent(finish) {
 				pageDB.get(function(x){
-					console.log(x, allPageMap);
+					//console.log(x, allPageMap);
 					if (!x || x.type == "tree" || !allPageMap[x.url]) {
 						return;
 					}
@@ -111,6 +111,33 @@ define([
 			pageDB.setItem(x, success, error);
 		}
 
+		function deletePage(page, success, error) {
+			git.deleteFile({
+				path: page.path,
+			}, function(){
+				util.http("POST", config.apiUrlPrefix + "page/delete_by_url", {url:page.url});
+				pageDB.deleteItem(page.url);
+				success && success();
+			}, error);	
+		}
+
+		function savePage(page, success, error) {
+			//console.log(page);
+			git.writeFile({
+				path:page.path, 
+				content:page.content
+			}, function(){
+				util.http("POST", config.apiUrlPrefix + "page/set_page", {
+					pagename: page.pagename,
+					username: page.username,
+					url: page.url,
+					content: page.content,
+				});
+
+				success && success();
+			}, error);
+		}
+
 		function change(filename, text) {
 			if (!curPage) {
 				return;
@@ -154,13 +181,9 @@ define([
 			if (!curPage) {
 				return;
 			}
-
+			
 			var page = curPage;
-
-			git.writeFile({
-				path:page.path, 
-				content:page.content
-			}, function(data){
+			savePage(page, function() {
 				console.log("保存成功!!!");
 				page.isModify = false;
 				page.isConflict = false;
@@ -332,20 +355,15 @@ define([
 			}
 
 			console.log(index, node);
-			var x = node.nodes[index];
-			git.deleteFile({
-				path: x.path,
-			}, function(){
+
+			deletePage(node.nodes[index], function(){
 				node.nodes.splice(index,1);	
-			}, function(resp){
-				console.log(resp);
-			});	
+			});
 		}
 
 		$scope.clickCancelCreateItem = function() {
 			$scope.isCreateItem = false;
 		}
-
 		$scope.clickViewModeCode = function() {
 			editor.setViewMode(true, false);
 		}

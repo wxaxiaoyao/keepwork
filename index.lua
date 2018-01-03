@@ -10,6 +10,7 @@ local group = nws.import("controller/group")
 local group_user = nws.import("controller/group_user")
 local file = nws.import("controller/file")
 local page = nws.import("controller/page")
+local user_visit_history = nws.import("controller/user_visit_history")
 
 nws.router(nws.config.api_url_prefix .. "test", test)
 nws.router(nws.config.api_url_prefix .. "user", user)
@@ -19,6 +20,7 @@ nws.router(nws.config.api_url_prefix .. "group", group)
 nws.router(nws.config.api_url_prefix .. "group_user", group_user)
 nws.router(nws.config.api_url_prefix .. "file", file)
 nws.router(nws.config.api_url_prefix .. "page", page)
+nws.router(nws.config.api_url_prefix .. "user_visit_history", user_visit_history)
 
 nws.router.default_handler = function(ctx) 
 	local url = ctx.request.url

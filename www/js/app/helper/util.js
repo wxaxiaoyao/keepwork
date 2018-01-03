@@ -101,6 +101,13 @@ define([
 		util.pushState({url:url});
 	}
 
+	util.setContentUrl = function(url) {
+		app.ng_objects.$rootScope.contentUrl = url;
+		app.ng_objects.$rootScope.isShowHeader = true;
+		app.ng_objects.$rootScope.isShowFooter = true;
+		util.$apply();
+	}
+
 	util.pushState = function(state) {
 		if (!state || !state.url) {
 			return ;
@@ -113,9 +120,7 @@ define([
 		}
 
 		window.history.pushState(state,"keepwork", relativeUrl);
-		app.ng_objects.$rootScope.contentUrl = state.url;
-		//app.ng_objects.$rootScope.loadContent(state.url);
-		util.$apply();
+		util.setContentUrl(state.url);
 	}
 
 	util.replaceState = function(state) {
@@ -124,9 +129,7 @@ define([
 		}
 		var relativeUrl = util.getRelativeUrl(state.url);
 		window.history.replaceState(state, "keepwork", relativeUrl);
-		app.ng_objects.$rootScope.contentUrl = state.url;
-		//app.ng_objects.$rootScope.loadContent(state.url);
-		util.$apply();
+		util.setContentUrl(state.url);
 	}
 	
 	window.onpopstate = function() {
@@ -135,9 +138,7 @@ define([
 		if (!state || !state.url) {
 			return;
 		}
-		app.ng_objects.$rootScope.contentUrl = state.url;
-		//app.ng_objects.$rootScope.loadContent(state.url);
-		util.$apply();
+		util.setContentUrl(state.url);
 	}
 
 	util.http = function(method, url, params, success, error) {
@@ -149,6 +150,7 @@ define([
 			error:error,
 		});
 	}
+
 	util.$http = function(obj) {
         var $http = app.ng_objects.$http;
 		var config = obj.config || {};

@@ -1,6 +1,5 @@
 
-local nws = commonlib.gettable("nws")
-local orm = commonlib.gettable("nws.orm")
+local orm = nws.gettable("nws.orm")
 local test = nws.inherit(orm)
 
 test:tablename("test")

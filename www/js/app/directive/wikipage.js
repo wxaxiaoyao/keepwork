@@ -65,7 +65,7 @@ define([
 						require([
 							ctrlPath,
 						], function(content) {
-							$rootScope.content = content;
+							$element.html($compile(content)($scope));
 							util.$apply();
 						});
 					} else {
@@ -102,6 +102,7 @@ define([
 				}
 
 				function render() {
+					//console.log("--------------", contentUrl);
 					if (content) {
 						$element.html($compile(content)($scope));
 						return;

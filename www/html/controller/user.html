@@ -1,4 +1,18 @@
 
-<div ng-controller="userController">
-	<div>this is a user page</div>
+<div ng-controller="userController" class="container">
+	<div class="row">
+		<div class="col-xs-2">
+			<div>
+				<img ng-src="{{userinfo.portrait}}"/>
+			</div>
+
+			<h4>{{userinfo.nickname}}</h4>
+			<h5>{{userinfo.username}}</h5>
+
+			<p>{{userinfo.desc}}</p>
+		</div>
+		<div class="col-xs-10">
+
+		</div>
+	</div>
 </div>

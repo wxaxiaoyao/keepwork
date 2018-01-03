@@ -239,7 +239,11 @@ define([
             }
         }
 
-        md.parse = function (text) {
+        md.parse = function (text, theme) {
+			theme = theme || "";
+			text = theme + '\n' + text;
+			themeLineCount = theme.split("\n").length;
+
             var tokenList = md.md.parse(text);
             var blockList = md.template.blockList;
             for (var i = 0; i < tokenList.length; i++) {
@@ -252,6 +256,8 @@ define([
 					block.text = token.text;
 					md.parseBlock(block, token);
 				}
+				block.token.start = block.token.start - themeLineCount;
+				block.token.end = block.token.end - themeLineCount;
 				blockList[i] = block;
             }
 

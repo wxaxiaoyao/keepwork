@@ -145,11 +145,13 @@ define([
 				if (node.type == "tree") {
 					node.text = node.name;
 					node.url = node.path;
+					node.pagename = node.text;
 					return true;
 				}
 				if (path.indexOf(".md") == path.length - 3) {
 					node.text = node.name.substring(0, node.name.length-3);
 					node.url = node.path.substring(0, node.path.length-3);
+					node.pagename = node.text;
 					return true;
 				}
 				return false;

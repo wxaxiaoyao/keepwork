@@ -7,7 +7,9 @@ define([
 	var config = app.objects.config;
 
     app.registerController("userController",['$scope', function ($scope) {
-		var $auth =app.ng_objects.$auth;
+		var $auth = app.ng_objects.$auth;
+
+			
 	}]);
 
 	return htmlContent;
