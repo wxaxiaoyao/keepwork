@@ -2,6 +2,7 @@
 local controller = nws.gettable("nws.controller")
 local page = controller:new("page")
 
+local gitlab = nws.import("helper/gitlab")
 local data_source_model = nws.import("model/data_source")
 local file_group_model = nws.import("model/file_group")
 local group_user_model = nws.import("model/group_user")
@@ -28,15 +29,19 @@ function page:visit_by_url(ctx)
 		return (errors:wrap(errors.NOT_PRIVILEGES))
 	end
 
-	local theme = user_theme_ctrl:get_best_match_by_path(ctx, {path:path}).data
+	local theme = user_theme_ctrl:get_best_match_by_path(ctx, {path = path}).data
 	local _, data_source = data_source_model:get_default_by_username({username=dst_username})
 
 	if not data_source then
 		return (errors:wrap(errors.SERVER_INNER_ERROR))
 	end
 
-	local git:init(data_source)
-	local content = git:get_content(path=path)
+	nws.log(theme)
+	nws.log(data_source)
+	local git = gitlab:init(data_source)
+	--local content = git:get_content({path=path})
 
 	return (errors:wrap(nil, {content = content, theme=theme, data_source=data_source}))
 end
+
+return page

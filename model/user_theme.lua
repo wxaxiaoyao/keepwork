@@ -29,3 +29,5 @@ function user_theme:get_by_username(params)
 	return nil, data
 end
 
+
+return user_theme

@@ -37,6 +37,7 @@ function user_theme:get_best_match_by_path(ctx, params)
 	local datas = user_theme_model:get_by_username(params)
 	local path, data = nil
 
+	nws.log(datas)
 	for _, x in ipairs(datas or {}) do
 		path = x.path
 		path = string.gsub(path, "[^/]*$", "")
@@ -49,3 +50,6 @@ function user_theme:get_best_match_by_path(ctx, params)
 
 	return (errors:wrap(nil, data))
 end
+
+
+return user_theme
