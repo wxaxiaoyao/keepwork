@@ -495,8 +495,12 @@ define([
 			//console.log("编辑器创建失败...");
 			//return;
 		//}
-		editor.md = mdwiki({containerId: "kp-editor-preview"});
 		editor.editor = initEditor(editor);
+		editor.md = mdwiki({
+			containerId: "kp-editor-preview",
+			editable: true,
+			editor: editor.editor,
+		});
 
 
 		var text = storage.sessionStorageGetItem("cmeditor_temp_content") || ("");

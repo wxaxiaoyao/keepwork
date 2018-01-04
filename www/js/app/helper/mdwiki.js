@@ -70,15 +70,23 @@ define([
         }
 
         block.applyModParams = function(modParams) {
-            var pos = block.textPosition;
+			console.log(block);
+            var from = block.token.start;
+			var to = block.token.end;
+			var editor = md.editor;
             modParams = modParams || {};
+
+			if (!editor) {
+				return;
+			}
             //console.log(modParams);
             if (typeof(modParams) == "object") {
                 //modParams = angular.toJson(modParams, 4);
                 modParams = mdconf.jsonToMd(modParams);
             }
-            editor.replaceRange(modParams + '\n', {line: pos.from + 1, ch: 0}, {
-                line: pos.to - 1,
+
+            editor.replaceRange(modParams + '\n', {line: from, ch: 0}, {
+                line: to - 2,
                 ch: 0
             });
         }
@@ -224,14 +232,22 @@ define([
 					block.modParams = undefined;
 				}
 
-				loadMod(block, function (mod) {
-					var htmlContent = mod.render(block);
+				block.isRender = false;
+				block.render = function(htmlContent) {
+					block.isRender = true;
 					if (block.isTemplate) {
 						md.template.htmlContent = htmlContent;
 						md.template.$scope && md.template.$scope.$apply();
 					} else {
 						block.htmlContent = htmlContent;
 						block.$scope && block.$scope.$apply();
+					}
+				}
+
+				loadMod(block, function (mod) {
+					var htmlContent = mod.render(block);
+					if (!block.isRender) {
+						block.render(htmlContent);	
 					}
 				}, function () {
 					console.log("加载模块" + block.modName + "失败");
@@ -259,6 +275,7 @@ define([
 				block.token.start = block.token.start - themeLineCount;
 				block.token.end = block.token.end - themeLineCount;
 				blockList[i] = block;
+				//console.log(blcok);
             }
 
 			var size = blockList.length;
