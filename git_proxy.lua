@@ -111,6 +111,12 @@ if res.status_code ~= 200 or not res.data or not res.data.data or not res.data.d
 end
 
 local data = res.data.data
+
+--log(data)
+
+log("request is ok => " .. ngx.var.dst_uri)
+log("token is => " ..  data.token)
+
 ngx.req.set_header("PRIVATE-TOKEN", data.token)
 
 return

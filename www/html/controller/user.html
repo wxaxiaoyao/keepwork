@@ -1,9 +1,18 @@
 
+<style>
+.kp_left_side_contianer {
+	padding: 20px 40px;
+}
+
+.kp_user_portrait {
+	max-width: 100%;
+}
+</style>
 <div ng-controller="userController" class="container">
 	<div class="row">
-		<div class="col-xs-2">
+		<div class="col-xs-3 kp_left_side_contianer">
 			<div>
-				<img ng-src="{{userinfo.portrait}}"/>
+				<img class="kp_user_portrait" ng-src="{{userinfo.portrait}}"/>
 			</div>
 
 			<h4>{{userinfo.nickname}}</h4>
@@ -11,8 +20,58 @@
 
 			<p>{{userinfo.desc}}</p>
 		</div>
-		<div class="col-xs-10">
-
+		<div class="col-xs-9">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#lastestRenewId" data-toggle="tab">最近更新</a>
+				</li>
+				<li>
+					<a href="#visitHistoryId" data-toggle="tab">访问历史</a>
+				</li>
+				<li>
+					<a href="#myFavoriteId" data-toggle="tab">我的收藏</a>
+				</li>
+				<li>
+					<a href="#myFollowerId" data-toggle="tab">我的关注</a>
+				</li>
+				<li>
+					<a href="#myFansId" data-toggle="tab">我的粉丝</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane fade in active" id="lastestRenewId">
+					<div ng-repeat="x in latest_renew track by $index">
+						<a src="x.url">
+							<span style="font-size:16px">{{x.pagename}}</span>
+							<span>--</span>
+							<span>{{x.url}}</span>
+						</a>
+						<!--<h5>{{x.pagename}}</h5>-->
+						<!--<p><a src="{{x.url}}">{{x.url}}</a></p>-->
+					</div>
+				</div>
+				<div class="tab-pane fade" id="visitHistoryId"> 
+					<div ng-repeat="x in visit_history track by $index">
+						<a src="{{x.url}}">
+							<label>url:</label>
+							<span>{{x.url}}</span>
+						</a>
+						<a>
+							<label>所属用户:</label>
+							<span>{{x.username}}</span>
+						</a>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="myFavoriteId">
+					浏览器的收藏功能实现
+				</div>
+				<div class="tab-pane fade" id="myFollowerId"> 
+					我关注的人
+				</div>
+				<div class="tab-pane fade" id="myFansId"> 
+					关注我的人
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

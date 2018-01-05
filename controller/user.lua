@@ -5,6 +5,8 @@ local user = controller:new("user")
 
 local user_model = nws.import("model/user")
 local data_source_model = nws.import("model/data_source")
+local page_model = nws.import("model/page")
+local user_visit_history_model = nws.import("model/user_visit_history")
 
 -- 用户登录
 function user:login(ctx)
@@ -99,36 +101,28 @@ function user:changepw(ctx)
 	return (errors:wrap(err))
 end
 
-function user:getDetailByName(params)
-	local userinfo = user_model:get_by_username(params).data
-	
+function user:get_detail_by_username(ctx)
+	local params = ctx.request:get_params()
+
+	if not params.username then
+		return (errors:wrap(PARAMS_ERROR))
+	end
+
+	local err, userinfo = user_model:get_by_username(params)
 	if not userinfo then
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
-	local date = common.get_date()
-	local year = os.date("%Y")
-	local activeObj = user_active_model:get_year_data_by_username({username=userinfo.username, year=year}).data
-	activeObj = convert_model.active_new_to_old(activeObj)
-	local list = site_model:find({username=userinfo.username, site_type = const.SITE_TYPE_ORGANIZATION}) or {}
-	local selfOrganizationObj = {total = #list, siteList = list}
-	local joinOrganizationObj = {total = 0, siteList = {}}
-	local hotSiteObj = {total = 0, siteList = {}}
-	local allSiteList = site_model:get_by_username({username=userinfo.username}).data
-	local fansObj = fans_model:get_by_username({username=userinfo.username}).data
-	local followUserObj = fans_model:get_by_fans_username({fans_username=userinfo.username}).data
-	local followSiteObj = {}
-	return errors:wrap(nil, {
-		userinfo = convert_model.user_new_to_old(userinfo),
-		activeObj = activeObj,
-		selfOrganizationObj = selfOrganizationObj,
-		joinOrganizationObj = joinOrganizationObj,
-		hotSiteObj = hotSiteObj,
-		allSiteList = allSiteList,
-		fansObj = {total = fansObj.total, userList = fansObj.list},
-		followObj = {followUserObj = followUserObj, followSiteObj = followSiteObj},
-		trendsObj = {},
-	})
+	-- 获取最近更新
+	local err, latest_renew = page_model:get_renew({username=params.username})
+
+	-- 获取访问历史
+	local err, visit_history = user_visit_history_model:get_by_username({username=params.username})
+	return (errors:wrap(nil, {
+		userinfo = userinfo,
+		latest_renew = latest_renew,
+		visit_history = visit_history,
+	}))
 end
 
 return user

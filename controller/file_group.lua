@@ -138,6 +138,7 @@ function file_group:is_accessible_by_path(ctx)
 		return (errors:wrap(errors.NOT_FOUND))
 	end
 	
+	nws.log(git)
 	return (errors:wrap(nil, git))
 end
 

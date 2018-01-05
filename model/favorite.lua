@@ -2,22 +2,21 @@
 -- author: xiaoyao
 -- date: 2017-9-28
 
-local orm = require("orm/orm")
+local orm = nws.gettable("nws.orm")
+local favorite = nws.inherit(orm)
 
-local favorite = common.inherit(orm)
 
 favorite:tablename("favorite")
 favorite:addfield("favorite_id", "number")
-favorite:addfield("username","string")
-favorite:addfield("favorite_username","string")
-favorite:addfield("favorite_sitename","string")
-favorite:addfield("extra_data","string")
+favorite:addfield("username","string")  -- 用户名
+favorite:addfield("classify","string")  -- 分类
+favorite:addfield("url","string")       -- url
 favorite:addfield("create_time", "string")
 favorite:addfield("update_time", "string")
 
 
 function favorite:set_favorite(params)
-	if not params.username or not params.favorite_username or not params.favorite_sitename then
+	if not params.username or not params.url then
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
