@@ -158,11 +158,16 @@ define([
 			savePageToDB(curPage);
 		}
 
+		function fileUpload(file, success, error) {
+			success && success("test");
+		}
+
 		function initEditor() {
 			editor = cmeditor({
 				selector:"#editor", 
 				$scope:$scope,
 				change: change,
+				fileUpload: fileUpload,
 				keyMap:{
 					"F11": function(cm) {
 						console.log("---------");

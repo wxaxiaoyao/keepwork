@@ -162,6 +162,14 @@ define([
 			//console.log(cm);
 		});
 		
+		editor.on("drop", function(cm, e){
+			fileUpload(editorObj, e);
+		});
+
+		editor.on("paste", function(cm, e){
+			paste(editorObj, e);
+		});
+
 		window.onresize = function() {
 			initEditorSize(editorObj);
 		}
@@ -178,6 +186,89 @@ define([
 
 		exportInterface(editorObj);
 		return editor;
+	}
+
+	function getEmptyLine(editor, lineNo) {
+		if(!angular.isNumber(lineNo)){
+			return 0;
+		}
+		var content = editor.getLine(lineNo);
+		while (content){
+			content = editor.getLine(++lineNo);
+		}
+		if (!angular.isDefined(content)){
+			editor.replaceRange("\n",{line: lineNo, ch: 0});
+		}
+		return lineNo;
+	}
+
+	function line_keyword_nofocus(editor, lineNo, content) {
+		var originContent = editor.getLine(lineNo);
+		var offsetX = originContent && originContent.length;
+		editor.replaceRange(content, CodeMirror.Pos(lineNo, 0), CodeMirror.Pos(lineNo, offsetX));
+	};
+
+	function paste(editor, e) {
+		if (!(e.clipboardData && e.clipboardData.items.length)) {
+			console.log("该浏览器不支持操作");
+			return;
+		}
+		for (var i = 0; i < e.clipboardData.items.length; i++) {
+			var item = e.clipboardData.items[i];
+			if (item.kind === "string") {
+
+			} else if(item.kind === "file") {
+				var pasteFile = item.getAsFile();
+				file_upload(editor, pasteFile);
+			}
+		}
+	}
+
+	function file_upload(editor, file) {
+		console.log(file);
+		var edit = editor.editor;
+		var fileReader = new FileReader();
+		var cursor = edit.getCursor();
+		var insertLineNum = getEmptyLine(edit, cursor.line);
+		console.log(cursor, insertLineNum);
+		fileReader.onloadstart = function() {
+			var onloadInfo = "***正在获取文件 0/"+ file.size +"***";
+			console.log(onloadInfo);
+			line_keyword_nofocus(edit, insertLineNum, onloadInfo);
+		}
+		fileReader.onprogress = function(f) {
+			var onprogressInfo = "***正在获取文件 "+ f.loaded +"/" + file.size  + "***";
+			console.log(onprogressInfo);
+			line_keyword_nofocus(edit, insertLineNum, onprogressInfo);
+		}
+		fileReader.onload = function() {
+			console.log("upload file to server");
+			file.content = fileReader.result;
+			editor.fileUpload(file, function(url){
+				url = url || "";
+				if (/image\/\w+/.test(file.type)) {
+					line_keyword_nofocus(edit, insertLineNum, '![](' + url + ")");
+				} else {
+					line_keyword_nofocus(edit, insertLineNum, '[](' + url + ")");
+				}
+			}, function(){
+				line_keyword_nofocus(edit, insertLineNum, '');
+			})
+		}
+		fileReader.readAsDataURL(file);
+	}
+
+	function fileUpload(editor, e) {
+		e.preventDefault();
+		if (!editor.fileUpload || !FileReader || !e.dataTransfer || e.dataTransfer.files.length == 0)  {
+			console.log("file upload failed", editor.fileUpload, FileReader);
+			return;
+		}
+
+		var files = e.dataTransfer.files;
+		for (var i = 0; i < files.length; i++) {
+			file_upload(editor, files[i]);
+		}
 	}
 
 	function initEditorSize(editorObj) {
@@ -485,6 +576,7 @@ define([
 			selector: options.selector, 
 			$scope: options.$scope,
 			change: options.change,
+			fileUpload: options.fileUpload,
 			viewChange: options.viewChange,
 			options: options,
 		};
