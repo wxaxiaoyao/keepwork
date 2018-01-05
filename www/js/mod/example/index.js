@@ -3,12 +3,14 @@ define([
 	"text!wikimod/example/index.html",
 ], function(htmlContent){
 	function render(wikiBlock) {
-		app.registerController("exampleController", ["$scope", function($scope){
-			//console.log($scope);
-		}]);
-
 		//console.log(wikiBlock);
-		wikiBlock.$scope.params = wikiBlock.modParams || {};
+		var $scope =  wikiBlock.$scope;
+
+		$scope.params = wikiBlock.modParams || {};
+
+		$scope.change = function() {
+			wikiBlock.applyModParams($scope.params);
+		}
 		return htmlContent;
 	}
 	return {
