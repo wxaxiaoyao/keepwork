@@ -6,7 +6,9 @@ local user = controller:new("user")
 local user_model = nws.import("model/user")
 local data_source_model = nws.import("model/data_source")
 local page_model = nws.import("model/page")
-local user_visit_history_model = nws.import("model/user_visit_history")
+local visit_history_model = nws.import("model/visit_history")
+local favorite_model = nws.import("model/favorite")
+local fans_model = nws.import("model/fans")
 
 -- 用户登录
 function user:login(ctx)
@@ -58,13 +60,14 @@ function user:register(ctx)
 	return errors:wrap(nil, {token=token, userinfo=userinfo})
 end
 
+-- 获取已认证的用户信息
 function user:get(ctx)
-	local token = ctx.token
-	if not token then
+	local username = ctx.username
+	if not username then
 		return (errors:wrap(errors.NOT_PRIVILEGES))
 	end
 	
-	local err, userinfo = user_model:get_by_username({username=token.username})
+	local err, userinfo = user_model:get_by_username({username=username})
 	if not userinfo then
 		return (errors:wrap(err))
 	end
@@ -75,13 +78,12 @@ function user:get(ctx)
 	return (errors:wrap(nil, userinfo))
 end
 
-function user:get_by_username(ctx) 
-	local params = ctx.request:get_params()
-end
-
+-- 更新用户信息
 function user:update_by_username(ctx)
-	local username = ctx.username;
+	local username = ctx.username
 	local params = ctx.request:get_params()
+	params.username = username
+
 	local err, data = user_model:update_by_username(params)
 
 	return (errors:wrap(err, data))
@@ -101,7 +103,8 @@ function user:changepw(ctx)
 	return (errors:wrap(err))
 end
 
-function user:get_detail_by_username(ctx)
+-- 通过用户名获取用户信息
+function user:get_by_username(ctx)
 	local params = ctx.request:get_params()
 
 	if not params.username then
@@ -109,20 +112,8 @@ function user:get_detail_by_username(ctx)
 	end
 
 	local err, userinfo = user_model:get_by_username(params)
-	if not userinfo then
-		return errors:wrap(errors.PARAMS_ERROR)
-	end
 
-	-- 获取最近更新
-	local err, latest_renew = page_model:get_renew({username=params.username})
-
-	-- 获取访问历史
-	local err, visit_history = user_visit_history_model:get_by_username({username=params.username})
-	return (errors:wrap(nil, {
-		userinfo = userinfo,
-		latest_renew = latest_renew,
-		visit_history = visit_history,
-	}))
+	return (errors:wrap(err , userinfo))
 end
 
 return user

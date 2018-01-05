@@ -57,7 +57,13 @@ function page:visit_by_url(ctx)
 end
 
 -- 获取最近更新页
-function page:get_renew(params)
+function page:get_renew_by_username(ctx)
+	local params = ctx.request:get_params()
+
+	if not params.username then
+		return (errors:wrap(errors.PARAMS_ERROR))
+	end
+
 	local err, data = page_model:get_renew(params)
 
 	return (errors:wrap(err, data))

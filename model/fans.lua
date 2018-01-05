@@ -2,15 +2,18 @@
 -- author: xiaoyao
 -- date: 2017-9-28
 
-local orm = require("orm/orm")
+local orm = nws.gettable("nws.orm")
 
-local fans = common.inherit(orm)
+local fans = nws.inherit(orm)
 
 fans:tablename("fans")
 fans:addfield("fans_id", "number")
 fans:addfield("username","string")
-fans:addfield("fans_username","string")
-fans:addfield("extra_data","string")
+fans:addfield("nickname", "string")
+fans:addfield("portrait", "string")
+fans:addfield("fans_username", "string")
+fans:addfield("fans_nickname", "string")
+fans:addfield("fans_portrait", "string")
 fans:addfield("create_time", "string")
 fans:addfield("update_time", "string")
 
@@ -40,7 +43,7 @@ function fans:get_one(params)
 		fans_username = params.fans_username,
 	})
 
-	return errors:wrap(nil, data)
+	return nil, data
 end
 
 -- 删除
@@ -54,7 +57,7 @@ function fans:delete_one(params)
 		fans_username = params.fans_username,
 	})
 
-	return errors:wrap(nil, data)
+	return errors:wrap(err)
 end
 
 -- 获得用户粉丝数量
@@ -65,7 +68,7 @@ function fans:get_count_by_username(params)
 
 	local total = self:count({username = params.username})
 
-	return errors:wrap(nil, total)
+	return nil, total 
 end
 
 -- 获得用户的粉丝
@@ -74,10 +77,9 @@ function fans:get_by_username(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
-	local total = self:count({username = params.username})
 	local list = self:find({username = params.username})
 
-	return errors:wrap(nil, {total = total, list = list})
+	return nil, list
 end
 
 -- 获得用户关注
@@ -86,10 +88,9 @@ function fans:get_by_fans_username(params)
 		return errors:wrap(errors.PARAMS_ERROR)
 	end
 
-	local total = self:count({fans_username = params.fans_username})
 	local list = self:find({fans_username = params.fans_username})
 
-	return errors:wrap(nil, {total = total, list = list})
+	return nil, list
 end
 
 -- 是否关注
@@ -101,10 +102,10 @@ function fans:is_fans(params)
 	local data = self:find_one({username = params.username, fans_username = params.fans_username})
 	
 	if not data then
-		return errors:wrap(nil, 0)
+		return nil, 0
 	end
 
-	return errors:wrap(nil, 1)
+	return nil, 1
 end
 
 return fans
