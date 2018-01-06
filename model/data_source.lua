@@ -326,10 +326,10 @@ function data_source:get_default_by_username(params)
 	end
 
 	local data = self:find_one({username=params.username, is_default = 1})
-	if not data then
-		self:create_gitlab_data_source(params)
-		data = self:find_one({username=params.username, is_default = 1})
-	end
+	--if not data then
+		--self:create_gitlab_data_source(params)
+		--data = self:find_one({username=params.username, is_default = 1})
+	--end
 
 	return nil, data
 end
