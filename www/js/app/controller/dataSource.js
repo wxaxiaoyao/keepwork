@@ -25,6 +25,10 @@ define([
 				return;
 			}
 
+			x.api_base_url = x.api_base_url.trim();
+			x.raw_base_url = x.raw_base_url.trim();
+			x.token = x.token.trim();
+
 			if (!$scope.isModify) {
 				for (var i = 0; i < $scope.dataSourceList.length; i++) {
 					var t = $scope.dataSourceList[i];
@@ -48,6 +52,10 @@ define([
 		$scope.clickSetDefault = function(x) {
 			util.http("POST", config.apiUrlPrefix + "data_source/set_default_data_source", {data_source_id: x._id}, function(){
 				getDataSourceList();
+				
+				var user = app.objects.user;
+				user.default_data_source = x;
+				app.setUser(user);
 			});
 		}
 
