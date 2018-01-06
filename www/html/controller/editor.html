@@ -78,15 +78,18 @@
 		<div class="kp_filelist_container">
 			<ul class="nav nav-tabs">
 				<li class="active">
-					<a href="#filelist" data-toggle="tab">文件</a>
+					<a href="#filelistId" data-toggle="tab">文件</a>
 				</li>
 				<li>
-					<a href="#toolbar" data-toggle="tab">工具</a>
+					<a href="#moduleId" data-toggle="tab">模块</a>
+				</li>
+				<li>
+					<a href="#helperId" data-toggle="tab">帮助</a>
 				</li>
 			</ul>
 			<!--已打开文件列表-->
 			<div class="tab-content">
-				<div class="tab-pane fade in active" id="filelist">
+				<div class="tab-pane fade in active" id="filelistId">
 					<div>
 						<div>
 							<span>已打开</span>
@@ -148,8 +151,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="tab-pane fade" id="toolbar">
-					this is a test toolbar
+				<div class="tab-pane fade" id="moduleId">
+					<wikipage data-content="moduleContent" data-content-url="moduleContentUrl"></wikipage>
+				</div>
+				<div class="tab-pane fade" id="helperId">
+					帮助文档
 				</div>
 			</div>
 			<div class="kp_view_mode">

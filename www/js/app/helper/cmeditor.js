@@ -219,6 +219,8 @@ define([
 
 			} else if(item.kind === "file") {
 				var pasteFile = item.getAsFile();
+				pasteFile.name = undefined;
+				pasteFile.filename = (new Date()).getTime();
 				file_upload(editor, pasteFile);
 			}
 		}
@@ -247,9 +249,9 @@ define([
 			editor.fileUpload(file, function(url){
 				url = url || "";
 				if (/image\/\w+/.test(file.type)) {
-					line_keyword_nofocus(edit, insertLineNum, '![](' + url + ")");
+					line_keyword_nofocus(edit, insertLineNum, '!['+ (file.filename || file.name) + '](' + url + ")");
 				} else {
-					line_keyword_nofocus(edit, insertLineNum, '[](' + url + ")");
+					line_keyword_nofocus(edit, insertLineNum, '[' + (file.filename || file.name) + '](' + url + ")");
 				}
 			}, function(){
 				line_keyword_nofocus(edit, insertLineNum, '');

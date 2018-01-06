@@ -3,9 +3,12 @@ define([
     'app',
 	"helper/md/mdconf",
 	"helper/md/md",
+	'directive/wikiBlock',
+	'directive/wikiBlockContainer',
 ], function(app, mdconf, markdown){
+    app.objects.mds = {};
     var instCount = 0;
-    var mds = {};
+	var mds = app.objects.mds;
     // 获取md
     function getMd(mdName) {
 		//return app.get('app.md.' + mdName);
@@ -30,106 +33,6 @@ define([
             errcb && errcb();
         });
     }
-
-    function extendBlock($scope, params, isTemplate) {
-		//if ($scope.$kp_block) {
-			//return $scope.$kp_block;
-		//}
-
-		var block = undefined;
-		var mdName = undefined;
-		var md = undefined;
-		if (isTemplate) {
-			mdName = decodeURI(params);
-			md = getMd(mdName);
-			block = md.template;
-		} else {
-			block = $scope.$eval(params);
-		}
-		if(!block) {
-            return block;
-		}
-		
-		$scope.$kp_block = block;
-		block.$scope = $scope;
-		block.$apply = function() {
-			setTimeout(function(){
-				block.$scope && block.$scope.$apply();
-				//if (block.isTemplate) {
-					//for (var i = 0; i < block.blockList; i++) {
-						//var tempBlock = block.blockList[i];
-						//tempBlock.$scope && tempBlock.$scope.$apply();
-					//}
-				//}
-			});
-		};
-		
-		md = getMd(block.mdName);
-        if (!md.editable || !md.editor) {
-            return block;
-        }
-
-        block.applyModParams = function(modParams) {
-			console.log(block);
-            var from = block.token.start;
-			var to = block.token.end;
-			var editor = md.editor;
-            modParams = modParams || {};
-
-			if (!editor) {
-				return;
-			}
-            //console.log(modParams);
-            if (typeof(modParams) == "object") {
-                //modParams = angular.toJson(modParams, 4);
-                modParams = mdconf.jsonToMd(modParams);
-            }
-
-            editor.replaceRange(modParams + '\n', {line: from, ch: 0}, {
-                line: to - 2,
-                ch: 0
-            });
-        }
-
-		return block;
-    }
-
-    // 定义扩展指令
-    app.registerDirective("wikiBlock", ['$compile', function ($compile) {
-        return {
-            restrict:'E',
-            controller: ['$scope', '$attrs', '$element', function ($scope, $attrs, $element) {
-				var block = $scope.$kp_block;
-				if (!block) {
-					block = extendBlock($scope, $attrs.params);
-				}
-
-				var oldHtmlContent;
-				var render = function(newVal) {
-					if (!newVal || oldHtmlContent == newVal) {
-						return;
-					}
-					$element.html($compile(newVal)($scope));
-					oldHtmlContent = newVal;
-					setTimeout(function() { $scope.$apply(); });
-				}
-				$scope.$watch('$kp_block.htmlContent', render);
-            }],
-        };
-    }]);
-
-	// 定义模块编辑器
-	app.registerDirective("wikiBlockContainer", ["$compile", function($compile){
-		return {
-			restrict:'E',
-			//scope: true,
-			template: '<div><wiki-block data-params="$kp_block"></wiki-block></div>',
-			controller:['$scope', '$attrs', '$element', function($scope, $attrs, $element) {
-				var block = extendBlock($scope, $attrs.params, $attrs.template);
-				block.$element = $element;
-			}],
-		}
-	}]);
 
     // md 构造函数
     function mdwiki(options) {
@@ -245,7 +148,14 @@ define([
 				}
 
 				loadMod(block, function (mod) {
-					var htmlContent = mod.render(block);
+					var htmlContent = undefined;
+					if (typeof(mod) == "function") {
+						htmlContent = mod(block);	
+					} else if(typeof(mod) == "object") {
+						htmlContent = mod.render(block);
+					} else {
+						htmlContent = mod;
+					}
 					if (!block.isRender) {
 						block.render(htmlContent);	
 					}

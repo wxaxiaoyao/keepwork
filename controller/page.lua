@@ -7,7 +7,7 @@ local page_model = nws.import("model/page")
 local data_source_model = nws.import("model/data_source")
 local file_group_model = nws.import("model/file_group")
 local group_user_model = nws.import("model/group_user")
-local user_visit_history_model = nws.import("model/user_visit_history")
+local visit_history_model = nws.import("model/visit_history")
 
 local file_ctrl = nws.import("controller/file")
 local user_theme_ctrl = nws.import("controller/user_theme")
@@ -50,7 +50,7 @@ function page:visit_by_url(ctx)
 
 	-- 添加访问历史
 	if username then
-		user_visit_history_model:set({username = username, url = url})
+		visit_history_model:set({username = username, url = url})
 	end
 
 	return (errors:wrap(nil, {content = content, page=url_page, theme=theme, data_source=data_source}))

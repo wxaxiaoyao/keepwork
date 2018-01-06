@@ -42,7 +42,7 @@ local proxytoken = headers["proxytoken"] or args.proxytoken or ""
 local proxygittype= headers["proxygittype"] or "gitlab"
 
 --local auth_username = luajwt.
-ngx.var.dst_uri = proxyurlprefix .. ngx.var.request_uri
+--ngx.var.dst_uri = proxyurlprefix .. ngx.var.request_uri
 
 if method == "OPTIONS" then
 	ngx.header["Access-Control-Allow-Origin"] = "*"
@@ -123,6 +123,8 @@ log("token is => " ..  data.token)
 	--ngx.var.dst_uri = ngx.var.dst_uri .. "?"
 --end
 --ngx.var.dst_uri = ngx.var.dst_uri .. "private_token=" .. data.token
+
+ngx.var.dst_uri = data.raw_base_url .. ngx.var.request_uri
 log("request is ok => " .. ngx.var.dst_uri)
 
 ngx.req.set_header("PRIVATE-TOKEN", data.token)

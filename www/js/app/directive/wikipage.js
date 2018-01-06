@@ -84,6 +84,7 @@ define([
 								var git = app.objects.dataSource(data.data_source);
 								var theme = data.theme || {};
 								var content = data.content;
+								console.log(url);
 								if (content) {
 									renderMDContent(content, theme.content);
 								} else {

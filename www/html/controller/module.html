@@ -1,0 +1,21 @@
+
+<div ng-controller="moduleController">
+	<div ng-show='showType=="module_list"'>
+	</div>
+	<div ng-show='showType="module_edit"'>
+		<div ng-repeat="data in datas track by $index">
+			<div ng-if='data.$data.type == "text"'>
+				<div>{{data.$data.name}}</div>
+				<div>
+					<input ng-model="data.text"/>
+				</div>
+			</div>
+			<!--<div ng-if='data.type == "link"'>-->
+				<!--<div>{{data.name}}</div>-->
+				<!--<div>-->
+					<!--<input ng-model="data.text"/>-->
+				<!--</div>-->
+			<!--</div>-->
+		</div>
+	</div>
+</div>

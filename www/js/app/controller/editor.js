@@ -7,8 +7,9 @@ define([
 	'markdown-it',
 	'helper/cmeditor',
 	'helper/dataSource/gitlab',
+	'controller/module',
 	'text!html/controller/editor.html',
-], function (app, markdownit, cmeditor, gitlab, htmlContent) {
+], function (app, markdownit, cmeditor, gitlab, moduleHtml, htmlContent) {
 	var $auth = app.ng_objects.$auth;
 	var $rootScope = app.ng_objects.$rootScope;
 	var util = app.objects.util;
@@ -94,6 +95,8 @@ define([
 
 			$rootScope.isShowHeader = false;
 
+			$scope.moduleContent = moduleHtml;
+
 			loadFilelist();
 		}
 
@@ -159,7 +162,23 @@ define([
 		}
 
 		function fileUpload(file, success, error) {
-			success && success("test");
+			var filename = "tmp/" + (file.filename || file.name || (new Date()).getTime());
+			var content = file.content;
+			if (/image\/\w+/.test(file.type)) {
+				if (!file.name) {
+					var imgType = file.type.match(/image\/([\w]+)/);
+					filename += (imgType ? imgType[1] : "");
+				}
+				git.uploadImage({
+					path: filename,
+					content: content,
+				}, success, error);
+			} else {
+				git.uploadImage({
+					path: filename,
+					content: content,
+				}, success, error);
+			}
 		}
 
 		function initEditor() {

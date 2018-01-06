@@ -60,8 +60,8 @@ define([
 
 	util.parseUrl = function(url) {
         var hostname = window.location.hostname;
-        var pathname = decodeURI(window.location.pathname);
-		var url = url || util.getAbsoluteUrl(pathname);
+		var pathname = window.location.pathname;
+		var url = decodeURI(url || util.getAbsoluteUrl(pathname));
         var paths = url.split("/").slice(1);
 
         return {

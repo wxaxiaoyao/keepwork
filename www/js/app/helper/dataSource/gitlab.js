@@ -34,7 +34,8 @@ define([
 
 
 		gitlab.getRawContentUrl = function(params) {
-			return this.proxyRawBaseUrl + '/' + this.externalUsername + '/' + this.projectName.toLowerCase() + '/raw/' +(params.ref || "master") + '/' + params.path + "?proxyurlprefix=" + this.proxyUrlPrefix;
+			//return this.proxyRawBaseUrl + '/' + this.externalUsername + '/' + this.projectName.toLowerCase() + '/raw/' +(params.ref || "master") + '/' + params.path + "?proxyurlprefix=" + this.proxyUrlPrefix;
+			return this.proxyRawBaseUrl + '/' + this.externalUsername + '/' + this.projectName.toLowerCase() + '/raw/' +(params.ref || "master") + '/' + params.path;
 		}
 
 		gitlab.getGitFilePath = function(params) {
