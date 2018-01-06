@@ -27,8 +27,8 @@ define([
 			self.projectId = config.project_id;
 			self.lastCommitId = config.last_commit_id || "master";
 			self.proxyToken = app.ng_objects.$auth.getToken();
-			self.proxyUrlPrefix = self.apiBaseUrl.match(/(http[s]:\/\/[^\/]+)/)[1];
-			self.proxyApiBaseUrl = config.api_base_url.replace(/http[s]:\/\/[^\/]+/, proxyUrlPrefix);
+			self.proxyUrlPrefix = self.apiBaseUrl.match(/(http[s]?:\/\/[^\/]+)/)[1];
+			self.proxyApiBaseUrl = config.api_base_url.replace(/http[s]?:\/\/[^\/]+/, proxyUrlPrefix);
 			self.proxyRawBaseUrl = proxyUrlPrefix;
 		}
 
