@@ -61,6 +61,8 @@ if proxygittype == "gitlab" then
 	-- tree 路径
 	file_path = args.path
 
+	log(file_path)
+
 	-- 部分接口直接放行
 	if string.match(path, '/repository/tree$') then
 		return 
@@ -114,8 +116,14 @@ local data = res.data.data
 
 --log(data)
 
-log("request is ok => " .. ngx.var.dst_uri)
 log("token is => " ..  data.token)
+--if (string.find(ngx.var.dst_uri, '%?')) then
+	--ngx.var.dst_uri = ngx.var.dst_uri .. "&"
+--else
+	--ngx.var.dst_uri = ngx.var.dst_uri .. "?"
+--end
+--ngx.var.dst_uri = ngx.var.dst_uri .. "private_token=" .. data.token
+log("request is ok => " .. ngx.var.dst_uri)
 
 ngx.req.set_header("PRIVATE-TOKEN", data.token)
 
