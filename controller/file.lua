@@ -29,7 +29,7 @@ function file:get_access_level(username, path)
 		return const.FILE_ACCESS_WRITE_LEVEL
 	end
 
-	dst_username = string.match("[^_]*")
+	dst_username = string.match(dst_username, "[^_]*")
 
 	local file_group_list = file_group_model:get_by_username({username = dst_username})
 	local group_path_len = 0
