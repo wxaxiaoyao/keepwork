@@ -118,19 +118,20 @@
 								</span>
 							</div>
 							<div class="pull-right">
-								<img ng-click="clickNewFile(node)" ng-src='{{imgsPath + "new_file.png"}}'/>
-								<img ng-click="clickNewDir(node)" ng-src='{{imgsPath + "new_dir.png"}}'/>
+								<img ng-click='clickNewFile(node, "blob")' ng-src='{{imgsPath + "new_file.png"}}'/>
+								<img ng-click='clickNewFile(node, "tree")' ng-src='{{imgsPath + "new_dir.png"}}'/>
 							</div>
 						</div>
 						<div class="clearfix"></div>
 						<div ng-show="isCreateItem">
-							<div style="display:inline-block; width:80%; margin:0px; padding:0px;">
-								<input class="kp_input_text" type="text" style="width:100%" ng-model="$parent.newItemName"/>
-							</div>
-							<div style="display:inline; width:20%; margin:0px; padding:0px;">
-								<i ng-click="clickCreateItem(node)" class="fa fa-check" aria-hidden="true"></i>
-								<i ng-click="clickCancelCreateItem(node)" class="fa fa-times" aria-hidden="true"></i>
-							</div>
+							<input id="fileInputId" class="kp_input_text" type="text" ng-model="$parent.newItemName"/>
+							<!--<div style="display:inline-block; width:80%; margin:0px; padding:0px;">-->
+								<!--<input id="fileInputId" class="kp_input_text" type="text" style="width:100%" ng-model="$parent.newItemName"/>-->
+							<!--</div>-->
+							<!--<div style="display:inline; width:20%; margin:0px; padding:0px;">-->
+								<!--<i ng-click="clickCreateItem(node)" class="fa fa-check" aria-hidden="true"></i>-->
+								<!--<i ng-click="clickCancelCreateItem(node)" class="fa fa-times" aria-hidden="true"></i>-->
+							<!--</div>-->
 						</div>
 						<div ng-show="!node.isRootNode || node.showSubNode">
 							<div ng-repeat="x in node.nodes track by $index">

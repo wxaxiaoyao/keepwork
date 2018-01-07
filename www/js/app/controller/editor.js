@@ -376,20 +376,28 @@ define([
 			$scope.curPage = curPage;
 		}
 
-		$scope.clickNewFile = function(node) {
+		$scope.clickNewFile = function(node, type) {
 			$scope.isCreateItem = true;
-			$scope.createItemType = "blob";
+			$scope.createItemNode = node;
+			$scope.createItemType = type;
+			setTimeout(function(){
+				$("#fileInputId")[0].focus();
+			});
 		}
 
-		$scope.clickNewDir = function(node) {
-			$scope.isCreateItem = true;
-			$scope.createItemType = "tree";
+		$scope.clickCancelCreateItem = function() {
+			$scope.isCreateItem = false;
+			$scope.newItemName = "";
+			$scope.createItemNode = undefined;
+			util.$apply();
 		}
 
 		$scope.clickCreateItem = function(node) {
-			if (!$scope.newItemName) {
+			if (!$scope.newItemName || !$scope.createItemNode) {
+				$scope.clickCancelCreateItem();
 				return;
 			}
+			node = node || $scope.createItemNode;
 			for (var i = 0; i < node.nodes.length; i++) {
 				var temp = node.nodes[i];
 				if (temp.name == $scope.newItemName && temp.type == $scope.createItemType) {
@@ -467,9 +475,6 @@ define([
 		$scope.clickOpenedListBtn = function(){
 			$scope.showOpenedList = !$scope.showOpenedList;
 		}
-		$scope.clickCancelCreateItem = function() {
-			$scope.isCreateItem = false;
-		}
 		$scope.clickViewModeCode = function() {
 			editor.setViewMode(true, false);
 		}
@@ -493,6 +498,17 @@ define([
 			$rootScope.user = undefined;
 			util.go("/www/login");
 		}
+
+		$(document).keyup(function(event){
+			//console.log(event.keyCode);
+			if ($("#fileInputId").is(":focus")) {
+				if(event.keyCode == "13" ) {
+					$scope.clickCreateItem();
+				} else if (event.keyCode == "27") {
+					$scope.clickCancelCreateItem();
+				}
+			}
+		});
 
 		$scope.$watch("$viewContentLoaded", function(){
 			if ($auth.isAuthenticated()) {
