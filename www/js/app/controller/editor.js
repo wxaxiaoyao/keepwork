@@ -20,6 +20,8 @@ define([
 	var editor = undefined;
 	var git = gitlab();
 
+	var saveTimerMap = {};
+	var saveInterval = 3 * 60 * 1000; // 保存间隔3分钟
 	var allPageMap = {};
 	var curPage = undefined;
 
@@ -147,6 +149,12 @@ define([
 				delete $scope.openedPageMap[page.url];
 				saveOpenedPageList();
 			}
+
+			if (saveTimerMap[page.url]) {
+				clearTimeout(saveTimerMap[page.url]);
+				delete saveTimerMap[page.url];
+			}
+
 			delete allPageMap[page.url];
 			pageDB.deleteItem(page.url);
 
@@ -159,8 +167,34 @@ define([
 			}, error);	
 		}
 
+		// 自动保存
+		function autoSavePage(page) {
+			var timer = saveTimerMap[page.url];
+			
+			if (!page.isModify) {
+				return;
+			}	
+
+			timer && clearTimeout(timer);
+			saveTimerMap[page.url] = setTimeout(function(){
+				saveTimerMap[page.url] = undefined;
+
+				if (!page.isModify) {
+					return;
+				}
+
+				savePage(page, function(){
+					console.log("自动保存成功");
+				}, function(){
+					console.log("自动保存失败");
+				});
+			}, saveInterval);
+		}
+
+		// 保存页面
 		function savePage(page, success, error) {
 			//console.log(page);
+			page.isSaving = true;
 			git.writeFile({
 				path:page.path, 
 				content:page.content
@@ -172,6 +206,10 @@ define([
 					content: page.content,
 				});
 
+				page.isModify = false;
+				page.isConflict = false;
+				page.isSaving = false;
+				pageDB.deleteItem(page.url);
 				success && success();
 			}, error);
 		}
@@ -193,6 +231,7 @@ define([
 
 			//console.log(filename, text);
 			
+			autoSavePage(curPage);
 			savePageToDB(curPage);
 		}
 
@@ -242,9 +281,6 @@ define([
 			var page = curPage;
 			savePage(page, function() {
 				console.log("保存成功!!!");
-				page.isModify = false;
-				page.isConflict = false;
-				pageDB.deleteItem(page.url);
 			});
 		}
 
@@ -329,7 +365,7 @@ define([
 			
 			saveOpenedPageList();
 
-			if (curPage.url == node.url) {
+			if (curPage && curPage.url == node.url) {
 				curPage = undefined;
 				for (var key in $scope.openedPageMap) {
 					curPage = $scope.openedPageMap[key];
@@ -365,6 +401,7 @@ define([
 			var path = node.path + "/" + $scope.newItemName + ($scope.createItemType == "tree" ? "/.gitkeep":".md");
 			node.nodes.push({
 				path: path,
+				url: $scope.createItemType == "tree" ? path : (node.path + "/" + $scope.newItemName),
 				content:"",
 				name: $scope.newItemName,
 				text: $scope.newItemName,
@@ -373,7 +410,7 @@ define([
 
 			$scope.clickCancelCreateItem();
 			if ($scope.createItemType == "tree") {
-				git.writefile({
+				git.writeFile({
 					path:path,
 					content:"",
 				}, function(data) {
@@ -387,9 +424,12 @@ define([
 				$event.stopPropagation();
 			}
 
+			node.isSaving = true;
 			git.getContent({path:node.path}, function(content) {
 				node.content = content;
 				node.isConflict = false;
+				node.isModify = false;
+				node.isSaving = false;
 				pageDB.deleteItem(node.url);
 				if (curPage && curPage.url == node.url) {
 					openPage(curPage);

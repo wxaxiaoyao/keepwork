@@ -96,7 +96,7 @@
 						<div ng-show="showOpenedList" ng-repeat="(k, x) in openedPageMap">
 							<div class="kp_file_item_container" ng-click="clickItem(x)" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 								<span data-toggle="tooltip" title="{{x.url}}" >
-									<i ng-class='x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"' aria-hidden="true"></i>
+									<i ng-class='x.isModify ? (x.isSaving ? "fa fa-refresh fa-spin" : "fa fa-pencil-square-o") : "fa fa-file-o"' aria-hidden="true"></i>
 									<span>{{x.text}}</span>
 								</span>
 								<span class="pull-right kp_padding_right_10 kp_file_item_btn_group">
@@ -132,11 +132,11 @@
 								<i ng-click="clickCancelCreateItem(node)" class="fa fa-times" aria-hidden="true"></i>
 							</div>
 						</div>
-						<div ng-show="node.showSubNode">
+						<div ng-show="!node.isRootNode || node.showSubNode">
 							<div ng-repeat="x in node.nodes track by $index">
 								<div ng-click="clickItem(x)" class="kp_file_item_container" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 									<span data-toggle="tooltip" title="{{x.url}}">
-										<i ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isModify ? "fa fa-pencil-square-o" :"fa fa-file-o")' aria-hidden="true"></i>
+										<i ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isModify ? (x.isSaving ? "fa fa-refresh fa-spin" : "fa fa-pencil-square-o") :"fa fa-file-o")' aria-hidden="true"></i>
 										<span>{{x.text}}</span>
 									</span>
 									<span class="pull-right kp_padding_right_10 kp_file_item_btn_group">
