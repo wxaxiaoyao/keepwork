@@ -72,8 +72,6 @@
 </style>
 
 <div ng-controller="editorController" class="kp_editor_container">
-	<!--<div class="kp_toolbar_container">-->
-	<!--</div>-->
 	<div style="height:100%;"> 
 		<div class="kp_filelist_container">
 			<ul class="nav nav-tabs">
@@ -89,12 +87,13 @@
 			</ul>
 			<!--已打开文件列表-->
 			<div class="tab-content">
-				<div class="tab-pane fade in active" id="filelistId">
+				<div class="tab-pane fade in active kp_forbit_copy" id="filelistId">
 					<div>
-						<div>
+						<div ng-click="clickOpenedListBtn()">
+							<i ng-class='showOpenedList ? "fa fa-chevron-down" : "fa fa-chevron-right"' aria-hidden="true"></i>
 							<span>已打开</span>
 						</div>
-						<div ng-repeat="(k, x) in openedPageMap">
+						<div ng-show="showOpenedList" ng-repeat="(k, x) in openedPageMap">
 							<div class="kp_file_item_container" ng-click="clickItem(x)" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 								<span data-toggle="tooltip" title="{{x.url}}" >
 									<i ng-class='x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"' aria-hidden="true"></i>
@@ -113,7 +112,7 @@
 					<div style="margin-top:20px">
 						<div style="text-align:center">
 							<div class="pull-left" ng-click="clickBackwardBtn()">
-								<i ng-class='node.isRootNode ? "fa fa-globe" : "fa fa-folder-o"' aria-hidden="true"></i>
+								<i ng-class='node.isRootNode ? (node.showSubNode ? "fa fa-chevron-down" : "fa fa-chevron-right") : "fa fa-folder-o"' aria-hidden="true"></i>
 								<span>
 									{{node.text}}
 								</span>
@@ -133,7 +132,7 @@
 								<i ng-click="clickCancelCreateItem(node)" class="fa fa-times" aria-hidden="true"></i>
 							</div>
 						</div>
-						<div>
+						<div ng-show="node.showSubNode">
 							<div ng-repeat="x in node.nodes track by $index">
 								<div ng-click="clickItem(x)" class="kp_file_item_container" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 									<span data-toggle="tooltip" title="{{x.url}}">

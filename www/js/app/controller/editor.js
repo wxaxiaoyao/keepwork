@@ -33,14 +33,30 @@ define([
 		
 		$scope.openedPageMap = {};
 
+		// 保存已打开的文件列表
+		function saveOpenedPageList() {
+			var list = [];
+			for (var key in $scope.openedPageMap) {
+				list.push(key);
+			}
+
+			storage.localStorageSetItem("editorOpenedPageList", list);
+		}
+
+		// 加载pageDB中页面
 		function loadFilelist() {
-			function loadUnSavePageContent(finish) {
+			function loadPageDB(finish) {
 				pageDB.get(function(x){
 					//console.log(x, allPageMap);
 					if (!x || x.type == "tree" || !allPageMap[x.url]) {
 						return;
 					}
 					var node = allPageMap[x.url];
+
+					if (!node) {
+						pageDB:deleteItem(x.url);
+					}
+
 					node.content = x.content;
 					node.isModify = x.isModify;
 					if (x.isModify && x.id != node.id) {
@@ -62,6 +78,15 @@ define([
 				}
 			}
 
+			// 加载已打开的文件列表
+			function loadOpenedPageList() {
+				var openlist = storage.localStorageGetItem("editorOpenedPageList");
+				for (var i = 0; i < (openlist || []).length; i++) {
+					var url = openlist[i];
+					$scope.openedPageMap[url] = allPageMap[url];
+				}
+			}
+
 			util.http("GET", config.apiUrlPrefix + "data_source/get_default_data_source", {}, function(data){
 				console.log(data);
 				git.init(data);
@@ -73,12 +98,14 @@ define([
 					console.log(datas);
 					if (datas.length == 1) {
 						$scope.node = datas[0];
-						$scope.node.text = "我的站点";
+						$scope.node.showSubNode = false;
+						$scope.node.text = "我的页面";
 						$scope.node.isRootNode = true;
 					}
 
 					treeToMap(datas);
-					loadUnSavePageContent(function(){
+					loadOpenedPageList();
+					loadPageDB(function(){
 						util.$apply();
 					});
 				}, function(){
@@ -93,6 +120,7 @@ define([
 			initEditor();
 			$scope.user = $scope.user || $rootScope.user;
 
+			$scope.showOpenedList = true;
 			$rootScope.isShowHeader = false;
 
 			$scope.moduleContent = moduleHtml;
@@ -115,6 +143,13 @@ define([
 		}
 
 		function deletePage(page, success, error) {
+			if ($scope.openedPageMap[page.url]) {
+				delete $scope.openedPageMap[page.url];
+				saveOpenedPageList();
+			}
+			delete allPageMap[page.url];
+			pageDB.deleteItem(page.url);
+
 			git.deleteFile({
 				path: page.path,
 			}, function(){
@@ -150,13 +185,13 @@ define([
 				console.log("文件不匹配");
 				return;
 			}
-			//console.log(filename, text);
-			if (curPage.content == text) {
-				return;
+
+			if (curPage.content != text) {
+				curPage.content = text;
+				curPage.isModify = true;
 			}
 
-			curPage.content = text;
-			curPage.isModify = true;
+			//console.log(filename, text);
 			
 			savePageToDB(curPage);
 		}
@@ -189,10 +224,8 @@ define([
 				fileUpload: fileUpload,
 				keyMap:{
 					"F11": function(cm) {
-						console.log("---------");
 					},
 					"ESC": function(cm) {
-
 					},
 					"Ctrl-S": function(cm) {
 						$scope.cmd_save();
@@ -217,6 +250,7 @@ define([
 
 		$scope.clickBackwardBtn = function() {
 			if (stack.length == 0) {
+				$scope.node.showSubNode = !$scope.node.showSubNode;
 				return;
 			}
 			$scope.node = stack.pop();
@@ -229,7 +263,10 @@ define([
 				return;
 			}
 
-			$scope.openedPageMap[node.url] = node;
+			if (!$scope.openedPageMap[node.url]) {
+				$scope.openedPageMap[node.url] = node;
+				saveOpenedPageList();
+			}
 			curPage = node;
 			editor.swapDoc(node.url, node.content);
 			$scope.curPage = curPage;
@@ -283,11 +320,14 @@ define([
 		}
 
 		$scope.clickCloseBtn = function(node, $event) {
-			delete $scope.openedPageMap[node.url];
-			delete allPageMap[node.url];
 			if ($event) {
 				$event.stopPropagation();
 			}
+
+			delete $scope.openedPageMap[node.url];
+			//delete allPageMap[node.url];
+			
+			saveOpenedPageList();
 
 			if (curPage.url == node.url) {
 				curPage = undefined;
@@ -384,7 +424,9 @@ define([
 				node.nodes.splice(index,1);	
 			});
 		}
-
+		$scope.clickOpenedListBtn = function(){
+			$scope.showOpenedList = !$scope.showOpenedList;
+		}
 		$scope.clickCancelCreateItem = function() {
 			$scope.isCreateItem = false;
 		}
