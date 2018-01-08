@@ -316,11 +316,14 @@ define([
 			}
 			// 获取服务器对应文件内容
 			function getGitContent() {
+				node.isRefresh = true;
 				git.getContent({path:node.path}, function(content) {
 					//node.content = content || "";
+					node.isRefresh = false;
 					success && success(content);
 				}, function(){
 					//console.log("获取文件内容失败:" + node.path);
+					node.isRefresh = false;
 					error && error();
 				});
 			}
