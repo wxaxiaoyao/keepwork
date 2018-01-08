@@ -24,6 +24,7 @@ define([
 		app.ng_objects.$compile = $injector.get("$compile");
 		app.ng_objects.$http = $injector.get("$http");
 		app.ng_objects.$auth = $injector.get("$auth");
+		app.ng_objects.$timeout = $injector.get("$timeout");
     }]);
 
 	//ng_app = app.get("app.ng_app", ng_app);
@@ -109,6 +110,7 @@ define([
 			"helper/dataSource/dataSource",
 
 			"directive/wikipage",
+			"directive/notify",
 
 			"controller/main",
 			//'directive/treeview',
