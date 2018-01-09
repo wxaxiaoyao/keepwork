@@ -35,6 +35,22 @@ local l_gitlab_host = "http://" .. nws.config.gitlab.host
 local l_default_project_name = "keepworkdatasource"
 local util = nws.util
 
+function data_source:get_system_default_git()
+	return {
+		project_name = "keepworkdatasource",
+		project_id = 1212689,
+		external_username = "wxaxiaoyao",
+		external_user_id = 1212689,
+		data_source_name = "keepwork",
+		username = "keepwork",
+		api_base_url = "https://gitlab.com/api/v4",
+		raw_base_url = "https://gitlab.com",
+		type = "gitlab",
+		token = "Ed9S7hSfiruewMR-jitR",
+		is_default = 1,
+	}
+end
+
 function data_source:get_default_git_by_username(params)
 	if not params.username then
 		return (errors:wrap(errors.PARAMS_ERROR, params))

@@ -57,6 +57,12 @@ define([
 
 					if (!node) {
 						pageDB:deleteItem(x.url);
+						return;
+					}
+
+					if (!x.isModify && node.id != x.id) {
+						pageDB:deleteItem(x.url);
+						return;
 					}
 
 					node.content = x.content;

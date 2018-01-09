@@ -30,6 +30,8 @@ define([
         }
 
 
+		console.log($scope);
+
 		$scope.fileUpload = function(file) {
 			console.log(file);
 
@@ -73,6 +75,7 @@ define([
 		$scope.clickSubmitUserInfoBtn = function() {
 			util.http("POST", config.apiUrlPrefix + "user/update_by_username", $scope.user, function(){
 				app.setUser($scope.user);
+				$scope.msgContent = "用户信息修改成功";
 			});
 		}
 
