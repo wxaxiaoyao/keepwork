@@ -32,6 +32,7 @@ define([
 	//function format
 	app.registerController("editorController", ["$scope", "$compile", function($scope, $compile){
 		var stack = [];
+		var username; 
 		
 		$scope.openedPageMap = {};
 
@@ -53,15 +54,15 @@ define([
 					if (!x || x.type == "tree" || !allPageMap[x.url]) {
 						return;
 					}
-					var node = allPageMap[x.url];
 
+					var node = allPageMap[x.url];
 					if (!node) {
-						pageDB:deleteItem(x.url);
+						pageDB.deleteItem(x.url);
 						return;
 					}
 
 					if (!x.isModify && node.id != x.id) {
-						pageDB:deleteItem(x.url);
+						pageDB.deleteItem(x.url);
 						return;
 					}
 
@@ -91,6 +92,9 @@ define([
 				var openlist = storage.localStorageGetItem("editorOpenedPageList");
 				for (var i = 0; i < (openlist || []).length; i++) {
 					var url = openlist[i];
+					if (!allPageMap[url]) {
+						continue;
+					}
 					$scope.openedPageMap[url] = allPageMap[url];
 				}
 			}
@@ -101,15 +105,21 @@ define([
 				git.getTree({
 					recursive: true,
 					isFetchAll: true,
-					path: "xiaoyao",
+					path: $scope.user.username,
 				}, function(datas){
 					console.log(datas);
 					if (datas.length == 1) {
 						$scope.node = datas[0];
-						$scope.node.showSubNode = false;
-						$scope.node.text = "我的页面";
-						$scope.node.isRootNode = true;
+					} else {
+						$scope.node = {
+							url:$scope.user.username,
+							path:$scope.user.username,
+							nodes:[],
+						}
 					}
+					$scope.node.showSubNode = false;
+					$scope.node.text = "我的页面";
+					$scope.node.isRootNode = true;
 
 					treeToMap(datas);
 					loadOpenedPageList();

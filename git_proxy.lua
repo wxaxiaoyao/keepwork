@@ -23,6 +23,10 @@ local function get_url(params)
 end
 
 local function log(t) 
+	local info = debug.getinfo(2)
+	local filepos = info.source .. ":" .. info.currentline
+	ngx.log(ngx.ERR, "位置:" .. filepos)
+
 	if type(t) ~= "table" then
 		ngx.log(ngx.ERR, tostring(t))
 		return
@@ -65,7 +69,7 @@ if proxygittype == "gitlab" then
 
 	-- 部分接口直接放行
 	if string.match(path, '/repository/tree$') then
-		return 
+		--return 
 	end
 
 	-- 文件curd路径
