@@ -37,7 +37,7 @@ function data_source:get_default_data_source(ctx)
 		return (errors:wrap(errors.PARAMS_ERROR))
 	end
 
-	local data = data_source_model:find_one({username=username, is_default=1})
+	local _, data = data_source_model:get_default_data_source({username=username})
 	if not data then
 		return (errors:wrap(errors.NOT_FOUND))
 	end

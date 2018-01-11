@@ -36,17 +36,30 @@ local l_default_project_name = "keepworkdatasource"
 local util = nws.util
 
 function data_source:get_system_default_git()
+	--return {
+		--project_name = "keepworkdatasource",
+		--project_id = 4980659,
+		--external_username = "wxaxiaoyao",
+		--external_user_id = 1212689,
+		--data_source_name = "keepwork",
+		--username = "keepwork",
+		--api_base_url = "https://gitlab.com/api/v4",
+		--raw_base_url = "https://gitlab.com",
+		--type = "gitlab",
+		--token = "Ed9S7hSfiruewMR-jitR",
+		--is_default = 1,
+	--}
 	return {
 		project_name = "keepworkdatasource",
-		project_id = 1212689,
-		external_username = "wxaxiaoyao",
-		external_user_id = 1212689,
+		project_id = 5112836,
+		external_username = "keepwork",
+		external_user_id = 1915792,
 		data_source_name = "keepwork",
 		username = "keepwork",
 		api_base_url = "https://gitlab.com/api/v4",
 		raw_base_url = "https://gitlab.com",
 		type = "gitlab",
-		token = "Ed9S7hSfiruewMR-jitR",
+		token = "9x94xLa-CZPH9Da5h5kd",
 		is_default = 1,
 	}
 end
@@ -58,7 +71,8 @@ function data_source:get_default_git_by_username(params)
 
 	local data = self:find_one({username=params.username, is_default=1})
 	if not data then
-		return (errors:wrap(errors.NOT_FOUND))
+		--return (errors:wrap(errors.NOT_FOUND))
+		data = data_source:get_system_default_git()
 	end
 
 	local git = nil
@@ -342,6 +356,9 @@ function data_source:get_default_by_username(params)
 	end
 
 	local data = self:find_one({username=params.username, is_default = 1})
+	if not data then
+		data = data_source:get_system_default_git()
+	end
 	--if not data then
 		--self:create_gitlab_data_source(params)
 		--data = self:find_one({username=params.username, is_default = 1})
