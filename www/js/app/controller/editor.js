@@ -514,7 +514,7 @@ define([
 		$scope.clickLogoutBtn = function() {
 			$rootScope.isShowHeader = true;
 			$auth.logout();
-			$rootScope.user = undefined;
+			app.setUser({});
 			util.go("/www/login");
 		}
 
