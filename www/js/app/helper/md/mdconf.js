@@ -118,7 +118,9 @@ define([
 			lines.push(line);
 		}
 
-		if (lines.length == 1 && !lines[0].match(/^[-+#] .*/)) {
+		if (lines.length == 0) {
+			return "";
+		} else if (lines.length == 1 && !lines[0].match(/^[-+#] .*/)) {
 			return lines[0];
 		} else {
 			for (var i = 0; i < lines.length; i++) {
@@ -147,7 +149,7 @@ define([
 				for (var key in obj) {
 					// 优先写非对象值
 					value = obj[key];
-					if (key.indexOf("$$") == 0 || typeof(value) == "object") {
+					if (value == undefined || key.indexOf("$") == 0 || typeof(value) == "object") {
 						continue;
 					}
 					text += "- " + key + " : " + value + "\n";
@@ -155,7 +157,7 @@ define([
 				for (var key in obj) {
 					// 写对象值
 					value = obj[key];
-					if (key.indexOf("$$") == 0 || typeof(value) != "object") {
+					if (key.indexOf("$") == 0 || typeof(value) != "object") {
 						continue;
 					}
 

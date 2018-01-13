@@ -101,7 +101,9 @@ define([
 		util.pushState({url:url});
 	}
 
+
 	util.setContentUrl = function(url) {
+		app.objects.current_url = url;
 		app.ng_objects.$rootScope.contentUrl = url;
 		app.ng_objects.$rootScope.isShowHeader = true;
 		app.ng_objects.$rootScope.isShowFooter = true;

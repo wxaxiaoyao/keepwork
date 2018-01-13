@@ -30,6 +30,9 @@ define([
 		}
 
 		$(document).keyup(function(event){
+			if (app.objects.current_url != "/www/login") {
+				return;
+			}
 			if (event.keyCode == "13") {
 				$scope.clickLogin();
 			}

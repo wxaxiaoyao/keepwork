@@ -30,6 +30,9 @@ define([
 		}
 
 		$(document).keyup(function(event){
+			if (app.objects.current_url != "/www/register") {
+				return;
+			}
 			if (event.keyCode == "13") {
 				$scope.clickRegister();
 			}

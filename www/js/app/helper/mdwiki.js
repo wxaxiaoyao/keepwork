@@ -39,7 +39,9 @@ define([
 		options = options || {};
 
         var mdName = "md" + instCount++;
-		var templateContent = '<div ng-repeat="$kp_block in $kp_block.blockList track by $index" ng-if="!wikiBlock.isTemplate"><wiki-block-container data-params="$kp_block"></wiki-block-container></div>';
+		var encodeMdName = encodeURI(mdName);
+		var templateContent = '<div ng-repeat="$kp_block in $kp_block.blockList track by $index" ng-if="!wikiBlock.isTemplate"><wiki-block-container data-params="' + encodeMdName +'"></wiki-block-container></div>';
+		var blankTemplateContent = '<div class="container">' + templateContent + '</div>';
 		var $compile = app.ng_objects.$compile;
 		var $scope = options.$scope || app.ng_objects.$rootScope;
         var md = getMd(mdName);
@@ -67,37 +69,31 @@ define([
 
 		md.bindContainer = function() {
 			if (!md.isBindContainer && md.containerId && $('#' + md.containerId)) {
-				$("#" + md.containerId).html($compile('<wiki-block-container data-template="true" data-params="' + encodeURI(md.mdName) + '"></wiki-block-container>')($scope));
+				$("#" + md.containerId).html($compile('<wiki-block-container data-template="true" data-params="' + encodeMdName + '"></wiki-block-container>')($scope));
 				md.isBindContainer = true;
 			}
 		}
 
+		md.renderMod = function(){
+			for (var i = 0; i < md.template.blockList.length; i++) {
+				var block = md.template.blockList[i];
+
+				if (block.renderMod) {
+					block.renderMod();
+				}
+			}
+		}
         // 渲染
         md.render = function (text, theme) {
-            var blockList = md.parse(text, theme);
-            var list = [];
-			var template = undefined;
-            for (var i = 0; i < blockList.length; i++) {
-                if (blockList[i].isWikiBlock && blockList[i].isTemplate) {
-                    template = blockList[i];
-                } else {
-                    list.push(blockList[i]);
-                }
-            }
+            md.parse(text, theme);
 
-            //md.template.blockList = list;
-			if (template) {
-				md.template.htmlContent = template.htmlContent;
-				md.template.modName = template.modName;
-				md.template.cmdName = template.cmdName;
-				md.template.modParams = template.modParams;
+			if (md.template.renderMod) {
+				md.template.renderMod();
 			} else {
-				md.template.htmlContent = '<div class="container">' + templateContent + '</div>';
+				md.template.$apply && md.template.$apply();
 			}
 
 			md.bindContainer();
-
-			md.template.$apply && md.template.$apply();
 			return '<wiki-block-container data-template="true" data-params="' + encodeURI(md.mdName) + '"></wiki-block-container>';
         }
 
@@ -135,33 +131,47 @@ define([
 					block.modParams = undefined;
 				}
 
-				block.isRender = false;
 				block.render = function(htmlContent) {
-					block.isRender = true;
-					if (block.isTemplate) {
+					var self = this;
+					self.isRender = true;
+					if (self.isTemplate) {
 						md.template.htmlContent = htmlContent;
 						md.template.$scope && md.template.$scope.$apply();
 					} else {
-						block.htmlContent = htmlContent;
-						block.$scope && block.$scope.$apply();
+						self.htmlContent = htmlContent;
+						self.$scope && self.$scope.$apply();
 					}
 				}
 
-				loadMod(block, function (mod) {
-					var htmlContent = undefined;
-					if (typeof(mod) == "function") {
-						htmlContent = mod(block);	
-					} else if(typeof(mod) == "object") {
-						htmlContent = mod.render(block);
-					} else {
-						htmlContent = mod;
-					}
-					if (!block.isRender) {
-						block.render(htmlContent);	
-					}
-				}, function () {
-					console.log("加载模块" + block.modName + "失败");
-				});
+				block.renderMod = function(success, error) {
+					var self = this;
+					self.isRender = false;
+					loadMod(self, function (mod) {
+						if (!self.$scope) {
+							error && error();
+							return;
+						}
+						self.wikimod = mod;
+						var htmlContent = undefined;
+						if (typeof(mod) == "function") {
+							htmlContent = mod(self);	
+						} else if(typeof(mod) == "object") {
+							htmlContent = mod.render(self);
+						} else {
+							htmlContent = mod;
+						}
+						if (!self.isRender) {
+							self.render(htmlContent);	
+						}
+
+						success && success();
+					}, function () {
+						console.log("加载模块" + block.modName + "失败");
+						error && error();
+					});
+				}
+
+				block.renderMod();
             }
         }
 
@@ -172,6 +182,7 @@ define([
 
             var tokenList = md.md.parse(text);
             var blockList = md.template.blockList;
+			var template = undefined;
             for (var i = 0; i < tokenList.length; i++) {
                 var token = tokenList[i];
 				var block = blockList[i] || {};
@@ -186,11 +197,29 @@ define([
 				block.token.end = block.token.end - themeLineCount;
 				blockList[i] = block;
 				//console.log(blcok);
+				if (block.isTemplate) {
+					template = block;
+				}
             }
 
 			var size = blockList.length;
 			for (var i = tokenList.length; i < size; i++) {
 				blockList.pop();
+			}
+
+			if (template) {
+				md.template.modName = template.modName;
+				md.template.cmdName = template.cmdName;
+				md.template.modParams = template.modParams;
+				md.template.render = template.render;
+				md.template.renderMod = template.renderMod;
+			} else {
+				md.template.modName = undefined;
+				md.template.cmdName = undefined;
+				md.template.modParams = undefined;
+				md.template.render = undefined;
+				md.template.renderMod = undefined;
+				md.template.htmlContent = blankTemplateContent;
 			}
 			//console.log(blockList);
             return blockList;

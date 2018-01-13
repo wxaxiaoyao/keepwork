@@ -106,6 +106,7 @@ define([
 			"helper/storage",
 			"helper/config",
 			"helper/util",
+			"helper/md/mdconf",
 			"helper/mdwiki",
 			"helper/dataSource/dataSource",
 
@@ -114,10 +115,11 @@ define([
 
 			"controller/main",
 			//'directive/treeview',
-        ], function (storage, config, util, mdwiki, dataSource) {
+        ], function (storage, config, util, mdconf, mdwiki, dataSource) {
 			app.objects.storage = storage;
 			app.objects.config = config;
 			app.objects.util = util;
+			app.objects.mdconf = mdconf;
 			app.objects.mdwiki = mdwiki;
 			app.objects.dataSource = dataSource;
 

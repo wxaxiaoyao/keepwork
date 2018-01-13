@@ -7,28 +7,25 @@ define([
 ], function(app, mdconf, wikiBlockContainerHtml){
     function getMd(mdName) {
 		//return app.get('app.md.' + mdName);
-		app.objects.mds[mdName] = app.objects.mds[mdName] || {};
+		//app.objects.mds[mdName] = app.objects.mds[mdName] || {};
 		return app.objects.mds[mdName];
     }
 
-    function extendBlock($scope, params, isTemplate) {
-		//if ($scope.$kp_block) {
-			//return $scope.$kp_block;
-		//}
-
+    function extendBlock($scope, mdName, index) {
+		var md = getMd(mdName);
 		var block = undefined;
-		var mdName = undefined;
-		var md = undefined;
-		if (isTemplate) {
-			mdName = decodeURI(params);
-			md = getMd(mdName);
-			//md = app.objects.mds[mdName];
+
+		if (!md) {
+			return;
+		}
+		if (index == undefined) {
 			block = md.template;
 		} else {
-			block = $scope.$eval(params);
+			block = md.template.blockList[index];
 		}
-		if(!block) {
-            return block;
+
+		if(!block || !block.isWikiBlock) {
+            return;
 		}
 		
 		$scope.$kp_block = block;
@@ -45,7 +42,9 @@ define([
 			});
 		};
 		
-		md = getMd(block.mdName);
+		// 渲染模块
+		//console.log(block);
+		block.renderMod();
 		//md = app.objects.mds[mdName];
         if (!md.editable || !md.editor) {
             return block;
@@ -86,8 +85,16 @@ define([
 			//template: '<div><wiki-block data-params="$kp_block"></wiki-block></div>',
 			template: wikiBlockContainerHtml,
 			controller:['$scope', '$attrs', '$element', function($scope, $attrs, $element) {
+				var index = $scope.$eval("$index");
+				var mdName = decodeURI($attrs.params);
+				var isTemplate = $attrs.template;
 				var $rootScope = app.ng_objects.$rootScope;
-				var block = extendBlock($scope, $attrs.params, $attrs.template);
+				var block = extendBlock($scope, mdName, index);
+				
+				if (!block) {
+					return;
+				}
+
 				block.$element = $element;
 
 				$scope.clickContainer = function($event) {
