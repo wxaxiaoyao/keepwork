@@ -26,6 +26,13 @@
 	right: 0px;
 }
 
+.kp_editor_split_strip>i {
+	background-color:rgb(168,168,168);
+	position:absolute;
+	bottom:0px;
+	left:100%;
+	z-index:10;
+}
 .kp_cmeditor_container {
 	height:100%;
 	margin-left:240px;
@@ -35,6 +42,15 @@
 	width:80px;
 	float:left;
 	height:100%;
+	border-right: 1px solid #ddd;
+	position:relative;
+}
+.kp_editor_nav_bar>.nav-tabs, .kp_editor_nav_bar>.nav-tabs>li.active>a, .kp_editor_nav_bar>.nav-tabs>li.active>a:focus, .kp_editor_nav_bar>.nav-tabs>li.active>a:hover {
+	border: none;
+}
+
+.kp_editor_nav_bar>.nav-tabs>li.active>a, .kp_editor_nav_bar>.nav-tabs>li.active>a:focus, .kp_editor_nav_bar>.nav-tabs>li.active>a:hover {
+	border-bottom: 1px solid #ddd;
 }
 
 .kp_editor_left_content_container {
@@ -119,7 +135,6 @@
 	<div style="height:100%;"> 
 		<div class="kp_editor_left_container">
 			<div class="kp_editor_nav_bar">
-				<div ng-click="toggleLeftPane()">{{isShowLeftPane ? "隐藏" : "显示"}}</div>
 				<ul class="nav nav-tabs nav-stacked">
 					<li class="active">
 						<a href="#filelistId" data-toggle="tab">文件</a>
@@ -131,6 +146,33 @@
 						<a href="#helperId" data-toggle="tab">帮助</a>
 					</li>
 				</ul>
+				<div class="kp_view_mode">
+					<div style="display:flex; justify-content:space-between;">
+						<div class="btn-group dropup">
+							<button class="btn-sm btn-md btn btn-default dropdown-toggle" data-toggle="dropdown">
+								逍遥
+								<span class="caret"></span>
+							</button>	
+							<ul class="dropdown-menu" role="menu">
+								<li>
+									<a ng-click="clickMyHomeBtn()">我的主页</a>
+								</li>
+								<li>
+									<a ng-click="clickSettingBtn()">设置</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a ng-click="clickLogoutBtn()">退出</a>
+								</li>
+							</ul>
+						</div>
+						<!--<div class="btn-group">-->
+							<!--<button ng-click="clickViewModeCode()" class="btn-sm btn-md btn btn-default">代码</button>-->
+							<!--<button ng-click="clickViewModeCodePreview()" class="btn-sm btn-md btn btn-default">拆分</button>-->
+							<!--<button ng-click="clickViewModePreview()" class="btn-sm btn-md btn btn-default">预览</button>-->
+						<!--</div>	-->
+					</div>
+				</div>
 			</div>
 			<!--已打开文件列表-->
 			<div ng-show="isShowLeftPane" class="tab-content kp_editor_left_content_container">
@@ -201,36 +243,11 @@
 					帮助文档
 				</div>
 			</div>
-			<!--<div class="kp_view_mode">-->
-				<!--<div style="display:flex; justify-content:space-between;">-->
-					<!--<div class="btn-group dropup">-->
-						<!--<button class="btn-sm btn-md btn btn-default dropdown-toggle" data-toggle="dropdown">-->
-							<!--逍遥-->
-							<!--<span class="caret"></span>-->
-						<!--</button>	-->
-						<!--<ul class="dropdown-menu" role="menu">-->
-							<!--<li>-->
-								<!--<a ng-click="clickMyHomeBtn()">我的主页</a>-->
-							<!--</li>-->
-							<!--<li>-->
-								<!--<a ng-click="clickSettingBtn()">设置</a>-->
-							<!--</li>-->
-							<!--<li class="divider"></li>-->
-							<!--<li>-->
-								<!--<a ng-click="clickLogoutBtn()">退出</a>-->
-							<!--</li>-->
-						<!--</ul>-->
-					<!--</div>-->
-					<!--<div class="btn-group">-->
-						<!--<button ng-click="clickViewModeCode()" class="btn-sm btn-md btn btn-default">代码</button>-->
-						<!--<button ng-click="clickViewModeCodePreview()" class="btn-sm btn-md btn btn-default">拆分</button>-->
-						<!--<button ng-click="clickViewModePreview()" class="btn-sm btn-md btn btn-default">预览</button>-->
-					<!--</div>	-->
-				<!--</div>-->
-			<!--</div>-->
 
 			<!--<div class="clearfix"></div>-->
-			<div class="kp_editor_split_strip kp_forbit_copy"></div>
+			<div class="kp_editor_split_strip kp_forbit_copy">
+				<i ng-click="toggleLeftPane()" ng-class='isShowLeftPane ? "fa fa-chevron-left" : "fa fa-chevron-right"' aria-hidden="true"></i>
+			</div>
 		</div>
 
 		<div id="editor" class="kp_cmeditor_container"></div>
