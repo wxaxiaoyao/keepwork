@@ -38,78 +38,35 @@
 }
 
 .kp_editor_nav_bar {
-	width:80px;
+	width:65px;
 	float:left;
 	height:100%;
 	border-right: 1px solid #ddd;
 	position:relative;
 	text-align: center;
 }
-.kp_editor_nav_bar>.nav-tabs, .kp_editor_nav_bar>.nav-tabs>li.active>a, .kp_editor_nav_bar>.nav-tabs>li.active>a:focus, .kp_editor_nav_bar>.nav-tabs>li.active>a:hover {
-	border: none;
+
+.kp_editor_workspace_nav_container {
+	text-align:center;
 }
 
-.kp_editor_nav_bar>.nav-tabs>li.active>a, .kp_editor_nav_bar>.nav-tabs>li.active>a:focus, .kp_editor_nav_bar>.nav-tabs>li.active>a:hover {
-	border-bottom: 1px solid #ddd;
+.kp_editor_workspace_nav_item {
+}
+
+.kp_editor_workspace_nav_item_active {
+	background-color: #ddd;
+}
+
+.kp_editor_workspace_nav_item:hover {
+	background-color: #ccc;
 }
 
 .kp_editor_left_content_container {
-	margin-left: 80px;
+	margin-left: 65px;
 	height:100%;
 	margin-right:9px;
 }
 
-.kp_dir_item_container {
-	position:relative;
-}
-
-.kp_dir_item_text {
-	width:100%;
-	text-overflow:ellipsis;
-	overflow-x: hidden;
-}
-
-.kp_dir_item_btn_group {
-	position:absolute;
-	top: 0px;
-	right: 0px;
-}
-
-.kp_file_item_container {
-	text-align: left;
-	padding-left: 20px;
-	white-space: nowrap;
-	position: relative;
-}
-
-.kp_file_item_text {
-	width:100%;
-	text-overflow:ellipsis;
-	overflow-x: hidden;
-}
-
-.kp_file_item_btn_group {
-	display:none;
-}
-
-.kp_file_item_container:hover{
-	background-color:#E6E6E6;
-}
-
-.kp_file_item_container:hover .kp_file_item_btn_group {
-	display:inline;
-	margin-right:10px;
-	position: absolute;
-	top: 0px;
-	right: 0px;
-}
-
-.kp_file_item_container:hover .kp_file_item_text {
-	padding-right:60px;
-}
-.kp_padding_right_10 {
-	padding-right: 10px;
-}
 .kp_editor_nav_bar_menu {
 	position:absolute;
 	bottom:0px;
@@ -117,37 +74,20 @@
 	right:0px;
 }
 
-.kp_input_text {
-	border:none;
-	border-bottom: 1px solid #A7A7A7;
-	font-size: 16px;
-	margin-bottom:10px;
-}
-
-.kp_input_text:focus {
-	outline:none;
-	border-bottom-color: #3977AD;
-}
 </style>
 
 <div ng-controller="editorController" class="kp_editor_container">
 	<div style="height:100%;"> 
 		<div class="kp_editor_left_container">
-			<div class="kp_editor_nav_bar">
-				<ul class="nav nav-tabs nav-stacked">
-					<li class="active">
-						<a href="#filelistId" data-toggle="tab">文件</a>
-					</li>
-					<li>
-						<a href="#moduleId" data-toggle="tab">模块</a>
-					</li>
-					<li>
-						<a href="#helperId" data-toggle="tab">帮助</a>
-					</li>
-				</ul>
-				<!--<div class="kp_editor_left_content_switch">-->
-					<!--<i ng-click="toggleLeftPane()" ng-class='isShowLeftPane ? "fa fa-chevron-left" : "fa fa-chevron-right"' aria-hidden="true"></i>-->
-				<!--</div>-->
+			<div class="kp_editor_nav_bar kp_forbit_copy">
+				<div class="kp_editor_workspace_nav_container">
+					<div class="kp_editor_workspace_nav_item" 
+						ng-repeat="x in workspaceContentList track by $index"
+						ng-class='workspaceItem.type == x.type ? "kp_editor_workspace_nav_item_active" : ""'
+						ng-click="clickWorkspaceNavItem(x)">
+						{{x.text}}
+					</div>
+				</div>
 				<div class="kp_editor_nav_bar_menu">
 					<div class="dropup">
 						<div class="dropdown-toggle" data-toggle="dropdown">
@@ -186,73 +126,8 @@
 				</div>
 			</div>
 			<!--已打开文件列表-->
-			<div ng-show="isShowLeftPane" class="tab-content kp_editor_left_content_container">
-				<div class="tab-pane fade in active kp_forbit_copy" id="filelistId">
-					<div>
-						<div ng-click="clickOpenedListBtn()">
-							<i ng-class='showOpenedList ? "fa fa-chevron-down" : "fa fa-chevron-right"' aria-hidden="true"></i>
-							<span>已打开</span>
-						</div>
-						<div ng-show="showOpenedList" ng-repeat="(k, x) in openedPageMap">
-							<div class="kp_file_item_container" ng-click="clickItem(x)" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
-								<div class="kp_file_item_text" data-toggle="tooltip" title="{{x.url}}" >
-									<i ng-class='x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o")' aria-hidden="true"></i>
-									<span>{{x.text}}</span>
-								</div>
-								<div class="kp_file_item_btn_group">
-									<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
-									<i ng-click="clickAccessPage(x, $event)" class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
-									<i ng-click="clickGitBtn(x, $event)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
-									<i ng-click="clickCloseBtn(x, $event)" class="fa fa-times" aria-hidden="true" data-toggle="tooltip" title="关闭"></i>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!--<div class="clearfix"></div>-->
-					<!--用户文件列表-->
-					<div style="margin-top:20px">
-						<!--<div class="clearfix"></div>-->
-						<div class="kp_dir_item_container">
-							<div class="kp_dir_item_text" ng-click="clickBackwardBtn()">
-								<i ng-class='node.isRootNode ? (node.showSubNode ? "fa fa-chevron-down" : "fa fa-chevron-right") : "fa fa-folder-o"' aria-hidden="true"></i>
-								<span>
-									{{node.text}}
-								</span>
-							</div>
-							<div class="kp_dir_item_btn_group">
-								<img ng-click='clickNewFile(node, "blob")' ng-src='{{imgsPath + "new_file.png"}}'/>
-								<img ng-click='clickNewFile(node, "tree")' ng-src='{{imgsPath + "new_dir.png"}}'/>
-							</div>
-						</div>
-						<!--<div class="clearfix"></div>-->
-						<div ng-show="isCreateItem">
-							<input id="fileInputId" class="kp_input_text" type="text" ng-model="$parent.newItemName"/>
-						</div>
-						<div ng-show="!node.isRootNode || node.showSubNode">
-							<div ng-repeat="x in node.nodes track by $index">
-								<div ng-click="clickItem(x)" class="kp_file_item_container" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
-									<div class="kp_file_item_text" data-toggle="tooltip" title="{{x.url}}">
-										<i ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"))' aria-hidden="true"></i>
-										<span>{{x.text}}</span>
-									</div>
-									<div class="kp_file_item_btn_group">
-										<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" ng-show='x.type != "tree"' class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
-										<i ng-click="clickAccessPage(x, $event)" ng-show='x.type != "tree"' class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
-										<i ng-click="clickGitBtn(x, $event)" ng-hide='x.type == "tree"' class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
-										<i ng-show="!x.nodes || x.nodes.length == 0" ng-click='clickDeleteItem(node, $index, $event)' class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="tab-pane fade" id="moduleId">
-					<wikipage data-content="moduleContent" data-content-url="moduleContentUrl"></wikipage>
-				</div>
-				<div class="tab-pane fade" id="helperId">
-					帮助文档
-				</div>
+			<div ng-show="isShowLeftPane" class="kp_editor_left_content_container">
+				<wikipage data-content="workspaceContent" data-content-url="workspaceContentUrl"></wikipage>
 			</div>
 
 			<!--<div class="clearfix"></div>-->

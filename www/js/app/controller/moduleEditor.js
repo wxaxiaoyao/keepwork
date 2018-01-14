@@ -1,7 +1,7 @@
 
 define([
 	'app',
-	'text!html/controller/module.html',
+	'text!html/controller/moduleEditor.html',
 ], function(app, htmlContent) {
 	var util = app.objects.util;
 	var config = app.objects.config;
@@ -32,7 +32,7 @@ define([
 		return datas;
 	}
 
-    app.registerController("moduleController",['$scope', function ($scope) {
+    app.registerController("moduleEditorController",['$scope', function ($scope) {
 		var $auth =app.ng_objects.$auth;
 		//$scope.showType = "module_list";
 		$scope.showType = "module_edit";

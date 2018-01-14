@@ -158,10 +158,6 @@ define([
 			sourceScroll(editorObj);
 		});
 
-		editor.on("cursorActivity", function(cm){
-			//console.log(cm);
-		});
-		
 		editor.on("drop", function(cm, e){
 			fileUpload(editorObj, e);
 		});
@@ -171,7 +167,7 @@ define([
 		});
 
 		editor.on("cursorActivity", function(cm){
-			editorObj.cursorActivity && editorObj.cursorActivity(editorObj);			
+			editorObj.options.cursorActivity && editorObj.options.cursorActivity(editorObj);			
 		});
 
 		window.onresize = function() {
@@ -250,7 +246,7 @@ define([
 		fileReader.onload = function() {
 			console.log("upload file to server");
 			file.content = fileReader.result;
-			editor.fileUpload(file, function(url){
+			editor.options.fileUpload(file, function(url){
 				url = url || "";
 				if (/image\/\w+/.test(file.type)) {
 					line_keyword_nofocus(edit, insertLineNum, '!['+ (file.filename || file.name) + '](' + url + ")");
@@ -266,8 +262,8 @@ define([
 
 	function fileUpload(editor, e) {
 		e.preventDefault();
-		if (!editor.fileUpload || !FileReader || !e.dataTransfer || e.dataTransfer.files.length == 0)  {
-			console.log("file upload failed", editor.fileUpload, FileReader);
+		if (!editor.options.fileUpload || !FileReader || !e.dataTransfer || e.dataTransfer.files.length == 0)  {
+			console.log("file upload failed", FileReader);
 			return;
 		}
 
@@ -307,6 +303,7 @@ define([
 		// 字体样式
 		return {
 			"Ctrl-S": function(cm) {
+				editorObj.options.save && editorObj.options.save();
 			},
 			"Ctrl-B": function(cm) {
 				font_style(editorObj, "**", "**");
@@ -376,7 +373,7 @@ define([
 				col2.hide();
 			}
 
-			editor.viewChange && editor.viewChange();
+			editor.options.viewChange && editor.options.viewChange();
 		};
 
 		editor.editorSplitStrip.on("mousedown", function(event){
@@ -506,7 +503,7 @@ define([
 
 		setPreviewScale(editor);
 
-		editor.change && editor.change(editor.currentFilename, text);
+		editor.options.change && editor.options.change(editor.currentFilename, text);
 	}
 
 	// 导出编辑器接口
@@ -551,6 +548,9 @@ define([
 		editor.setPreviewScale = function(scaleX, scaleY) {
 			setPreviewScale(editor, scaleX, scaleY);
 		}
+		editor.setOptions = function(options) {
+			editor.options = angular.merge(editor.options, options || {});
+		}
 		editor.swapDoc = function(filename, text) {
 			if (filename) {
 				if (!editor.docMap[filename]) {
@@ -576,15 +576,11 @@ define([
 
 	// codemirror editor constructor
 	function cmeditor(options) {
-		//var height = $(selector).css("height");
+		options = options || {};
 		var editor = {
 			docMap: {},
 			selector: options.selector, 
 			$scope: options.$scope,
-			change: options.change,
-			fileUpload: options.fileUpload,
-			viewChange: options.viewChange,
-			cursorActivity: options.cursorActivity,
 			options: options,
 		};
 
