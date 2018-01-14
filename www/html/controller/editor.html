@@ -26,11 +26,10 @@
 	right: 0px;
 }
 
-.kp_editor_split_strip>i {
-	background-color:rgb(168,168,168);
+.kp_editor_left_content_switch {
 	position:absolute;
 	bottom:0px;
-	left:100%;
+	right:0px;
 	z-index:10;
 }
 .kp_cmeditor_container {
@@ -44,6 +43,7 @@
 	height:100%;
 	border-right: 1px solid #ddd;
 	position:relative;
+	text-align: center;
 }
 .kp_editor_nav_bar>.nav-tabs, .kp_editor_nav_bar>.nav-tabs>li.active>a, .kp_editor_nav_bar>.nav-tabs>li.active>a:focus, .kp_editor_nav_bar>.nav-tabs>li.active>a:hover {
 	border: none;
@@ -110,12 +110,11 @@
 .kp_padding_right_10 {
 	padding-right: 10px;
 }
-.kp_view_mode {
+.kp_editor_nav_bar_menu {
 	position:absolute;
 	bottom:0px;
 	left:0px;
 	right:0px;
-	height:30px;
 }
 
 .kp_input_text {
@@ -146,31 +145,43 @@
 						<a href="#helperId" data-toggle="tab">帮助</a>
 					</li>
 				</ul>
-				<div class="kp_view_mode">
-					<div style="display:flex; justify-content:space-between;">
-						<div class="btn-group dropup">
-							<button class="btn-sm btn-md btn btn-default dropdown-toggle" data-toggle="dropdown">
-								逍遥
-								<span class="caret"></span>
-							</button>	
-							<ul class="dropdown-menu" role="menu">
-								<li>
-									<a ng-click="clickMyHomeBtn()">我的主页</a>
-								</li>
-								<li>
-									<a ng-click="clickSettingBtn()">设置</a>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<a ng-click="clickLogoutBtn()">退出</a>
-								</li>
-							</ul>
-						</div>
-						<!--<div class="btn-group">-->
-							<!--<button ng-click="clickViewModeCode()" class="btn-sm btn-md btn btn-default">代码</button>-->
-							<!--<button ng-click="clickViewModeCodePreview()" class="btn-sm btn-md btn btn-default">拆分</button>-->
-							<!--<button ng-click="clickViewModePreview()" class="btn-sm btn-md btn btn-default">预览</button>-->
-						<!--</div>	-->
+				<!--<div class="kp_editor_left_content_switch">-->
+					<!--<i ng-click="toggleLeftPane()" ng-class='isShowLeftPane ? "fa fa-chevron-left" : "fa fa-chevron-right"' aria-hidden="true"></i>-->
+				<!--</div>-->
+				<div class="kp_editor_nav_bar_menu">
+					<div class="dropup">
+						<div class="dropdown-toggle" data-toggle="dropdown">
+							视图
+						</div>	
+						<ul class="dropdown-menu" role="menu">
+							<li ng-repeat="x in viewList track by $index" ng-class='viewtype == x.type ? "active" : ""'>
+								<a ng-click="clickSwitchView(x)">{{x.text}}</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a ng-click="toggleLeftPane()">
+									<i ng-class='isShowLeftPane ? "fa fa-check" : ""' aria-hidden="true"> 工作区</i>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="dropup">
+						<div class="dropdown-toggle" data-toggle="dropdown">
+							逍遥
+							<!--<span class="caret"></span>-->
+						</div>	
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a ng-click="clickMyHomeBtn()">我的主页</a>
+							</li>
+							<li>
+								<a ng-click="clickSettingBtn()">设置</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a ng-click="clickLogoutBtn()">退出</a>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>
@@ -246,7 +257,6 @@
 
 			<!--<div class="clearfix"></div>-->
 			<div class="kp_editor_split_strip kp_forbit_copy">
-				<i ng-click="toggleLeftPane()" ng-class='isShowLeftPane ? "fa fa-chevron-left" : "fa fa-chevron-right"' aria-hidden="true"></i>
 			</div>
 		</div>
 

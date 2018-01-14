@@ -168,6 +168,40 @@ define([
 			rightContainerElem = $(".kp_cmeditor_container");
 			splitStripElem = $(".kp_editor_split_strip");
 
+			$scope.viewList = [
+			{
+				type:"workspace-code-preview",
+				text:"工作区-代码-预览",
+				workspaceWidth: "240px",
+			},
+			{
+				type:"code-preview",
+				text:"代码-预览",
+				workspaceWidth: "240px",
+			},
+			{
+				type:"workspace-preview",
+				text:"工作区-预览",
+				workspaceWidth: "360px",
+			},
+			{
+				type:"workspace-code",
+				text:"工作区-代码",
+				workspaceWidth: "360px",
+			},
+			{
+				type:"code",
+				text:"代码",
+				workspaceWidth: "360px",
+			},
+			{
+				type:"preview",
+				text:"预览",
+				workspaceWidth: "360px",
+			},
+			];
+			$scope.viewtype = "workspace-code-preview";
+
 			$scope.moduleContent = moduleHtml;
 
 			loadFilelist();
@@ -527,22 +561,49 @@ define([
 		$scope.clickOpenedListBtn = function(){
 			$scope.showOpenedList = !$scope.showOpenedList;
 		}
-		$scope.clickViewModeCode = function() {
-			editor.setViewMode(true, false);
-		}
-		$scope.clickViewModePreview = function() {
-			editor.setViewMode(false, true);
-		}
-		$scope.clickViewModeCodePreview = function() {
-			editor.setViewMode(true, true);
+		$scope.clickSwitchView = function(x) {
+			$scope.viewtype = x.type;
+			if (x.type == "workspace-code-preview") {
+				editor.setViewMode(true, true);
+				setLeftContainerWidth(x.workspaceWidth);
+				$scope.isShowLeftPane = true;
+			} else if(x.type == "workspace-preview") {
+				editor.setViewMode(false, true);
+				setLeftContainerWidth(x.workspaceWidth);
+				$scope.isShowLeftPane = true;
+			} else if(x.type == "workspace-code") {
+				editor.setViewMode(true, false);
+				setLeftContainerWidth(x.workspaceWidth);
+				$scope.isShowLeftPane = true;
+			} else if(x.type == "code-preview") {
+				editor.setViewMode(true, true);
+				setLeftContainerWidth("80px");
+				$scope.isShowLeftPane = false;
+			} else if(x.type == "code") {
+				editor.setViewMode(true, false);
+				setLeftContainerWidth("80px");
+				$scope.isShowLeftPane = false;
+			} else if(x.type == "preview") {
+				editor.setViewMode(false, true);
+				setLeftContainerWidth("80px");
+				$scope.isShowLeftPane = false;
+			}
 		}
 		$scope.toggleLeftPane = function() {
 			$scope.isShowLeftPane = !$scope.isShowLeftPane;
 
-			console.log($(".kp_editor_left_container"));
 			if ($scope.isShowLeftPane) {
-				setLeftContainerWidth("240px");
+				$scope.viewtype = $scope.viewtype.indexOf("workspace-") == 0 ? $scope.viewtype : "workspace-" + $scope.viewtype;
+				var workspaceWidth = "80px";
+				for (var i = 0; i < $scope.viewList.length; i++) {
+					if($scope.viewtype == $scope.viewList[i].type) {
+						workspaceWidth = $scope.viewList[i].workspaceWidth;
+						break;
+					}
+				}
+				setLeftContainerWidth(workspaceWidth);
 			} else {
+				$scope.viewtype = $scope.viewtype.indexOf("workspace-") == 0 ? $scope.viewtype.substring(10) : $scope.viewtype;
 				setLeftContainerWidth("80px");
 			}
 		}
