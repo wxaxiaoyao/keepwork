@@ -24,7 +24,7 @@ define([
 			block = md.template.blockList[index];
 		}
 
-		if(!block || !block.isWikiBlock) {
+		if(!block) {
             return;
 		}
 		
@@ -44,7 +44,7 @@ define([
 		
 		// 渲染模块
 		//console.log(block);
-		block.renderMod();
+		block.render && block.render();
 		//md = app.objects.mds[mdName];
         if (!md.editable || !md.editor) {
             return block;
@@ -91,6 +91,7 @@ define([
 				var $rootScope = app.ng_objects.$rootScope;
 				var block = extendBlock($scope, mdName, index);
 				
+				//console.log(block.isTemplate, mdName, index);
 				if (!block) {
 					return;
 				}

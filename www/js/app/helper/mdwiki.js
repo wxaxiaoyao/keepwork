@@ -40,7 +40,7 @@ define([
 
         var mdName = "md" + instCount++;
 		var encodeMdName = encodeURI(mdName);
-		var templateContent = '<div ng-repeat="$kp_block in $kp_block.blockList track by $index" ng-if="!wikiBlock.isTemplate"><wiki-block-container data-params="' + encodeMdName +'"></wiki-block-container></div>';
+		var templateContent = '<div ng-repeat="$kp_block in $kp_block.blockList track by $index" ng-if="!$kp_block.isTemplate"><wiki-block-container data-params="' + encodeMdName +'"></wiki-block-container></div>';
 		var blankTemplateContent = '<div class="container">' + templateContent + '</div>';
 		var $compile = app.ng_objects.$compile;
 		var $scope = options.$scope || app.ng_objects.$rootScope;
@@ -74,21 +74,12 @@ define([
 			}
 		}
 
-		md.renderMod = function(){
-			for (var i = 0; i < md.template.blockList.length; i++) {
-				var block = md.template.blockList[i];
-
-				if (block.renderMod) {
-					block.renderMod();
-				}
-			}
-		}
         // 渲染
         md.render = function (text, theme) {
             md.parse(text, theme);
 
-			if (md.template.renderMod) {
-				md.template.renderMod();
+			if (md.template.render) {
+				md.template.render();
 			} else {
 				md.template.$apply && md.template.$apply();
 			}
@@ -107,6 +98,12 @@ define([
             block.isWikiBlock = isWikiBlock;
             if (!isWikiBlock) {
                 block.htmlContent = token.htmlContent;
+				block.isTemplate = false;
+				block.modName = undefined;
+				block.cmdName = undefined;
+				block.modParams = undefined;
+				block.render = undefined;
+				block.renderMod = undefined;
             } else {
                 var wikiCmdRE = /^```@([\w_\/]+)/;
                 var wikiModNameRE = /^([\w_]+)/;
@@ -131,21 +128,8 @@ define([
 					block.modParams = undefined;
 				}
 
-				block.render = function(htmlContent) {
+				block.render = function(success, error) {
 					var self = this;
-					self.isRender = true;
-					if (self.isTemplate) {
-						md.template.htmlContent = htmlContent;
-						md.template.$scope && md.template.$scope.$apply();
-					} else {
-						self.htmlContent = htmlContent;
-						self.$scope && self.$scope.$apply();
-					}
-				}
-
-				block.renderMod = function(success, error) {
-					var self = this;
-					self.isRender = false;
 					loadMod(self, function (mod) {
 						if (!self.$scope) {
 							error && error();
@@ -160,9 +144,9 @@ define([
 						} else {
 							htmlContent = mod;
 						}
-						if (!self.isRender) {
-							self.render(htmlContent);	
-						}
+
+						self.htmlContent = htmlContent;
+						self.$apply && self.$apply();
 
 						success && success();
 					}, function () {
@@ -170,8 +154,7 @@ define([
 						error && error();
 					});
 				}
-
-				block.renderMod();
+				block.render();
             }
         }
 
@@ -192,6 +175,8 @@ define([
 				if (block.text != token.text) {
 					block.text = token.text;
 					md.parseBlock(block, token);
+				} else {
+					//block.$apply && block.$apply();
 				}
 				block.token.start = block.token.start - themeLineCount;
 				block.token.end = block.token.end - themeLineCount;

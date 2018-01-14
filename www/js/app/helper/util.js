@@ -98,7 +98,10 @@ define([
 	}
 
 	util.go = function(url) {
-		util.pushState({url:url});
+		util.pushState({
+			url:url,
+			//hash:window.location.hash,
+		});
 	}
 
 
@@ -122,6 +125,7 @@ define([
 		}
 
 		window.history.pushState(state,"keepwork", relativeUrl);
+		window.location.hash = window.location.hash || state.hash;
 		util.setContentUrl(state.url);
 	}
 
@@ -131,6 +135,7 @@ define([
 		}
 		var relativeUrl = util.getRelativeUrl(state.url);
 		window.history.replaceState(state, "keepwork", relativeUrl);
+		window.location.hash = window.location.hash || state.hash;
 		util.setContentUrl(state.url);
 	}
 	

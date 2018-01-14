@@ -16,7 +16,10 @@ define([
 		$rootScope.imgsPath = "assets/imgs/";
 		
 		function init(){
-			util.replaceState({url:util.getAbsoluteUrl()});
+			util.replaceState({
+				url:util.getAbsoluteUrl(),
+				hash:window.location.hash,
+			});
 		}
 
 		app.getUser(function(userinfo){

@@ -25,6 +25,10 @@ define([
 	var allPageMap = {};
 	var curPage = undefined;
 
+	var leftContainerElem = undefined;
+	var rightContainerElem = undefined;
+	var splitStripElem = undefined;
+
 	storage.indexedDBRegisterOpenCallback(function(){
 		pageDB = storage.indexedDBGetStore("sitepage");
 	});
@@ -51,13 +55,14 @@ define([
 			function loadPageDB(finish) {
 				pageDB.get(function(x){
 					//console.log(x, allPageMap);
-					if (!x || x.type == "tree" || !allPageMap[x.url]) {
+					if (!x || x.type == "tree") {
 						return;
 					}
 
 					var node = allPageMap[x.url];
 					if (!node) {
-						pageDB.deleteItem(x.url);
+						//pageDB.deleteItem(x.url);
+						allPageMap[x.url] = x;
 						return;
 					}
 
@@ -81,7 +86,15 @@ define([
 			function treeToMap(nodes) {
 				for (var i = 0; i < nodes.length; i++) {
 					var x = nodes[i];
-					allPageMap[x.url] = x;
+					if (!allPageMap[x.url]) {
+						allPageMap[x.url] = x;
+					} else {
+						var node = allPageMap[x.url];
+						// 严格控制异地编辑同一文件
+						if (x.id != node.id) {
+							node.isConflict = true;
+						}
+					}
 
 					treeToMap(x.nodes || []);
 				}
@@ -97,8 +110,21 @@ define([
 					}
 					$scope.openedPageMap[url] = allPageMap[url];
 				}
+
+				if (window.location.hash) {
+					var url = window.location.hash.substring(2);
+					var node = allPageMap[url];
+					openPage(node);
+				}
 			}
 
+			// 本地加载
+			loadPageDB(function(){
+				loadOpenedPageList();
+				util.$apply();
+			});
+
+			// 远程加载
 			util.http("GET", config.apiUrlPrefix + "data_source/get_default_data_source", {}, function(data){
 				console.log(data);
 				git.init(data);
@@ -122,10 +148,6 @@ define([
 					$scope.node.isRootNode = true;
 
 					treeToMap(datas);
-					loadOpenedPageList();
-					loadPageDB(function(){
-						util.$apply();
-					});
 				}, function(){
 
 				});
@@ -138,8 +160,13 @@ define([
 			initEditor();
 			$scope.user = $scope.user || $rootScope.user;
 
+			$scope.isShowLeftPane = true;
 			$scope.showOpenedList = true;
 			$rootScope.isShowHeader = false;
+
+			leftContainerElem = $(".kp_editor_left_container");
+			rightContainerElem = $(".kp_cmeditor_container");
+			splitStripElem = $(".kp_editor_split_strip");
 
 			$scope.moduleContent = moduleHtml;
 
@@ -148,13 +175,16 @@ define([
 
 		function savePageToDB(node, success, error) {
 			var x = {};
-			x.url = node.url;
-			x.content = node.content;
 			x.isModify = node.isModify;
-			x.path = node.path;
-			x.id = node.id;
+			x.isConflict = node.isConflict;
+			x.content = node.content;
+			x.pagename = node.pagename;
 			x.name = node.name;
+			x.id = node.id;
+			x.path = node.path;
+			x.text = node.text;
 			x.type = node.type;
+			x.url = node.url;
 			x.username = node.username;
 
 			pageDB.setItem(x, success, error);
@@ -312,6 +342,7 @@ define([
 		function openPage(node) {
 			if (!node) {
 				editor.swapDoc(undefined);
+				window.location.hash = "";
 				return;
 			}
 
@@ -322,6 +353,8 @@ define([
 			curPage = node;
 			editor.swapDoc(node.url, node.content);
 			$scope.curPage = curPage;
+
+			window.location.hash = "#/" + curPage.url;
 		}
 		
 		// 获取页面内容  1 读本地数据库 2 都服务器
@@ -503,6 +536,22 @@ define([
 		$scope.clickViewModeCodePreview = function() {
 			editor.setViewMode(true, true);
 		}
+		$scope.toggleLeftPane = function() {
+			$scope.isShowLeftPane = !$scope.isShowLeftPane;
+
+			console.log($(".kp_editor_left_container"));
+			if ($scope.isShowLeftPane) {
+				setLeftContainerWidth("240px");
+			} else {
+				setLeftContainerWidth("80px");
+			}
+		}
+
+		function setLeftContainerWidth(width) {
+			leftContainerElem.css("width", width);
+			rightContainerElem.css("margin-left", width);
+		}
+
 		$scope.clickMyHomeBtn = function(){
 			$rootScope.isShowHeader = true;
 			util.go("/" + $scope.user.username);

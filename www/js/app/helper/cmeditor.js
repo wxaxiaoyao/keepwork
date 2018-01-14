@@ -170,6 +170,10 @@ define([
 			paste(editorObj, e);
 		});
 
+		editor.on("cursorActivity", function(cm){
+			editorObj.cursorActivity && editorObj.cursorActivity(editorObj);			
+		});
+
 		window.onresize = function() {
 			initEditorSize(editorObj);
 		}
@@ -580,6 +584,7 @@ define([
 			change: options.change,
 			fileUpload: options.fileUpload,
 			viewChange: options.viewChange,
+			cursorActivity: options.cursorActivity,
 			options: options,
 		};
 

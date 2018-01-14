@@ -76,6 +76,7 @@ define([
 			}
 		}
 
+		//console.log(wikiBlock.templateContent);
 		$scope.mode = wikiBlock.mode;
 		//console.log($scope.params, $scope.mode);
 

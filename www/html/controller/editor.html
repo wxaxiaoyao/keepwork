@@ -9,30 +9,67 @@
 	right: 0px;
 }
 
-.kp_toolbar_container {
-	height:100px;
-	display:flex;
-	align-items:center;
-}
-.kp_filelist_container {
+.kp_editor_left_container {
 	float: left;
-	width:200px;
-	padding-left:10px;
+	width:240px;
 	cursor: pointer;
 	height:100%;
 	position: relative;
 }
+
+.kp_editor_split_strip {
+	height:100%;
+	width: 5px;
+	background-color:rgb(168,168,168);
+	position:absolute;
+	top: 0px;
+	right: 0px;
+}
+
 .kp_cmeditor_container {
 	height:100%;
-	margin-left:200px;
+	margin-left:240px;
 }
-.kp_dir_item_container {
 
+.kp_editor_nav_bar {
+	width:80px;
+	float:left;
+	height:100%;
+}
+
+.kp_editor_left_content_container {
+	margin-left: 80px;
+	height:100%;
+	margin-right:9px;
+}
+
+.kp_dir_item_container {
+	position:relative;
+}
+
+.kp_dir_item_text {
+	width:100%;
+	text-overflow:ellipsis;
+	overflow-x: hidden;
+}
+
+.kp_dir_item_btn_group {
+	position:absolute;
+	top: 0px;
+	right: 0px;
 }
 
 .kp_file_item_container {
 	text-align: left;
 	padding-left: 20px;
+	white-space: nowrap;
+	position: relative;
+}
+
+.kp_file_item_text {
+	width:100%;
+	text-overflow:ellipsis;
+	overflow-x: hidden;
 }
 
 .kp_file_item_btn_group {
@@ -45,8 +82,15 @@
 
 .kp_file_item_container:hover .kp_file_item_btn_group {
 	display:inline;
+	margin-right:10px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }
 
+.kp_file_item_container:hover .kp_file_item_text {
+	padding-right:60px;
+}
 .kp_padding_right_10 {
 	padding-right: 10px;
 }
@@ -73,20 +117,23 @@
 
 <div ng-controller="editorController" class="kp_editor_container">
 	<div style="height:100%;"> 
-		<div class="kp_filelist_container">
-			<ul class="nav nav-tabs">
-				<li class="active">
-					<a href="#filelistId" data-toggle="tab">文件</a>
-				</li>
-				<li>
-					<a href="#moduleId" data-toggle="tab">模块</a>
-				</li>
-				<li>
-					<a href="#helperId" data-toggle="tab">帮助</a>
-				</li>
-			</ul>
+		<div class="kp_editor_left_container">
+			<div class="kp_editor_nav_bar">
+				<div ng-click="toggleLeftPane()">{{isShowLeftPane ? "隐藏" : "显示"}}</div>
+				<ul class="nav nav-tabs nav-stacked">
+					<li class="active">
+						<a href="#filelistId" data-toggle="tab">文件</a>
+					</li>
+					<li>
+						<a href="#moduleId" data-toggle="tab">模块</a>
+					</li>
+					<li>
+						<a href="#helperId" data-toggle="tab">帮助</a>
+					</li>
+				</ul>
+			</div>
 			<!--已打开文件列表-->
-			<div class="tab-content">
+			<div ng-show="isShowLeftPane" class="tab-content kp_editor_left_content_container">
 				<div class="tab-pane fade in active kp_forbit_copy" id="filelistId">
 					<div>
 						<div ng-click="clickOpenedListBtn()">
@@ -95,57 +142,53 @@
 						</div>
 						<div ng-show="showOpenedList" ng-repeat="(k, x) in openedPageMap">
 							<div class="kp_file_item_container" ng-click="clickItem(x)" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
-								<span data-toggle="tooltip" title="{{x.url}}" >
+								<div class="kp_file_item_text" data-toggle="tooltip" title="{{x.url}}" >
 									<i ng-class='x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o")' aria-hidden="true"></i>
 									<span>{{x.text}}</span>
-								</span>
-								<span class="pull-right kp_padding_right_10 kp_file_item_btn_group">
+								</div>
+								<div class="kp_file_item_btn_group">
 									<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
 									<i ng-click="clickAccessPage(x, $event)" class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
 									<i ng-click="clickGitBtn(x, $event)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
 									<i ng-click="clickCloseBtn(x, $event)" class="fa fa-times" aria-hidden="true" data-toggle="tooltip" title="关闭"></i>
-								</span>
+								</div>
 							</div>
 						</div>
 					</div>
+
+					<!--<div class="clearfix"></div>-->
 					<!--用户文件列表-->
 					<div style="margin-top:20px">
-						<div style="text-align:center">
-							<div class="pull-left" ng-click="clickBackwardBtn()">
+						<!--<div class="clearfix"></div>-->
+						<div class="kp_dir_item_container">
+							<div class="kp_dir_item_text" ng-click="clickBackwardBtn()">
 								<i ng-class='node.isRootNode ? (node.showSubNode ? "fa fa-chevron-down" : "fa fa-chevron-right") : "fa fa-folder-o"' aria-hidden="true"></i>
 								<span>
 									{{node.text}}
 								</span>
 							</div>
-							<div class="pull-right">
+							<div class="kp_dir_item_btn_group">
 								<img ng-click='clickNewFile(node, "blob")' ng-src='{{imgsPath + "new_file.png"}}'/>
 								<img ng-click='clickNewFile(node, "tree")' ng-src='{{imgsPath + "new_dir.png"}}'/>
 							</div>
 						</div>
-						<div class="clearfix"></div>
+						<!--<div class="clearfix"></div>-->
 						<div ng-show="isCreateItem">
 							<input id="fileInputId" class="kp_input_text" type="text" ng-model="$parent.newItemName"/>
-							<!--<div style="display:inline-block; width:80%; margin:0px; padding:0px;">-->
-								<!--<input id="fileInputId" class="kp_input_text" type="text" style="width:100%" ng-model="$parent.newItemName"/>-->
-							<!--</div>-->
-							<!--<div style="display:inline; width:20%; margin:0px; padding:0px;">-->
-								<!--<i ng-click="clickCreateItem(node)" class="fa fa-check" aria-hidden="true"></i>-->
-								<!--<i ng-click="clickCancelCreateItem(node)" class="fa fa-times" aria-hidden="true"></i>-->
-							<!--</div>-->
 						</div>
 						<div ng-show="!node.isRootNode || node.showSubNode">
 							<div ng-repeat="x in node.nodes track by $index">
 								<div ng-click="clickItem(x)" class="kp_file_item_container" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
-									<span data-toggle="tooltip" title="{{x.url}}">
+									<div class="kp_file_item_text" data-toggle="tooltip" title="{{x.url}}">
 										<i ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"))' aria-hidden="true"></i>
 										<span>{{x.text}}</span>
-									</span>
-									<span class="pull-right kp_padding_right_10 kp_file_item_btn_group">
+									</div>
+									<div class="kp_file_item_btn_group">
 										<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" ng-show='x.type != "tree"' class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
 										<i ng-click="clickAccessPage(x, $event)" ng-show='x.type != "tree"' class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
 										<i ng-click="clickGitBtn(x, $event)" ng-hide='x.type == "tree"' class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
 										<i ng-show="!x.nodes || x.nodes.length == 0" ng-click='clickDeleteItem(node, $index, $event)' class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>
-									</span>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -158,34 +201,38 @@
 					帮助文档
 				</div>
 			</div>
-			<div class="kp_view_mode">
-				<div style="display:flex; justify-content:space-between;">
-					<div class="btn-group dropup">
-						<button class="btn-sm btn-md btn btn-default dropdown-toggle" data-toggle="dropdown">
-							逍遥
-							<span class="caret"></span>
-						</button>	
-						<ul class="dropdown-menu" role="menu">
-							<li>
-								<a ng-click="clickMyHomeBtn()">我的主页</a>
-							</li>
-							<li>
-								<a ng-click="clickSettingBtn()">设置</a>
-							</li>
-							<li class="divider"></li>
-							<li>
-								<a ng-click="clickLogoutBtn()">退出</a>
-							</li>
-						</ul>
-					</div>
-					<div class="btn-group">
-						<button ng-click="clickViewModeCode()" class="btn-sm btn-md btn btn-default">代码</button>
-						<button ng-click="clickViewModeCodePreview()" class="btn-sm btn-md btn btn-default">拆分</button>
-						<button ng-click="clickViewModePreview()" class="btn-sm btn-md btn btn-default">预览</button>
-					</div>	
-				</div>
-			</div>
+			<!--<div class="kp_view_mode">-->
+				<!--<div style="display:flex; justify-content:space-between;">-->
+					<!--<div class="btn-group dropup">-->
+						<!--<button class="btn-sm btn-md btn btn-default dropdown-toggle" data-toggle="dropdown">-->
+							<!--逍遥-->
+							<!--<span class="caret"></span>-->
+						<!--</button>	-->
+						<!--<ul class="dropdown-menu" role="menu">-->
+							<!--<li>-->
+								<!--<a ng-click="clickMyHomeBtn()">我的主页</a>-->
+							<!--</li>-->
+							<!--<li>-->
+								<!--<a ng-click="clickSettingBtn()">设置</a>-->
+							<!--</li>-->
+							<!--<li class="divider"></li>-->
+							<!--<li>-->
+								<!--<a ng-click="clickLogoutBtn()">退出</a>-->
+							<!--</li>-->
+						<!--</ul>-->
+					<!--</div>-->
+					<!--<div class="btn-group">-->
+						<!--<button ng-click="clickViewModeCode()" class="btn-sm btn-md btn btn-default">代码</button>-->
+						<!--<button ng-click="clickViewModeCodePreview()" class="btn-sm btn-md btn btn-default">拆分</button>-->
+						<!--<button ng-click="clickViewModePreview()" class="btn-sm btn-md btn btn-default">预览</button>-->
+					<!--</div>	-->
+				<!--</div>-->
+			<!--</div>-->
+
+			<!--<div class="clearfix"></div>-->
+			<div class="kp_editor_split_strip kp_forbit_copy"></div>
 		</div>
+
 		<div id="editor" class="kp_cmeditor_container"></div>
 	</div>
 </div>
