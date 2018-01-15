@@ -1,12 +1,28 @@
 
 define([
 	'app',
-	'text!html/controller/moduleEditor.html',
+	'text!html/controller/editorModuleEditor.html',
 ], function(app, htmlContent) {
+	var $auth =app.ng_objects.$auth;
 	var util = app.objects.util;
 	var config = app.objects.config;
-	//var block = undefined;
 
+	var editorModuleEditor = app.getShareObject("editorModuleEditor");
+
+	editorModuleEditor.getBlock = function() {
+		return this.block;
+	}
+
+	editorModuleEditor.setBlock = function(block) {
+		var oldBlock = this.block;
+		if (oldBlock && oldBlock.applyModParams) {
+			oldBlock.applyModParams();
+		}
+
+		this.block = block;
+		this.datas = getOrderDatas(block.modParams);
+	}
+	
 	function getOrderDatas(modParams) {
 		var datas = [];
 
@@ -32,36 +48,11 @@ define([
 		return datas;
 	}
 
-    app.registerController("moduleEditorController",['$scope', function ($scope) {
-		var $auth =app.ng_objects.$auth;
-		//$scope.showType = "module_list";
-		$scope.showType = "module_edit";
+    app.registerController("editorModuleEditorController",['$scope', function ($scope) {
 		function init() {
+			$scope.params = editorModuleEditor;
 		}
 
-		function initModuleEditor(block) {
-			var oldBlock = $scope.block;
-			if (oldBlock) {
-				oldBlock.applyModParams();
-			}
-
-			if (!block) {
-				$scope.showType = "module_list";
-				$scope.block = undefined;
-				$scope.datas = undefined;
-				return;
-			}
-
-			$scope.block = block;
-			$scope.datas = getOrderDatas(block.modParams);
-
-			console.log($scope.datas);
-		}
-
-		$scope.$on("moduleEditor", function($event, block){
-			initModuleEditor(block);
-			console.log(block);
-		});
 
 		$scope.$watch("$viewContentLoaded", init);
 	}]);

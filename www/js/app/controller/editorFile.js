@@ -115,7 +115,7 @@ define([
 
 			// 远程加载
 			util.http("GET", config.apiUrlPrefix + "data_source/get_default_data_source", {}, function(data){
-				console.log(data);
+				//console.log(data);
 				git.init(data);
 				git.getTree({
 					recursive: true,

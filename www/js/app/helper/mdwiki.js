@@ -88,6 +88,9 @@ define([
 			return '<wiki-block-container data-template="true" data-params="' + encodeURI(md.mdName) + '"></wiki-block-container>';
         }
 
+		md.getBlockList = function() {
+			return md.template.blockList;
+		}
         // md.bind
         md.parseBlock = function (block, token) {
             var content = token.content;
@@ -159,9 +162,9 @@ define([
         }
 
         md.parse = function (text, theme) {
-			theme = theme || "";
-			text = theme + '\n' + text;
-			themeLineCount = theme.split("\n").length;
+			//theme = theme || "";
+			//text = theme + '\n' + text;
+			//themeLineCount = theme.split("\n").length;
 
             var tokenList = md.md.parse(text);
             var blockList = md.template.blockList;
@@ -178,8 +181,8 @@ define([
 				} else {
 					//block.$apply && block.$apply();
 				}
-				block.token.start = block.token.start - themeLineCount;
-				block.token.end = block.token.end - themeLineCount;
+				//block.token.start = block.token.start - themeLineCount;
+				//block.token.end = block.token.end - themeLineCount;
 				blockList[i] = block;
 				//console.log(blcok);
 				if (block.isTemplate) {

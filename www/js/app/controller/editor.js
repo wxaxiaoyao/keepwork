@@ -5,11 +5,11 @@
 define([
     'app',
 	'helper/cmeditor',
-	'controller/moduleEditor',
+	'controller/editorModuleEditor',
 	'controller/editorFile',
 	'controller/editorModule',
 	'text!html/controller/editor.html',
-], function (app, cmeditor,  moduleEditorHtml, editorFileHtml, editorModuleHtml, htmlContent) {
+], function (app, cmeditor,  editorModuleEditorHtml, editorFileHtml, editorModuleHtml, htmlContent) {
 	var $auth = app.ng_objects.$auth;
 	var $rootScope = app.ng_objects.$rootScope;
 	var util = app.objects.util;
@@ -22,10 +22,35 @@ define([
 
 	//function format
 	app.registerController("editorController", ["$scope", "$compile", function($scope, $compile){
+
+		function cursorActivity(editor) {
+			var pos = editor.editor.getCursor();
+			var blockList = editor.getBlockList();
+			var block = undefined, tmp = undefined;
+			for (var i = 0; i < blockList.length; i++) {
+				tmp = blockList[i];
+				if (pos.line >= tmp.token.start && pos.line < tmp.token.end) {
+					block = tmp;
+					break;
+				}
+			}
+
+			if (!block) {
+				return;
+			}
+
+			var editorModuleEditor = app.getShareObject("editorModuleEditor");
+			var tmp = editorModuleEditor.getBlock();
+			if (!tmp || tmp.token.start != block.token.start) {
+				editorModuleEditor.setBlock(block);
+			}
+		}
+
 		function initEditor() {
 			editor = app.objects.editor = cmeditor({
 				selector:"#editor", 
 				$scope:$scope,
+				cursorActivity:cursorActivity,
 			});
 		}
 
@@ -91,7 +116,7 @@ define([
 			{
 				type:"moduleEditor",
 				text:"编辑",
-				htmlContent: moduleEditorHtml,
+				htmlContent: editorModuleEditorHtml,
 			},
 			{
 				type:"helper",

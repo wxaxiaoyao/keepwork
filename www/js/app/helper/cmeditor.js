@@ -545,6 +545,9 @@ define([
 		editor.setValue = function(text) {
 			editor.editor.setValue(text);
 		}
+		editor.getValue = function() {
+			return editor.editor.getValue();
+		}
 		editor.setPreviewScale = function(scaleX, scaleY) {
 			setPreviewScale(editor, scaleX, scaleY);
 		}
@@ -567,11 +570,9 @@ define([
 				CodeMirror.signal(editor.editor, "change", editor.editor);
 			}
 		}
-
-		editor.getValue = function() {
-			return editor.editor.getValue();
+		editor.getBlockList = function() {
+			return editor.md.getBlockList();
 		}
-
 	}
 
 	// codemirror editor constructor

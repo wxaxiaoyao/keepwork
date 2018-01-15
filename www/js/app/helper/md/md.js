@@ -760,8 +760,8 @@ define([
 				token.htmlContent = render_token(token)
 				token.content = md.md_special_char_unescape(token.content);
 				token.text = md.md_special_char_unescape(token.text);
-				token.start++;
-				token.end++;
+				//token.start++;
+				//token.end++;
 				token.htmlContent = md.md_special_char_unescape(token.htmlContent);
 			}
 			return tokens;

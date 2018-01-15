@@ -123,6 +123,13 @@ define([
 			app.objects.mdwiki = mdwiki;
 			app.objects.dataSource = dataSource;
 
+			app.objects.share = {}; // 共享对象
+			app.getShareObject = function(key) {
+				app.objects.share[key] = app.objects.share[key] || {};
+
+				return app.objects.share[key];
+			}
+
             angular.bootstrap(document, [app.appName]);
         });
     }
