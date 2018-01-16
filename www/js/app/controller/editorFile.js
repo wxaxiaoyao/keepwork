@@ -133,10 +133,8 @@ define([
 			}
 
 			// 远程加载
-			util.http("GET", config.apiUrlPrefix + "data_source/get_default_data_source", {}, function(data){
-				//console.log(data);
-				git.init(data);
-				
+			app.getGit(function(data){
+				git = data;
 				// 本地加载
 				loadPageDB(function(){
 					loadOpenedPageList();
@@ -164,12 +162,13 @@ define([
 
 					userNode = $scope.node;
 					treeToMap(datas);
-				}, function(){
-
 				});
 			});
 		}
 
+		//function cursorActivity(editor) {
+			//console.log("------------");
+		//}
 		function init() {
 			if (!app.objects.editor || editor) {
 				//console.log("编辑器未初始化或重复初始化");
@@ -182,6 +181,8 @@ define([
 				fileUpload:fileUpload,
 				save:save,
 			});
+
+			//editor.on("cursorActivity", cursorActivity);
 
 			loadFilelist();
 		}
@@ -199,6 +200,7 @@ define([
 			x.type = node.type;
 			x.url = node.url;
 			x.username = node.username;
+			x.cursor = node.cursor;
 
 			pageDB.setItem(x, success, error);
 		}
@@ -230,7 +232,7 @@ define([
 		function autoSavePage(page) {
 			var timer = saveTimerMap[page.url];
 			
-			if (!page.isModify) {
+			if (!page.isModify || page.isConflict) {
 				return;
 			}	
 
@@ -287,10 +289,9 @@ define([
 			if (curPage.content != text) {
 				curPage.content = text;
 				curPage.isModify = true;
+				curPage.cursor = editor.editor.getCursor();
 			}
 
-			//console.log(filename, text);
-			
 			autoSavePage(curPage);
 			savePageToDB(curPage);
 		}
@@ -349,6 +350,10 @@ define([
 			}
 			curPage = node;
 			editor.swapDoc(node.url, node.content);
+			editor.editor.setCursor(curPage.cursor || {
+				line: editor.editor.lineCount(),
+			});
+			editor.editor.focus();
 			$scope.curPage = curPage;
 
 			window.location.hash = "#/" + curPage.url;

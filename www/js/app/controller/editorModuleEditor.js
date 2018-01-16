@@ -13,14 +13,31 @@ define([
 		return this.block;
 	}
 
-	editorModuleEditor.setBlock = function(block) {
-		var oldBlock = this.block;
-		if (oldBlock && oldBlock.applyModParams) {
-			oldBlock.applyModParams();
+	editorModuleEditor.applyModParams = function() {
+		var block = this.block;
+		if (!block || !block.applyModParams || !this.datas || !this.params){
+			return;
 		}
 
+		var modParams = angular.copy(this.params);
+		if (typeof(block.wikimod) == "object" && typeof(block.wikimod.getModuleParams) == "function") {
+			modParams = block.wikimod.getModuleParams(modParams);
+		}
+		block.applyModParams(modParams);
+	}
+
+	editorModuleEditor.setBlock = function(block) {
+
 		this.block = block;
-		this.datas = getOrderDatas(block.modParams);
+		if (block && typeof(block.wikimod) == "object" && typeof(block.wikimod.getEditorParams) == "function") {
+			this.params = block.wikimod.getEditorParams(block);
+			this.datas = getOrderDatas(this.params);
+		} else {
+			this.params = undefined;
+			this.datas = undefined;
+		}
+
+		util.$apply();
 	}
 	
 	function getOrderDatas(modParams) {
@@ -52,8 +69,11 @@ define([
 		function init() {
 			$scope.params = editorModuleEditor;
 		}
-
-
+			
+		$scope.change = function(){
+			console.log($scope.params);
+			editorModuleEditor.applyModParams();
+		}
 		$scope.$watch("$viewContentLoaded", init);
 	}]);
 

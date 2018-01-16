@@ -570,6 +570,11 @@ define([
 				CodeMirror.signal(editor.editor, "change", editor.editor);
 			}
 		}
+		editor.on = function(eventName, callback){
+			editor.editor.on(eventName, function(cm){
+				callback && callback(editor);
+			});
+		}
 		editor.getBlockList = function() {
 			return editor.md.getBlockList();
 		}
@@ -595,7 +600,7 @@ define([
 		editor.md = mdwiki({
 			containerId: "kp-editor-preview",
 			editable: true,
-			editor: editor.editor,
+			editor: editor,
 		});
 
 

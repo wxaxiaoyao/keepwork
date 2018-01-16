@@ -24,6 +24,7 @@ define([
 	app.registerController("editorController", ["$scope", "$compile", function($scope, $compile){
 
 		function cursorActivity(editor) {
+			var editorModuleEditor = app.getShareObject("editorModuleEditor");
 			var pos = editor.editor.getCursor();
 			var blockList = editor.getBlockList();
 			var block = undefined, tmp = undefined;
@@ -35,13 +36,8 @@ define([
 				}
 			}
 
-			if (!block) {
-				return;
-			}
-
-			var editorModuleEditor = app.getShareObject("editorModuleEditor");
 			var tmp = editorModuleEditor.getBlock();
-			if (!tmp || tmp.token.start != block.token.start) {
+			if (!block || !tmp || tmp.token.start != block.token.start) {
 				editorModuleEditor.setBlock(block);
 			}
 		}

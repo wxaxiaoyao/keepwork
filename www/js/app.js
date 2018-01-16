@@ -180,6 +180,36 @@ define([
 		storage.sessionStorageSetItem("userinfo", userinfo);	
 	}
 
+	app.getGit = function(success, error) {
+		var $auth = app.ng_objects.$auth;
+		var storage = app.objects.storage;
+		var util = app.objects.util;
+		var config = app.objects.config;
+		if (!$auth.isAuthenticated()) {
+			error && error();
+			return;
+		}
+		var default_data_source = app.objects.default_data_source || storage.sessionStorageGetItem("default_data_source");
+		
+		if (default_data_source) {
+			app.objects.default_data_source = default_data_source
+			app.objects.git = app.objects.dataSource(default_data_source);
+			success && success(app.objects.git);
+			return;
+		}
+
+		util.http("GET", config.apiUrlPrefix + "data_source/get_default_data_source", {}, function(data){
+			app.setGit(data);
+			success && success(app.objects.git);
+		}, error)
+	}
+
+	app.setGit = function(ds) {
+		var storage = app.objects.storage;
+		app.objects.default_data_source = ds;
+		app.objects.git = app.objects.dataSource(ds);
+		storage.sessionStorageSetItem("default_data_source", ds);
+	}
 
     window.app = app;
     return app;

@@ -33,12 +33,6 @@ define([
 		block.$apply = function() {
 			setTimeout(function(){
 				block.$scope && block.$scope.$apply();
-				//if (block.isTemplate) {
-					//for (var i = 0; i < block.blockList; i++) {
-						//var tempBlock = block.blockList[i];
-						//tempBlock.$scope && tempBlock.$scope.$apply();
-					//}
-				//}
 			});
 		};
 		
@@ -50,29 +44,6 @@ define([
             return block;
         }
 
-        block.applyModParams = function(modParams) {
-			console.log(block);
-
-			if (!editor || !block.token) {
-				return;
-			}
-
-            var from = block.token.start;
-			var to = block.token.end;
-			var editor = md.editor;
-            modParams = modParams || block.modParams;
-
-            //console.log(modParams);
-            if (typeof(modParams) == "object") {
-                //modParams = angular.toJson(modParams, 4);
-                modParams = mdconf.jsonToMd(modParams);
-            }
-
-            editor.replaceRange(modParams + '\n', {line: from, ch: 0}, {
-                line: to - 2,
-                ch: 0
-            });
-        }
 
 		return block;
     }

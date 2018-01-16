@@ -70,11 +70,11 @@
 		<div ng-show="showOpenedList" ng-repeat="(k, x) in openedPageMap">
 			<div class="kp_file_item_container" ng-click="clickItem(x)" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 				<div class="kp_file_item_text" data-toggle="tooltip" title="{{x.url}}" >
-					<i ng-class='x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o")' aria-hidden="true"></i>
+					<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
+					<i ng-hide="x.isConflict" ng-class='x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o")' aria-hidden="true"></i>
 					<span>{{x.text}}</span>
 				</div>
 				<div class="kp_file_item_btn_group">
-					<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
 					<i ng-click="clickAccessPage(x, $event)" class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
 					<i ng-click="clickGitBtn(x, $event)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
 					<i ng-click="clickCloseBtn(x, $event)" class="fa fa-times" aria-hidden="true" data-toggle="tooltip" title="关闭"></i>
@@ -107,11 +107,11 @@
 			<div ng-repeat="x in node.nodes track by $index">
 				<div ng-click="clickItem(x)" class="kp_file_item_container" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 					<div class="kp_file_item_text" data-toggle="tooltip" title="{{x.url}}">
-						<i ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"))' aria-hidden="true"></i>
+						<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" ng-show='x.type != "tree"' class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
+						<i ng-hide="x.isConflict" ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"))' aria-hidden="true"></i>
 						<span>{{x.text}}</span>
 					</div>
 					<div class="kp_file_item_btn_group">
-						<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" ng-show='x.type != "tree"' class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
 						<i ng-click="clickAccessPage(x, $event)" ng-show='x.type != "tree"' class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
 						<i ng-click="clickGitBtn(x, $event)" ng-hide='x.type == "tree"' class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
 						<i ng-show="!x.nodes || x.nodes.length == 0" ng-click='clickDeleteItem(node, $index, $event)' class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>

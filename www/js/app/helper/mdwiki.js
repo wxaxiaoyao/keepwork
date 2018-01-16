@@ -131,14 +131,35 @@ define([
 					block.modParams = undefined;
 				}
 
+				block.applyModParams = function(modParams) {
+					var md = getMd(block.mdName);
+					var editor = (md.editor || {}).editor;
+
+					if (!editor) {
+						return;
+					}
+
+					var from = block.token.start;
+					var to = block.token.end;
+					modParams = modParams || block.modParams;
+
+					//console.log(modParams);
+					if (typeof(modParams) == "object") {
+						//modParams = angular.toJson(modParams, 4);
+						modParams = mdconf.jsonToMd(modParams);
+					}
+
+					editor.replaceRange(modParams + '\n', {line: from + 1, ch: 0}, {line: to - 1, ch: 0});
+				}
+
 				block.render = function(success, error) {
 					var self = this;
 					loadMod(self, function (mod) {
+						self.wikimod = mod;
 						if (!self.$scope) {
 							error && error();
 							return;
 						}
-						self.wikimod = mod;
 						var htmlContent = undefined;
 						if (typeof(mod) == "function") {
 							htmlContent = mod(self);	
@@ -200,13 +221,12 @@ define([
 				md.template.cmdName = template.cmdName;
 				md.template.modParams = template.modParams;
 				md.template.render = template.render;
-				md.template.renderMod = template.renderMod;
+				md.template.applyModParams = template.applyModParams;
 			} else {
 				md.template.modName = undefined;
 				md.template.cmdName = undefined;
 				md.template.modParams = undefined;
 				md.template.render = undefined;
-				md.template.renderMod = undefined;
 				md.template.htmlContent = blankTemplateContent;
 			}
 			//console.log(blockList);

@@ -29,7 +29,22 @@ define([
 		return value;
 	}
 
-	function get_mod_editor_params(wikiBlock) {
+	// 获取模块参数
+	function getModuleParams(editorParams) {
+		for (var i = 0; i < editorParams.rows.length; i++) {
+			var row = editorParams.rows[i];
+			for (var j = 0; j < row.cols.length; j++) {
+				var col = row.cols[j];
+				if (col.is_main_content) {
+					col.content = undefined;
+				}
+			}
+		}
+
+		return editorParams;
+	}
+	// 获取编辑参数
+	function getEditorParams(wikiBlock) {
 		var modParams = wikiBlock.modParams || {};
 		var id = 0;
 
@@ -52,6 +67,8 @@ define([
 				}
 			}
 		}
+
+		return modParams;
 	}
 
 	function render(wikiBlock) {
@@ -84,7 +101,8 @@ define([
 	}
 
 	return {
-		get_mod_editor_params: get_mod_editor_params,
+		getEditorParams: getEditorParams,
+		getModuleParams: getModuleParams,
 		render: render,
 	}
 })
