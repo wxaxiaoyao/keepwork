@@ -39,6 +39,25 @@ define([
 			storage.localStorageSetItem("editorOpenedPageList", list);
 		}
 
+		// 重新获取节点内容
+		function updateNode(node, success, error) {
+			node.isRefresh = true;
+			git.getFile({path:node.path}, function(data) {
+				node.id = data.blob_id;
+				node.content = data.content;
+				node.isConflict = false;
+				node.isRefresh = false;
+				node.isModify = false;
+				pageDB.setItem(node);
+
+				if (curPage && curPage.url == node.url) {
+					openPage(curPage);
+				}
+
+				success && success(node);
+			}, error);
+		}
+
 		// 加载pageDB中页面
 		function loadFilelist() {
 			function loadPageDB(finish) {
@@ -81,8 +100,13 @@ define([
 						var node = allPageMap[x.url];
 						// 严格控制异地编辑同一文件
 						if (x.id != node.id) {
-							node.isConflict = true;
+							if (node.isModify) {
+								node.isConflict = true;
+							} else {
+								updateNode(node);
+							}
 						}
+						nodes[i] = node;
 					}
 
 					treeToMap(x.nodes || []);
@@ -103,20 +127,22 @@ define([
 				if (window.location.hash) {
 					var url = window.location.hash.substring(2);
 					var node = allPageMap[url];
+					//console.log(node);
 					openPage(node);
 				}
 			}
-
-			// 本地加载
-			loadPageDB(function(){
-				loadOpenedPageList();
-				util.$apply();
-			});
 
 			// 远程加载
 			util.http("GET", config.apiUrlPrefix + "data_source/get_default_data_source", {}, function(data){
 				//console.log(data);
 				git.init(data);
+				
+				// 本地加载
+				loadPageDB(function(){
+					loadOpenedPageList();
+					util.$apply();
+				});
+
 				git.getTree({
 					recursive: true,
 					isFetchAll: true,
@@ -242,7 +268,8 @@ define([
 				page.isModify = false;
 				page.isConflict = false;
 				page.isSaving = false;
-				pageDB.deleteItem(page.url);
+				//pageDB.deleteItem(page.url);
+				pageDB.setItem(page);
 				success && success();
 			}, error);
 		}
@@ -427,7 +454,7 @@ define([
 					return;
 				}
 			}
-			console.log($scope.createItemType, node, $scope.newItemName);
+			//console.log($scope.createItemType, node, $scope.newItemName);
 			var path = node.path + "/" + $scope.newItemName + ($scope.createItemType == "tree" ? "/.gitkeep":".md");
 			node.nodes.push({
 				path: path,
@@ -454,18 +481,7 @@ define([
 				$event.stopPropagation();
 			}
 
-			node.isSaving = true;
-			git.getContent({path:node.path}, function(content) {
-				node.content = content;
-				node.isConflict = false;
-				node.isModify = false;
-				node.isSaving = false;
-				pageDB.deleteItem(node.url);
-				if (curPage && curPage.url == node.url) {
-					openPage(curPage);
-				}
-			}, function(){
-			});
+			updateNode(node);
 		}
 
 		$scope.clickAccessPage = function(node, $event) {
@@ -487,9 +503,6 @@ define([
 			if ($event) {
 				$event.stopPropagation();
 			}
-
-			console.log(index, node);
-
 			deletePage(node.nodes[index], function(){
 				node.nodes.splice(index,1);	
 			});

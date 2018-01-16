@@ -107,13 +107,19 @@ define([
 			var path = encodeUrl(params.path);
 			var url = "/projects/" + self.projectId + "/repository/files/" + path + "?ref=" + self.lastCommitId;
 
-			self.httpRequest("GET", url, {},  success, error);
+			self.httpRequest("GET", url, {},  function(data){
+				data.content = Base64.decode(data.content);
+				success && success(data);
+			}, error);
 		}
 
 		gitlab.getContent = function(params, success, error) {
 			var self = this;
-			self.getFile(params, function(data){
-				success && success(Base64.decode(data.content));
+			var path = encodeUrl(params.path);
+			var url = "/projects/" + self.projectId + "/repository/files/" + path + "?ref=" + self.lastCommitId;
+			self.httpRequest("GET", url, {},  function(data){
+				data.content = Base64.decode(data.content);
+				success && success(data.content);
 			}, error);
 		}
 
