@@ -71,7 +71,7 @@
 			<div class="kp_file_item_container" ng-click="clickItem(x)" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 				<div class="kp_file_item_text" data-toggle="tooltip" title="{{x.url}}" >
 					<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
-					<i ng-hide="x.isConflict" ng-class='x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o")' aria-hidden="true"></i>
+					<i ng-hide="x.isConflict" ng-class='x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o")' aria-hidden="true"></i>
 					<span>{{x.text}}</span>
 				</div>
 				<div class="kp_file_item_btn_group">
@@ -108,7 +108,7 @@
 				<div ng-click="clickItem(x)" class="kp_file_item_container" ng-style='x.path == curPage.path && {"background-color":"#ccc"}'>
 					<div class="kp_file_item_text" data-toggle="tooltip" title="{{x.url}}">
 						<i ng-show="x.isConflict" ng-click="clickFixedConflict(x, $event)" ng-show='x.type != "tree"' class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
-						<i ng-hide="x.isConflict" ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isSaving || x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"))' aria-hidden="true"></i>
+						<i ng-hide="x.isConflict" ng-class='x.type == "tree" ? "fa fa-folder-o" : (x.isRefresh ? "fa fa-refresh fa-spin" : (x.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"))' aria-hidden="true"></i>
 						<span>{{x.text}}</span>
 					</div>
 					<div class="kp_file_item_btn_group">

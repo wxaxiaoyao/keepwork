@@ -27,8 +27,12 @@ define([
 	}
 
 	editorModuleEditor.setBlock = function(block) {
+		if (this.block && block && this.block.token.start == block.start && this.datas) {
+			return;
+		}
 
 		this.block = block;
+		//console.log(block);
 		if (block && typeof(block.wikimod) == "object" && typeof(block.wikimod.getEditorParams) == "function") {
 			this.params = block.wikimod.getEditorParams(block);
 			this.datas = getOrderDatas(this.params);
@@ -68,6 +72,7 @@ define([
     app.registerController("editorModuleEditorController",['$scope', function ($scope) {
 		function init() {
 			$scope.params = editorModuleEditor;
+			//util.$apply();
 		}
 			
 		$scope.change = function(){

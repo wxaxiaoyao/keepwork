@@ -107,6 +107,7 @@ define([
 				block.modParams = undefined;
 				block.render = undefined;
 				block.renderMod = undefined;
+				block.wikimod = undefined;
             } else {
                 var wikiCmdRE = /^```@([\w_\/]+)/;
                 var wikiModNameRE = /^([\w_]+)/;

@@ -255,7 +255,7 @@ define([
 		// 保存页面
 		function savePage(page, success, error) {
 			//console.log(page);
-			page.isSaving = true;
+			page.isRefresh = true;
 			git.writeFile({
 				path:page.path, 
 				content:page.content
@@ -269,10 +269,16 @@ define([
 
 				page.isModify = false;
 				page.isConflict = false;
-				page.isSaving = false;
+				page.isRefresh = false;
 				//pageDB.deleteItem(page.url);
 				pageDB.setItem(page);
 				success && success();
+
+				// git sha 最好本地计算 避免发送请求 TODO
+				git.getFile({path:page.path}, function(data) {
+					page.id = data.blob_id;
+					pageDB.setItem(page);
+				})
 			}, error);
 		}
 

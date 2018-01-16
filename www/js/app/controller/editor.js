@@ -36,10 +36,7 @@ define([
 				}
 			}
 
-			var tmp = editorModuleEditor.getBlock();
-			if (!block || !tmp || tmp.token.start != block.token.start) {
-				editorModuleEditor.setBlock(block);
-			}
+			editorModuleEditor.setBlock(block);
 		}
 
 		function initEditor() {

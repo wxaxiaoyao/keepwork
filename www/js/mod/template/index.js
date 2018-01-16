@@ -24,9 +24,11 @@ define([
 	function string_to_object(value) {
 		if (typeof(value) == "string") {
 			return {text:value};
+		} else if (typeof(value) == "object") {
+			return value;
 		}
 
-		return value;
+		return {};
 	}
 
 	// 获取模块参数
