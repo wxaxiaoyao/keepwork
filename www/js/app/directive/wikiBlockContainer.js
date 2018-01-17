@@ -6,8 +6,6 @@ define([
 	'directive/wikiBlock',
 ], function(app, mdconf, wikiBlockContainerHtml){
     function getMd(mdName) {
-		//return app.get('app.md.' + mdName);
-		//app.objects.mds[mdName] = app.objects.mds[mdName] || {};
 		return app.objects.mds[mdName];
     }
 
@@ -66,8 +64,6 @@ define([
 				if (!block) {
 					return;
 				}
-
-				block.$element = $element;
 
 				$scope.clickContainer = function($event) {
 					if ($event) {

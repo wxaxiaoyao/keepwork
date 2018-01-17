@@ -34,7 +34,7 @@ define([
 		this.block = block;
 		//console.log(block);
 		if (block && typeof(block.wikimod) == "object" && typeof(block.wikimod.getEditorParams) == "function") {
-			this.params = block.wikimod.getEditorParams(block);
+			this.params = block.wikimod.getEditorParams(block.modParams);
 			this.datas = getOrderDatas(this.params);
 		} else {
 			this.params = undefined;
@@ -76,7 +76,7 @@ define([
 		}
 			
 		$scope.change = function(){
-			console.log($scope.params);
+			//console.log($scope.params);
 			editorModuleEditor.applyModParams();
 		}
 		$scope.$watch("$viewContentLoaded", init);

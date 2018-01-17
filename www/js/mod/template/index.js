@@ -46,10 +46,10 @@ define([
 		return editorParams;
 	}
 	// 获取编辑参数
-	function getEditorParams(wikiBlock) {
-		var modParams = wikiBlock.modParams || {};
+	function getEditorParams(modParams) {
 		var id = 0;
-
+		modParams = modParams || {};
+		modParams.rows = modParams.rows || [{cols:[{is_main_content:true}]}];
 		modParams.urlmatch = string_to_object(modParams.urlmatch);
 		modParams.urlmatch.$data = {
 			type:"text",

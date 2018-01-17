@@ -27,6 +27,8 @@ define([
 			requireUrl = defaultModPath + block.cmdName;
 		}
 
+		//console.log("加载mod:", requireUrl);
+
         require([requireUrl], function (mod) {
             cb && cb(mod);
         }, function () {
@@ -78,11 +80,7 @@ define([
         md.render = function (text, theme) {
             md.parse(text, theme);
 
-			if (md.template.render) {
-				md.template.render();
-			} else {
-				md.template.$apply && md.template.$apply();
-			}
+			md.template.render();
 
 			md.bindContainer();
 			return '<wiki-block-container data-template="true" data-params="' + encodeURI(md.mdName) + '"></wiki-block-container>';
@@ -100,7 +98,10 @@ define([
 
             block.isWikiBlock = isWikiBlock;
             if (!isWikiBlock) {
-                block.htmlContent = token.htmlContent;
+				if (block.htmlContent != token.htmlContent) {
+					block.htmlContent = token.htmlContent;
+					block.$render && block.$render(block.htmlContent);
+				}
 				block.isTemplate = false;
 				block.modName = undefined;
 				block.cmdName = undefined;
@@ -121,7 +122,6 @@ define([
                     modParams = mdconf.mdToJson(content) || content;
                 }
 
-				block.htmlContent = '<div></div>';
                 block.modName = modName;
                 block.cmdName = cmdName;
                 block.modParams = modParams;
@@ -155,12 +155,12 @@ define([
 
 				block.render = function(success, error) {
 					var self = this;
-					loadMod(self, function (mod) {
-						self.wikimod = mod;
+					function _render(mod) {
 						if (!self.$scope) {
 							error && error();
 							return;
 						}
+
 						var htmlContent = undefined;
 						if (typeof(mod) == "function") {
 							htmlContent = mod(self);	
@@ -169,24 +169,33 @@ define([
 						} else {
 							htmlContent = mod;
 						}
-
-						self.htmlContent = htmlContent;
-						self.$apply && self.$apply();
-
+						if (self.htmlContent != htmlContent) {
+							self.htmlContent = htmlContent;
+							self.$render && self.$render(htmlContent);
+						}
 						success && success();
-					}, function () {
-						console.log("加载模块" + block.modName + "失败");
-						error && error();
-					});
+					}
+
+					if (self.wikimod) {
+						_render(self.wikimod);
+					} else {
+						loadMod(self, function (mod) {
+							self.wikimod = mod;
+							_render(self.wikimod);
+						}, function () {
+							console.log("加载模块" + block.modName + "失败");
+							error && error();
+						});
+					}
 				}
 				block.render();
             }
         }
 
         md.parse = function (text, theme) {
-			//theme = theme || "";
-			//text = theme + '\n' + text;
-			//themeLineCount = theme.split("\n").length;
+			theme = theme || "";
+			text = theme + '\n' + text;
+			themeLineCount = theme.split("\n").length;
 
             var tokenList = md.md.parse(text);
             var blockList = md.template.blockList;
@@ -200,11 +209,13 @@ define([
 				if (block.text != token.text) {
 					block.text = token.text;
 					md.parseBlock(block, token);
+					//console.log(block);
 				} else {
+					//console.log(block);
 					//block.$apply && block.$apply();
 				}
-				//block.token.start = block.token.start - themeLineCount;
-				//block.token.end = block.token.end - themeLineCount;
+				block.token.start = block.token.start - themeLineCount;
+				block.token.end = block.token.end - themeLineCount;
 				blockList[i] = block;
 				//console.log(blcok);
 				if (block.isTemplate) {
@@ -227,8 +238,12 @@ define([
 				md.template.modName = undefined;
 				md.template.cmdName = undefined;
 				md.template.modParams = undefined;
-				md.template.render = undefined;
-				md.template.htmlContent = blankTemplateContent;
+				md.template.render = function(){
+					if (md.template.htmlContent != blankTemplateContent) {
+						md.template.htmlContent = blankTemplateContent;
+						md.template.$render && md.template.$render(blankTemplateContent);
+					}
+				};
 			}
 			//console.log(blockList);
             return blockList;

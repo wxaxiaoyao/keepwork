@@ -8,21 +8,16 @@ define([
             restrict:'E',
             controller: ['$scope', '$attrs', '$element', function ($scope, $attrs, $element) {
 				var block = $scope.$kp_block;
-				//console.log(block);
-				//if (!block) {
-					//block = extendBlock($scope, $attrs.params);
-				//}
-
-				var oldHtmlContent;
-				var render = function(newVal) {
-					if (!newVal || oldHtmlContent == newVal) {
-						return;
-					}
-					$element.html($compile(newVal)($scope));
-					oldHtmlContent = newVal;
+				
+				block.$render = function(htmlContent) {
+					$element.html($compile(htmlContent)($scope));
+					//console.log(htmlContent, block);
 					setTimeout(function() { $scope.$apply(); });
 				}
-				$scope.$watch('$kp_block.htmlContent', render);
+				
+				if (block.htmlContent) {
+					block.$render(block.htmlContent);
+				}
             }],
         };
     }]);
