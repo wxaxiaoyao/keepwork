@@ -80,7 +80,17 @@ define([
         md.render = function (text, theme) {
             md.parse(text, theme);
 
-			md.template.render();
+			md.template.render(function(){
+				for(var i = 0; i < md.template.blockList.length; i++) {
+					var block = md.template.blockList[i];
+					if (block.isTemplate) {
+						continue;
+					}
+					block.render();
+				}
+			});
+			md.template.$apply && md.template.$apply();
+			//console.log(md.template);
 
 			md.bindContainer();
 			return '<wiki-block-container data-template="true" data-params="' + encodeURI(md.mdName) + '"></wiki-block-container>';
@@ -90,7 +100,8 @@ define([
 			return md.template.blockList;
 		}
         // md.bind
-        md.parseBlock = function (block, token) {
+        md.parseBlock = function (block) {
+			var token = block.token;
             var content = token.content;
 			var text = token.text;
 			var line = text.split("\n")[0];
@@ -98,10 +109,6 @@ define([
 
             block.isWikiBlock = isWikiBlock;
             if (!isWikiBlock) {
-				if (block.htmlContent != token.htmlContent) {
-					block.htmlContent = token.htmlContent;
-					block.$render && block.$render(block.htmlContent);
-				}
 				block.isTemplate = false;
 				block.modName = undefined;
 				block.cmdName = undefined;
@@ -109,6 +116,12 @@ define([
 				block.render = undefined;
 				block.renderMod = undefined;
 				block.wikimod = undefined;
+				block.render = function() {
+					if (block.htmlContent != token.htmlContent && block.$render) {
+						block.htmlContent = token.htmlContent;
+						block.$render(block.htmlContent);
+					}
+				}
             } else {
                 var wikiCmdRE = /^```@([\w_\/]+)/;
                 var wikiModNameRE = /^([\w_]+)/;
@@ -156,11 +169,6 @@ define([
 				block.render = function(success, error) {
 					var self = this;
 					function _render(mod) {
-						if (!self.$scope) {
-							error && error();
-							return;
-						}
-
 						var htmlContent = undefined;
 						if (typeof(mod) == "function") {
 							htmlContent = mod(self);	
@@ -169,10 +177,11 @@ define([
 						} else {
 							htmlContent = mod;
 						}
-						if (self.htmlContent != htmlContent) {
+						if (self.htmlContent != htmlContent && self.$render) {
 							self.htmlContent = htmlContent;
-							self.$render && self.$render(htmlContent);
+							self.$render(htmlContent);
 						}
+						//self.$apply && self.$apply();
 						success && success();
 					}
 
@@ -208,7 +217,7 @@ define([
 				block.mdName = mdName;
 				if (block.text != token.text) {
 					block.text = token.text;
-					md.parseBlock(block, token);
+					md.parseBlock(block);
 					//console.log(block);
 				} else {
 					//console.log(block);
@@ -238,11 +247,12 @@ define([
 				md.template.modName = undefined;
 				md.template.cmdName = undefined;
 				md.template.modParams = undefined;
-				md.template.render = function(){
-					if (md.template.htmlContent != blankTemplateContent) {
+				md.template.render = function(success){
+					if (md.template.htmlContent != blankTemplateContent && md.template.$render) {
 						md.template.htmlContent = blankTemplateContent;
-						md.template.$render && md.template.$render(blankTemplateContent);
+						md.template.$render(blankTemplateContent);
 					}
+					success && success();
 				};
 			}
 			//console.log(blockList);
