@@ -41,6 +41,7 @@ define([
 			this.datas = undefined;
 		}
 
+		//console.log(this);
 		util.$apply();
 	}
 	

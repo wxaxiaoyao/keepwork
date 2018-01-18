@@ -17,7 +17,13 @@ define([
 
 					$element.html($compile(htmlContent)($scope));
 					//console.log(htmlContent, block);
-					setTimeout(function() { $scope.$apply(); });
+					setTimeout(function() { 
+						$scope.$apply(); 
+
+						if (block.wikimod && block.wikimod.renderAfter) {
+							block.wikimod.renderAfter(block);
+						}
+					});
 				}
 				
 				if (block.htmlContent) {

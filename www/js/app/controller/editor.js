@@ -35,7 +35,6 @@ define([
 					break;
 				}
 			}
-
 			editorModuleEditor.setBlock(block);
 		}
 

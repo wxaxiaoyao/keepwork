@@ -45,8 +45,10 @@ define([
 
 		return editorParams;
 	}
+
 	// 获取编辑参数
 	function getEditorParams(modParams) {
+		var idPrefix = "wikiblock_template_";
 		var id = 0;
 		modParams = modParams || {};
 		modParams.rows = modParams.rows || [{cols:[{is_main_content:true}]}];
@@ -55,7 +57,7 @@ define([
 			type:"text",
 			name:"urlmatch",
 			order:1,
-			id: id++,
+			id: idPrefix + id++,
 		}
 
 		for (var i = 0; i < modParams.rows.length; i++) {
@@ -65,7 +67,7 @@ define([
 				col.$data = {
 					type: "page",
 					name: "区块" + i + "-" + j,
-					id: id++,
+					id: idPrefix + id++,
 				}
 			}
 		}
@@ -95,16 +97,22 @@ define([
 			}
 		}
 
-		//console.log(wikiBlock.templateContent);
 		$scope.mode = wikiBlock.mode;
-		//console.log($scope.params, $scope.mode);
-
 		return htmlContent;
+	}
+
+	function renderAfter(wikiBlock) {
+		var $compile = app.ng_objects.$compile;
+		var $scope = wikiBlock.$scope;
+		var htmlContent = $compile(wikiBlock.templateContent)($scope);
+		$(".kp_wiki_template_main_content").html(htmlContent);
+		wikiBlock.$apply && wikiBlock.$apply();
 	}
 
 	return {
 		getEditorParams: getEditorParams,
 		getModuleParams: getModuleParams,
 		render: render,
+		renderAfter: renderAfter, // 二次渲染问题
 	}
 })

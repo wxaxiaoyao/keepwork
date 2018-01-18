@@ -83,12 +83,10 @@ define([
 			md.template.render(function(){
 				for(var i = 0; i < md.template.blockList.length; i++) {
 					var block = md.template.blockList[i];
-					if (block.isTemplate) {
-						continue;
-					}
 					block.render();
 				}
 			});
+
 			md.template.$apply && md.template.$apply();
 			//console.log(md.template);
 
@@ -101,6 +99,7 @@ define([
 		}
         // md.bind
         md.parseBlock = function (block) {
+			// 进来表明该模块发生变化 应重置所有状态
 			var token = block.token;
             var content = token.content;
 			var text = token.text;
@@ -113,9 +112,8 @@ define([
 				block.modName = undefined;
 				block.cmdName = undefined;
 				block.modParams = undefined;
-				block.render = undefined;
-				block.renderMod = undefined;
 				block.wikimod = undefined;
+				block.applyModParams = undefined;
 				block.render = function() {
 					if (block.htmlContent != token.htmlContent && block.$render) {
 						block.htmlContent = token.htmlContent;
@@ -134,6 +132,10 @@ define([
                 catch (e) {
                     modParams = mdconf.mdToJson(content) || content;
                 }
+
+				if (block.cmdName != cmdName) {
+					block.wikimod = undefined;
+				}
 
                 block.modName = modName;
                 block.cmdName = cmdName;
@@ -170,6 +172,7 @@ define([
 					var self = this;
 					function _render(mod) {
 						var htmlContent = undefined;
+						var md = getMd(self.mdName);
 						if (typeof(mod) == "function") {
 							htmlContent = mod(self);	
 						} else if(typeof(mod) == "object") {
@@ -177,11 +180,14 @@ define([
 						} else {
 							htmlContent = mod;
 						}
+
 						if (self.htmlContent != htmlContent && self.$render) {
 							self.htmlContent = htmlContent;
-							self.$render(htmlContent);
+							if (!self.isTemplate || self.blockList != undefined) { // template 与 template_block 唯一区别是blockList
+								self.$render(htmlContent);
+							}
+						} else {
 						}
-						//self.$apply && self.$apply();
 						success && success();
 					}
 
@@ -197,7 +203,6 @@ define([
 						});
 					}
 				}
-				block.render();
             }
         }
 
@@ -238,15 +243,20 @@ define([
 			}
 
 			if (template) {
+				md.template.token = template.token;
 				md.template.modName = template.modName;
 				md.template.cmdName = template.cmdName;
 				md.template.modParams = template.modParams;
+				md.template.wikimod = template.wikimod;
 				md.template.render = template.render;
 				md.template.applyModParams = template.applyModParams;
 			} else {
+				md.template.token = undefined;
 				md.template.modName = undefined;
 				md.template.cmdName = undefined;
 				md.template.modParams = undefined;
+				md.template.wikimod = undefined;
+				md.template.applyModParams = undefined;
 				md.template.render = function(success){
 					if (md.template.htmlContent != blankTemplateContent && md.template.$render) {
 						md.template.htmlContent = blankTemplateContent;
