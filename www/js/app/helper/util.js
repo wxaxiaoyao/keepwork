@@ -125,7 +125,7 @@ define([
 		}
 
 		window.history.pushState(state,"keepwork", relativeUrl);
-		window.location.hash = window.location.hash || state.hash;
+		window.location.hash = window.location.hash || state.hash || "";
 		util.setContentUrl(state.url);
 	}
 
