@@ -170,6 +170,12 @@ define([
 
 				block.render = function(success, error) {
 					var self = this;
+
+					if (!self.isChange) {
+						success && success();
+						return;
+					}
+
 					function _render(mod) {
 						var htmlContent = undefined;
 						var md = getMd(self.mdName);
@@ -222,9 +228,11 @@ define([
 				block.mdName = mdName;
 				if (block.text != token.text) {
 					block.text = token.text;
+					block.isChange = true;
 					md.parseBlock(block);
 					//console.log(block);
 				} else {
+					block.isChange = false;
 					//console.log(block);
 					//block.$apply && block.$apply();
 				}

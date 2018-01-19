@@ -10,6 +10,7 @@ local config = {
 	use_inner_server = true,
 
 	api_url_prefix = "/api/v1/",
+	wikimod_path = "www/js/mod/",
 	-- 数据库配置
 	database = {
 		db_type = "tabledb",  --  数据库类型: tabledb, mysql

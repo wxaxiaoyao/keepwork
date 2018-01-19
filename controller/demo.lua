@@ -1,6 +1,6 @@
 
 -- 获取控制器类
-local controller = commonlib.gettable("nws.controller")
+local controller = nws.gettable("nws.controller")
 --  创建test控制器
 local demo = controller:new("demo")
 

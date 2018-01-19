@@ -2,6 +2,18 @@ nws.import("helper/errors")
 nws.import("helper/const")
 nws.import("helper/filter")
 
+-- 加载wikimod 
+local filelist = {}
+commonlib.Files.Find(filelist, nws.config.wikimod_path, 1000, 1000000, "*.lua", nil)
+for _, x in ipairs(filelist) do
+	if string.match(x.filename, "^[^/]+/index.lua$") then
+		local filename = nws.config.wikimod_path .. x.filename
+		filename = string.gsub(filename, ".lua$", "")
+		nws.import(filename)
+	end
+end
+
+-- 加载框架路由 
 local test = nws.import("controller/test")
 local user = nws.import("controller/user")
 local data_source = nws.import("controller/data_source")
