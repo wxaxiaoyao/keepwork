@@ -76,7 +76,7 @@
 				<div class="tab-pane fade" id="myFollowId"> 
 					<div ng-repeat="x in followsList track by $index">
 						<div>
-							<img src="{{x.portrait}}" style="width:75px; height:75px"/>
+							<img ng-src="{{x.portrait}}" style="width:75px; height:75px"/>
 							<div>
 								<span>{{x.nickname}}</span>
 								<span>{{x.username}}</span>
@@ -87,7 +87,7 @@
 				<div class="tab-pane fade" id="myFansId"> 
 					<div ng-repeat="x in fansList track by $index">
 						<div>
-							<img src="{{x.fans_portrait}}" style="width:75px; height:75px"/>
+							<img ng-src="{{x.fans_portrait}}" style="width:75px; height:75px"/>
 							<div>
 								<span>{{x.fans_nickname}}</span>
 								<span>{{x.fans_username}}</span>
