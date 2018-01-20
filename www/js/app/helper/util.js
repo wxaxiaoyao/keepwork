@@ -42,6 +42,11 @@ define([
 			return result;
 		}	
 
+		// dev 开始
+		if (hostname.indexOf("dev.") == 0) {
+			return result;
+		}
+
 		for (var i = 0; i < officialHostnameList.length; i++) {
 			var officialHostname = officialHostnameList[i];
 			if (officialHostname == hostname) {
