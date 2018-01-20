@@ -1,1 +1,0 @@
-define('text!html/directive/wikiBlockContainer.html',[],function () { return '\n<style>\n.kp_wiki_block_container {\n\n}\n\n.kp_wiki_block_container:hover {\n}\n\n</style>\n\n<div ng-click="clickContainer($event)" class="kp_wiki_block_container">\n\t<wiki-block data-params="$kp_block"></wiki-block>\n\t<!--<div class="wikiblcok"></div>-->\n</div>\n';});
