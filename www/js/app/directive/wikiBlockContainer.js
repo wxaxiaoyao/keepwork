@@ -72,7 +72,7 @@ define([
 					if ($event) {
 						$event.stopPropagation();
 					}
-					console.log(block);
+					//console.log(block);
 
 					if (!block.isWikiBlock) {
 						return;

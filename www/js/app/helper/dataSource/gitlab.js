@@ -47,7 +47,7 @@ define([
 			var self = this;
 			var apiBaseUrl = self.apiBaseUrl;
 
-			if (self.authUsername != self.username) {
+			if (!self.token && self.authUsername != self.username) {
 				apiBaseUrl = self.proxyApiBaseUrl;
 			}
 

@@ -360,8 +360,8 @@ define([
 			setPreviewScale(editor);
 		};
 		var mouseupEvent = function(){
-			editor.editorContainer.off("mouseup", mouseupEvent);
-			editor.editorContainer.off("mousemove mouseleave", mousemoveEvent);
+			editor.editorContainer.off("mouseup mouseleave", mouseupEvent);
+			editor.editorContainer.off("mousemove", mousemoveEvent);
 			if (col1.width()<200){
 				col2.width("100%");
 				col1.width(0);

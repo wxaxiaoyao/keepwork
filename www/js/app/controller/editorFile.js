@@ -125,7 +125,7 @@ define([
 				}
 
 				if (window.location.hash) {
-					var url = window.location.hash.substring(2);
+					var url = decodeURIComponent(window.location.hash.substring(2));
 					var node = allPageMap[url];
 					//console.log(node);
 					openPage(node);
