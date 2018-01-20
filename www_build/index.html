@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<base href="/www/" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KEEPWORK</title>
+
+    <!-- lib css -->
+	<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+	<!--<link href="assets/css/main.css" rel="stylesheet" type="text/css">-->
+	{* '<link href="assets/css/main.css?bust=' .. tostring(os.time()) .. '" rel="stylesheet" type="text/css">' *}
+</head>
+
+<body>
+<div ng-controller="mainController">
+	<noscript id="noscriptId">{{ content }}</noscript>
+	<wikipage ng-if="isShowHeader" data-content="headerContent" data-content-url="headerContentUrl">
+	</wikipage>
+	<wikipage data-content="content" data-content-url="contentUrl">
+		{* content *}
+	</wikipage>
+	<wikipage ng-if-"isShowFooter" data-content="footerContent" data-content-url="footerContentUrl">
+	</wikipage>
+</div>
+<!-- lib脚本 -->
+<!--<script data-main="js/main.js" src="js/lib/requirejs/require.js"></script>-->
+{* '<script data-main="js/main.js?bust=' .. tostring(os.time()) ..'" src="js/lib/requirejs/require.js"></script>' *}
+</body>
+</html>

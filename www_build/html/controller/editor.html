@@ -1,0 +1,141 @@
+
+<style>
+.kp_editor_container {
+	z-index:1;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+
+.kp_editor_left_container {
+	float: left;
+	width:300px;
+	cursor: pointer;
+	height:100%;
+	position: relative;
+}
+
+.kp_editor_split_strip {
+	height:100%;
+	width: 5px;
+	background-color:rgb(168,168,168);
+	position:absolute;
+	top: 0px;
+	right: 0px;
+	cursor: col-resize;
+}
+
+.kp_editor_left_content_switch {
+	position:absolute;
+	bottom:0px;
+	right:0px;
+	z-index:10;
+}
+.kp_cmeditor_container {
+	height:100%;
+	margin-left:240px;
+}
+
+.kp_editor_nav_bar {
+	width:65px;
+	float:left;
+	height:100%;
+	border-right: 1px solid #ddd;
+	position:relative;
+	text-align: center;
+}
+
+.kp_editor_workspace_nav_container {
+	text-align:center;
+}
+
+.kp_editor_workspace_nav_item {
+}
+
+.kp_editor_workspace_nav_item_active {
+	background-color: #ddd;
+}
+
+.kp_editor_workspace_nav_item:hover {
+	background-color: #ccc;
+}
+
+.kp_editor_left_content_container {
+	margin-left: 65px;
+	height:100%;
+	margin-right:9px;
+}
+
+.kp_editor_nav_bar_menu {
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	right:0px;
+}
+
+</style>
+
+<div ng-controller="editorController" class="kp_editor_container">
+	<div style="height:100%;"> 
+		<div class="kp_editor_left_container">
+			<div class="kp_editor_nav_bar kp_forbit_copy">
+				<div class="kp_editor_workspace_nav_container">
+					<div class="kp_editor_workspace_nav_item" 
+						ng-repeat="x in workspaceContentList track by $index"
+						ng-class='workspaceItem.type == x.type ? "kp_editor_workspace_nav_item_active" : ""'
+						ng-click="clickWorkspaceNavItem(x)">
+						{{x.text}}
+					</div>
+				</div>
+				<div class="kp_editor_nav_bar_menu">
+					<div class="dropup">
+						<div class="dropdown-toggle" data-toggle="dropdown">
+							视图
+						</div>	
+						<ul class="dropdown-menu" role="menu">
+							<li ng-repeat="x in viewList track by $index" ng-class='viewtype == x.type ? "active" : ""'>
+								<a ng-click="clickSwitchView(x)">{{x.text}}</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a ng-click="toggleLeftPane()">
+									<i ng-class='isShowLeftPane ? "fa fa-check" : ""' aria-hidden="true"> 工作区</i>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="dropup">
+						<div class="dropdown-toggle" data-toggle="dropdown">
+							逍遥
+							<!--<span class="caret"></span>-->
+						</div>	
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a ng-click="clickMyHomeBtn()">我的主页</a>
+							</li>
+							<li>
+								<a ng-click="clickSettingBtn()">设置</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a ng-click="clickLogoutBtn()">退出</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--已打开文件列表-->
+			<div ng-show="isShowLeftPane" class="kp_editor_left_content_container">
+				<wikipage data-content="workspaceContent" data-content-url="workspaceContentUrl"></wikipage>
+			</div>
+
+			<!--<div class="clearfix"></div>-->
+			<div class="kp_editor_split_strip kp_forbit_copy">
+			</div>
+		</div>
+
+		<div id="editor" class="kp_cmeditor_container"></div>
+	</div>
+</div>

@@ -1,0 +1,105 @@
+
+<div ng-controller="dataSourceController">
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a href="#dataSourceGroup" data-toggle="tab">数据源配置</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div class="panel-group tab-pane fade in active" id="dataSourceGroup">
+			<div class="panel" ng-repeat="x in dataSourceList track by $index">
+				<div>
+					<a href='{{"#dataSourceItemId_" + $index}}' data-toggle="collapse" data-parent="#dataSourceGroup">{{x.data_source_name}}</a>
+					<span class="badge">{{x.is_default ? "默认" : ""}}</span>
+					<span class="badge">{{x.data_source_name == "__keepwork__" ? "内置GIT" : ""}}</span>
+
+					<a ng-hide='x.data_source_name == "__keepwork__"' ng-click="clickModifyDataSource(x)">修改</a>
+				</div>
+				<div id='{{"dataSourceItemId_" + $index}}' class="collapse">
+					<div>
+						<label>数据源名:</label>
+						<span>{{x.data_source_name}}</span>
+					</div>
+					<div>
+						<label>默认:</label>
+						<span>{{x.is_default ? "是" : "否"}}</span>
+						<a ng-show="!x.is_default" ng-click="clickSetDefault(x)">设置成默认</a>
+					</div>
+					<div>
+						<label>来源:</label>
+						<span>{{x.data_source_name == "__keepwork__" ? "内置GIT" : "外部GIT"}}</span>
+					</div>
+					<div>
+						<label>类型:</label>
+						<span>{{x.type}}</span>
+					</div>
+					<div>
+						<label>项目名:</label>
+						<span>{{x.project_name}}</span>
+					</div>
+					<div>
+						<label>API BASE URL:</label>
+						<span>{{x.api_base_url}}</span>
+					</div>
+					<div>
+						<label>RAW BASE URL:</label>
+						<span>{{x.raw_base_url}}</span>
+					</div>
+					<div>
+						<label>TOKEN:</label>
+						<span>{{x.token}}</span>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div>
+					<div style="display:flex; justify-content:flex-end;">
+						<a href="#newDataSourceId" data-toggle="collapse">{{"新增"}}</a>
+					</div>
+				</div>
+				<div id="newDataSourceId" class="collapse">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-xs-3 control-label">类型:</label>
+							<div class="col-xs-6">
+								<select class="form-control" ng-model="dataSource.type">
+									<option ng-repeat="x in ['gitlab']" value="{{x}}">{{x}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3 control-label">数据源名:</label>
+							<div class="col-xs-6">
+								<input ng-model="dataSource.data_source_name" type="text" class="form-control" placeholder="gitlab">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3 control-label">API BASE URL:</label>
+							<div class="col-xs-6">
+								<input ng-model="dataSource.api_base_url" type="text" class="form-control" placeholder="https://gitlab.com/api/v4">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3 control-label">RAW BASE URL:</label>
+							<div class="col-xs-6">
+								<input ng-model="dataSource.raw_base_url" type="text" class="form-control" placeholder="https://gitlab.com">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3 control-label">Token:</label>
+							<div class="col-xs-6">
+								<input ng-model="dataSource.token" type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-xs-offset-3 col-xs-6">
+								<button class="btn btn-primary" ng-click="clickSetDataSource()">提交</button>
+								<span style="color: red">{{errMsg}}</span>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

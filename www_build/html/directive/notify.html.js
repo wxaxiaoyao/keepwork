@@ -1,0 +1,1 @@
+define('text!html/directive/notify.html',[],function () { return '\n<div style="display:none; position:relative; z-index:10;">\n\t<div ng-class=\'"alert alert-" + type\' style="position:absolute; width:100%;">\n\t\t<a href="#" class="close" data-dismiss="alert">&times;</a>\n\t\t<div class="kp-notify-content"></div>\n\t</div>\n</div>\n';});

@@ -1,0 +1,17 @@
+
+<div ng-controller="editorModuleEditorController">
+	<div ng-repeat="data in params.datas track by $index">
+		<div ng-if='data.$data.type == "text"'>
+			<div>{{data.$data.name}}</div>
+			<div>
+				<input ng-model="data.text" ng-change="change()"/>
+			</div>
+		</div>
+		<!--<div ng-if='data.type == "link"'>-->
+			<!--<div>{{data.name}}</div>-->
+			<!--<div>-->
+				<!--<input ng-model="data.text"/>-->
+			<!--</div>-->
+		<!--</div>-->
+	</div>
+</div>
