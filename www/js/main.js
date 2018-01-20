@@ -51,9 +51,6 @@
             'highlight':{
                 exports: 'hljs',
             },
-            'wangEditor': {
-                deps:['jquery'],
-            },
         },
         packages: [
             {
@@ -62,7 +59,6 @@
                 main: "lib/codemirror"
             },
         ],
-        deps:['bootstrap'],
 		waitSeconds:20,
         urlArgs: "bust=" + (new Date()).getTime()  //防止读取缓存，调试用
         // urlArgs: "bust=" + (config.isLocal() ? ((new Date()).getTime()) : (config.bustVersion || '')),   //防止读取缓存，调试用

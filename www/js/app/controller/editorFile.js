@@ -4,7 +4,6 @@ define([
 	'helper/dataSource/gitlab',
 	'text!html/controller/editorFile.html',
 ], function(app, gitlab, htmlContent){
-	var $rootScope = app.ng_objects.$rootScope;
 	var util = app.objects.util;
 	var config = app.objects.config;
 	var storage = app.objects.storage;
@@ -26,6 +25,8 @@ define([
 	});
 
 	app.registerController("editorFileController", ["$scope", function($scope){
+		var $rootScope = app.ng_objects.$rootScope;
+
 		$scope.openedPageMap = openedPageMap;
 		$scope.node = userNode;
 

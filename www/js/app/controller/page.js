@@ -4,14 +4,13 @@ define([
 	'helper/dataSource/gitlab',
 	'text!html/controller/page.html',
 ], function (app, gitlab, htmlContent) {
-	var $auth = app.ng_objects.$auth;
-	var $rootScope = app.ng_objects.$rootScope;
 	var util = app.objects.util;
 	var config = app.objects.config;
 	var storage = app.objects.storage;
 	var git = gitlab();
 
     app.registerController("pageController",['$scope', function ($scope) {
+		var $rootScope = app.ng_objects.$rootScope;
 		var $auth =app.ng_objects.$auth;
 
 		$scope.levelList = [{

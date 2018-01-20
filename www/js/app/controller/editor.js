@@ -10,8 +10,6 @@ define([
 	'controller/editorModule',
 	'text!html/controller/editor.html',
 ], function (app, cmeditor,  editorModuleEditorHtml, editorFileHtml, editorModuleHtml, htmlContent) {
-	var $auth = app.ng_objects.$auth;
-	var $rootScope = app.ng_objects.$rootScope;
 	var util = app.objects.util;
 
 	var editor = undefined;
@@ -22,6 +20,8 @@ define([
 
 	//function format
 	app.registerController("editorController", ["$scope", "$compile", function($scope, $compile){
+		var $auth = app.ng_objects.$auth;
+		var $rootScope = app.ng_objects.$rootScope;
 
 		function cursorActivity(editor) {
 			var editorModuleEditor = app.getShareObject("editorModuleEditor");

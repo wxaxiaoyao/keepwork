@@ -3,7 +3,6 @@ define([
 	'app',
 	'text!html/controller/editorModuleEditor.html',
 ], function(app, htmlContent) {
-	var $auth =app.ng_objects.$auth;
 	var util = app.objects.util;
 	var config = app.objects.config;
 
@@ -71,6 +70,7 @@ define([
 	}
 
     app.registerController("editorModuleEditorController",['$scope', function ($scope) {
+		var $auth =app.ng_objects.$auth;
 		function init() {
 			$scope.params = editorModuleEditor;
 			//util.$apply();

@@ -9,7 +9,9 @@ define([
 ], function (angular) {
 	var app = {};
     app.appName = "keepwork";
-	app.objects = {};
+	app.objects = {
+		share:{},
+	};
     app.ng_objects = {
         controller_map:{},
         directive_map:{},
@@ -102,6 +104,7 @@ define([
 
     // 启动框架
     app.bootstrap = function () {
+		// 加载依赖
         require([
 			"helper/storage",
 			"helper/config",
@@ -112,8 +115,6 @@ define([
 
 			"directive/wikipage",
 			"directive/notify",
-
-			"controller/main",
 			//'directive/treeview',
         ], function (storage, config, util, mdconf, mdwiki, dataSource) {
 			app.objects.storage = storage;
@@ -123,16 +124,25 @@ define([
 			app.objects.mdwiki = mdwiki;
 			app.objects.dataSource = dataSource;
 
-			app.objects.share = {}; // 共享对象
-			app.getShareObject = function(key) {
-				app.objects.share[key] = app.objects.share[key] || {};
-
-				return app.objects.share[key];
-			}
-
-            angular.bootstrap(document, [app.appName]);
+			// 加载控制器
+			require([
+				"controller/main",
+				"controller/header",
+				"controller/editor",
+				"controller/user",
+				"controller/userSetting",
+			], function(){
+				angular.bootstrap(document, [app.appName]);
+			});
         });
     }
+
+	// 获取共享对象
+	app.getShareObject = function(key) {
+		app.objects.share[key] = app.objects.share[key] || {};
+
+		return app.objects.share[key];
+	}
 
 	// 获取用户信息
 	app.getUser = function(success, error) {
