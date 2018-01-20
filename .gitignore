@@ -3,4 +3,5 @@ assets.log
 nws/
 database/
 wwww_build/
+wwww_build
 nohup.out
