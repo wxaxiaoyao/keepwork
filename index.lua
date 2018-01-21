@@ -2,6 +2,9 @@ nws.import("helper/errors")
 nws.import("helper/const")
 nws.import("helper/filter")
 
+-- 静态文件版本
+local version_bust = tostring(os.time())
+
 -- 加载wikimod 
 local filelist = {}
 commonlib.Files.Find(filelist, nws.config.wikimod_path, 1000, 1000000, "*.lua", nil)
@@ -44,7 +47,7 @@ nws.router.default_handler = function(ctx)
 	local ext = path:match('^.+%.([a-zA-Z0-9]+)$')
 	local dst_username = string.match(url, "/([^/]+)")
 	if not dst_username or dst_username == "www" or url == ("/" .. dst_username) then
-		ctx.response:render("www/index.html", {})
+		ctx.response:render("www/index.html", {version_bust = version_bust})
 		return
 	end
 
@@ -58,7 +61,7 @@ nws.router.default_handler = function(ctx)
 
 	--local err, content = file:_get_content_by_path(ctx.username, path .. ".md")
 	-- 用户页面
-	ctx.response:render("www/index.html", {content = content})
+	ctx.response:render("www/index.html", {content = content, version_bust = version_bust})
 	return
 end
 
