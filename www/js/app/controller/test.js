@@ -7,12 +7,22 @@ define([
 		var $rootScope = app.ng_objects.$rootScope;
 		$scope.message = "this is test";
 		$scope.type = "info";
-
-		app.ng_objects.$timeout(function(){
-			console.log("------------");
-			$scope.type = "warning";
-			//$scope.message = "<H3>test</h3>";
-		},2000);
+		$scope.node = {
+			htmlContent:"node1",
+			nodes:[
+			{
+				htmlContent:"node11",
+			},
+			{
+				htmlContent:"node12",
+				nodes:[
+				{
+					htmlContent:"node121",
+				}
+				]
+			},
+			],
+		}
 	}]);
 
 	return htmlContent;

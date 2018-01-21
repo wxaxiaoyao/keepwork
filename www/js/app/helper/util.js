@@ -116,6 +116,10 @@ define([
 		});
 	}
 
+	util.$broadcast = function(msg, data) {
+		app.ng_objects.$rootScope.$broadcast(msg, data);
+	}
+
 	util.setPageContentUrl = function(url) {
 		app.ng_objects.$rootScope.contentUrl = state.url;
 		util.$apply();

@@ -115,6 +115,7 @@ define([
 
 			"directive/wikipage",
 			"directive/notify",
+			"directive/treenode",
 			//'directive/treeview',
         ], function (storage, config, util, mdconf, mdwiki, dataSource) {
 			app.objects.storage = storage;

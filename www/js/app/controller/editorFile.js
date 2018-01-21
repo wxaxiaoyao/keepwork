@@ -1,8 +1,9 @@
 
 define([
 	"app",
+	'text!html/partial/editorFileNode.html',
 	'text!html/controller/editorFile.html',
-], function(app, htmlContent){
+], function(app, editorFileNodeHtml, htmlContent){
 	var util = app.objects.util;
 	var config = app.objects.config;
 	var storage = app.objects.storage;
@@ -26,8 +27,10 @@ define([
 	app.registerController("editorFileController", ["$scope", function($scope){
 		var $rootScope = app.ng_objects.$rootScope;
 
+		$scope.fileNodeHtml = editorFileNodeHtml;
 		$scope.openedPageMap = openedPageMap;
 		$scope.node = userNode;
+		$scope.showType = "list"; // tree list
 
 		// 保存已打开的文件列表
 		function saveOpenedPageList() {
@@ -156,6 +159,7 @@ define([
 							nodes:[],
 						}
 					}
+					$scope.node.type = "tree";
 					$scope.node.showSubNode = false;
 					$scope.node.text = "我的页面";
 					$scope.node.isRootNode = true;
@@ -201,6 +205,7 @@ define([
 			x.url = node.url;
 			x.username = node.username;
 			x.cursor = node.cursor;
+			x.opened = node.opened;
 
 			pageDB.setItem(x, success, error);
 		}
@@ -335,14 +340,6 @@ define([
 			});
 		}
 
-		$scope.clickBackwardBtn = function() {
-			if (stack.length == 0) {
-				$scope.node.showSubNode = !$scope.node.showSubNode;
-				return;
-			}
-			$scope.node = stack.pop();
-		}
-
 		// 打开站点页
 		function openPage(node) {
 			if (!node) {
@@ -352,11 +349,12 @@ define([
 			}
 
 			if (!$scope.openedPageMap[node.url]) {
+				node.opened = true;
 				$scope.openedPageMap[node.url] = node;
 				saveOpenedPageList();
 			}
 			curPage = node;
-			console.log(curPage.id, git.sha(curPage.content));
+			//console.log(curPage.id, git.sha(curPage.content));
 			editor.swapDoc(node.url, node.content);
 			editor.editor.setCursor(curPage.cursor || {
 				line: editor.editor.lineCount(),
@@ -403,11 +401,33 @@ define([
 			}
 		}
 
+		$scope.clickBackwardBtn = function() {
+			if (stack.length == 0) {
+				$scope.node.showSubNode = !$scope.node.showSubNode;
+				return;
+			}
+			$scope.node = stack.pop();
+		}
+
 		$scope.clickItem = function(node) {
 			//console.log("点击文件项:", node);
 			if (node.type == "tree") {
-				stack.push($scope.node);
-				$scope.node = node;
+				if ($scope.showType == "list") {
+					if ($scope.node.url != node.url) {
+						stack.push($scope.node);
+						$scope.node = node;
+						node.showSubNode = true;
+					} else {
+						if (stack.length == 0) {
+							$scope.node.showSubNode = !$scope.node.showSubNode;
+						} else {
+							$scope.node.showSubNode = false;
+							$scope.node = stack.pop();
+						}
+					}
+				} else {
+					node.showSubNode = !node.showSubNode;
+				}
 				return;
 			}
 
@@ -423,7 +443,7 @@ define([
 			}
 
 			delete $scope.openedPageMap[node.url];
-			//delete allPageMap[node.url];
+			node.opened = false;
 			
 			saveOpenedPageList();
 
@@ -438,48 +458,58 @@ define([
 			$scope.curPage = curPage;
 		}
 
-		$scope.clickNewFile = function(node, type) {
-			$scope.isCreateItem = true;
-			$scope.createItemNode = node;
-			$scope.createItemType = type;
+		$scope.clickNewFile = function(node, type, $event) {
+			if ($event) {
+				$event.stopPropagation();
+			}
+
+			$scope.clickCancelNewItem();
+
+			$scope.newItemNode = node;
+			$scope.newItemNode.newItemType = type;
+			$scope.newItemNode.isNewItem = true;
+			$scope.newItemNode.newItemName = "";
 			setTimeout(function(){
 				$("#fileInputId")[0].focus();
 			});
 		}
 
-		$scope.clickCancelCreateItem = function() {
-			$scope.isCreateItem = false;
-			$scope.newItemName = "";
-			$scope.createItemNode = undefined;
+		$scope.clickCancelNewItem = function() {
+			if ($scope.newItemNode) {
+				$scope.newItemNode.isNewItem = false;
+				$scope.newItemNode.newItemType = undefined;
+				$scope.newItemNode.newItemName = "";
+			}
+			$scope.newItemNode = undefined;
 			util.$apply();
 		}
 
-		$scope.clickCreateItem = function(node) {
-			if (!$scope.newItemName || !$scope.createItemNode) {
-				$scope.clickCancelCreateItem();
+		$scope.clickNewItem = function() {
+			if (!$scope.newItemNode || !$scope.newItemNode.newItemName) {
+				$scope.clickCancelNewItem();
 				return;
 			}
-			node = node || $scope.createItemNode;
+			var node = $scope.newItemNode;
 			for (var i = 0; i < node.nodes.length; i++) {
 				var temp = node.nodes[i];
-				if (temp.name == $scope.newItemName && temp.type == $scope.createItemType) {
+				if (temp.name == node.newItemName && temp.type == $scope.newItemType) {
 					console.log("文件已存在");
 					return;
 				}
 			}
-			//console.log($scope.createItemType, node, $scope.newItemName);
-			var path = node.path + "/" + $scope.newItemName + ($scope.createItemType == "tree" ? "/.gitkeep":".md");
+			var path = node.path + "/" + node.newItemName + (node.newItemType == "tree" ? "/.gitkeep":".md");
 			node.nodes.push({
 				path: path,
-				url: $scope.createItemType == "tree" ? path : (node.path + "/" + $scope.newItemName),
+				url: node.newItemType == "tree" ? path : (node.path + "/" + node.newItemName),
 				content:"",
-				name: $scope.newItemName,
-				text: $scope.newItemName,
-				type: $scope.createItemType,
+				name: node.newItemName,
+				text: node.newItemName,
+				type: node.newItemType,
 			});
+			//util.$apply();
 
-			$scope.clickCancelCreateItem();
-			if ($scope.createItemType == "tree") {
+			$scope.clickCancelNewItem();
+			if (node.newItemType == "tree") {
 				git.writeFile({
 					path:path,
 					content:"",
@@ -512,14 +542,37 @@ define([
 			window.open(git.getGitFilePath({path:node.path}));
 		}
 
-		$scope.clickDeleteItem = function(node, index, $event) {
+		$scope.clickDeleteItem = function(node, $event) {
 			if ($event) {
 				$event.stopPropagation();
 			}
-			deletePage(node.nodes[index], function(){
-				node.nodes.splice(index,1);	
-			});
+
+			var parentUrl = node.url.replace(/\/[^\/]*$/, "");
+			var parentNode = allPageMap[parentUrl];
+			if (!parentNode) {
+				return;
+			}
+
+			var index = undefined;
+			for (var i = 0; i < parentNode.nodes.length; i++) {
+				if (parentNode.nodes[i].url == node.url){
+					index = i;
+					break;
+				}
+			}
+			if (index == undefined) {
+				return;
+			}
+
+			if (node.id) {
+				deletePage(node, function(){
+					parentNode.nodes.splice(index,1);	
+				});
+			} else {
+				parentNode.nodes.splice(index,1);	
+			}
 		}
+
 		$scope.clickOpenedListBtn = function(){
 			$scope.showOpenedList = !$scope.showOpenedList;
 		}
@@ -527,9 +580,9 @@ define([
 			//console.log(event.keyCode);
 			if ($("#fileInputId").is(":focus")) {
 				if(event.keyCode == "13" ) {
-					$scope.clickCreateItem();
+					$scope.clickNewItem();
 				} else if (event.keyCode == "27") {
-					$scope.clickCancelCreateItem();
+					$scope.clickCancelNewItem();
 				}
 			}
 		});

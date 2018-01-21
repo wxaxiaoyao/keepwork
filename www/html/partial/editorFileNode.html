@@ -1,0 +1,31 @@
+
+<div ng-click="clickItem(node)" class="kp_file_item_container" ng-style='node.path == curPage.path && {"background-color":"#ccc"}' class="kp_forbit_copy">
+	<div ng-if='node.type == "tree"'>
+		<div class="kp_file_item_text" data-toggle="tooltip" title="{{node.url}}" ng-style="style">
+			<i ng-class='node.showSubNode ? "fa fa-chevron-down" : "fa fa-chevron-right"' aria-hidden="true"></i>
+			<!--<i class="fa fa-folder-o" aria-hidden="true"></i>-->
+			<span class="kp_forbit_copy">{{node.text}}</span>
+		</div>
+		<div class="kp_file_item_btn_group">
+			<img ng-click='clickNewFile(node, "blob", $event)' ng-src='{{imgsPath + "new_file.png"}}'/>
+			<img ng-click='clickNewFile(node, "tree", $event)' ng-src='{{imgsPath + "new_dir.png"}}'/>
+		</div>
+	</div>
+	<div ng-if='node.type == "blob"'>
+		<div class="kp_file_item_text" data-toggle="tooltip" title="{{node.url}}" ng-style="style">
+			<i ng-show="node.isConflict" ng-click="clickFixedConflict(node, $event)" ng-show='node.type != "tree"' class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
+			<i ng-hide="node.isConflict" ng-class='node.type == "tree" ? "fa fa-folder-o" : (node.isRefresh ? "fa fa-refresh fa-spin" : (node.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"))' aria-hidden="true"></i>
+			<span class="kp_forbit_copy">{{node.text}}</span>
+		</div>
+		<div class="kp_file_item_btn_group">
+			<i ng-click="clickAccessPage(node, $event)" ng-show='node.type != "tree"' class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="打开"></i>
+			<i ng-click="clickGitBtn(node, $event)" ng-hide='node.type == "tree"' class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
+			<i ng-if="node.opened" ng-show="!node.nodes || node.nodes.length == 0" ng-click='clickCloseBtn(node, $event)' class="fa fa-times" aria-hidden="true" data-toggle="tooltip" title="关闭"></i>
+			<i ng-if="!node.opened" ng-show="!node.nodes || node.nodes.length == 0" ng-click='clickDeleteItem(node, $event)' class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>
+		</div>
+	</div>
+</div>
+
+<div ng-if="node.isNewItem">
+	<input id="fileInputId" class="kp_input_text" type="text" ng-model="node.newItemName"/>
+</div>
