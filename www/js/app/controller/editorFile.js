@@ -124,6 +124,9 @@ define([
 					if (!allPageMap[url]) {
 						continue;
 					}
+					if (allPageMap[url].username != $scope.username) {
+						continue;
+					}
 					$scope.openedPageMap[url] = allPageMap[url];
 				}
 
@@ -501,6 +504,8 @@ define([
 			node.nodes.push({
 				path: path,
 				url: node.newItemType == "tree" ? path : (node.path + "/" + node.newItemName),
+				pagename: node.newItemName,
+				username: node.username,
 				content:"",
 				name: node.newItemName,
 				text: node.newItemName,
@@ -587,7 +592,12 @@ define([
 			}
 		});
 
-		$scope.$watch("$viewContentLoaded", init);
+		$scope.$watch("$viewContentLoaded", function(){
+			app.getUser(function(user){
+				$scope.user = user;
+				init();
+			});
+		});
 	}]);
 
 	return htmlContent;

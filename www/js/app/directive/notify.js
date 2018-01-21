@@ -19,7 +19,7 @@ define([
 
 				$scope.notifyList = [];
 				function hide() {
-					containerElem.fadeOut(2000);
+					containerElem.fadeOut(1000);
 				}
 
 				function show() {
@@ -32,8 +32,8 @@ define([
 					var html = "<div>" + content + "</div>";
 					html = $compile(html)($scope);
 					contentElem.html(html);
-					containerElem.fadeIn(2000);
-					setTimeout(hide, 4000);
+					containerElem.fadeIn(1000);
+					setTimeout(hide, 2000);
 				}
 
 				$scope.$watch(function(){

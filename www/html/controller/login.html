@@ -1,22 +1,26 @@
 
+<style>
+.kp_login_container {
+	margin-top:80px;
+}
+</style>
 
-<div ng-controller="loginController" class="container">
-	
+<div ng-controller="loginController" class="container kp_login_container">
 	<form class="form-horizontal" role="form">
 		<div class="form-group">
-			<label class="col-sm-2 col-sm-offset-3 control-label">用户名:</label>
+			<label class="col-sm-2 col-sm-offset-2 control-label">用户名:</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" ng-model="username"/>
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-2 col-sm-offset-3 control-label">密码:</label>
+			<label class="col-sm-2 col-sm-offset-2 control-label">密码:</label>
 			<div class="col-sm-4">
 				<input type="password" class="form-control" ng-model="password"/>
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-offset-5 col-sm-4"> 
+			<div class="col-sm-offset-4 col-sm-4"> 
 				<button type="button" ng-click="clickLogin()" class="center-block btn btn-default">登陆</button>
 			</div>
 		</div>

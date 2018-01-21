@@ -7,9 +7,11 @@ define([
 	var config = app.objects.config;
 
     app.registerController("loginController",['$scope', function ($scope) {
-		var $auth =app.ng_objects.$auth;
+		var $auth = app.ng_objects.$auth;
+		var $rootScope = app.ng_objects.$rootScope;
 		
 		$scope.clickLogin = function() {
+			$rootScope.notifyContent = undefined;
 			var params = {
 				username: $scope.username,
 				password: $scope.password,
@@ -24,8 +26,9 @@ define([
 					util.go("/" + data.userinfo.username);
 				},
 				error: function(err) {
-
-				}
+					$rootScope.notifyContent = err.message;
+					console.log(err);
+				},
 			});
 		}
 
