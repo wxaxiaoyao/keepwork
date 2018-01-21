@@ -127,6 +127,9 @@ define([
 		var link_text = regs[1];
 		var link_href = regs[2];
 		var link_str = '<a href="'+ link_href +'">' + link_text + '</a>';
+		if (link_href.indexOf("http://") == 0 || link_href.indexOf("https://") == 0) {
+			link_str = '<a target="_blank" href="'+ link_href +'">' + link_text + '</a>';
+		}
 		var link_render = obj.md.rule_render["a"];
 		if (link_render) {
 			link_str = link_render({md:obj.md, text:match_str, link_text:link_text, link_href:link_href}) || link_str;
