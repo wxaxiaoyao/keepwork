@@ -1,7 +1,8 @@
 
 define([
 	'app',	
-], function(app) {
+	'jshashes',
+], function(app, Hashes) {
 	var util = app.objects.util = {};
 
 	// 是否是空对象
@@ -11,6 +12,24 @@ define([
 		}
 
 		return true;
+	}
+
+	util.getStringByteLength = function(str) {
+		var totalLength = 0;     
+		var charCode;  
+		for (var i = 0; i < str.length; i++) {  
+			charCode = str.charCodeAt(i);  
+			if (charCode < 0x007f)  {     
+				totalLength++;     
+			} else if ((0x0080 <= charCode) && (charCode <= 0x07ff))  {     
+				totalLength += 2;     
+			} else if ((0x0800 <= charCode) && (charCode <= 0xffff))  {     
+				totalLength += 3;   
+			} else{  
+				totalLength += 4;   
+			}          
+		}  
+		return totalLength;   
 	}
 
 	util.getOfficialHost = function() {
@@ -196,6 +215,7 @@ define([
         });
 
 	}
+
 	window.util = util;
 	return util;
 });

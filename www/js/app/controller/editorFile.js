@@ -1,16 +1,15 @@
 
 define([
 	"app",
-	'helper/dataSource/gitlab',
 	'text!html/controller/editorFile.html',
-], function(app, gitlab, htmlContent){
+], function(app, htmlContent){
 	var util = app.objects.util;
 	var config = app.objects.config;
 	var storage = app.objects.storage;
 
 	var pageDB = undefined;
 	var editor = undefined;
-	var git = gitlab();
+	var git = undefined;
 
 	var saveTimerMap = {};
 	var saveInterval = 3 * 60 * 1000; // 保存间隔3分钟
@@ -271,15 +270,16 @@ define([
 				page.isModify = false;
 				page.isConflict = false;
 				page.isRefresh = false;
+				page.id = git.sha(page.content);
 				//pageDB.deleteItem(page.url);
 				pageDB.setItem(page);
 				success && success();
 
 				// git sha 最好本地计算 避免发送请求 TODO
-				git.getFile({path:page.path}, function(data) {
-					page.id = data.blob_id;
-					pageDB.setItem(page);
-				})
+				//git.getFile({path:page.path}, function(data) {
+					//page.id = data.blob_id;
+					//pageDB.setItem(page);
+				//});
 			}, error);
 		}
 
@@ -356,6 +356,7 @@ define([
 				saveOpenedPageList();
 			}
 			curPage = node;
+			console.log(curPage.id, git.sha(curPage.content));
 			editor.swapDoc(node.url, node.content);
 			editor.editor.setCursor(curPage.cursor || {
 				line: editor.editor.lineCount(),

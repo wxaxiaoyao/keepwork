@@ -24,6 +24,7 @@
 		'markdown-it': 'js/lib/markdown-it/markdown-it.min',  // 已支持amd则不能喝<script>标签混合使用
 		'highlight': 'js/lib/highlight/highlight.pack', //不支持amd规范可用标签引入 或配置shim
 		'js-base64': 'js/lib/js-base64/base64.min',
+		'jshashes': 'js/lib/jshashes/hashes.min',
 		'text': 'js/lib/requirejs/text',
 		'domReady': 'js/lib/requirejs/domReady',
 		'cropper': 'js/lib/cropper/cropper.min',
