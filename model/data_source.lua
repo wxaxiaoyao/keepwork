@@ -59,8 +59,10 @@ function data_source:get_system_default_git()
 		api_base_url = "https://gitlab.com/api/v4",
 		raw_base_url = "https://gitlab.com",
 		type = "gitlab",
-		token = "9x94xLa-CZPH9Da5h5kd",
+		--token = "9x94xLa-CZPH9Da5h5kd",
+		token = "keepwork",
 		is_default = 1,
+		is_proxy = 1,
 	}
 end
 

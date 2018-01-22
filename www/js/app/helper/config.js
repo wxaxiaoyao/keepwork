@@ -7,7 +7,12 @@ define([
 	config.apiUrlPrefix = "/api/v1/";
 
 	config.gitApiProxyUrlPrefix = "http://gitapi.localhost";
-	config.gitApiProxyUrlPrefix = window.location.protocol + "//gitapi." + window.location.host; 
+
+	if (window.location.host.indexOf("localhost") < 0) {
+		var domains = window.location.host.split(".");
+		var size = domains.length;
+		config.gitApiProxyUrlPrefix = window.location.protocol + "//gitapi." + domains[size-2] + "." + domains[size-1]; 
+	}
 
 	config.pageSuffix = ".md";
 

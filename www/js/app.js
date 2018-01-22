@@ -156,7 +156,7 @@ define([
 			return;
 		}
 		var authUseinfo = $auth.getPayload();
-		var userinfo = app.objects.user || storage.sessionStorageGetItem("userinfo");
+		var userinfo = app.objects.user || storage.sessionStorageGetItem(authUseinfo.username + "_userinfo");
 		if (userinfo && authUseinfo && userinfo.username == authUseinfo.username) {
 			app.setUser(userinfo);
 			success && success(userinfo);
@@ -188,7 +188,7 @@ define([
 		}
 
 		//$rootScope.$broadcast("userinfo", userinfo);
-		storage.sessionStorageSetItem("userinfo", userinfo);	
+		storage.sessionStorageSetItem(userinfo.username + "_userinfo", userinfo);	
 	}
 
 	app.getGit = function(success, error) {
@@ -200,7 +200,8 @@ define([
 			error && error();
 			return;
 		}
-		var default_data_source = app.objects.default_data_source || storage.sessionStorageGetItem("default_data_source");
+		var authUseinfo = $auth.getPayload();
+		var default_data_source = app.objects.default_data_source || storage.sessionStorageGetItem(authUseinfo.username + "_default_data_source");
 		
 		if (default_data_source) {
 			app.objects.default_data_source = default_data_source
@@ -216,10 +217,15 @@ define([
 	}
 
 	app.setGit = function(ds) {
+		var $auth = app.ng_objects.$auth;
+		if (!$auth.isAuthenticated()) {
+			return;
+		}
+		var authUseinfo = $auth.getPayload();
 		var storage = app.objects.storage;
 		app.objects.default_data_source = ds;
 		app.objects.git = app.objects.dataSource(ds);
-		storage.sessionStorageSetItem("default_data_source", ds);
+		storage.sessionStorageSetItem(authUseinfo.username + "_default_data_source", ds);
 	}
 
     window.app = app;

@@ -11,6 +11,7 @@ r.js -o build.js;
 ./start.sh restart;
 ]]
 
-os.execute(shell_script)
+--os.execute(shell_script)
+ngx.log(ngx.ERR, "-------------code-------------")
 
 

@@ -33,7 +33,11 @@ local config = {
 	gitlab={
 		host = "39.106.11.114:8800",
 		token = "uc7ammyzzAru6YG22L7B",
-	}
+	},
+
+	data_source_token = {
+		["keepwork"] = "9x94xLa-CZPH9Da5h5kd",
+	},
 }
 
 

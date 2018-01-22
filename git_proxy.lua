@@ -3,6 +3,40 @@ local cjson_safe = require("cjson.safe")
 local luajwt = require("luajwt")
 local requests = require("requests")
 
+local config = require("config")
+
+local dns_map = {
+	["gitlab.com"] = "52.167.219.168",
+}
+
+local token_map = config.data_source_token
+
+-- jwt 编码
+local function encode_jwt(payload, secret, expire)
+	local alg = "HS256"
+	payload = payload or {}
+	secret = secret or "keepwork"
+	payload.iss = "xiaoyao"
+	payload.nbf = os.time()
+	payload.exp = os.time() + (expire or 3600)
+
+	local token, err = luajwt.encode(payload, secret, alg)
+
+	return token
+end
+
+-- jwt 编码
+local function decode_jwt(token, secret)
+	if not token then
+		return nil
+	end
+
+	secret = secret or "keepwork"
+	local payload, err = luajwt.decode(token, secret)
+	
+	return payload
+end
+
 local function get_url(params)
 	local method = params.method or "GET"
 
@@ -44,7 +78,7 @@ local headers = ngx.req.get_headers();
 local proxyurlprefix = headers["proxyurlprefix"] or  args.proxyurlprefix or ""
 local proxytoken = headers["proxytoken"] or args.proxytoken or ""
 local proxygittype= headers["proxygittype"] or "gitlab"
-
+local private_token = headers["private-token"]
 --local auth_username = luajwt.
 --ngx.var.dst_uri = proxyurlprefix .. ngx.var.request_uri
 
@@ -118,19 +152,16 @@ end
 
 local data = res.data.data
 
---log(data)
+local raw_base_url = data.raw_base_url
+local token = token_map[data.token] or data.token
+for key, value in pairs(dns_map) do
+	raw_base_url = string.gsub(raw_base_url, key, value)
+end
 
-log("token is => " ..  data.token)
---if (string.find(ngx.var.dst_uri, '%?')) then
-	--ngx.var.dst_uri = ngx.var.dst_uri .. "&"
---else
-	--ngx.var.dst_uri = ngx.var.dst_uri .. "?"
---end
---ngx.var.dst_uri = ngx.var.dst_uri .. "private_token=" .. data.token
-
-ngx.var.dst_uri = data.raw_base_url .. ngx.var.request_uri
+ngx.var.dst_uri = raw_base_url .. ngx.var.request_uri
 log("request is ok => " .. ngx.var.dst_uri)
+log("token is => " ..  token)
 
-ngx.req.set_header("PRIVATE-TOKEN", data.token)
+ngx.req.set_header("PRIVATE-TOKEN", token)
 
 return

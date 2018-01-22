@@ -39,7 +39,7 @@ define([
 				list.push(key);
 			}
 
-			storage.localStorageSetItem("editorOpenedPageList", list);
+			storage.localStorageSetItem($scope.user.username + "_editorOpenedPageList", list);
 		}
 
 		// 重新获取节点内容
@@ -118,7 +118,7 @@ define([
 
 			// 加载已打开的文件列表
 			function loadOpenedPageList() {
-				var openlist = storage.localStorageGetItem("editorOpenedPageList");
+				var openlist = storage.localStorageGetItem($scope.user.username + "_editorOpenedPageList");
 				for (var i = 0; i < (openlist || []).length; i++) {
 					var url = openlist[i];
 					if (!allPageMap[url]) {
@@ -142,6 +142,7 @@ define([
 			app.getGit(function(data){
 				git = data;
 				// 本地加载
+				console.log(data);
 				loadPageDB(function(){
 					loadOpenedPageList();
 					util.$apply();

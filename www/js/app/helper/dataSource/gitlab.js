@@ -30,6 +30,7 @@ define([
 			self.proxyUrlPrefix = self.apiBaseUrl.match(/(http[s]?:\/\/[^\/]+)/)[1];
 			self.proxyApiBaseUrl = config.api_base_url.replace(/http[s]?:\/\/[^\/]+/, proxyUrlPrefix);
 			self.proxyRawBaseUrl = proxyUrlPrefix;
+			self.is_proxy = config.is_proxy;
 		}
 
 
@@ -47,7 +48,7 @@ define([
 			var self = this;
 			var apiBaseUrl = self.apiBaseUrl;
 
-			if (!self.token && self.authUsername != self.username) {
+			if (self.is_proxy || !self.token || self.authUsername != self.username) {
 				apiBaseUrl = self.proxyApiBaseUrl;
 			}
 
