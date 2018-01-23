@@ -22,9 +22,22 @@ local function file_is_exist(path)
 	return (g_lfs.attributes(path))
 end
 
+local function read_file(filename)
+	local f = ParaIO.open(filename, "r")
+	if not f:IsValid() then
+		return
+	end
+
+	local content = f:GetText(0, -1)
+	
+	f:close()
+
+	return content
+end
+
 -- 写文件
 local function write_file(filename, content)
-	local dirname = string.match(filename, "[^/]+$", "")
+	local dirname = string.gsub(filename, "[^/]+$", "")
 	if not file_is_exist(dirname) then
 		ParaIO.CreateDirectory(dirname)
 	end
@@ -47,7 +60,7 @@ end
 
 -- 获取包配置通过包数据
 local function get_package_config_by_package_file(filename) 
-	local dirname = string.match(filename, "[^/]+$", "")
+	local dirname = string.gsub(filename, "[^/]+$", "")
 	if(ParaAsset.OpenArchive(filename, true)) then
 		local filesOut = {};
 		commonlib.Files.Find(filesOut, "", 0, 10000, ":^[^/]*/?package.npl$", filename);
@@ -79,27 +92,27 @@ end
 function package:upload(ctx)
 	local params = ctx.request:get_params()
 
+	--nws.log(params)
 	if not params.username or not params.name or not params.version or not params.content then
-		params.content = nil
-		nws.log(params)
 		return (errors:wrap(errors.PARAMS_ERROR, params))
 	end
 
 	local data = package_model:get_by_name_version(params)
 
-	if data and data.username ~= params.username then
+	if data and data.username and data.username ~= params.username then
 		return (errors:wrap("包已存在"))
 	end
 	
+	params.content = ParaMisc.unbase64(params.content)
 	local filename = wikimod_path .. "zip/" .. params.name .. "/" .. params.version .. ".zip"
 	if not write_file(filename, params.content) then
 		return errors:wrap("写文件出错")
 	end
 
-	local ok,package_config_content = get_package_config_by_package_file(filename)
+	local ok, package_config_content = get_package_config_by_package_file(filename)
 	local package_config = NPL.LoadTableFromString(package_config_content or "{}")
 	if not ok or not package_config then
-		return (errors:wrap("解析包配置错误"))
+		return (errors:wrap("解析包配置错误", package_config_content))
 	end
 	
 	if not package_config.name or not package_config.version or 
@@ -117,12 +130,44 @@ function package:upload(ctx)
 	return (errors:wrap(err))
 end
 
+-- 获取zip包
+function package:get_zip(ctx)
+	local params = ctx.request:get_params()
+	if not params.name then
+		ctx.response:send("参数错误", 400)
+		return
+	end
+
+	local err, datas = package_model:raw_find({["+name-version"]={params.name, params.version}})
+	if not datas or #datas == 0 then
+		ctx.response:send("未找到", 400)
+		return
+	end
+
+	local data = datas[1]
+	local filename = wikimod_path .. "zip/" .. data.name .. "/" .. data.version .. ".zip"
+	local content = read_file(filename)
+	if not content then
+		ctx.response:send("读文件失败", 400)
+		return
+	end
+
+	ctx.response:send(content, 200)
+	return
+end
+
 function package:get_by_name(ctx)
 
 end
 
 function package:get_by_name_version(ctx)
 
+end
+
+function package:get(ctx)
+	local datas = package_model:find({})
+
+	return errors:wrap(nil, datas)
 end
 
 return package

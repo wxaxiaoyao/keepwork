@@ -10,6 +10,7 @@ package:addfield("version", "string")  -- 版本
 package:addfield("config", "string")   -- 包配置
 package:addfield("filename", "string") -- zip filename
 
+-- 增改包记录
 function package:set(params)
 	if not params.username or not params.name or not params.version then
 		return (errors:wrap(errors.PARAMS_ERROR, params))
@@ -25,7 +26,7 @@ function package:set(params)
 	return err
 end
 
-
+-- 通过名字获取包列表
 function package:get_by_name(params)
 	if not params.name then
 		return (errors:wrap(errors.PARAMS_ERROR))
