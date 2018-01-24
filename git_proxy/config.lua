@@ -4,17 +4,15 @@ local config = {
 	--server_type = "npl",   -- 服务器类型 npl, lua(lua-nginx)
 	--server_type = "lua",   -- 服务器类型 npl, lua(lua-nginx)
 	server_ip = nil,
-	server_port = 8880,
-	use_inner_server = true,
-	server_log = false,
+	server_port = 8888,
+	server_log = true,
 
+	index = "index",
+	--use_inner_server = true,
 	token = {
 		secret = "keepwork",
 		expire = 3600 * 3600,
 	},
-
-	index = "index",
-	--use_inner_server = true,
 
 	api_url_prefix = "/api/v1/",
 	wikimod_path = "www/js/mod/",

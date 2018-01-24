@@ -6,15 +6,15 @@ nws.import("helper/filter")
 local version_bust = tostring(os.time())
 
 -- 加载wikimod 
-local filelist = {}
-commonlib.Files.Find(filelist, nws.config.wikimod_path, 1000, 1000000, "*.lua", nil)
-for _, x in ipairs(filelist) do
-	if string.match(x.filename, "^[^/]+/index.lua$") then
-		local filename = nws.config.wikimod_path .. x.filename
-		filename = string.gsub(filename, ".lua$", "")
-		nws.import(filename)
-	end
-end
+--local filelist = {}
+--commonlib.Files.Find(filelist, nws.config.wikimod_path, 1000, 1000000, "*.lua", nil)
+--for _, x in ipairs(filelist) do
+	--if string.match(x.filename, "^[^/]+/index.lua$") then
+		--local filename = nws.config.wikimod_path .. x.filename
+		--filename = string.gsub(filename, ".lua$", "")
+		--nws.import(filename)
+	--end
+--end
 
 -- 加载框架路由 
 local test = nws.import("controller/test")

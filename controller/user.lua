@@ -27,9 +27,9 @@ function user:login(ctx)
 	userinfo.default_data_source = default_data_source
 
 	-- 生成token
-	local token = nws.util.encode_jwt({user_id = userinfo.user_id, username=userinfo.username}, nil, 3600 * 100)
+	local token = nws.util.encode_jwt({user_id = userinfo.user_id, username=userinfo.username}, nws.config.token.secret, nws.config.token.expire)
 
-	--nws.log(token)
+	nws.log(token)
 	return (errors:wrap(nil, {token=token, userinfo=userinfo}))
 end
 
@@ -53,7 +53,7 @@ function user:register(ctx)
 	userinfo.default_data_source = default_data_source
 
 	-- 生成token
-	local token = nws.util.encode_jwt({user_id = userinfo.user_id, username=userinfo.username}, nil, 3600 * 100)
+	local token = nws.util.encode_jwt({user_id = userinfo.user_id, username=userinfo.username}, nws.config.token.secret, nws.config.token.expire)
 
 	-- 数据格式转换
 	userinfo = convert_model.user_new_to_old(userinfo)

@@ -1,9 +1,9 @@
 local cjson = require("cjson")
 local cjson_safe = require("cjson.safe")
-local luajwt = require("luajwt")
-local requests = require("requests")
 
 local config = require("config")
+local log = require("log")
+local util = require("util")
 
 local dns_map = {
 	["gitlab.com"] = "52.167.219.168",
@@ -11,65 +11,6 @@ local dns_map = {
 
 local token_map = config.data_source_token
 
--- jwt 编码
-local function encode_jwt(payload, secret, expire)
-	local alg = "HS256"
-	payload = payload or {}
-	secret = secret or "keepwork"
-	payload.iss = "xiaoyao"
-	payload.nbf = os.time()
-	payload.exp = os.time() + (expire or 3600)
-
-	local token, err = luajwt.encode(payload, secret, alg)
-
-	return token
-end
-
--- jwt 编码
-local function decode_jwt(token, secret)
-	if not token then
-		return nil
-	end
-
-	secret = secret or "keepwork"
-	local payload, err = luajwt.decode(token, secret)
-	
-	return payload
-end
-
-local function get_url(params)
-	local method = params.method or "GET"
-
-	if params.headers then
-		params.headers['Content-Type'] = params.headers['Content-Type'] or "application/json"
-	else
-		params.headers = {['Content-Type'] = "application/json"}
-	end
-
-	if string.lower(method) == "get" then
-		params.params = params.data
-	end
-	local res = requests.request(method, params)
-
-	res.data = res.json()
-
-	return res
-end
-
-local function log(t) 
-	local info = debug.getinfo(2)
-	local filepos = info.source .. ":" .. info.currentline
-	ngx.log(ngx.ERR, "位置:" .. filepos)
-
-	if type(t) ~= "table" then
-		ngx.log(ngx.ERR, tostring(t))
-		return
-	end
-
-	for key, value in pairs(t or {}) do
-		ngx.log(ngx.ERR, key .. ":" .. tostring(value))
-	end
-end
 
 local method = ngx.req.get_method()
 local args = ngx.req.get_uri_args() or {}
@@ -78,7 +19,9 @@ local headers = ngx.req.get_headers();
 local proxyurlprefix = headers["proxyurlprefix"] or  args.proxyurlprefix or ""
 local proxytoken = headers["proxytoken"] or args.proxytoken or ""
 local proxygittype= headers["proxygittype"] or "gitlab"
-local private_token = headers["private-token"]
+local privatetoken = headers["private-token"]
+
+log(headers)
 --local auth_username = luajwt.
 --ngx.var.dst_uri = proxyurlprefix .. ngx.var.request_uri
 
@@ -98,8 +41,6 @@ local file_path = nil
 if proxygittype == "gitlab" then
 	-- tree 路径
 	file_path = args.path
-
-	log(file_path)
 
 	-- 部分接口直接放行
 	if string.match(path, '/repository/tree$') then
@@ -123,13 +64,13 @@ if not file_path then
 	return
 end
 
-local dst_username = string.match(file_path, "([^/]+)")
--- 图片 文件资源暂不做权限
-if (string.find(dst_username, "_")) then
-	--return
-end
+-- jwt 算法结果不一致， 方式取消  TODO 待完善
+--if proxytoken and privatetoken then
+	--local token = util.decode_jwt(proxytoken)
+	--local dst_username = string.match(file_path, "([^_]+)")
+--end
 
-local res = get_url({
+local res = util.get_url({
 	url="http://127.0.0.1:8888/api/v1/file_group/is_accessible_by_path",
 	headers = {
 		["authorization"] = "bearer " .. proxytoken,
