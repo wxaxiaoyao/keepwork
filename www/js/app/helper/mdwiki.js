@@ -20,6 +20,7 @@ define([
     function loadMod(block, cb, errcb) {
         var defaultModPath = "wikimod/";
         var requireUrl = block.cmdName;
+		var cmdName = block.cmdName;
 
         if (block.cmdName == block.modName) {
             requireUrl = defaultModPath + block.modName + "/index";
@@ -29,10 +30,11 @@ define([
 
 		//console.log("加载mod:", requireUrl);
 
+		//block.blockUrl = requireUrl;  // 暂时以cmdName标识唯一模块
         require([requireUrl], function (mod) {
-            cb && cb(mod);
+            cb && cb(mod, cmdName);
         }, function () {
-            errcb && errcb();
+            errcb && errcb(cmdName);
         });
     }
 
@@ -80,6 +82,7 @@ define([
         md.render = function (text, theme) {
             md.parse(text, theme);
 
+			//console.log("-------render----------");
 			md.template.render(function(){
 				for(var i = 0; i < md.template.blockList.length; i++) {
 					var block = md.template.blockList[i];
@@ -108,6 +111,7 @@ define([
 
             block.isWikiBlock = isWikiBlock;
             if (!isWikiBlock) {
+				//block.blockUrl = undefined;
 				block.isTemplate = false;
 				block.modName = undefined;
 				block.cmdName = undefined;
@@ -171,7 +175,13 @@ define([
 				block.render = function(success, error) {
 					var self = this;
 
+
 					if (!self.isChange) {
+						// 强制渲染
+						if (self.cmdName && self.wikimod && self.cmdName == self.wikimod.cmdName && self.wikimod.forceRender) {
+							self.wikimod.forceRender(self);
+						}
+
 						success && success();
 						return;
 					}
@@ -197,12 +207,16 @@ define([
 						success && success();
 					}
 
-					if (self.wikimod) {
-						_render(self.wikimod);
+					if (self.cmdName && self.wikimod && self.cmdName == self.wikimod.cmdName) {
+						_render(self.wikimod.mod);
 					} else {
-						loadMod(self, function (mod) {
-							self.wikimod = mod;
-							_render(self.wikimod);
+						loadMod(self, function (mod, cmdName) {
+							if (self.cmdName != cmdName) {
+								return;
+							}
+
+							self.wikimod = {cmdName: cmdName, mod: mod};
+							_render(self.wikimod.mod);
 						}, function () {
 							console.log("加载模块" + block.modName + "失败");
 							error && error();

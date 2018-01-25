@@ -44,6 +44,7 @@ define([
 				$scope:$scope,
 				cursorActivity:cursorActivity,
 			});
+			app.objects.share.md = editor.md;
 		}
 
 		function init() {

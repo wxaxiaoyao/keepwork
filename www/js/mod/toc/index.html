@@ -1,0 +1,78 @@
+
+<style>
+.toc_h_container {
+	cursor:pointer;
+}
+.toc_h1_container {
+	margin-left: 0px;
+}
+.toc_h2_container {
+	margin-left: 0px;
+}
+.toc_h3_container {
+	margin-left: 0px;
+}
+.toc_h4_container {
+	margin-left: 0px;
+}
+.toc_h5_container {
+	margin-left: 0px;
+}
+.toc_h6_container {
+	margin-left: 0px;
+}
+
+.toc_text_container {
+}
+.toc_text1_container {
+	margin-left: 10px;
+}
+.toc_text2_container {
+	margin-left: 30px;
+}
+.toc_text3_container {
+	margin-left: 50px;
+}
+.toc_text4_container {
+	margin-left: 70px;
+}
+.toc_text5_container {
+	margin-left: 90px;
+}
+.toc_text6_container {
+	margin-left: 110px;
+}
+</style>
+
+<div>
+	<div class="toc_h1_container toc_h_container" ng-repeat="x1 in tree.nodes">
+		<div class="toc_text1_container toc_text_container" ng-click="clickTocItem(x1)">
+			{{x1.token ? x1.token.content : ""}}
+		</div>
+		<div class="toc_h2_container toc_h_container" ng-repeat="x2 in x1.nodes">
+			<div class="toc_text2_container toc_text_container" ng-click="clickTocItem(x2)">
+				{{x2.token ? x2.token.content : ""}}
+			</div>
+			<div class="toc_h3_container toc_h_container" ng-repeat="x3 in x2.nodes">
+				<div class="toc_text3_container toc_text_container" ng-click="clickTocItem(x3)">
+					{{x3.token ? x3.token.content : ""}}
+				</div>
+				<div class="toc_h4_container toc_h_container" ng-repeat="x4 in x3.nodes">
+					<div class="toc_text4_container toc_text_container" ng-click="clickTocItem(x4)">
+						{{x4.token ? x4.token.content : ""}}
+					</div>
+					<div class="toc_h5_container toc_h_container" ng-repeat="x5 in x4.nodes">
+						<div class="toc_text5_container toc_text_container" ng-click="clickTocItem(x5)">
+							{{x5.token ? x5.token.content : ""}}
+						</div>
+						<div class="toc_h6_container toc_h_container" ng-repeat="x6 in x5.nodes">
+							<div class="toc_text6_container toc_text_container" ng-click="clickTocItem(x6)">
+								{{x6.token ? x6.token.content : ""}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

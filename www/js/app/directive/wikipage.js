@@ -33,6 +33,11 @@ define([
 
 				function renderMDContent(content , theme) {
 					var md = mdwiki();
+
+					if ($attrs.isMainContent) {
+						app.objects.share.md = md;
+					}
+
 					var htmlstr = md.render(content, content);
 					$element.html($compile(htmlstr)($scope));
 					util.$apply($scope);
@@ -84,7 +89,7 @@ define([
 								var git = app.objects.dataSource(data.data_source);
 								var theme = data.theme || {};
 								var content = data.content;
-								console.log(url);
+								//console.log(url);
 								if (content) {
 									renderMDContent(content, theme.content);
 								} else {

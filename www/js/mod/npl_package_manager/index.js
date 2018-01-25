@@ -9,9 +9,9 @@ define([
 	var apiUrlPrefix = config.apiUrlPrefix + "wikimod/" + modName + "/";
 
 	function render(block) {
-		util.http("GET", apiUrlPrefix +  "package/get",{}, function(data){
-			console.log(data);
-		});
+		//util.http("GET", apiUrlPrefix +  "package/get",{}, function(data){
+			//console.log(data);
+		//});
 		
 		return htmlContent;
 	}
