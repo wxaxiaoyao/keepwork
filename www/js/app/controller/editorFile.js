@@ -72,7 +72,6 @@ define([
 
 					var node = allPageMap[x.url];
 					if (!node) {
-						//pageDB.deleteItem(x.url);
 						allPageMap[x.url] = x;
 						return;
 					}
@@ -124,7 +123,7 @@ define([
 					if (!allPageMap[url]) {
 						continue;
 					}
-					if (allPageMap[url].username != $scope.username) {
+					if (allPageMap[url].username != $scope.user.username) {
 						continue;
 					}
 					$scope.openedPageMap[url] = allPageMap[url];

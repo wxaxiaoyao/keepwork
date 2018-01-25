@@ -14,7 +14,7 @@ define([
 		var curLevel = minLevel;
 		var curNode = undefined;
 
-		console.log(params, wikiBlock);
+		//console.log(params, wikiBlock);
 		for (var i = 0; i < blockList.length; i++) {
 			var block = blockList[i];
 			var token = angular.copy(block.token);
