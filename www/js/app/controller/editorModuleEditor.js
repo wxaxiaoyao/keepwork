@@ -5,8 +5,23 @@ define([
 ], function(app, htmlContent) {
 	var util = app.objects.util;
 	var config = app.objects.config;
-
+	var md = app.objects.mdwiki({mode:"preview", containerId:"moduleEditorStyleContainer"});
 	var editorModuleEditor = app.getShareObject("editorModuleEditor");
+
+
+	function getStyleList(block) {
+		var styleList = block.wikimod.getBlockList() || [];
+		var styles = [];
+
+		var text = "";
+		
+		for (var i = 0; i < (styleList || []).length; i++) {
+			//text 
+		}
+
+		console.log(block, styleList);
+		return;
+	}
 
 	editorModuleEditor.getBlock = function() {
 		return this.block;
@@ -32,12 +47,24 @@ define([
 
 		this.block = block;
 		//console.log(block);
-		if (block && typeof(block.wikimod) == "object" && typeof(block.wikimod.getEditorParams) == "function") {
-			this.params = block.wikimod.getEditorParams(block.modParams);
-			this.datas = getOrderDatas(this.params);
+		if (block && typeof(block.wikimod) == "object") {
+			if (typeof(block.wikimod.getEditorParams) == "function") {
+				this.params = block.wikimod.getEditorParams(block.modParams);
+				this.datas = getOrderDatas(this.params);
+			} else {
+				this.params = undefined;
+				this.datas = undefined;
+			}
+
+			if (typeof(block.wikimod.getStyleList) == "function") {
+				this.styles = getStyleList(block);
+			} else {
+				this.styles = undefined;
+			}
 		} else {
 			this.params = undefined;
 			this.datas = undefined;
+			this.styles = undefined;
 		}
 
 		//console.log(this);

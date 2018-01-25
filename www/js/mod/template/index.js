@@ -3,6 +3,7 @@ define([
 	"text!wikimod/template/index.html",
 ], function(htmlContent){
 	var default_params = {
+		design: "style1",
 		urlmatch:{
 			text:"",
 		},
@@ -102,6 +103,10 @@ define([
 	}
 
 	function renderAfter(wikiBlock) {
+		if (wikiBlock.mode == "preview") {
+			return;
+		}
+
 		var $compile = app.ng_objects.$compile;
 		var $scope = wikiBlock.$scope;
 		var htmlContent = $compile(wikiBlock.templateContent)($scope);
@@ -109,10 +114,95 @@ define([
 		wikiBlock.$apply && wikiBlock.$apply();
 	}
 
+	function usage() {
+		return "";
+	}
+
+	function getStyleList(wikiBlock) {
+		return [
+		{ 
+			design: "样式1",
+			rows:[
+			{
+				class:undefined,
+				style:undefined,
+				cols:[
+				{
+					class:undefined,
+					style:undefined,
+					is_main_content:true,
+				}
+				]
+			},
+			],
+		},
+		{ 
+			design: "样式2",
+			rows:[
+			{
+				class:undefined,
+				style:undefined,
+				cols:[
+				{
+					class:"container",
+					style:undefined,
+					is_main_content:true,
+				}
+				]
+			},
+			],
+		},
+		{ 
+			design: "样式3",
+			rows:[
+			{
+				class:undefined,
+				style:undefined,
+				cols:[
+				{
+					class:"col-xs-3",
+					style:undefined,
+					is_main_content:true,
+				},
+				{
+					class:"col-xs-9",
+					style:undefined,
+					is_main_content:true,
+				},
+				]
+			},
+			],
+		},
+		{ 
+			design: "样式4",
+			rows:[
+			{
+				class:undefined,
+				style:undefined,
+				cols:[
+				{
+					class:"col-xs-9",
+					style:undefined,
+					is_main_content:true,
+				},
+				{
+					class:"col-xs-3",
+					style:undefined,
+					is_main_content:true,
+				},
+				]
+			},
+			],
+		},
+		];
+	}
+
 	return {
 		getEditorParams: getEditorParams,
 		getModuleParams: getModuleParams,
+		getStyleList: getStyleList,
 		render: render,
 		renderAfter: renderAfter, // 二次渲染问题
-	}
+		usage: usage,
+	};
 })

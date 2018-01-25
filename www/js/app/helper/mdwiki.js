@@ -44,8 +44,6 @@ define([
 
         var mdName = "md" + instCount++;
 		var encodeMdName = encodeURI(mdName);
-		var templateContent = '<div ng-repeat="$kp_block in $kp_block.blockList track by $index" ng-if="!$kp_block.isTemplate"><wiki-block-container data-params="' + encodeMdName +'"></wiki-block-container></div>';
-		var blankTemplateContent = '<div class="container">' + templateContent + '</div>';
 		var $compile = app.ng_objects.$compile;
 		var $scope = options.$scope || app.ng_objects.$rootScope;
         var md = getMd(mdName);
@@ -55,15 +53,24 @@ define([
         md.editable = options.editable;
         md.containerId = options.containerId;
         md.editor = options.editor;
+		md.mode = options.mode || "normal";
         md.$scope = options.$scope;
 		md.isBindContainer = false;
+
+		var templateContent = '<div ng-repeat="$kp_block in $kp_block.blockList track by $index" ng-if="!$kp_block.isTemplate"><wiki-block-container data-params="' + encodeMdName +'"></wiki-block-container></div>';
+		var blankTemplateContent = '<div class="container">' + templateContent + '</div>';
+
+		if (md.mode == "preview") {
+			templateContent = '<div ng-repeat="$kp_block in $kp_block.blockList track by $index"><wiki-block-container data-params="' + encodeMdName +'"></wiki-block-container></div>';
+			blankTemplateContent = '<div>' + templateContent + '</div>';
+		}
 
 		md.template = {
 			mdName: mdName,
 			isTemplate: true,
 			isWikiBlock: true,
 			templateContent:templateContent,
-			htmlContent: "<div>" + templateContent + "</div>",
+			htmlContent: blankTemplateContent,
 			blockList:[],
 		}
 
@@ -239,7 +246,8 @@ define([
 				var block = blockList[i] || {};
 
 				block.token = token;
-				block.mdName = mdName;
+				block.mdName = md.mdName;
+				block.mode = md.mode;
 				if (block.text != token.text) {
 					block.text = token.text;
 					block.isChange = true;
@@ -264,7 +272,8 @@ define([
 				blockList.pop();
 			}
 
-			if (template) {
+			//  预览模式不支持template
+			if (md.mode != "preview" && template) {
 				md.template.token = template.token;
 				md.template.modName = template.modName;
 				md.template.cmdName = template.cmdName;
