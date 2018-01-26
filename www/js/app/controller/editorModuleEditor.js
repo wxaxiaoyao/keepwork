@@ -5,22 +5,36 @@ define([
 ], function(app, htmlContent) {
 	var util = app.objects.util;
 	var config = app.objects.config;
-	var md = app.objects.mdwiki({mode:"preview", containerId:"moduleEditorStyleContainer"});
+	var mdconf = app.objects.mdconf;
+	//var md = app.objects.mdwiki({mode:"preview", containerId:"moduleEditorStyleContainer"});
 	var editorModuleEditor = app.getShareObject("editorModuleEditor");
 
+	// 默认显示类型
+	editorModuleEditor.showType = "styles";
 
 	function getStyleList(block) {
-		var styleList = block.wikimod.getBlockList() || [];
+		var styleList = block.wikimod.mod.getStyleList() || [];
 		var styles = [];
 
-		var text = "";
-		
+		//console.log(block);
 		for (var i = 0; i < (styleList || []).length; i++) {
-			//text 
+			styles.push({
+				isChange: true,
+				//htmlContent: block.htmlContent,
+				cmdName: block.cmdName,
+				isTemplate: block.isTemplate,
+				isWikiBlock: block.isWikiBlock,
+			    mdName: undefined,	
+				modParams: styleList[i],
+				mode: config.CONST.MD_MODE_PREVIEW,
+				render: block.render,
+				wikimod: block.wikimod,
+			});
 		}
 
-		console.log(block, styleList);
-		return;
+		//console.log(styleList);
+		//console.log(styles);
+		return styles;
 	}
 
 	editorModuleEditor.getBlock = function() {
@@ -34,29 +48,34 @@ define([
 		}
 
 		var modParams = angular.copy(this.params);
-		if (typeof(block.wikimod) == "object" && typeof(block.wikimod.getModuleParams) == "function") {
-			modParams = block.wikimod.getModuleParams(modParams);
+		if (block.wikimod && typeof(block.wikimod.mod) == "object" && typeof(block.wikimod.mod.getModuleParams) == "function") {
+			modParams = block.wikimod.mod.getModuleParams(modParams);
 		}
 		block.applyModParams(modParams);
 	}
 
+	editorModuleEditor.setShowType = function(showType) {
+		this.showType = showType || "attrs";
+	}
+
 	editorModuleEditor.setBlock = function(block) {
-		if (this.block && block && this.block.token.start == block.start && this.datas) {
+		if (this.block && block && this.block.token.start == block.token.start && (this.datas || this.styles)) {
 			return;
 		}
 
+		//console.log(block, this);
+		
 		this.block = block;
-		//console.log(block);
-		if (block && typeof(block.wikimod) == "object") {
-			if (typeof(block.wikimod.getEditorParams) == "function") {
-				this.params = block.wikimod.getEditorParams(block.modParams);
+		if (block && typeof(block.wikimod) == "object" && typeof(block.wikimod.mod) == "object") {
+			if (typeof(block.wikimod.mod.getEditorParams) == "function") {
+				this.params = block.wikimod.mod.getEditorParams(block.modParams);
 				this.datas = getOrderDatas(this.params);
 			} else {
 				this.params = undefined;
 				this.datas = undefined;
 			}
 
-			if (typeof(block.wikimod.getStyleList) == "function") {
+			if (typeof(block.wikimod.mod.getStyleList) == "function") {
 				this.styles = getStyleList(block);
 			} else {
 				this.styles = undefined;
@@ -100,6 +119,8 @@ define([
 		var $auth =app.ng_objects.$auth;
 		function init() {
 			$scope.params = editorModuleEditor;
+			editorModuleEditor.setBlock(editorModuleEditor.block);
+			//console.log(editorModuleEditor);
 			//util.$apply();
 		}
 			

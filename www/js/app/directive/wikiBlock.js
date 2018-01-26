@@ -8,8 +8,26 @@ define([
             restrict:'E',
             controller: ['$scope', '$attrs', '$element', function ($scope, $attrs, $element) {
 				var block = $scope.$kp_block;
+
+				if (!block) {
+					return;
+				}
+
 				block.$scope = $scope;
+
 				
+				block.$apply = function() {
+					setTimeout(function(){
+						//if (block.isTemplate) {
+							//for (var i = 0; i < block.blockList.length; i++) {
+								//var tmp = block.blockList[i];
+								//tmp.$scope && tmp.$scope.$apply();
+							//}
+						//}
+						block.$scope && block.$scope.$apply();
+					});
+				};
+
 				block.$render = function(htmlContent) {
 					var self = this;
 					self.$scope = $scope;
@@ -20,8 +38,8 @@ define([
 					setTimeout(function() { 
 						$scope.$apply(); 
 
-						if (block.wikimod && block.wikimod.renderAfter) {
-							block.wikimod.renderAfter(block);
+						if (block.wikimod && block.wikimod.mod && block.wikimod.mod.renderAfter) {
+							block.wikimod.mod.renderAfter(block);
 						}
 					});
 				}

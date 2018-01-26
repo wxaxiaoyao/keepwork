@@ -16,6 +16,7 @@ define([
 		if (!md) {
 			return;
 		}
+
 		if (index == undefined) {
 			block = md.template;
 		} else {
@@ -27,24 +28,7 @@ define([
 		}
 		
 		$scope.$kp_block = block;
-		block.$apply = function() {
-			setTimeout(function(){
-				//if (block.isTemplate) {
-					//for (var i = 0; i < block.blockList.length; i++) {
-						//var tmp = block.blockList[i];
-						//tmp.$scope && tmp.$scope.$apply();
-					//}
-				//}
-				block.$scope && block.$scope.$apply();
-			});
-		};
 		
-		//md = app.objects.mds[mdName];
-        if (!md.editable || !md.editor) {
-            return block;
-        }
-
-
 		return block;
     }
 
@@ -79,7 +63,6 @@ define([
 					}
 					
 					$rootScope.$broadcast("moduleEditor", block);
-					
 				}
 			}],
 		}

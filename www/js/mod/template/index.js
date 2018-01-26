@@ -99,16 +99,21 @@ define([
 		}
 
 		$scope.mode = wikiBlock.mode;
+		//console.log($scope.mode, wikiBlock);
 		return htmlContent;
 	}
 
 	function renderAfter(wikiBlock) {
+		var $compile = app.ng_objects.$compile;
+		var $scope = wikiBlock.$scope;
+
+		//$scope.mode = wikiBlock.mode;
+		//$scope.params = wikiBlock.modParams;
+		//console.log($scope.mode, $scope.params);
 		if (wikiBlock.mode == "preview") {
 			return;
 		}
 
-		var $compile = app.ng_objects.$compile;
-		var $scope = wikiBlock.$scope;
 		var htmlContent = $compile(wikiBlock.templateContent)($scope);
 		$(".kp_wiki_template_main_content").html(htmlContent);
 		wikiBlock.$apply && wikiBlock.$apply();
@@ -121,7 +126,7 @@ define([
 	function getStyleList(wikiBlock) {
 		return [
 		{ 
-			design: "样式1",
+			design: "style1",
 			rows:[
 			{
 				class:undefined,
@@ -137,7 +142,7 @@ define([
 			],
 		},
 		{ 
-			design: "样式2",
+			design: "style2",
 			rows:[
 			{
 				class:undefined,
@@ -153,7 +158,7 @@ define([
 			],
 		},
 		{ 
-			design: "样式3",
+			design: "style3",
 			rows:[
 			{
 				class:undefined,
@@ -174,7 +179,7 @@ define([
 			],
 		},
 		{ 
-			design: "样式4",
+			design: "style4",
 			rows:[
 			{
 				class:undefined,

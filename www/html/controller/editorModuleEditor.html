@@ -1,29 +1,29 @@
 
 <div ng-controller="editorModuleEditorController">
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="#moduleEditorAttrs" data-toggle="tab">属性</a></li>
-		<li><a href="#moduleEditorStyle" data-toggle="tab">样式</a></li>
-	</ul>
-	<div class="tab-content">
-		<div id="moduleEditorAttrs" class="tab-pane fade in active">
-			<div ng-repeat="data in params.datas track by $index">
-				<div ng-if='data.$data.type == "text"'>
-					<div>{{data.$data.name}}</div>
-					<div>
-						<input ng-model="data.text" ng-change="change()"/>
-					</div>
+	<div ng-if='params.showType == "attrs"'>
+		<div>hello world</div>
+		<div ng-repeat="data in params.datas track by $index">
+			<div ng-if='data.$data.type == "text"'>
+				<div>{{data.$data.name}}</div>
+				<div>
+					<input ng-model="data.text" ng-change="change()"/>
 				</div>
-				<!--<div ng-if='data.type == "link"'>-->
-					<!--<div>{{data.name}}</div>-->
-					<!--<div>-->
-						<!--<input ng-model="data.text"/>-->
-					<!--</div>-->
-				<!--</div>-->
 			</div>
+			<!--<div ng-if='data.type == "link"'>-->
+				<!--<div>{{data.name}}</div>-->
+				<!--<div>-->
+					<!--<input ng-model="data.text"/>-->
+				<!--</div>-->
+			<!--</div>-->
 		</div>
+	</div>
 
-		<div id="moduleEditorStyle" class="tab-pane fade">
-			<div id="moduleEditorStyleContainer"></div>
+	<div ng-if='params.showType == "styles"'>
+		<div>hello world</div>
+		<div ng-repeat="$kp_block in params.styles track by $index">
+			<div style="height:30px">
+				<wiki-block></wiki-block>
+			</div>
 		</div>
 	</div>
 </div>

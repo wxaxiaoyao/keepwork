@@ -21,5 +21,13 @@ define([
 		"keepwork.com",
 		"wxaxiaoyao.cn",
 	];
+
+
+	config.CONST = {
+		MD_MODE_PREVIEW : "preview",
+		MD_MODE_NORMAL : "normal",
+		MD_MODE_EDITOR : "editor",
+	};
+
 	return config;
 })

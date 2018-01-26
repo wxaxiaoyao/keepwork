@@ -2,6 +2,7 @@
 define([
 	'app',
 	'helper/mdwiki',
+	'helper/config',
 	'helper/storage',
     'codemirror',
 	'text!html/helper/cmeditor.html',
@@ -26,7 +27,7 @@ define([
     //'codemirror/addon/search/jump-to-line',
     //'codemirror/addon/scroll/annotatescrollbar',
     //'codemirror/addon/display/fullscreen',
-], function(app, mdwiki, storage, CodeMirror, cmeditorHtml, cmeditorCss, CodeMirrorCss, foldGutterCss) {
+], function(app, mdwiki, config, storage, CodeMirror, cmeditorHtml, cmeditorCss, CodeMirrorCss, foldGutterCss) {
 	var htmlStr = '<style>';
 	htmlStr += cmeditorCss;
    	htmlStr += CodeMirrorCss;
@@ -599,10 +600,9 @@ define([
 		editor.editor = initEditor(editor);
 		editor.md = mdwiki({
 			containerId: "kp-editor-preview",
-			editable: true,
 			editor: editor,
+			mode: config.CONST.MD_MODE_EDITOR,
 		});
-
 
 		var text = storage.sessionStorageGetItem("cmeditor_temp_content") || ("");
 		editor.editor.setValue(text);

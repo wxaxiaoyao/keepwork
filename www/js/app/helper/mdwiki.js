@@ -1,11 +1,12 @@
 
 define([
     'app',
+	"helper/config",
 	"helper/md/mdconf",
 	"helper/md/md",
 	'directive/wikiBlock',
 	'directive/wikiBlockContainer',
-], function(app, mdconf, markdown){
+], function(app, config, mdconf, markdown){
     app.objects.mds = {};
     var instCount = 0;
 	var mds = app.objects.mds;
@@ -50,10 +51,9 @@ define([
 
         md.mdName = mdName;
         md.md = markdown(options);
-        md.editable = options.editable;
         md.containerId = options.containerId;
         md.editor = options.editor;
-		md.mode = options.mode || "normal";
+		md.mode = options.mode || config.CONST.MD_MODE_NORMAL;
         md.$scope = options.$scope;
 		md.isBindContainer = false;
 
@@ -185,8 +185,9 @@ define([
 
 					if (!self.isChange) {
 						// 强制渲染
-						if (self.cmdName && self.wikimod && self.cmdName == self.wikimod.cmdName && self.wikimod.forceRender) {
-							self.wikimod.forceRender(self);
+						if (self.cmdName && self.wikimod && self.cmdName == self.wikimod.cmdName && 
+								self.wikimod.mod && self.wikimod.mod.forceRender) {
+							self.wikimod.mod.forceRender(self);
 						}
 
 						success && success();
@@ -206,7 +207,7 @@ define([
 
 						if (self.htmlContent != htmlContent && self.$render) {
 							self.htmlContent = htmlContent;
-							if (!self.isTemplate || self.blockList != undefined) { // template 与 template_block 唯一区别是blockList
+							if (self.mode == "preview" || !self.isTemplate || self.blockList != undefined) { // template 与 template_block 唯一区别是blockList
 								self.$render(htmlContent);
 							}
 						} else {

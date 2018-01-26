@@ -15,7 +15,7 @@
 </style>
 
 <div class="full-height">
-	<div ng-show="mode == 'preview'">
+	<div ng-if="mode != 'preview'">
 		<div ng-repeat="row in params.rows track by $index" ng-class="row.class" ng-style='row.style'>
 			<div ng-repeat="col in row.cols track by $index" ng-class="col.class" ng-style='col.style'>
 				<wikipage ng-if="!col.is_main_content" content="col.content" contentUrl="col.contentUrl"></wikipage>
