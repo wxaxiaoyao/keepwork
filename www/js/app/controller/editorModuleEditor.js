@@ -10,7 +10,7 @@ define([
 	var editorModuleEditor = app.getShareObject("editorModuleEditor");
 
 	// 默认显示类型
-	editorModuleEditor.showType = "styles";
+	editorModuleEditor.showType = "attrs";
 
 	function getStyleList(block) {
 		var styleList = block.wikimod.mod.getStyleList() || [];
@@ -142,6 +142,14 @@ define([
 
 				editorModuleEditor.reload();
 			}
+		}
+
+		$scope.clickNavItem = function(showType, $event) {
+			$scope.params.showType = showType;
+
+			$(".kp_nav_item_container .kp_active").removeClass("kp_active");
+			$($event.target).addClass("kp_active");
+			console.log($event);
 		}
 
 		$scope.getStyleActiveClass = function(block) {

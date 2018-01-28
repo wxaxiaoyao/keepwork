@@ -7,11 +7,27 @@
 .kp_style_selected {
 	border: 2px solid blue;
 }
+
+.kp_nav_item_container {
+
+}
+
+.kp_nav_item_container .kp_active {
+	background-color: #f2f2f2;
+}
+
+.kp_nav_item {
+	display: inline-block;
+	margin: 0px;
+}
 </style>
 
 <div ng-controller="editorModuleEditorController">
+	<div class="kp_nav_item_container">
+		<div ng-click="clickNavItem('attrs', $event)" class="kp_nav_item kp_active">属性</div>
+		<div ng-click="clickNavItem('styles', $event)"class="kp_nav_item">样式</div>
+	</div>
 	<div ng-if='params.showType == "attrs"'>
-		<div>hello world</div>
 		<div ng-repeat="data in params.datas track by $index">
 			<div ng-if='data.$data.type == "text"'>
 				<div>{{data.$data.name}}</div>

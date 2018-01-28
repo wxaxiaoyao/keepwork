@@ -38,7 +38,7 @@ define([
 						app.objects.share.md = md;
 					}
 
-					var htmlstr = md.render(content, content);
+					var htmlstr = md.render(content, theme);
 					$element.html($compile(htmlstr)($scope));
 					util.$apply($scope);
 				}
@@ -110,7 +110,11 @@ define([
 				function render() {
 					//console.log("--------------", contentUrl);
 					if (content) {
-						$element.html($compile(content)($scope));
+						if ($attrs.contentType == "md") {
+							renderMDContent(content);
+						} else {
+							$element.html($compile(content)($scope));
+						}
 						return;
 					}
 
@@ -128,6 +132,7 @@ define([
 					content = newVal;
 					render();
 				});
+
 				$scope.$watch($attrs.contentUrl, function(newVal) {
 					if (!newVal || newVal == contentUrl) {
 						return;
