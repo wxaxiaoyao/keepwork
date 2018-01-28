@@ -53,6 +53,7 @@ define([
 		var id = 0;
 		modParams = modParams || {};
 		modParams.rows = modParams.rows || [{cols:[{is_main_content:true}]}];
+		modParams.design = modParams.design || "style1";
 		modParams.urlmatch = string_to_object(modParams.urlmatch);
 		modParams.urlmatch.$data = {
 			type:"text",
@@ -88,19 +89,32 @@ define([
 
 		$scope.params = params;
 
+		var templateContent = "";
 		for (var i = 0; i < params.rows.length; i++) {
 			var row = params.rows[i];
+			templateContent += '<div ng-class="params.rows[' + i + '].class" ng-style="params.rows[' + i +'].style">\n';
 			for (var j = 0; j < row.cols.length; j++) {
 				var col = row.cols[j];
+				var colStr = "params.rows[" + i + "].cols[" + j + "]";
+				templateContent += '<div ng-class="' + colStr+ '.class" ng-style="' + colStr + '.style">\n';
 				if (col.is_main_content) {
 					col.content = wikiBlock.templateContent;
+					templateContent += wikiBlock.templateContent || "";
+				} else {
+					templateContent += '<wikipage content="' + colStr + '.content" contentUrl="' + colStr + '.contentUrl"></wikipage>\n';
 				}
+				templateContent += "</div>\n";
 			}
+
+			templateContent += "</div>\n";
 		}
+
+		//console.log(templateContent);
+		//console.log($scope);
 
 		$scope.mode = wikiBlock.mode;
 		//console.log($scope.mode, wikiBlock);
-		return htmlContent;
+		return htmlContent.replace("templateContent", templateContent);
 	}
 
 	function renderAfter(wikiBlock) {
@@ -114,9 +128,9 @@ define([
 			return;
 		}
 
-		var htmlContent = $compile(wikiBlock.templateContent)($scope);
-		$(".kp_wiki_template_main_content").html(htmlContent);
-		wikiBlock.$apply && wikiBlock.$apply();
+		//var htmlContent = $compile(wikiBlock.templateContent)($scope);
+		//$(".kp_wiki_template_main_content").html(htmlContent);
+		//wikiBlock.$apply && wikiBlock.$apply();
 	}
 
 	function usage() {
@@ -167,7 +181,6 @@ define([
 				{
 					class:"col-xs-3",
 					style:undefined,
-					is_main_content:true,
 				},
 				{
 					class:"col-xs-9",
@@ -193,7 +206,6 @@ define([
 				{
 					class:"col-xs-3",
 					style:undefined,
-					is_main_content:true,
 				},
 				]
 			},

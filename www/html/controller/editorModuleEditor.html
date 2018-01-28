@@ -1,4 +1,14 @@
 
+<style>
+.kp_module_editor_wiki_block_container {
+	height:140px;
+	padding:20px;
+}
+.kp_style_selected {
+	border: 2px solid blue;
+}
+</style>
+
 <div ng-controller="editorModuleEditorController">
 	<div ng-if='params.showType == "attrs"'>
 		<div>hello world</div>
@@ -19,9 +29,9 @@
 	</div>
 
 	<div ng-if='params.showType == "styles"'>
-		<div>hello world</div>
 		<div ng-repeat="$kp_block in params.styles track by $index">
-			<div style="height:30px">
+			<div class="kp_module_editor_wiki_block_container" ng-click="clickSelectStyle($kp_block)" 
+			  ng-class="getStyleActiveClass($kp_block)">
 				<wiki-block></wiki-block>
 			</div>
 		</div>

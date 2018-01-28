@@ -71,6 +71,7 @@ define([
 			isWikiBlock: true,
 			templateContent:templateContent,
 			htmlContent: blankTemplateContent,
+			text:undefined,
 			blockList:[],
 		}
 
@@ -182,19 +183,23 @@ define([
 				block.render = function(success, error) {
 					var self = this;
 
+					// 强制渲染
+					if (self.$render && self.cmdName && self.wikimod && self.cmdName == self.wikimod.cmdName && 
+							self.wikimod.mod && self.wikimod.mod.forceRender) {
+						self.wikimod.mod.forceRender(self);
+					}
 
 					if (!self.isChange) {
-						// 强制渲染
-						if (self.cmdName && self.wikimod && self.cmdName == self.wikimod.cmdName && 
-								self.wikimod.mod && self.wikimod.mod.forceRender) {
-							self.wikimod.mod.forceRender(self);
-						}
-
 						success && success();
 						return;
 					}
 
+					//console.log(self);
 					function _render(mod) {
+						if (!self.$render) {
+							return;
+						}
+
 						var htmlContent = undefined;
 						var md = getMd(self.mdName);
 						if (typeof(mod) == "function") {
@@ -205,8 +210,10 @@ define([
 							htmlContent = mod;
 						}
 
-						if (self.htmlContent != htmlContent && self.$render) {
+						// text 改变不一定重新渲染  htmlContent改变则重新渲染
+						if (self.htmlContent != htmlContent) {
 							self.htmlContent = htmlContent;
+							// 预览模式渲染魔板块 此外排除魔板块
 							if (self.mode == "preview" || !self.isTemplate || self.blockList != undefined) { // template 与 template_block 唯一区别是blockList
 								self.$render(htmlContent);
 							}
@@ -253,11 +260,8 @@ define([
 					block.text = token.text;
 					block.isChange = true;
 					md.parseBlock(block);
-					//console.log(block);
 				} else {
 					block.isChange = false;
-					//console.log(block);
-					//block.$apply && block.$apply();
 				}
 				block.token.start = block.token.start - themeLineCount;
 				block.token.end = block.token.end - themeLineCount;
@@ -273,8 +277,10 @@ define([
 				blockList.pop();
 			}
 
+			var templateText = md.template.text;
 			//  预览模式不支持template
 			if (md.mode != "preview" && template) {
+				md.template.text = template.text;
 				md.template.token = template.token;
 				md.template.modName = template.modName;
 				md.template.cmdName = template.cmdName;
@@ -283,6 +289,7 @@ define([
 				md.template.render = template.render;
 				md.template.applyModParams = template.applyModParams;
 			} else {
+				md.template.text = undefined;
 				md.template.token = undefined;
 				md.template.modName = undefined;
 				md.template.cmdName = undefined;
@@ -296,6 +303,11 @@ define([
 					}
 					success && success();
 				};
+			}
+			if (templateText != md.template.text) {
+				md.template.isChange = true;
+			} else {
+				md.template.isChange = false;
 			}
 			//console.log(blockList);
             return blockList;

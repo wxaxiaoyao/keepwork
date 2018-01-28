@@ -28,6 +28,7 @@ define([
 		}
 		
 		$scope.$kp_block = block;
+		block.$scope = $scope;
 		
 		return block;
     }

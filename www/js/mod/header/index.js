@@ -23,6 +23,7 @@ define([
 
 	function render(wikiBlock) {
 		var $scope =  wikiBlock.$scope;
+		//console.log(wikiBlock);
 		$scope.params = wikiBlock.modParams || {};
 
 		//console.log($scope.params);

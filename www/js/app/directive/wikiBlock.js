@@ -16,16 +16,12 @@ define([
 				block.$scope = $scope;
 
 				
-				block.$apply = function() {
+				block.$apply = function(callback) {
 					setTimeout(function(){
-						//if (block.isTemplate) {
-							//for (var i = 0; i < block.blockList.length; i++) {
-								//var tmp = block.blockList[i];
-								//tmp.$scope && tmp.$scope.$apply();
-							//}
-						//}
 						block.$scope && block.$scope.$apply();
 					});
+
+					callback && callback();
 				};
 
 				block.$render = function(htmlContent) {
@@ -34,21 +30,18 @@ define([
 					$scope.$kp_block = self;
 
 					$element.html($compile(htmlContent)($scope));
-					//console.log(htmlContent, block);
-					setTimeout(function() { 
-						$scope.$apply(); 
 
+					self.$apply(function(){
 						if (block.wikimod && block.wikimod.mod && block.wikimod.mod.renderAfter) {
 							block.wikimod.mod.renderAfter(block);
 						}
 					});
 				}
-				
-				if (block.htmlContent) {
-					block.$render(block.htmlContent);
-				} else {
-					block.render();
-				}
+
+				//console.log("init block:" + block.cmdName);
+				// 将htmlContent置空 确保初始化的render正确的执行
+				block.htmlContent = undefined;
+				block.render();
             }],
         };
     }]);

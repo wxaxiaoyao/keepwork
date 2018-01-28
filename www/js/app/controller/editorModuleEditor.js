@@ -58,14 +58,11 @@ define([
 		this.showType = showType || "attrs";
 	}
 
-	editorModuleEditor.setBlock = function(block) {
-		if (this.block && block && this.block.token.start == block.token.start && (this.datas || this.styles)) {
+	editorModuleEditor.reload = function() {
+		if (!this.block) {
 			return;
 		}
-
-		//console.log(block, this);
-		
-		this.block = block;
+		var block = this.block;
 		if (block && typeof(block.wikimod) == "object" && typeof(block.wikimod.mod) == "object") {
 			if (typeof(block.wikimod.mod.getEditorParams) == "function") {
 				this.params = block.wikimod.mod.getEditorParams(block.modParams);
@@ -85,9 +82,18 @@ define([
 			this.datas = undefined;
 			this.styles = undefined;
 		}
-
-		//console.log(this);
 		util.$apply();
+	}
+
+	editorModuleEditor.setBlock = function(block) {
+		if (this.block && block && this.block.token.start == block.token.start && (this.datas || this.styles)) {
+			return;
+		}
+
+		//console.log(block, this);
+		
+		this.block = block;
+		this.reload();
 	}
 	
 	function getOrderDatas(modParams) {
@@ -119,15 +125,32 @@ define([
 		var $auth =app.ng_objects.$auth;
 		function init() {
 			$scope.params = editorModuleEditor;
-			editorModuleEditor.setBlock(editorModuleEditor.block);
-			//console.log(editorModuleEditor);
-			//util.$apply();
+			// 此行 防止没有显示 因为wikimod为异步， 执行此行做做重新检测
+			editorModuleEditor.reload();
 		}
 			
 		$scope.change = function(){
 			//console.log($scope.params);
 			editorModuleEditor.applyModParams();
 		}
+
+		// 更改样式
+		$scope.clickSelectStyle = function(block) {
+			var editBlock =editorModuleEditor.getBlock();
+			if (editBlock && editBlock.applyModParams) {
+				editBlock.applyModParams(block.modParams);
+
+				editorModuleEditor.reload();
+			}
+		}
+
+		$scope.getStyleActiveClass = function(block) {
+			if (block.modParams.design == editorModuleEditor.params.design) {
+				return "kp_style_selected";
+			}
+			return undefined;
+		}
+
 		$scope.$watch("$viewContentLoaded", init);
 	}]);
 
