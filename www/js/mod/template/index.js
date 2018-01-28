@@ -101,6 +101,7 @@ define([
 					col.content = wikiBlock.templateContent;
 					templateContent += wikiBlock.templateContent || "";
 				} else {
+					//console.log(col.content);
 					templateContent += '<wikipage data-content-type="md" content="' + colStr + '.content" contentUrl="' + colStr + '.contentUrl"></wikipage>\n';
 				}
 				templateContent += "</div>\n";
