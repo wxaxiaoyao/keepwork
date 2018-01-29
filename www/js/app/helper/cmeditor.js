@@ -553,16 +553,16 @@ define([
 			setPreviewScale(editor);
 		}
 		editor.showSource = function() {
-			editor.editorSourceContainer.show();
+			editor.editorSourceContainer && editor.editorSourceContainer.show();
 		}
 		editor.hideSource = function() {
-			editor.editorSourceContainer.hide();
+			editor.editorSourceContainer && editor.editorSourceContainer.hide();
 		}
 		editor.showPreview = function() {
-			editor.editorPreviewContainer.show();
+			editor.editorPreviewContainer && editor.editorPreviewContainer.show();
 		}
 		editor.hidePreview = function() {
-			editor.editorPreviewContainer.hide();
+			editor.editorPreviewContainer && editor.editorPreviewContainer.hide();
 		}
 		editor.setValue = function(text) {
 			editor.editor.setValue(text);
