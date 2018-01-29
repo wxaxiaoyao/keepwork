@@ -130,6 +130,8 @@ define([
 						return;
 					}
 					content = newVal;
+					//console.log($attrs.content, $scope);
+					//console.log(content);
 					render();
 				});
 

@@ -190,9 +190,8 @@ define([
 	}
 
 	function getEmptyLine(editor, lineNo) {
-		if(!angular.isNumber(lineNo)){
-			return 0;
-		}
+		lineNo = lineNo || editor.getCursor().line;
+
 		var content = editor.getLine(lineNo);
 		while (content){
 			content = editor.getLine(++lineNo);
@@ -578,6 +577,9 @@ define([
 		}
 		editor.getBlockList = function() {
 			return editor.md.getBlockList();
+		}
+		editor.getEmptyLine = function(lineNo) {
+			return getEmptyLine(editor.editor, lineNo)
 		}
 	}
 

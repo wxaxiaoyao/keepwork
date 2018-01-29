@@ -5,6 +5,10 @@ define([
 	var escapeChar = "@";
 	var escapeCharList = '@`-+#';
 	function md_escape(text) {
+		if (typeof(text) != "string") {
+			return text;
+		}
+
 		text = text || "";
 
 		var lines = text.split("\n");
@@ -34,6 +38,10 @@ define([
 
 	// md 转json对象
 	mdconf.mdToJson = function(text) {
+		if (typeof(text) != "string") {
+			return text;
+		}
+
 		text = md_unescape(text);
 
 		var temp_lines = text.trim().split("\n");

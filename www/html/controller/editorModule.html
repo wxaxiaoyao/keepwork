@@ -1,4 +1,37 @@
 
+<style>
+.kp_module_wiki_block_container {
+	height:140px;
+	padding:20px;
+}
+
+.kp_module_title_container {
+	text-align: center;
+}
+
+.kp_module_list_item_container {
+	padding-left: 40px;
+}
+</style>
 <div ng-controller="editorModuleController">
-	模块列表
+	<div ng-if="params.showType == 'blocklist'">
+		<div class="kp_module_title_container">模块列表</div>
+		<div ng-repeat="block in params.blocklist track by $index">
+			<div class="kp_module_list_item_container" ng-click="clickSelectBlock(block)">
+				{{block.showname}}
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="params.showType == 'block'">
+		<div class="kp_module_title_container" ng-click="clickSelectBlock()">
+			<i class="fa fa-arrow-left" aria-hidden="true"></i></i>
+			{{params.block.showname}}
+		</div>
+		<div ng-repeat="$kp_block in params.styles track by $index">
+			<div class="kp_module_wiki_block_container" ng-click="clickSelectStyle($kp_block)">
+				<wiki-block></wiki-block>
+			</div>
+		</div>
+	</div>
 </div>
