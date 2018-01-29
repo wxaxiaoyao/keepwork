@@ -44,18 +44,20 @@ define([
 
 						var mod = self.wikimod.mod;
 
-						if (!self.htmlContent) {
+						var _getModHtml = function() {
+							var htmlContent = undefined;
 							if (typeof(mod) == "function") {
-								self.htmlContent = mod(self);
+								htmlContent = mod(self);
 							} else if (typeof(mod) == "object") {
-								self.htmlContent = mod.render(self);
+								htmlContent = mod.render(self);
 							} else {
-								self.htmlContent = mod;
+								htmlContent = mod;
 							}
+							return htmlContent;
 						}
 
 						if (self.$render) {
-							self.$render(self.htmlContent);
+							self.$render(_getModHtml);
 						}
 					},
 					wikimod: block.wikimod,
@@ -103,11 +105,12 @@ define([
 				return;
 			}
 			var line = editor.editor.getCursor().line;
+			var line = editor.getEmptyLine();
 			var text = '```@' + block.cmdName + "\n" + mdconf.jsonToMd(block.modParams) + '\n```\n';
 			//console.log(line);
-			editor.editor.replaceRange(text, {line:line+1, ch:0}, {line:line+1, ch:0});
+			editor.editor.replaceRange(text, {line:line, ch:0}, {line:line, ch:0});
 			//editor.editor.replaceRange('helloworld\n', {line:line+1, ch:0}, {line:line+1, ch:0});
-			editor.editor.setCursor({line:line+1, ch:0});
+			editor.editor.setCursor({line:line, ch:0});
 			editor.editor.focus();
 		}
 		$scope.$watch("$viewContentLoaded", init);

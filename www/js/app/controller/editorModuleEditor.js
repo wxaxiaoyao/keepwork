@@ -149,7 +149,7 @@ define([
 
 			$(".kp_nav_item_container .kp_active").removeClass("kp_active");
 			$($event.target).addClass("kp_active");
-			console.log($event);
+			//console.log($event);
 		}
 
 		$scope.getStyleActiveClass = function(block) {

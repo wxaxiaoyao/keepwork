@@ -190,16 +190,29 @@ define([
 	}
 
 	function getEmptyLine(editor, lineNo) {
-		lineNo = lineNo || editor.getCursor().line;
+		lineNo = lineNo || editor.editor.getCursor().line || 0;
 
-		var content = editor.getLine(lineNo);
-		while (content){
-			content = editor.getLine(++lineNo);
+		var blockList = editor.getBlockList();
+		if (blockList.length == 0){
+			return 0;
 		}
-		if (!angular.isDefined(content)){
-			editor.replaceRange("\n",{line: lineNo, ch: 0});
+
+		for (var i = 0; i < blockList.length; i++) {
+			var block = blockList[i];
+			if (i < blockList.length-1 && block.token.end <= lineNo && lineNo < blockList[i+1].token.start) {
+				return lineNo;
+			}
+			if (/^\n+$/.test(block.text)) {
+				if (block.token.start <= lineNo && lineNo < block.token.end) {
+					return lineNo;
+				}
+				if (lineNo < block.start) {
+					return block.start;
+				}
+			} 
 		}
-		return lineNo;
+
+		return blockList[blockList.length-1].token.end;
 	}
 
 	function line_keyword_nofocus(editor, lineNo, content) {
@@ -231,7 +244,7 @@ define([
 		var edit = editor.editor;
 		var fileReader = new FileReader();
 		var cursor = edit.getCursor();
-		var insertLineNum = getEmptyLine(edit, cursor.line);
+		var insertLineNum = getEmptyLine(editor, cursor.line);
 		console.log(cursor, insertLineNum);
 		fileReader.onloadstart = function() {
 			var onloadInfo = "***正在获取文件 0/"+ file.size +"***";
@@ -579,7 +592,7 @@ define([
 			return editor.md.getBlockList();
 		}
 		editor.getEmptyLine = function(lineNo) {
-			return getEmptyLine(editor.editor, lineNo)
+			return getEmptyLine(editor, lineNo)
 		}
 	}
 
