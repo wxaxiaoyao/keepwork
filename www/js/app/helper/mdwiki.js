@@ -316,7 +316,7 @@ define([
 			} else {
 				md.template.isChange = false;
 			}
-			console.log(blockList);
+			//console.log(blockList);
             return blockList;
         }
 

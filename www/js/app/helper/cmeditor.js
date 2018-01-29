@@ -197,22 +197,31 @@ define([
 			return 0;
 		}
 
+		var _getLineNo = function(lineNo) {
+			if (editor.editor.getLine(lineNo) == undefined) {
+				editor.editor.replaceRange("\n", {line:lineNo, ch:0});
+			}
+
+			return lineNo;
+		}
+
 		for (var i = 0; i < blockList.length; i++) {
 			var block = blockList[i];
-			if (i < blockList.length-1 && block.token.end <= lineNo && lineNo < blockList[i+1].token.start) {
-				return lineNo;
+			if (i < blockList.length-1 && block.token.end < blockList[i+1].token.start && lineNo <= block.token.end) {
+				return _getLineNo(block.token.end);
+			
 			}
 			if (/^\n+$/.test(block.text)) {
 				if (block.token.start <= lineNo && lineNo < block.token.end) {
-					return lineNo;
+					return _getLineNo(lineNo);
 				}
 				if (lineNo < block.start) {
-					return block.start;
+					return _getLineNo(block.start);
 				}
 			} 
 		}
 
-		return blockList[blockList.length-1].token.end;
+		return _getLineNo(blockList[blockList.length-1].token.end);
 	}
 
 	function line_keyword_nofocus(editor, lineNo, content) {

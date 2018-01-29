@@ -107,9 +107,7 @@ define([
 			var line = editor.editor.getCursor().line;
 			var line = editor.getEmptyLine();
 			var text = '```@' + block.cmdName + "\n" + mdconf.jsonToMd(block.modParams) + '\n```\n';
-			//console.log(line);
 			editor.editor.replaceRange(text, {line:line, ch:0}, {line:line, ch:0});
-			//editor.editor.replaceRange('helloworld\n', {line:line+1, ch:0}, {line:line+1, ch:0});
 			editor.editor.setCursor({line:line, ch:0});
 			editor.editor.focus();
 		}
