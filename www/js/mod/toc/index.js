@@ -63,6 +63,11 @@ define([
 
 		var $scope = wikiBlock.$scope;
 
+		// 初始化默认参数
+		$scope.params = wikiBlock.modParams || {};
+		$scope.params.design = $scope.params.design || "style1";
+		$scope.mode = wikiBlock.mode;
+
 		$scope.template = app.objects.share.md.template;
 		$scope.tree = getTocTree(wikiBlock);
 
@@ -80,8 +85,50 @@ define([
 		return htmlContent;
 	}
 
-	return {
-		render:render,
-		forceRender:render,
+	// 或编辑参数
+	function getEditorParams(modParams) {
+		return {
+			design:modParams.design,
+			min_level:{
+				text: modParams.min_level,
+				$data: {
+					type:"number",
+				},
+			},
+			max_level:{
+				text:modParams.max_level,
+				$data: {
+					type:"number",
+				}
+			}
+		};
 	}
+
+	// 获取模块参数
+	function getModuleParams(editorParams) {
+		return {
+			design:editorParams.design,
+			min_level:parseInt(editorParams.min_level.text),
+			max_level:parseInt(editorParams.max_level.text),
+		};
+	}
+
+	// 获取样式列表
+	function getStyleList() {
+		return [
+			{
+				design:"style1",
+				min_level: 1,
+				max_level: 4,
+			},
+		];
+	}
+
+	return {
+		render: render,
+		forceRender: render,
+		getStyleList: getStyleList,
+		getEditorParams: getEditorParams,
+		getModuleParams: getModuleParams,
+	};
 });

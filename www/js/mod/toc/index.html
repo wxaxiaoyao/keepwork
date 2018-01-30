@@ -44,7 +44,7 @@
 }
 </style>
 
-<div>
+<div ng-if="mode != 'preview'">
 	<div class="toc_h1_container toc_h_container" ng-repeat="x1 in tree.nodes">
 		<div class="toc_text1_container toc_text_container" ng-click="clickTocItem(x1)">
 			{{x1.token ? x1.token.content : ""}}
@@ -71,6 +71,50 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-if="mode == 'preview'">
+	<div ng-if="params.design == 'style1'">
+		<div class="toc_h1_container toc_h_container">
+			<div class="toc_text1_container toc_text_container">
+				Title1
+			</div>
+			<div class="toc_h2_container toc_h_container">
+				<div class="toc_text2_container toc_text_container">
+					Title11
+				</div>
+			</div>
+			<div class="toc_h2_container toc_h_container">
+				<div class="toc_text2_container toc_text_container">
+					Title12
+				</div>
+			</div>
+			<div class="toc_h2_container toc_h_container">
+				<div class="toc_text2_container toc_text_container">
+					Title13
+				</div>
+			</div>
+		</div>
+		<div class="toc_h1_container toc_h_container">
+			<div class="toc_text1_container toc_text_container">
+				Title2
+			</div>
+			<div class="toc_h2_container toc_h_container">
+				<div class="toc_text2_container toc_text_container">
+					Title21
+				</div>
+			</div>
+			<div class="toc_h2_container toc_h_container">
+				<div class="toc_text2_container toc_text_container">
+					Title22
+				</div>
+			</div>
+			<div class="toc_h2_container toc_h_container">
+				<div class="toc_text2_container toc_text_container">
+					Title23
 				</div>
 			</div>
 		</div>
