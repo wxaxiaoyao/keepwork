@@ -102,7 +102,7 @@ define([
 					templateContent += wikiBlock.templateContent || "";
 				} else {
 					//console.log(col.content);
-					templateContent += '<wikipage data-content-type="md" content="' + colStr + '.content" contentUrl="' + colStr + '.contentUrl"></wikipage>\n';
+					templateContent += '<wikipage data-content-type="md" content="' + colStr + '.content" data-content-url="' + colStr + '.contentUrl"></wikipage>\n';
 					//if (col.content) {
 						//templateContent += '<wikipage data-content-type="md" content="' + colStr + '.content" contentUrl="' + colStr + '.contentUrl"></wikipage>\n';
 					//}

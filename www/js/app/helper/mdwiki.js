@@ -44,8 +44,6 @@ define([
 
         var mdName = "md" + instCount++;
 		var encodeMdName = encodeURI(mdName);
-		var $compile = app.ng_objects.$compile;
-		var $scope = options.$scope || app.ng_objects.$rootScope;
         var md = getMd(mdName);
 
         md.mdName = mdName;
@@ -79,6 +77,8 @@ define([
         }
 
 		md.bindContainer = function() {
+			var $compile = app.ng_objects.$compile;
+			var $scope = options.$scope || app.ng_objects.$rootScope;
 			if (!md.isBindContainer && md.containerId && $('#' + md.containerId)) {
 				$("#" + md.containerId).html($compile('<wiki-block-container data-template="true" data-params="' + encodeMdName + '"></wiki-block-container>')($scope));
 				md.isBindContainer = true;
