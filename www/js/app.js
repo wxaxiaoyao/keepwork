@@ -19,7 +19,9 @@ define([
     };
 
     // 定义angular app模块
-    app.ng_app = angular.module(app.appName, ['ui.bootstrap', 'satellizer']).run(["$injector", function($injector) {
+    app.ng_app = angular.module(app.appName, ['ui.bootstrap', 'satellizer']).run(["$injector", function() {
+		var $injector = angular.injector(["ng", "satellizer"]);
+
         app.angularBootstrap = true;
 		app.ng_objects.$injector = $injector;
 		app.ng_objects.$rootScope = $injector.get("$rootScope");
@@ -50,12 +52,6 @@ define([
 				app.ng_objects.$locationProvider = $locationProvider;
 				app.ng_objects.$authProvider = $authProvider;
 				app.ng_objects.$sceDelegateProvider = $sceDelegateProvider;
-
-				//$sceDelegateProvider.resourceUrlWhitelist([
-					//"http://gitlab.com", 
-					//"http://gitapi.localhost",
-				//]);
-
     }]);
 
     // 提供动态注册控制器接口
