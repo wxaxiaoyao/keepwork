@@ -2,7 +2,8 @@
 define([
 	'app',
 	'controller/header',
-], function (app, headerContent) {
+	'controller/footer',
+], function (app, headerContent, footerContent) {
 	app.registerController("mainController",['$scope', function ($scope) {
 		var util = app.objects.util;
 		var config = app.objects.config;
@@ -13,6 +14,7 @@ define([
 		$rootScope.isShowHeader = true;
 		$rootScope.isShowFooter = true;
 		$rootScope.headerContent = headerContent;
+		$rootScope.footerContent = footerContent;
 		$rootScope.imgsPath = "assets/imgs/";
 		
 		function init(){

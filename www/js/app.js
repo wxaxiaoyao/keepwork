@@ -19,8 +19,7 @@ define([
     };
 
     // 定义angular app模块
-    app.ng_app = angular.module(app.appName, ['ui.bootstrap', 'satellizer']).run(["$injector", function() {
-		var $injector = angular.injector(["ng", "satellizer"]);
+    app.ng_app = angular.module(app.appName, ['ui.bootstrap', 'satellizer']).run(["$injector", function($injector) {
 
         app.angularBootstrap = true;
 		app.ng_objects.$injector = $injector;
