@@ -56,6 +56,7 @@ define([
 			$scope.isShowLeftPane = true;
 			$scope.showOpenedList = true;
 			$rootScope.isShowHeader = false;
+			$rootScope.isShowFooter = false;
 
 			editorContainerElem = $(".kp_editor_container");
 			leftContainerElem = $(".kp_editor_left_container");

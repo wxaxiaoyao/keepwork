@@ -25,11 +25,28 @@ define([
 		return wikimods;
 	}
 	
+	wikimod.getWikimod = function(cmdName) {
+		for (var i = 0; i < wikimods.length; i++) {
+			var mod = wikimods[i];
+			if (mod.cmdName == cmdName) {
+				return mod;
+			}
+		}
+
+		return undefined;
+	}
+
 	// 加载mod
 	wikimod.loadWikiMod = function(params, success, error) {
+		var self = this;
         var defaultModPath = "wikimod/";
         var requireUrl = params.cmdName;
 		var cmdName = params.cmdName;
+
+		if (!self.getWikimod(cmdName)) {
+			error && error();
+			return;
+		}
 
         if (params.cmdName == params.modName) {
             requireUrl = defaultModPath + params.modName + "/index";
