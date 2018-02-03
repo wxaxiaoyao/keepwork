@@ -49,7 +49,10 @@ define([
 			var apiBaseUrl = self.apiBaseUrl;
 
 			if (self.is_proxy || !self.token || self.authUsername != self.username) {
-				apiBaseUrl = self.proxyApiBaseUrl;
+				if (self.username != "keepwork") {
+					apiBaseUrl = self.proxyApiBaseUrl;
+				}
+				//apiBaseUrl = self.proxyApiBaseUrl;
 			}
 
 			var config = {
