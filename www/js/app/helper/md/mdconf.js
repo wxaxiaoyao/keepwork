@@ -197,7 +197,7 @@ define([
 				for (var key in obj) {
 					// 写对象值
 					value = obj[key];
-					if (key.indexOf("$") == 0 || typeof(value) != "object") {
+					if (value == null || key.indexOf("$") == 0 || typeof(value) != "object") {
 						continue;
 					}
 
