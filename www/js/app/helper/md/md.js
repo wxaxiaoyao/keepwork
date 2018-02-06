@@ -2,7 +2,8 @@
 define([
 ], function(){
 	var escape_ch = "@";
-	var special_str = '`*_{}[]()#+-.!>\\' + '\'"<>&'; // 覆盖html禁止字符
+	//var special_str = '`*_{}[]()#+-.!>\\' + '\'"<>&'; // 覆盖html禁止字符
+	var special_str = '`*_{}[]()#+-.!<>\\'; // 覆盖html禁止字符
 
 	// markdown 特殊字符转义
 	function md_special_char_escape(text) {
@@ -172,7 +173,7 @@ define([
 
 	function em(obj) {
 		var text = obj.text;
-		var reg_str = /@\*(.+?)@\*/;
+		var reg_str = / @\*(.+?)@\* /;
 		var regs = text.match(reg_str);
 		var htmlstr = "", em_render;	
 		if (regs){
@@ -186,7 +187,7 @@ define([
 			return em(obj);
 		}
 
-		reg_str = /@_(.*?)@_/;
+		reg_str = / @_(.*?)@_ /;
 		regs = text.match(reg_str);
 		if (regs){
 			htmlstr = '<em>' + regs[1] + '</em>';
@@ -204,7 +205,7 @@ define([
 
 	function strong(obj) {
 		var text = obj.text;
-		var reg_str = /@\*@\*(.+?)@\*@\*/;
+		var reg_str = / @\*@\*(.+?)@\*@\* /;
 		var regs = text.match(reg_str);
 		var htmlstr = "", strong_render;	
 		if (regs){
@@ -218,7 +219,7 @@ define([
 			return strong(obj);
 		}
 
-		reg_str = /@_@_(.*?)@_@_/;
+		reg_str = / @_@_(.*?)@_@_ /;
 		regs = text.match(reg_str);
 		if (regs){
 			htmlstr = '<strong>' + regs[1] + '</strong>';
@@ -406,8 +407,8 @@ define([
 		var cur_line = obj.lines[obj.start];
 
 		//console.log(cur_line);
-		if (!/^@<[-\w\d]+/.test(cur_line)) {
-			return;
+		if (cur_line.indexOf("@<") != 0){
+			return; 
 		}
 
 		var text = cur_line, i = 0, single_line = cur_line;
@@ -418,12 +419,6 @@ define([
 			}	
 			single_line += line;
 			text += "\n" + line;
-		}
-		
-		var regs = single_line.match(/^@<([-\w\d]+).*@>.*@<\/([-\w]+)@>$/);
-		//console.log(single_line, regs);
-		if (!regs || !regs[1] || !regs[2] || regs[1] != regs[2]) {
-			return;
 		}
 
 		var token = {
@@ -441,11 +436,11 @@ define([
 	// 段落
 	function paragraph(obj, env) {
 		var _escape = function(str) {
-			str = str.replace(/@&/g, "&amp;");
+			str = str.replace(/&/g, "&amp;");
 			str = str.replace(/@</g, "&lt;");
 			str = str.replace(/@>/g, "&gt;");
-			str = str.replace(/@'/g, "&apos;");
-			str = str.replace(/@"/g, "&quot;");
+			str = str.replace(/'/g, "&apos;");
+			str = str.replace(/"/g, "&quot;");
 			// 空格非保留字
 			str = str.replace(/ /g, "&nbsp;");
 
