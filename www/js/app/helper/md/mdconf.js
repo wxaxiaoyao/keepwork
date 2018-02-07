@@ -189,7 +189,7 @@ define([
 				for (var key in obj) {
 					// 优先写非对象值
 					value = obj[key];
-					if (value == undefined || key.indexOf("$") == 0 || typeof(value) == "object") {
+					if (value == null || value == undefined || key.indexOf("$") == 0 || typeof(value) == "object") {
 						continue;
 					}
 					text += "- " + key + " : " + md_escape(value) + "\n";
