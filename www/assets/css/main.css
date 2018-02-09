@@ -1,6 +1,8 @@
 @import "../../js/lib/bootstrap/css/bootstrap.min.css";
 @import "../../js/lib/cropper/cropper.min.css";
 
+@import  "basestyle.css";
+
 /*@import  "editor.css";*/
 
 a:hover{

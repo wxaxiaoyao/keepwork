@@ -32,6 +32,7 @@
             'app': pathPrefix + 'js/app',
             'controller': pathPrefix + 'js/app/controller',
             'directive': pathPrefix + 'js/app/directive',
+            'component': pathPrefix + 'js/app/component',
             'helper': pathPrefix + 'js/app/helper',
             'wikimod': pathPrefix + 'js/mod',
         },

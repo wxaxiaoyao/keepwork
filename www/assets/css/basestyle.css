@@ -1,0 +1,19 @@
+
+.forbit_copy {
+	-moz-user-select: none;  
+	-webkit-user-select: none;  
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.input {
+	border:none;
+	border-bottom:1px solid #A7A7A7;
+	width:100%;
+	font-size:16px;
+}
+
+.input:focus {
+	outline:none;
+	border-bottom-color:#3977AD;
+}

@@ -22,6 +22,7 @@ define([
 		"wxaxiaoyao.cn",
 	];
 
+	config.componentPrefixName = "kp";
 
 	config.CONST = {
 		MD_MODE_PREVIEW : "preview",
