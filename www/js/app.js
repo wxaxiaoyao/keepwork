@@ -101,6 +101,7 @@ define([
     app.bootstrap = function () {
 		// 加载依赖
         require([
+			"helper/toolbase",
 			"helper/storage",
 			"helper/config",
 			"helper/util",
@@ -112,7 +113,8 @@ define([
 			"directive/notify",
 			"directive/treenode",
 			//'directive/treeview',
-        ], function (storage, config, util, mdconf, mdwiki, dataSource) {
+        ], function (toolbase, storage, config, util, mdconf, mdwiki, dataSource) {
+			app.objects.toolbase = toolbase;
 			app.objects.storage = storage;
 			app.objects.config = config;
 			app.objects.util = util;
