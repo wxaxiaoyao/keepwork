@@ -58,6 +58,11 @@ define([
 		var handle = {handler: handler, funcname:funcname};
 		// 禁止同一处理程序重复监听  外部实现重复监听比不重复要简单 且不重复更广泛(经验值判定)  故内部屏蔽
 		for (var i = 0; i < eventHandles.length; i++) {
+			// 删除指定对象上的事件
+			if (!funcname && eventHandles[i].handler.toString() == handler.toString()) {
+				return;
+			}
+
 			if (eventHandles[i].handler == handler && eventHandles[i].funcname == funcname){
 				return ;
 			}
@@ -85,7 +90,7 @@ define([
 				continue;
 			}
 			// 删除指定对象上的事件
-			if (!funcname && eventHandles[i].handler == handler) {
+			if (!funcname && eventHandles[i].handler.toString() == handler.toString()) {
 				continue;
 			}
 			// 删除指定事件
