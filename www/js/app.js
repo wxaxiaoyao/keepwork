@@ -3,11 +3,15 @@
  */
 
 define([
+	"helper/toolfunc",
     'angular',
     'angular-ui-bootstrap',
     'satellizer',
-], function (angular) {
+], function (toolfunc, angular) {
 	var app = {};
+
+	toolfunc.mixin(app, toolfunc);
+
     app.appName = "keepwork";
 	app.objects = {
 		share:{},
@@ -101,7 +105,7 @@ define([
     app.bootstrap = function () {
 		// 加载依赖
         require([
-			"helper/toolbase",
+			"helper/objectEvent",
 			"helper/storage",
 			"helper/config",
 			"helper/util",
@@ -113,8 +117,8 @@ define([
 			"directive/notify",
 			"directive/treenode",
 			//'directive/treeview',
-        ], function (toolbase, storage, config, util, mdconf, mdwiki, dataSource) {
-			app.objects.toolbase = toolbase;
+        ], function (objectEvent, storage, config, util, mdconf, mdwiki, dataSource) {
+			app.objects.objectEvent = objectEvent;
 			app.objects.storage = storage;
 			app.objects.config = config;
 			app.objects.util = util;

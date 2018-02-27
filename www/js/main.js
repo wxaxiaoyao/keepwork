@@ -35,6 +35,7 @@
             'component': pathPrefix + 'js/app/component',
             'helper': pathPrefix + 'js/app/helper',
             'wikimod': pathPrefix + 'js/mod',
+			"modeditor": pathPrefix + 'js/app/modeditor',
         },
         shim: {
             'bootstrap':{

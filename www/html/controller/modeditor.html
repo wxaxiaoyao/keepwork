@@ -1,0 +1,62 @@
+
+<style>
+#modeditorarea {
+	margin:200px auto;
+	width:1200px;
+	height:600px;
+	
+	border:1px solid #ccc;
+}
+
+#modeditorarea:hover {
+	cursor:pointer;
+}
+
+.full-screen {
+	position:absolute;
+	top:50px;
+	bottom:0px;
+	right:0px;
+	left:0px;
+}
+
+.attrInputContainer>span {
+	display:inline-block;
+	width:38%;
+}
+.attrInputContainer>input{
+	width:60%;
+	border:none;
+	border-bottom: 1px solid #A7A7A7;
+	font-size: 16px;
+}
+.attrInputContainer>input:focus {
+	outline:none;
+	border-bottom-color: #3977AD;
+}
+
+</style>
+
+<div ng-controller="modeditorController" class="container-fluid full-screen">
+	<div class="row">
+		<div class="col-sm-2">
+			<h4>组件列表</h4>
+		</div>
+		<div class="col-sm-8">
+			<div id="modeditorarea">
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div>
+				<h4>当前标签</h4>
+			</div>
+			<div>
+				<h4>属性列表</h4>
+				<div class="attrInputContainer">
+					<span>背景色</span>
+					<input type="text" ng-model="style['background-color']"/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
