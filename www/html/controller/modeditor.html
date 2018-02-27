@@ -1,7 +1,18 @@
 
 <style>
+.previewContainer {
+	width:1400px;
+	float:left;
+	height:100%;
+}
+
+.editorContainer {
+	margin-left:1400px;
+	height:100%;
+}
+
 #modeditorarea {
-	margin:200px auto;
+	margin:20px auto;
 	width:1200px;
 	height:600px;
 	
@@ -20,12 +31,7 @@
 	left:0px;
 }
 
-.attrInputContainer>span {
-	display:inline-block;
-	width:38%;
-}
 .attrInputContainer>input{
-	width:60%;
 	border:none;
 	border-bottom: 1px solid #A7A7A7;
 	font-size: 16px;
@@ -37,25 +43,34 @@
 
 </style>
 
-<div ng-controller="modeditorController" class="container-fluid full-screen">
-	<div class="row">
-		<div class="col-sm-2">
-			<h4>组件列表</h4>
+<div ng-controller="modeditorController" class="full-screen">
+	<div class="previewContainer">
+		<div id="modeditorarea">
 		</div>
-		<div class="col-sm-8">
-			<div id="modeditorarea">
-			</div>
-		</div>
-		<div class="col-sm-2">
+	</div>
+	<div class="editorContainer">
+		<div>
+			<h4>当前标签</h4>
 			<div>
-				<h4>当前标签</h4>
-			</div>
-			<div>
-				<h4>属性列表</h4>
-				<div class="attrInputContainer">
-					<span>背景色</span>
-					<input type="text" ng-model="style['background-color']"/>
+				<div>{{tag.type}}</div>
+				<div ng-repeat="x in tag.children track by $index" style="padding-left:20px">
+					{{x.type}}
 				</div>
+			</div>
+		</div>
+		<div>
+			<h4>属性列表</h4>
+			<div class="attrInputContainer">
+				<input type="text" placeholder="背景色[background-color]" ng-model="style['background-color']"/>
+				<span>背景色</span>
+			</div>
+			<div class="attrInputContainer">
+				<input type="text" placeholder="高度[height]" ng-model="style['height']"/>
+				<span>高度</span>
+			</div>
+			<div class="attrInputContainer">
+				<input type="text" placeholder="宽度[width]" ng-model="style['width']"/>
+				<span>宽度</span>
 			</div>
 		</div>
 	</div>

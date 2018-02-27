@@ -12,6 +12,7 @@ define([
 
 	tag.attrs = attrs;
 	tag.children = [];
+	tag.data = {};
 	tag.type = "";
 	tag.varValue = "";
 
@@ -77,13 +78,21 @@ define([
 		return undefined;
 	}
 
+	tag.addTag = function(tag) {
+		if (typeof(tag) == "string") {
+			tag = tagFactory(tag);
+		}
+
+		tag.children.push(tag);
+	}
+
 	tag.setType = function(typ) {
 		var self = this;
 		self.type = typ;
 
 		if (typ == "span") {
 
-		} else if (type == "p") {
+		} else if (typ == "p") {
 
 		}
 	}
@@ -94,10 +103,11 @@ define([
 
 		_tag.tagId = "tagId_" + (new Date()).getTime() + "_" + tagId++;
 		_tag.attrs.id = _tag.tagId;
-		_tag.type = typ || "";
+		_tag.type = typ || "var";
 
 
-		if (_tag.type == "") {
+		// 变量标签
+		if (_tag.type == "var") {
 			_tag.varKey = "tagVar_" + (tagId-1);
 			_tag.varValue = "";
 		}

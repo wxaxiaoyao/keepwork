@@ -7,12 +7,12 @@ define([
 
 	app.registerController("modeditorController", ["$scope", function($scope){
 		var $rootScope = app.ng_objects.$rootScope;
-		var tag = tagFactory();
+		var tag = tagFactory("div");
 
 		$rootScope.isShowFooter = false;
+		$scope.tag = tag;
 
 		function init(){
-			tag.name = "div";
 			tag.attrs.style.height = "100%";
 
 
