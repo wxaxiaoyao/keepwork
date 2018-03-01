@@ -1,14 +1,25 @@
 
 <style>
 .previewContainer {
-	width:1400px;
-	float:left;
-	height:100%;
+	height:800px;
 }
 
 .editorContainer {
-	margin-left:1400px;
-	height:100%;
+	display:flex;
+}
+
+.navTagContainer {
+	padding-left: 50px;
+	display: block;
+	width: 200px;
+}
+
+.tagsContainer {
+	display: block;
+	width: 200px;
+}
+
+.attrsContainer {
 }
 
 #modeditorarea {
@@ -31,6 +42,14 @@
 	left:0px;
 }
 
+.hoverTag {
+	background-color: #f0f0f0;
+}
+
+.activeTag {
+	border: 1px solid red;
+}
+
 .attrInputContainer>input{
 	border:none;
 	border-bottom: 1px solid #A7A7A7;
@@ -41,6 +60,22 @@
 	border-bottom-color: #3977AD;
 }
 
+.attrInputContainer>textarea{
+	border:none;
+	border-bottom: 1px solid #A7A7A7;
+	font-size: 16px;
+}
+.attrInputContainer>textarea:focus {
+	outline:none;
+	border-bottom-color: #3977AD;
+}
+
+.navTagSubItemContainer {
+	padding-left:20px;
+}
+.navTagSubItemContainer:hover{
+	cursor:pointer;
+}
 </style>
 
 <div ng-controller="modeditorController" class="full-screen">
@@ -49,28 +84,74 @@
 		</div>
 	</div>
 	<div class="editorContainer">
-		<div>
-			<h4>当前标签</h4>
+		<div class="navTagContainer">
 			<div>
-				<div>{{tag.type}}</div>
-				<div ng-repeat="x in tag.children track by $index" style="padding-left:20px">
-					{{x.type}}
+				<div ng-click="clickBackTag()">{{tag.name || tag.type}}</div>
+				<div ng-repeat="x in tag.children track by $index" class="navTagSubItemContainer">
+					<span ng-click="clickSelectTag(x)">
+						{{x.name || x.type}}
+					</span>
+					<span ng-click="clickDeleteTag($event, $index)"><i class="fa fa-trash-o"></i></span>
+					<span ng-hide="$index == 0" ng-click="clickSwapTag($event, $index - 1, $index)"><i class="fa fa-long-arrow-up"></i></span>
+					<span ng-hide="$index == tag.children.length - 1" ng-click="clickSwapTag($event, $index, $index + 1)"><i class="fa fa-long-arrow-down"></i></span>
 				</div>
 			</div>
 		</div>
-		<div>
-			<h4>属性列表</h4>
-			<div class="attrInputContainer">
-				<input type="text" placeholder="背景色[background-color]" ng-model="style['background-color']"/>
-				<span>背景色</span>
+		<div class="tagsContainer"> 
+			<div ng-repeat="x in tagList track by $index" class="tagContainer">
+				<span style="width:100px">{{x.name || x.type}}</span>
+				<span ng-click="clickAddTag(x)">+</span>
 			</div>
-			<div class="attrInputContainer">
-				<input type="text" placeholder="高度[height]" ng-model="style['height']"/>
-				<span>高度</span>
-			</div>
-			<div class="attrInputContainer">
-				<input type="text" placeholder="宽度[width]" ng-model="style['width']"/>
-				<span>宽度</span>
+		</div>
+		<div class="attrsContainer">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#attrId" data-toggle="tab">属性</a></li>
+				<li><a href="#varId" data-toggle="tab">变量</a></li>
+			</ul>
+			<div class="tab-content">
+				 <div id="attrId" class="tab-pane fade in active">
+					<div class="attrInputContainer">
+						<input type="text" placeholder="样式属性" ng-model="styleKey" ng-blur="styleKeyBlur()"/>
+						<input type="text" placeholder="值" ng-model="styleValue" ng-blur="styleValueBlur()"/>
+					</div>
+					<div class="attrInputContainer">
+						<input type="text" placeholder="标签名" ng-model="tag.name"/>
+						<span>标签名</span>
+					</div>
+					<div class="attrInputContainer">
+						<input type="text" placeholder="背景色[background-color]" ng-model="style['background-color']"/>
+						<span>背景色</span>
+					</div>
+					<div class="attrInputContainer">
+						<input type="text" placeholder="高度[height]" ng-model="style['height']"/>
+						<span>高度</span>
+					</div>
+					<div class="attrInputContainer">
+						<input type="text" placeholder="宽度[width]" ng-model="style['width']"/>
+						<span>宽度</span>
+					</div>
+					<div class="attrInputContainer">
+						<input type="text" placeholder="外边距[margin]" ng-model="style['margin']"/>
+						<span>外边距</span>
+					</div>
+					<div class="attrInputContainer">
+						<input type="text" placeholder="内边距[padding]" ng-model="style['padding']"/>
+						<span>内边距</span>
+					</div>
+				</div>
+				<div id="varId" class="tab-pane fade">
+					<div ng-repeat="x in tag.vars track by $index">
+						<div class="attrInputContainer">
+							<input type="text" placeholder="变量名(小写组成)" ng-model="x.$data.key"/>
+							<span>变量名</span>
+						</div>
+						<div class="attrInputContainer">
+							<input type="text" placeholder="变量值" ng-model="x.text"/>
+							<!--<textarea placeholder="变量值" ng-model="tag.varValue"></textarea>-->
+							<span>变量值</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

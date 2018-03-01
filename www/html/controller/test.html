@@ -1,8 +1,42 @@
 
-<div ng-controller="testController">
-	<kp-input></kp-input>
-	<kp-input></kp-input>
-	<kp-input></kp-input>
+<style>
+.editorContainer {
+	height:800px;
+	border:1px solid gray;
+	position:absolute;
+	width:100%;
+}
 
-	<input class="input"/>
+.dragObj {
+	display:inline-block;
+	width:60px;
+	height:60px;
+	background-color:blue;
+	margin-left: 100px;
+}
+.dragObj1 {
+	display:inline-block;
+	width:60px;
+	height:60px;
+	background-color:blue;
+	margin-top:20px;
+	margin-left: 70px;
+}
+
+.dropContainer {
+	height:200px;
+	border:1px solid gray;
+	position:absolute;
+}
+
+</style>
+
+<div ng-controller="testController">
+	<h1><span>测试</span></h1>
+	<div class="editorContainer">
+		<div class="dragObj" draggable=true></div>
+		<div class="dragObj1" draggable=true></div>
+	</div>
+	<div class="dropContainer">
+	</div>
 </div>

@@ -561,7 +561,7 @@ define([
 			if (line.indexOf("@* ") == 0 || line.indexOf("@- ") == 0 || line.indexOf("@+ ") == 0) {
 				return {is_list: true, is_sort: false};
 			}
-			if (line.match(/^\d+\. /)) {
+			if (line.match(/^\d+@\. /)) {
 				return {is_list:true, is_sort: true};
 			}
 
