@@ -12,8 +12,7 @@ define([
 		var tagStack = [];
 
 		$rootScope.isShowFooter = false;
-		$scope.tag = blockTag;
-		$scope.tagList = tags.tagList;
+		$scope.tagTree = tags.tagTree();
 
 		function apply() {
 			setTimeout(function(){
@@ -22,12 +21,10 @@ define([
 		}
 
 		function init(){
-			//blockTag.attrs.style.height = "100%";
-			//blockTag.attrs.style.display = "inline";
-			$scope.style = blockTag.attrs.style;
+			setCurrentTag(blockTag);
 
 			var rowTag = tags.getTag("rowDiv");
-			var pTag = tags.getTag("p");
+			var pTag = tags.getTag("text");
 			//pTag.attrs.style["margin"] = "20%";
 			rowTag.addTag(pTag);
 			rowTag.addTag(tags.getTag("img"));
@@ -83,20 +80,22 @@ define([
 			var parentElem = dragObj.parentElem;
 			//var marginLeft = (elem.outerWidth(true) - elem.outerWidth())/2;
 			//var marginTop = (elem.outerHeight(true) - elem.outerHeight())/2;
-			var marginLeft = elem.css("margin-left");
-			var marginTop = elem.css("margin-top");
-			marginLeft = parseInt(marginLeft.substring(0, marginLeft.length-2));
-			marginTop = parseInt(marginTop.substring(0, marginTop.length-2));
+			var paddingLeft = elem.css("padding-left");
+			var paddingTop = elem.css("padding-top");
+			paddingLeft = parseInt(paddingLeft.substring(0, paddingLeft.length-2));
+			paddingTop = parseInt(paddingTop.substring(0, paddingTop.length-2));
 			//var parentWidth = parentElem.width();
 			//var parentHeight = parentElem.height();
-			console.log(marginLeft, marginTop);
-			marginLeft += dragObj.offsetX;
-			marginTop += dragObj.offsetY;
-			console.log(marginLeft, marginTop);
+			console.log(paddingLeft, paddingTop);
+			paddingLeft += dragObj.offsetX;
+			paddingTop += dragObj.offsetY;
+			console.log(paddingLeft, paddingTop);
 
-			if (marginLeft >= 0 && marginTop >= 0) {
-				elem.css("margin-left", marginLeft + "px");
-				elem.css("margin-top", marginTop + "px");
+			if (paddingLeft >= 0 && paddingTop >= 0) {
+				elem.css("padding-left", paddingLeft + "px");
+				elem.css("padding-top", paddingTop + "px");
+			} else {
+				
 			}
 			return true;
 		}
@@ -203,6 +202,15 @@ define([
 				return;
 			}
 
+			var navTagList = [];
+			var tmpTag = tag;
+			while(tmpTag) {
+				navTagList.push(tmpTag);
+				tmpTag = tmpTag.parentTag;
+			}
+			navTagList.reverse();
+
+			$scope.navTagList = navTagList;
 			$scope.tag = tag;
 			$scope.style = tag.attrs.style;
 			
@@ -277,6 +285,9 @@ define([
 			renderBlock();
 		}
 
+		$scope.clickExpandTag = function(node) {
+			node.isExpand = !node.isExpand;
+		}
 		$(document).keyup(function(event){
 			if (app.objects.current_url != "/www/modeditor") {
 				return;

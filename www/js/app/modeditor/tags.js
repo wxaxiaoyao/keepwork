@@ -11,48 +11,78 @@ define([
 		name:"行容器",
 		type:"rowDiv",
 		tag:"div",
+		classify: "基本Tag",
 	},
 	{
 		name:"列容器",
 		type:"colDiv",
 		tag:"div",
+		classify: "基本Tag",
 	},
 	{
 		name:"文本",
 		type:"text",
 		tag:"span",
+		classify: "基本Tag",
 	},
 	{
 		name:"一级标题",
 		type:"h1",
 		tag:"h1",
+		classify: "基本Tag",
 	},
 	{
 		name:"二级标题",
 		type:"h2",
 		tag:"h2",
+		classify: "基本Tag",
 	},
 	{
 		name:"三级标题",
 		type:"h3",
 		tag:"h3",
+		classify: "基本Tag",
 	},
-	{
-		name:"段落",
-		type:"p",
-		tag:"p",
-	},
+	//{
+		//name:"段落",
+		//type:"p",
+		//tag:"p",
+	//},
 	{
 		name:"图片",
 		type:"img",
 		tag:"img",
+		classify: "基本Tag",
 	},
 	{
 		name:"链接",
 		type:"a",
 		tag:"a",
+		classify: "基本Tag",
 	},
 	];
+
+	// tag树型结构
+	tags.tagTree = function() {
+		var self = this;
+		var tree = [
+		{
+			classify: "基本Tag",
+		}
+		];
+
+		var tagList = self.tagList;
+		for (var i = 0; i < tagList.length; i++){
+			for (var j = 0; j < tree.length; j++) {
+				if (tree[j].classify == tagList[i].classify) {
+					tree[j].nodes = tree[j].nodes || [];
+					tree[j].nodes.push(tagList[i]);
+				}
+			}
+		}
+		
+		return tree;
+	}
 
 	// 定义容器tag
 	tags.divTag = function() {
