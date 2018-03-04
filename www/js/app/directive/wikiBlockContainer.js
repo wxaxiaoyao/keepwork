@@ -51,7 +51,7 @@ define([
 					return;
 				}
 
-				block.$element = $element; // 双向滚动时会用到
+				block.$containerElement = $element; // 双向滚动时会用到
 				$scope.clickContainer = function($event) {
 					if ($event) {
 						$event.stopPropagation();

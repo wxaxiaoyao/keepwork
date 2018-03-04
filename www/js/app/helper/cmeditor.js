@@ -468,7 +468,7 @@ define([
 			if (!block) {
 				return;
 			}
-			editor.editorPreviewContainer.scrollTop(block.$element[0].offsetTop * scaleSize);
+			editor.editorPreviewContainer.scrollTop(block.$containerElement[0].offsetTop * scaleSize);
 			editor.scrollTimer = undefined;
 		}, 100);
 	}
@@ -498,8 +498,8 @@ define([
 				block = blockList[index];
 				if (block.isTemplate)
 					continue;
-				//console.log(scrollTop, block.$element);
-				if (scrollTop <= block.$element[0].offsetTop * scaleSize) {
+				//console.log(scrollTop, block.$containerElement);
+				if (scrollTop <= block.$containerElement[0].offsetTop * scaleSize) {
 					break;
 				}
 			}

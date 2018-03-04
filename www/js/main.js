@@ -26,6 +26,8 @@
             'text': libPathPrefix + 'requirejs/text',
             'domReady': libPathPrefix + 'requirejs/domReady',
 			'cropper': libPathPrefix + 'cropper/cropper.min',
+			"vue": libPathPrefix + 'vue/vue.min',
+			"ELEMENT": libPathPrefix + "element-ui/index",
 
 			'lib': pathPrefix + 'js/lib',
 			'css': pathPrefix + 'assets/css',
@@ -54,6 +56,9 @@
             'highlight':{
                 exports: 'hljs',
             },
+			"ELEMENT":{
+				deps:["vue"],
+			},
         },
         packages: [
             {

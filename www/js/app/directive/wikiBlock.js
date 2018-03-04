@@ -13,6 +13,7 @@ define([
 				if (!block) {
 					return;
 				}
+				block.$element = $element;
 
 				// 获取新scope 避免模块重用干扰
 				block.getNewScope = function() {
