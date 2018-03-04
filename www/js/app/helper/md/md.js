@@ -494,6 +494,7 @@ define([
 			}
 			text += "\n" + line;
 			htmlContent += "<br/>" + line;
+			//htmlContent += "<br/>" + _escape(line);
 		}
 
 		var token = {
@@ -505,6 +506,8 @@ define([
 			end:i,
 		}
 		
+		//token.htmlContent = _escape(token.htmlContent);
+
 		if (env && env.is_sub_tag) {
 			token.htmlContent = obj.md.line_parse(token.htmlContent);
 		} else {
@@ -516,7 +519,6 @@ define([
 			token.htmlContent = paragraph_render({md:obj.md, content: text, text:text, is_sub_tag:env.is_sub_tag})  || token.htmlContent;
 		}
 
-		token.htmlContent = _escape(token.htmlContent);
 		return token;
 	}
 
