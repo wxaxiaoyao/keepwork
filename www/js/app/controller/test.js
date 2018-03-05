@@ -3,10 +3,30 @@ define([
 	'app',
 	'modeditor/tag',
 	'text!html/controller/test.html',
+	"component/vue/wikiCarousel",
 ], function (app, tagFactory, htmlContent) {
+	var vue = app.vue;
     app.registerController("testController",['$scope', function ($scope) {
 
 		function init() {
+			var vueElem = $("#vueId");
+			var vm = new vue({
+				el:vueElem[0],
+				data:{
+					params:{},
+					items:[
+					{
+						id:1,
+						title:"item1",
+					},
+					{
+						id:2,
+						title:"item2",
+					},
+					],
+				}
+			});
+
 			var elem1 = $(".editorContainer");
 			var elem2 = $(".dragObj");
 

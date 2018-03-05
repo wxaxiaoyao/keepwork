@@ -19,6 +19,8 @@ define([
 	tag.type = "";
 	tag.vars = []; // 变量集 未自定义则不配置更改
 	tag.styleCode = "";
+	tag.styleList = [];
+	tag.attrList = [];
 
 	function isEmptyObject(obj) {
 		for (var key in obj) {
@@ -36,27 +38,49 @@ define([
 		var self = this;
 		var str = "";
 		var attrs = self.attrs;
+
+		var attrExistMap = {};
+
+		for (var i = 0; i < self.vars.length; i++) {
+			var v = self.vars[i];
+			var value = "";
+
+			if (v.$data.type != "attr") {
+				continue;
+			}
+
+			var text = v.text || attrs[v.$data.attrName] || "";
+			
+			if (!text) {
+				continue;
+			}
+
+			if (v.$data.key) {
+				//value += "params." + v.$data.key + "||" + "'" + text + "'";
+				value += "params." + v.$data.key + "||" +  text;
+			} else {
+				//value = "'" + text + "'";
+				value = text;
+			}
+
+			attrExistMap[v.$data.attrName] = true;
+
+			//str += " " + v.$data.attrName + '="{{' + value + '}}"';
+			str += " " + v.$data.attrName + '="' + value + '"';
+		}
+
 		for (var key in attrs) {
 			var value = attrs[key];
+
+			if (attrExistMap[key]) {
+				continue;
+			}
 
 			if (typeof(value) == "string") {
 				str += " " + key + '="' + value + '"';
 			}
 		}
 
-		for (var i = 0; i < self.vars.length; i++) {
-			var v = self.vars[i];
-			var value = "";
-			var text = v.text || "";
-			if (v.$data.type == "attr") {
-				if (v.$data.key) {
-					value += "params." + v.$data.key + "||" + "'" + text + "'";
-				} else {
-					value = "'" + text + "'";
-				}
-				str += " " + v.$data.attrName + '="{{' + value + '}}"';
-			}
-		}
 
 		var style = attrs.style || {};
 		if (!isEmptyObject(style)) {

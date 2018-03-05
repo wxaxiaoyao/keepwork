@@ -26,9 +26,9 @@ define([
 			var rowTag = tags.getTag("rowDiv");
 			var pTag = tags.getTag("text");
 			//pTag.attrs.style["margin"] = "20%";
-			rowTag.addTag(pTag);
-			rowTag.addTag(tags.getTag("img"));
-			blockTag.addTag(rowTag);
+			//rowTag.addTag(pTag);
+			//rowTag.addTag(tags.getTag("img"));
+			//blockTag.addTag(rowTag);
 
 			//rowTag = tags.getTag("div");
 			//rowTag.attrs.style["display"] = "flex";
@@ -78,25 +78,35 @@ define([
 
 			var elem = dragObj.elem;
 			var parentElem = dragObj.parentElem;
-			//var marginLeft = (elem.outerWidth(true) - elem.outerWidth())/2;
-			//var marginTop = (elem.outerHeight(true) - elem.outerHeight())/2;
+			var marginLeft = elem.css("margin-left");
+			var marginTop = elem.css("margin-top");
 			var paddingLeft = elem.css("padding-left");
 			var paddingTop = elem.css("padding-top");
+			marginLeft = parseInt(marginLeft.substring(0, marginLeft.length-2));
+			marginTop = parseInt(marginTop.substring(0, marginTop.length-2));
 			paddingLeft = parseInt(paddingLeft.substring(0, paddingLeft.length-2));
 			paddingTop = parseInt(paddingTop.substring(0, paddingTop.length-2));
 			//var parentWidth = parentElem.width();
 			//var parentHeight = parentElem.height();
-			console.log(paddingLeft, paddingTop);
+			console.log(marginLeft, marginTop, paddingLeft, paddingTop);
+			marginLeft += dragObj.offsetX;
+			marginTop += dragObj.offsetY;
 			paddingLeft += dragObj.offsetX;
 			paddingTop += dragObj.offsetY;
-			console.log(paddingLeft, paddingTop);
+			console.log(marginLeft, marginTop, paddingLeft, paddingTop);
 
-			if (paddingLeft >= 0 && paddingTop >= 0) {
-				elem.css("padding-left", paddingLeft + "px");
-				elem.css("padding-top", paddingTop + "px");
-			} else {
+			console.log(elem.css("margin"));
+			if (marginLeft >= 0 && marginTop >= 0) {
+				elem.css("margin-left", marginLeft + "px");
+				elem.css("margin-top", marginTop + "px");
+
+				dragObj.tag.attrs.style["margin"] = elem.css("margin");
 				
 			}
+			//if (paddingLeft >= 0 && paddingTop >= 0) {
+				//elem.css("padding-left", paddingLeft + "px");
+				//elem.css("padding-top", paddingTop + "px");
+			//}
 			return true;
 		}
 
@@ -159,14 +169,12 @@ define([
 		}
 
 		function initModEditorAreaView() {
-			var allElem = $("#modeditorarea").find("*");
-			
-			//allElem.click(onclick);
-			allElem.attr("draggable", true);
-			
+			var tagView = function(tag) {
+				var $elem = $("#" + tag.tagId);
+				var elem = $elem[0];
 
-			for (var i = 0; i < allElem.length; i++) {
-				var elem = allElem[i];
+				$elem.attr("draggable", true);
+
 				elem.onclick = onclick;
 				elem.onmouseover = onmouseover;
 				//elem.onmouseenter = onmouseenter;
@@ -181,14 +189,43 @@ define([
 				//elem.ondrag = ondrag;
 				elem.ondragend = ondragend;
 			}
+
 			//allElem.
+			var eachTag = function(tag, callback) {
+				if (!tag) {
+					return;
+				}
+
+				callback && callback(tag);
+
+				for (var i = 0; i < tag.children.length; i++) {
+					eachTag(tag.children[i], callback);
+				}
+
+				return;
+			}
+
+			eachTag(blockTag, tagView);
 		}
 
 		function renderBlock() {
 			console.log(blockTag);
 			var htmlStr = blockTag.html();
-			//console.log(htmlStr);
-			$("#modeditorarea").html($compile(htmlStr)($scope));
+			console.log(htmlStr);
+			var modeditorarea = $("#modeditorarea");
+			console.log(modeditorarea);
+			//modeditorarea.html($compile(htmlStr)($scope));
+			modeditorarea.html(htmlStr);
+
+			var vm = new app.vue({
+				el:modeditorarea[0],
+				data:{
+					params: {
+
+					},
+				}
+			});
+
 
 			initModEditorAreaView();
 
@@ -212,6 +249,7 @@ define([
 
 			$scope.navTagList = navTagList;
 			$scope.tag = tag;
+			$scope.attrs = tag.attrs;
 			$scope.style = tag.attrs.style;
 			
 			activeCurrentTag();
@@ -241,12 +279,6 @@ define([
 			renderBlock();
 		}
 
-		$scope.styleKeyBlur = function() {
-			if ($scope.styleKey) {
-				$scope.styleValue = $scope.style[$scope.styleKey];
-			}
-		}
-
 		$scope.clickDeleteTag = function($event, index) {
 			$event && $event.stopPropagation();
 			var tag = $scope.tag;
@@ -269,6 +301,12 @@ define([
 			renderBlock();
 		}
 
+		$scope.styleKeyBlur = function() {
+			if ($scope.styleKey) {
+				$scope.styleValue = $scope.style[$scope.styleKey];
+			}
+		}
+
 		$scope.styleValueBlur = function() {
 			//console.log($scope.styleValue);
 			if ($scope.styleKey) {
@@ -285,6 +323,30 @@ define([
 			renderBlock();
 		}
 
+		$scope.attrKeyBlur = function() {
+			if($scope.attrKey) {
+				$scope.attrValue = $scope.attrs[$scope.attrKey];
+			}
+		}
+
+		$scope.attrValueBlur = function() {
+			if ($scope.attrKey) {
+				if ($scope.attrValue){
+					$scope.attrs[$scope.attrKey] = $scope.attrValue;
+				} else {
+					delete $scope.attrs[$scope.attrKey];
+				}
+			}	
+
+			$scope.attrKey = "";
+			$scope.attrValue = "";
+
+			renderBlock();
+		}
+
+		$scope.attrChange = function(x) {
+			console.log(x, $scope.attrs);
+		}
 		$scope.clickExpandTag = function(node) {
 			node.isExpand = !node.isExpand;
 		}

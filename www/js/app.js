@@ -135,8 +135,6 @@ define([
 
 			// 加载控制器
 			require([
-				"component/input/index",
-
 				"controller/main",
 				"controller/header",
 				"controller/editor",

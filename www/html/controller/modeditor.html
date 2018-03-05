@@ -55,7 +55,7 @@
 
 .attrInputContainer>span{
 	display:inline-block;
-	width:25%;
+	width:30%;
 	text-align:right;
 }
 
@@ -63,6 +63,7 @@
 	border:none;
 	border-bottom: 1px solid #A7A7A7;
 	font-size: 16px;
+	width:68%;
 }
 .attrInputContainer>input:focus {
 	outline:none;
@@ -125,17 +126,28 @@
 			<div class="attrsContainer">
 				<ul class="nav nav-tabs">
 					<li class="active"><a href="#attrId" data-toggle="tab">属性</a></li>
+					<li><a href="#styleId" data-toggle="tab">样式</a></li>
 					<li><a href="#varId" data-toggle="tab">变量</a></li>
 				</ul>
 				<div class="tab-content">
 					 <div id="attrId" class="tab-pane fade in active">
 						<div class="attrInputContainer">
-							<input type="text" style="width:48%" placeholder="样式属性" ng-model="styleKey" ng-blur="styleKeyBlur()"/>
-							<input type="text" style="width:48%" placeholder="值" ng-model="styleValue" ng-blur="styleValueBlur()"/>
+							<input type="text" style="width:30%" placeholder="属性" ng-model="attrKey" ng-blur="attrKeyBlur()"/>
+							<input type="text" style="width:68%" placeholder="值" ng-model="attrValue" ng-blur="attrValueBlur()"/>
 						</div>
 						<div class="attrInputContainer">
 							<span>标签名</span>
-							<input type="text" placeholder="标签名" ng-model="tag.name"/>
+							<input type="text" placeholder="标签名" disabled ng-model="tag.name"/>
+						</div>
+						<div class="attrInputContainer" ng-repeat="x in tag.attrList track by $index">
+							<span>{{x.name || x.attrName}}</span>	
+							<input type="text" placeholder="{{x.desc || x.name || x.attrName}}" ng-model="attrs[x.attrName]" ng-change="attrChange(x)"/>
+						</div>
+					</div>
+					 <div id="styleId" class="tab-pane fade">
+						<div class="attrInputContainer">
+							<input type="text" style="width:30%" placeholder="样式属性" ng-model="styleKey" ng-blur="styleKeyBlur()"/>
+							<input type="text" style="width:68%" placeholder="值" ng-model="styleValue" ng-blur="styleValueBlur()"/>
 						</div>
 						<div class="attrInputContainer">
 							<span>背景色</span>

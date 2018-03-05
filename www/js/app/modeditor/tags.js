@@ -22,7 +22,13 @@ define([
 	{
 		name:"文本",
 		type:"text",
-		tag:"span",
+		tag:"div",
+		classify: "基本Tag",
+	},
+	{
+		name:"图标",
+		type:"i",
+		tag:"i",
 		classify: "基本Tag",
 	},
 	{
@@ -60,6 +66,54 @@ define([
 		tag:"a",
 		classify: "基本Tag",
 	},
+	{
+		name:"布局行",
+		type:"elRow",
+		tag:"el-row",
+		classify: "组件-基本-Tag",
+	},
+	{
+		name:"布局列",
+		type:"elCol",
+		tag:"el-col",
+		classify: "组件-基本-Tag",
+	},
+	{
+		name:"布局-外层容器",
+		type:"elContainer",
+		tag:"el-container",
+		classify: "组件-基本-Tag",
+	},
+	{
+		name:"布局-顶栏容器",
+		type:"elHeader",
+		tag:"el-header",
+		classify: "组件-基本-Tag",
+	},
+	{
+		name:"布局-侧栏容器",
+		type:"elAside",
+		tag:"el-aside",
+		classify: "组件-基本-Tag",
+	},
+	{
+		name:"布局-主区域容器",
+		type:"elMain",
+		tag:"el-main",
+		classify: "组件-基本-Tag",
+	},
+	{
+		name:"布局-底栏容器",
+		type:"elFooter",
+		tag:"el-footer",
+		classify: "组件-基本-Tag",
+	},
+	{
+		name:"按钮",
+		type:"elButton",
+		tag:"el-button",
+		classify: "组件-基本-Tag",
+	},
 	];
 
 	// tag树型结构
@@ -68,7 +122,10 @@ define([
 		var tree = [
 		{
 			classify: "基本Tag",
-		}
+		},
+		{
+			classify: "组件-基本-Tag",
+		},
 		];
 
 		var tagList = self.tagList;
@@ -122,24 +179,33 @@ define([
 		var tag = tagFactory("img");
 		tag.name = "图片";
 		
-		tag.vars = [
-			{
-				text:"http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg",
-				$data:{
-					type:"attr",  // 属性变量
-					attrName:"ng-src",
-					key:"src",
-				},
-			},
-
+		tag.attrs.src = "http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg";
+		tag.attrList = [
+		{
+			name: "图片地址",
+			attrName: "src",
+			defaultValue: tag.attrs.src,
+			desc: "图片链接",
+		},
 		];
+
+		//tag.vars = [
+			//{
+				//text:"http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg",
+				//$data:{
+					//type:"attr",  // 属性变量
+					//attrName:"ng-src",
+					//key:"src",
+				//},
+			//},
+		//];
 
 		return tag;
 	}
 
 	// 文本tag
 	tags.textTag = function(opt) {
-		var tag = tagFactory("span");
+		var tag = tagFactory("div");
 		tag.name = "文本";
 
 		opt = opt || {};
@@ -256,6 +322,224 @@ define([
 		];
 
 		return tag;
+	}
+
+	// 图标
+	tags.iTag = function(){
+		var tag = tagFactory("i");
+		tag.name = "图标";
+
+		tag.vars = [
+			{
+				text:"el-icon-info",
+				$data:{
+					type:"attr",  // 属性变量
+					attrName:"class",
+					key:"class", // 栅格间隔
+				},
+			},
+		];
+
+		return tag;
+	}
+
+	// element ui base on vue 组件
+	tags.elRowTag = function() {
+		var tag = tagFactory("el-row");
+		tag.name = "布局行";
+
+		tag.vars = [
+			{
+				text:"",
+				$data:{
+					type:"attr",  // 属性变量
+					attrName:":gutter",
+					key:"gutter", // 栅格间隔
+				},
+			},
+		];
+
+		return tag;
+	}
+
+	tags.elColTag = function() {
+		var tag = tagFactory("el-col");
+		tag.name = "布局列";
+
+		tag.vars = [
+			{
+				text:"",
+				$data:{
+					type:"attr",  // 属性变量
+					attrName:":span",
+					key:"span", // 栅格间隔
+				},
+			},
+			{
+				text:"",
+				$data:{
+					type:"attr",  // 属性变量
+					attrName:":offset",
+					key:"offset", 
+				},
+			},
+			{
+				text:"",
+				$data:{
+					type:"attr",  // 属性变量
+					attrName:":push",
+					key:"push", 
+				},
+			},
+			{
+				text:"",
+				$data:{
+					type:"attr",  // 属性变量
+					attrName:":pull",
+					key:"pull", 
+				},
+			},
+		];
+
+		return tag;
+	}
+
+	tags.elContainerTag = function() {
+		var tag = tagFactory("el-container");
+		tag.name = "布局-外层容器";
+		
+		tag.vars = [
+			{
+				text:"",
+				$data:{
+					type:"attr",  // 属性变量
+					attrName:":direction",
+					key:"direction", // 栅格间隔
+				},
+			},
+		];
+
+		return tag;
+	}
+
+	tags.elHeaderTag = function() {
+		var tag = tagFactory("el-header");
+		tag.name = "布局-顶栏容器";
+		
+		tag.vars = [
+			{
+				text:"",
+				$data:{
+					type:"attr",  
+					attrName:":height",
+					key:"height", 
+				},
+			},
+		];
+
+		return tag;
+	}
+
+	tags.elAsideTag = function() {
+		var tag = tagFactory("el-aside");
+		tag.name = "布局-侧栏容器";
+		
+		tag.vars = [
+			{
+				text:"",
+				$data:{
+					type:"attr",  
+					attrName:":width",
+					key:"width", 
+				},
+			},
+		];
+
+		return tag;
+	}
+
+	tags.elMainTag = function(){
+		var tag = tagFactory("el-main");
+		tag.name = "布局-主区域容器";
+		
+		return tag;
+	}
+
+	tags.elFooterTag = function(){
+		var tag = tagFactory("el-footer");
+		tag.name = "布局-底栏容器";
+		
+		tag.vars = [
+			{
+				text:"",
+				$data:{
+					type:"attr",  
+					attrName:":height",
+					key:"height", 
+				},
+			},
+		];
+
+		return tag;
+	}
+
+	tags.elButtonTag = function() {
+		var tag = tagFactory("el-button");
+		tag.name = "按钮";
+		
+		tag.vars = [
+			{
+				text:"这是一个按钮",
+
+				$data: {
+					type:"text",  // 文件变量  用于标签内容显示
+					key:"content",  // 变量名
+				}
+			}
+		];
+
+		return tag;
+		
+	}
+
+	//tags.elCarouselTag = function() {
+		//var tag = tagFactory("el-carousel");
+		//tag.name = "布局-底栏容器";
+		
+		//tag.vars = [
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  
+					//attrName:":height",
+					//key:"height", 
+				//},
+			//},
+		//];
+
+		//return tag;
+	//}
+
+	//tags.elCarouselItemTag = function() {
+		//var tag = tagFactory("el-carousel-item");
+		//tag.name = "布局-底栏容器";
+		
+		//tag.vars = [
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  
+					//attrName:":height",
+					//key:"height", 
+				//},
+			//},
+		//];
+
+		//return tag;
+	//}
+
+	tags.wikiCarouselTag = function() {
+		
 	}
 	tags.getTag = function(typ) {
 		var funcname = typ + "Tag";

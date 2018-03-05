@@ -26,7 +26,8 @@
             'text': libPathPrefix + 'requirejs/text',
             'domReady': libPathPrefix + 'requirejs/domReady',
 			'cropper': libPathPrefix + 'cropper/cropper.min',
-			"vue": libPathPrefix + 'vue/vue.min',
+			//"vue": libPathPrefix + 'vue/vue.min',
+			"vue": libPathPrefix + 'vue/vue',
 			"ELEMENT": libPathPrefix + "element-ui/index",
 
 			'lib': pathPrefix + 'js/lib',
