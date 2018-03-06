@@ -4,26 +4,67 @@ define([
 	'modeditor/tag',
 	'text!html/controller/test.html',
 	"component/vue/wikiCarousel",
+	"component/vue/wikiObjectEditor",
+	"component/ng/wikiObjectEditor",
 ], function (app, tagFactory, htmlContent) {
 	var vue = app.vue;
     app.registerController("testController",['$scope', function ($scope) {
 
 		function init() {
+			$scope.params = {
+				key:{
+					text:"value",
+					$data:{
+						type:'text',
+						name:"标题",
+					},
+				},
+				list: {
+					list:[{
+						text:"hello world",
+						$data:{
+							type:"text",
+						},
+					}],
+					$data:{
+						type:"list",
+						subItemTpl:{
+							text:"",
+							$data:{
+								type:"text",
+							},
+						},
+					},
+				},
+			};
+			//setTimeout(function() {
+				//$scope.params = {};
+				//$scope.$apply();
+			//}, 1000);
 			var vueElem = $("#vueId");
 			var vm = new vue({
 				el:vueElem[0],
 				data:{
-					params:{},
-					items:[
-					{
-						id:1,
-						title:"item1",
+					params:{
+						key:{
+							text:"value",
+							$data:{
+								type:"text",
+							}
+						},
+						items:[
+						{
+							id:1,
+							title:"item1",
+							src:"http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg",
+						},
+						{
+							id:2,
+							title:"item2",
+							src:"http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg",
+						},
+						],
 					},
-					{
-						id:2,
-						title:"item2",
-					},
-					],
 				}
 			});
 

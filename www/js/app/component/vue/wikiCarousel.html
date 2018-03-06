@@ -1,8 +1,10 @@
 
 
 
-<el-carousel indicator-position="outside">
-	<el-carousel-item v-for="item in items" :key="item.id">
-		<h3>{{item.title}}</h3>
-	</el-carousel-item>
-</el-carousel>
+<div class="wikiCarousel">
+	<el-carousel>
+		<el-carousel-item v-for="item in params.items" :key="item.id">
+			<img v:if="item.src" :src="item.src"/> 
+		</el-carousel-item>
+	</el-carousel>
+</div>

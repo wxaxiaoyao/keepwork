@@ -17,7 +17,7 @@ define([
 	tag.children = [];
 	tag.data = {};
 	tag.type = "";
-	tag.vars = []; // 变量集 未自定义则不配置更改
+	tag.vars = {}; // 变量集 未自定义则不配置更改
 	tag.styleCode = "";
 	tag.styleList = [];
 	tag.attrList = [];
@@ -34,47 +34,29 @@ define([
 
 	}
 
-	tag.getAttrsHtml = function() {
+	tag.getAttrsHtml = function(){
 		var self = this;
 		var str = "";
 		var attrs = self.attrs;
+		var vars = self.vars;
+		var valPrefix = "params";
+		if (self.varKey) {
+			valPrefix += "." + self.varKey;
+		}
 
-		var attrExistMap = {};
+		// 默认:params为tag全部参数
+		str += ' :params="' + valPrefix + '"';
 
-		for (var i = 0; i < self.vars.length; i++) {
-			var v = self.vars[i];
-			var value = "";
-
-			if (v.$data.type != "attr") {
-				continue;
+		// 具体指定参数到属性
+		for (var key in vars) {
+			var value = vars[key];
+			if (value.$data && value.$data.type == "text" && value.$data.attrName) {
+				str += ' ' + value.$data.attrName + '="' + valPrefix + "." + key + '.text"';
 			}
-
-			var text = v.text || attrs[v.$data.attrName] || "";
-			
-			if (!text) {
-				continue;
-			}
-
-			if (v.$data.key) {
-				//value += "params." + v.$data.key + "||" + "'" + text + "'";
-				value += "params." + v.$data.key + "||" +  text;
-			} else {
-				//value = "'" + text + "'";
-				value = text;
-			}
-
-			attrExistMap[v.$data.attrName] = true;
-
-			//str += " " + v.$data.attrName + '="{{' + value + '}}"';
-			str += " " + v.$data.attrName + '="' + value + '"';
 		}
 
 		for (var key in attrs) {
 			var value = attrs[key];
-
-			if (attrExistMap[key]) {
-				continue;
-			}
 
 			if (typeof(value) == "string") {
 				str += " " + key + '="' + value + '"';
@@ -106,12 +88,12 @@ define([
 		}
 
 		// 获取内容变量值
-		for (var i = 0; i < self.vars.length; i++){
-			var v = self.vars[i];
-			if (v.$data.type == "text") {
-				content += v.text;
-			}
-		}
+		//for (var i = 0; i < self.vars.length; i++){
+			//var v = self.vars[i];
+			//if (v.$data.type == "text") {
+				//content += v.text;
+			//}
+		//}
 
 		return content;
 	}
@@ -160,12 +142,29 @@ define([
 		return tag;
 	}
 
+	tag.getParams = function(params) {
+		var self = this;
+
+		params = params || {};
+		if (!isEmptyObject(self.vars)) {
+			params[self.varKey] = self.vars;
+		}
+
+		for(var i = 0; i < self.children.length; i++) {
+			var _tag = self.children[i];
+			_tag.getParams(params);
+		}
+
+		return params;
+	}
+
 	function tagFactory(typ) {
 		var _tag = angular.copy(tag);
 
 		_tag.tagId = "tagId_" + (new Date()).getTime() + "_" + tagId++;
 		_tag.attrs.id = _tag.tagId;
 		_tag.type = typ;
+		_tag.varKey = _tag.tagId;
 
 		return _tag;
 	}

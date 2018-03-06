@@ -7,6 +7,22 @@ define([
 
 	vue.component("wiki-carousel", {
 		template: htmlTpl,
-		props:["items"],
+		props:{
+			params:{
+				type:Object,
+				default: function(){
+					return {
+						items:[
+						{
+							//src:"http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg"
+						},
+						{
+							//src:"http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg"
+						},
+						],
+					}
+				},
+			},
+		},
 	});
 })

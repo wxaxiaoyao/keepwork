@@ -1,0 +1,17 @@
+
+<div>
+	<div ng-repeat="data in datas track by $index">
+		<div ng-if="data.$data.type == 'text'">
+			<div class="editItemContainer textEditContainer">
+				<span>{{data.$data.name}}</span>
+				<input placeholder={{data.$data.desc || ""}} ng-model="data.text"/>
+			</div>
+		</div>
+		<div ng-if="data.$data.type == 'list'">
+			<div ng-repeat="item in data.list track by $index">
+				{{"list item " + $index}}
+			</div>
+			<div><a ng-click="addListItem(data)" class="btn">Add Item</a></div>
+		</div>
+	</div>
+</div>

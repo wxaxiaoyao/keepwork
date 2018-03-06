@@ -3,13 +3,16 @@ define([
 	"app",
 	"modeditor/tags",
 	"text!html/controller/modeditor.html",
+	"component/ng/wikiObjectEditor",
+	"component/vue/wikiCarousel",
+	"component/vue/wikiText",
 ], function(app, tags, htmlContent){
 
 	app.registerController("modeditorController", ["$scope", function($scope){
 		var $rootScope = app.ng_objects.$rootScope;
 		var $compile = app.ng_objects.$compile;
 		var blockTag = tags.getTag("colDiv");
-		var tagStack = [];
+		var vueRootData = {};
 
 		$rootScope.isShowFooter = false;
 		$scope.tagTree = tags.tagTree();
@@ -217,13 +220,11 @@ define([
 			//modeditorarea.html($compile(htmlStr)($scope));
 			modeditorarea.html(htmlStr);
 
+			vueRootData.params = blockTag.getParams();
+			console.log(vueRootData.params);
 			var vm = new app.vue({
 				el:modeditorarea[0],
-				data:{
-					params: {
-
-					},
-				}
+				data:vueRootData,
 			});
 
 

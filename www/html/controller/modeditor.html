@@ -171,15 +171,9 @@
 						</div>
 					</div>
 					<div id="varId" class="tab-pane fade">
-						<div ng-repeat="x in tag.vars track by $index">
+						<div ng-repeat="(key, value) in tag.vars">
 							<div class="attrInputContainer">
-								<input type="text" placeholder="变量名(小写组成)" ng-model="x.$data.key"/>
-								<span>变量名</span>
-							</div>
-							<div class="attrInputContainer">
-								<input type="text" placeholder="变量值" ng-model="x.text"/>
-								<!--<textarea placeholder="变量值" ng-model="tag.varValue"></textarea>-->
-								<span>变量值</span>
+								<input type="text" placeholder="{{key}}" ng-model="value.text"/>
 							</div>
 						</div>
 					</div>

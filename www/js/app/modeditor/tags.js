@@ -114,6 +114,18 @@ define([
 		tag:"el-button",
 		classify: "组件-基本-Tag",
 	},
+	{
+		name:"文本",
+		type:"wikiText",
+		tag:"wiki-text",
+		classify: "组件-功能-Tag",
+	},
+	{
+		name:"走马灯",
+		type:"wikiCarousel",
+		tag:"wiki-carousel",
+		classify: "组件-功能-Tag",
+	},
 	];
 
 	// tag树型结构
@@ -125,6 +137,9 @@ define([
 		},
 		{
 			classify: "组件-基本-Tag",
+		},
+		{
+			classify: "组件-功能-Tag",
 		},
 		];
 
@@ -204,21 +219,20 @@ define([
 	}
 
 	// 文本tag
-	tags.textTag = function(opt) {
+	tags.textTag = function() {
 		var tag = tagFactory("div");
 		tag.name = "文本";
 
-		opt = opt || {};
-		tag.vars = [
-			{
-				text: opt.text || "这是一个文本",
-
+		tag.vars = {
+			text: {
+				text:"这是一个文本",
 				$data: {
 					type:"text",  // 文件变量  用于标签内容显示
 					key:"content",  // 变量名
+					attrName:"v-text",
 				}
 			}
-		];
+		}
 
 		return tag;
 	}
@@ -228,17 +242,16 @@ define([
 		var tag = tagFactory(hn);
 		tag.name = "标题";
 
-		//tag.addTag(tags.textTag({text:"这是一个标题"}));
-		tag.vars = [
-			{
+		tag.vars = {
+			text: {
 				text:"这是一个标题",
-
 				$data: {
 					type:"text",  // 文件变量  用于标签内容显示
 					key:"content",  // 变量名
+					attrName:"v-text",
 				}
 			}
-		];
+		}
 
 		return tag;
 	}
@@ -283,16 +296,16 @@ define([
 
 		//tag.addTag(tags.textTag({text:"这是一个段落"}));
 
-		tag.vars = [
-			{
+		tag.vars = {
+			text: {
 				text:"这是一个段落",
-
 				$data: {
 					type:"text",  // 文件变量  用于标签内容显示
 					key:"content",  // 变量名
+					attrName:"v-text",
 				}
 			}
-		];
+		}
 
 		return tag;
 	}
@@ -301,25 +314,26 @@ define([
 	tags.aTag = function() {
 		var tag = tagFactory("a");
 		tag.name = "链接";
-		
-		tag.vars = [
-			{
-				text:"",
-				$data:{
-					type:"attr",  // 属性变量
-					attrName:"ng-href",
-					key:"href",
-				},
-			},
-			{
-				text:"这是一个链接",
 
+		tag.attrList = [
+		{
+			name: "链接地址",
+			attrName: "href",
+			defaultValue:"",
+			desc: "链接地址",
+		},
+		];
+		
+		tag.vars = {
+			text: {
+				text:"这是一个链接",
 				$data: {
 					type:"text",  // 文件变量  用于标签内容显示
 					key:"content",  // 变量名
+					attrName:"v-text",
 				}
 			}
-		];
+		}
 
 		return tag;
 	}
@@ -329,15 +343,14 @@ define([
 		var tag = tagFactory("i");
 		tag.name = "图标";
 
-		tag.vars = [
-			{
-				text:"el-icon-info",
-				$data:{
-					type:"attr",  // 属性变量
-					attrName:"class",
-					key:"class", // 栅格间隔
-				},
-			},
+		tag.attrs.class = "el-icon-info";
+		tag.attrList = [
+		{
+			name: "图标类名",
+			attrName: "class",
+			defaultValue:"",
+			desc: "图标类名",
+		},
 		];
 
 		return tag;
@@ -348,16 +361,24 @@ define([
 		var tag = tagFactory("el-row");
 		tag.name = "布局行";
 
-		tag.vars = [
-			{
-				text:"",
-				$data:{
-					type:"attr",  // 属性变量
-					attrName:":gutter",
-					key:"gutter", // 栅格间隔
-				},
-			},
+		tag.attrList = [
+		{
+			name: "栅格间隔",
+			attrName: ":gutter",
+			defaultValue:"",
+			desc: "栅格间隔",
+		},
 		];
+		//tag.vars = [
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  // 属性变量
+					//attrName:":gutter",
+					//key:"gutter", // 栅格间隔
+				//},
+			//},
+		//];
 
 		return tag;
 	}
@@ -366,40 +387,66 @@ define([
 		var tag = tagFactory("el-col");
 		tag.name = "布局列";
 
-		tag.vars = [
-			{
-				text:"",
-				$data:{
-					type:"attr",  // 属性变量
-					attrName:":span",
-					key:"span", // 栅格间隔
-				},
-			},
-			{
-				text:"",
-				$data:{
-					type:"attr",  // 属性变量
-					attrName:":offset",
-					key:"offset", 
-				},
-			},
-			{
-				text:"",
-				$data:{
-					type:"attr",  // 属性变量
-					attrName:":push",
-					key:"push", 
-				},
-			},
-			{
-				text:"",
-				$data:{
-					type:"attr",  // 属性变量
-					attrName:":pull",
-					key:"pull", 
-				},
-			},
+		tag.attrList = [
+		{
+			name: "栅格列数",
+			attrName: ":span",
+			defaultValue:"",
+			desc: "栅格占据的列数",
+		},
+		{
+			name: "偏移列数",
+			attrName: ":offset",
+			defaultValue:"",
+			desc: "栅格左侧的间隔格数",
+		},
+		{
+			name: "右移格数",
+			attrName: ":push",
+			defaultValue:"",
+			desc: "栅格向右移动格数",
+		},
+		{
+			name: "左移格数",
+			attrName: ":pull",
+			defaultValue:"",
+			desc: "栅格向左移动格数",
+		},
 		];
+		//tag.vars = [
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  // 属性变量
+					//attrName:":span",
+					//key:"span", // 栅格间隔
+				//},
+			//},
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  // 属性变量
+					//attrName:":offset",
+					//key:"offset", 
+				//},
+			//},
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  // 属性变量
+					//attrName:":push",
+					//key:"push", 
+				//},
+			//},
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  // 属性变量
+					//attrName:":pull",
+					//key:"pull", 
+				//},
+			//},
+		//];
 
 		return tag;
 	}
@@ -408,16 +455,24 @@ define([
 		var tag = tagFactory("el-container");
 		tag.name = "布局-外层容器";
 		
-		tag.vars = [
-			{
-				text:"",
-				$data:{
-					type:"attr",  // 属性变量
-					attrName:":direction",
-					key:"direction", // 栅格间隔
-				},
-			},
+		tag.attrList = [
+		{
+			name: "方向",
+			attrName: "direction",
+			defaultValue:"",
+			desc: "子元素的排列方向",
+		},
 		];
+		//tag.vars = [
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  // 属性变量
+					//attrName:":direction",
+					//key:"direction", // 栅格间隔
+				//},
+			//},
+		//];
 
 		return tag;
 	}
@@ -426,16 +481,24 @@ define([
 		var tag = tagFactory("el-header");
 		tag.name = "布局-顶栏容器";
 		
-		tag.vars = [
-			{
-				text:"",
-				$data:{
-					type:"attr",  
-					attrName:":height",
-					key:"height", 
-				},
-			},
+		tag.attrList = [
+		{
+			name: "高度",
+			attrName: "height",
+			defaultValue:"",
+			desc: "顶栏高度",
+		},
 		];
+		//tag.vars = [
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  
+					//attrName:":height",
+					//key:"height", 
+				//},
+			//},
+		//];
 
 		return tag;
 	}
@@ -444,16 +507,24 @@ define([
 		var tag = tagFactory("el-aside");
 		tag.name = "布局-侧栏容器";
 		
-		tag.vars = [
-			{
-				text:"",
-				$data:{
-					type:"attr",  
-					attrName:":width",
-					key:"width", 
-				},
-			},
+		tag.attrList = [
+		{
+			name: "宽度",
+			attrName: "width",
+			defaultValue:"",
+			desc: "侧边栏宽度",
+		},
 		];
+		//tag.vars = [
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  
+					//attrName:":width",
+					//key:"width", 
+				//},
+			//},
+		//];
 
 		return tag;
 	}
@@ -469,16 +540,24 @@ define([
 		var tag = tagFactory("el-footer");
 		tag.name = "布局-底栏容器";
 		
-		tag.vars = [
-			{
-				text:"",
-				$data:{
-					type:"attr",  
-					attrName:":height",
-					key:"height", 
-				},
-			},
+		tag.attrList = [
+		{
+			name: "高度",
+			attrName: "height",
+			defaultValue:"",
+			desc: "底栏高度",
+		},
 		];
+		//tag.vars = [
+			//{
+				//text:"",
+				//$data:{
+					//type:"attr",  
+					//attrName:":height",
+					//key:"height", 
+				//},
+			//},
+		//];
 
 		return tag;
 	}
@@ -538,9 +617,38 @@ define([
 		//return tag;
 	//}
 
-	tags.wikiCarouselTag = function() {
+	tags.wikiTextTag = function() {
+		var tag = tagFactory("wiki-text");
+		tag.name = "文本";
+
+		tag.vars = {
+			text: {
+				text:"文本组件",
+				$data:{
+					type:"text",
+				},
+			},
+		};
 		
+		return tag;
 	}
+
+	tags.wikiCarouselTag = function() {
+		var tag = tagFactory("wiki-carousel");
+		tag.name = "走马灯";
+
+		tag.vars = {
+			items:{
+				list:[],
+				$data:{
+					type:"list",
+				},
+			}
+		};
+		
+		return tag;
+	}
+
 	tags.getTag = function(typ) {
 		var funcname = typ + "Tag";
 

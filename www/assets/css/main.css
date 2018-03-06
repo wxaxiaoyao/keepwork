@@ -2,6 +2,7 @@
 @import "../../js/lib/element-ui/index.css";
 @import "../../js/lib/cropper/cropper.min.css";
 
+@import "../../js/app/component/vue/wikiCompoent.css";
 @import  "basestyle.css";
 
 /*@import  "editor.css";*/
