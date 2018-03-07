@@ -3,6 +3,7 @@
  */
 
 define([
+	"_",
 	"helper/toolfunc",
     'angular',
 	"vue",
@@ -10,10 +11,10 @@ define([
 
     'angular-ui-bootstrap',
     'satellizer',
-], function (toolfunc, angular, vue, ELEMENT) {
+], function (_, toolfunc, angular, vue, ELEMENT) {
 	vue.use(ELEMENT);
 
-	var app = {};
+	var app = {"_":_, vue:vue};
 
 	toolfunc.mixin(app, toolfunc);
 
@@ -21,7 +22,7 @@ define([
 	app.objects = {
 		share:{},
 	};
-	app.vue = vue;
+	//app.vue = vue;
 
     app.ng_objects = {
         controller_map:{},

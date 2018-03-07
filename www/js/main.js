@@ -29,6 +29,7 @@
 			//"vue": libPathPrefix + 'vue/vue.min',
 			"vue": libPathPrefix + 'vue/vue',
 			"ELEMENT": libPathPrefix + "element-ui/index",
+			"_": libPathPrefix + "lodash/lodash",
 
 			'lib': pathPrefix + 'js/lib',
 			'css': pathPrefix + 'assets/css',
