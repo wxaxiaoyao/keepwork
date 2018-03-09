@@ -1,21 +1,37 @@
 <template>
-	<div>editor</div>
+	<div>
+		<markdown :blocklist="blocklist"></markdown>
+	</div>
 </template>
 
 <script>
-import dataSource from "../../api/dataSource.js";
+import markdown from '../markdown';
 
 export default {
 	name:"editor",
+	data: function() {
+		return {
+			blocklist:[
+			{
+				//id:1,
+				modName:"header",
+				cmdName:"header",
+				modParams:{
+					title:"hello world",
+				},
+			},
+			],
+		}
+	},
+	computed: {
+	},
 	method: {
-
 	},
 	created(){
-		dataSource.getContent({path:"/xiaoyao/xiaoyao/wxa.md"}, function(data){
-			console.log(data);
-		}, function(){
-			console.log("---------");
-		});
+	},
+
+	components: {
+		markdown,
 	},
 }
 </script>
