@@ -1,0 +1,10 @@
+
+module.exports = [{
+	entry:{
+		test:"./src/components/mods/test.js",
+	},
+	output:{
+		libraryTarget: 'umd',
+		library:"test",
+	},
+}]

@@ -11,7 +11,7 @@ import block from "./block.vue";
 
 export default {
 	name: "markdown",
-	props: ["text", "blocklist", "theme"],
+	props: ["mode", "text", "blocklist", "theme"],
 	data: function() {
 		return {
 		};
@@ -19,6 +19,11 @@ export default {
 	computed: {
 	},
 	method: {
+	},
+	watch: {
+		text: function(val, oldVal) {
+			console.log(this, val, oldVal);
+		}
 	},
 	created(){
 		console.log(this) ;
