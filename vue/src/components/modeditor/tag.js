@@ -14,7 +14,7 @@ var tag = {};
 tag.attrs = attrs;
 tag.children = [];
 tag.data = {};
-tag.type = "";
+tag.tagName = "";
 tag.vars = {}; // 变量集 未自定义则不配置更改
 tag.styleCode = "";
 tag.styleList = [];
@@ -52,6 +52,8 @@ tag.getAttrsHtml = function(){
 			str += ' ' + value.$data.attrName + '="' + valPrefix + "." + key + '.text"';
 		}
 	}
+
+	//str += " v-on:blur.native=blur";
 
 	for (var key in attrs) {
 		var value = attrs[key];
@@ -100,13 +102,21 @@ tag.html = function(){
 	var self = this;
 	var htmlStr = "";
 	// br img  input
-	if (self.type == "br" || self.type == "img" || self.type == "input") {
-		htmlStr = "<" + self.type + self.getAttrsHtml() + "/>";
+	if (self.tagName == "br" || self.tagName == "img" || self.tagName == "input") {
+		htmlStr = "<" + self.tagName + self.getAttrsHtml() + "/>";
 	} else {
-		htmlStr = "<" + self.type + self.getAttrsHtml() + ">" + self.getContentHtml() + "</" + self.type + ">";
+		htmlStr = "<" + self.tagName + self.getAttrsHtml() + ">" + self.getContentHtml() + "</" + self.tagName + ">";
 	}
 
 	return htmlStr;
+}
+
+tag.each = function(callback) {
+	callback && callback(this);
+	
+	for (var i = 0; i < this.children.length; i++){
+		this.children[i].each(callback);
+	}	
 }
 
 tag.findById = function(tagId) {
@@ -140,6 +150,28 @@ tag.addTag = function(tag) {
 	return tag;
 }
 
+tag.deleteTag = function(tagId) {
+	tagId = tagId || this.tagId;	
+	var parentTag = this.parentTag;
+
+	if (!parentTag){
+		return;
+	}
+
+	if (tagId == this.tagId){
+		parentTag.deleteTag(tagId);
+	} else {
+		for (var i = 0; i < this.children.length; i++){
+			var childTag = this.children[i];
+			if (childTag.tagId == tagId) {
+				this.children.splice(i,1);
+			} else {
+				this.children[i].deleteTag(tagId);
+			}
+		}
+	}
+}
+
 tag.getParams = function(params) {
 	var self = this;
 
@@ -156,12 +188,12 @@ tag.getParams = function(params) {
 	return params;
 }
 
-function tagFactory(typ) {
+function tagFactory(tagName) {
 	var _tag = _.cloneDeep(tag);
 
 	_tag.tagId = "tagId_" + (new Date()).getTime() + "_" + tagId++;
 	_tag.attrs.id = _tag.tagId;
-	_tag.type = typ;
+	_tag.tagName = tagName;
 	_tag.varKey = _tag.tagId;
 
 	return _tag;

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-
+import _ from 'lodash';
 import ElementUI from 'element-ui';
 import VueResource from 'vue-resource';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -20,3 +20,6 @@ new Vue({
   store,
 }).$mount('#app');
 
+window.app = window.app || {};
+
+app._ = _;

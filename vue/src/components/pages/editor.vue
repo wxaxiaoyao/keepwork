@@ -17,21 +17,17 @@
 			</div>
 		</el-col>
 		<el-col :span="16">
-			<div ref="editor" contenteditable="plaintext-only" 
+			<div ref="editor" 
 				style="-webkit-user-modify: read-write-plaintext-only;
 					   -webkit-line-break: normal;
 					   -webkit-tap-highlight-color:rgba(0,0,0,0);
 					   outline:none;"
-				@change="change" 
-				@blur="blur"
-				@keyup.enter="enter"
-				@mouseup="mouseup"
-				@select="select">
+				@keyup.enter="enter" 
+				@keyup.delete="_delete" 
+				@keyup="keyup" 
+				@blur="blur" 
+				@mouseup="mouseup">
 					<component :is="tagHtml" :params="tagParams"></component>
-					<!--<div></div>-->
-					<!--<h3>test</h3>-->
-					<!--<h2>h2</h2>-->
-					<!--<p>段落</p>-->
 			</div>
 			<div>
 				<markdown :mode="mode" :text="text" :blocklist="blocklist"></markdown>
@@ -46,13 +42,13 @@
 								<i class="fa fa-chevron-right"></i>{{x.name || x.type}}
 							</span>
 						</div>
-						<div v-for="x in tag.children" :key="x.id" class="navTagSubItemContainer">
+						<div v-for="(x, $index) in tag.children" :key="x.tagId" class="navTagSubItemContainer">
 							<span @click="clickSelectTag(x)">
 								{{x.name || x.type}}
 							</span>
-							<span @click="clickDeleteTag($event, x.id)"><i class="fa fa-trash-o"></i></span>
-							<span v-show="x.id != 0" @click="clickSwapTag($event, x.id - 1, x.id)"><i class="fa fa-lov-arrow-up"></i></span>
-							<span v-show="x.id == tag.children.length - 1" @click="clickSwapTag($event, x.id, x.id + 1)"><i class="fa fa-lov-arrow-down"></i></span>
+							<span @click.stop="clickDeleteTag($index)"><i class="fa fa-trash-o"></i></span>
+							<span v-show="$index != 0" @click.stop="clickSwapTag($index - 1, $index)"><i class="fa fa-arrow-up"></i></span>
+							<span v-show="$index != tag.children.length - 1" @click.stop="clickSwapTag($index, $index + 1)"><i class="fa fa-arrow-down"></i></span>
 						</div>
 					</el-tab-pane>
 				</el-tabs>
@@ -60,7 +56,7 @@
 					<el-tab-pane label="属性">
 						<div class="attrInputContainer">
 							<input type="text" style="width:30%" placeholder="属性" v-model="attrKey" @blur="attrKeyBlur()"/>
-							<input type="text" style="width:68%" placeholder="值" v-model="attrValue" @blur="attrValueBlur()"/>
+							<input type="text" style="width:60%" placeholder="值" v-model="attrValue" @blur="attrValueBlur()"/>
 						</div>
 						<div class="attrInputContainer">
 							<span>标签名</span>
@@ -74,7 +70,7 @@
 					<el-tab-pane label="样式">
 						<div class="attrInputContainer">
 							<input type="text" style="width:30%" placeholder="样式属性" v-model="styleKey" @blur="styleKeyBlur()"/>
-							<input type="text" style="width:68%" placeholder="值" v-model="styleValue" @blur="styleValueBlur()"/>
+							<input type="text" style="width:60%" placeholder="值" v-model="styleValue" @blur="styleValueBlur()"/>
 						</div>
 						<div class="attrInputContainer">
 							<span>背景色</span>
@@ -115,7 +111,6 @@ import vue from "vue";
 import markdown from '../markdown';
 import tags from "../modeditor/tags.js";
 import "../bases";
-import htmlContent from "./editor.html";
 export default {
 	name:"editor",
 	data: function() {
@@ -134,46 +129,47 @@ export default {
 			tag:tag,
 			rootTag:tag,
 			blocklist:[
-			{
-				//id:1,
-				modName:"test",
-				cmdName:"test",
-				modParams:{
-					title:"hello world",
-				},
-				isWikiBlock:true,
-				htmlContent: "<div>html content</div>",
-			},
-			{
-				//id:1,
-				modName:"test",
-				cmdName:"test",
-				modParams:{
-					style:"style1",
-					title:"hello world",
-				},
-				isWikiBlock:true,
-				htmlContent: "<div>html content</div>",
-			},
+			//{
+			//	//id:1,
+			//	modName:"test",
+			//	cmdName:"test",
+			//	modParams:{
+			//		title:"hello world",
+			//	},
+			//	isWikiBlock:true,
+			//	htmlContent: "<div>html content</div>",
+			//},
+			//{
+			//	//id:1,
+			//	modName:"test",
+			//	cmdName:"test",
+			//	modParams:{
+			//		style:"style1",
+			//		title:"hello world",
+			//	},
+			//	isWikiBlock:true,
+			//	htmlContent: "<div>html content</div>",
+			//},
 			],
 		}
 	},
 	computed: {
 		tagHtml: function() {
-			var tagHtmlStr = this.tag.html();
-			console.log(tagHtmlStr);
-			//var res = this.compile(tagHtmlStr);
+			var tagHtmlStr = this.rootTag.html();
+			//console.log(tagHtmlStr);
+			var res = vue.compile(tagHtmlStr);
 			return {
-				template: tagHtmlStr,
+				//template: tagHtmlStr,
 				props:['params'],
 				created(){
-					console.log(this);
-				}
-				//staticRenderFns: res.staticRenderFns,
+					//console.log(this);
+				},
+				render: res.render,
+				staticRenderFns: res.staticRenderFns,
 			}
 		},
 		tagParams() {
-			return this.tag.getParams();
+			return this.rootTag.getParams();
 		},
 		navTagList(){
 			var navTagList = [];
@@ -199,21 +195,70 @@ export default {
 		clickAddTag(tag) {
 			this.tag.addTag(tags.getTag(tag.type));	
 		},
-		change() {
-			console.log(this);
+		clickDeleteTag(index) {
+			this.tag.children.splice(index,1);
+		},
+		clickSwapTag(index1, index2) {
+			var tag = this.tag;
+			if (index1 < 0 || index2 >= tag.children.length) {
+				return;
+			}
+			var tmp = tag.children[index1];
+			vue.set(tag.children, index1, tag.children[index2]);
+			vue.set(tag.children, index2, tmp);
 		},
 		blur() {
-			console.log("blur", this);
+			console.log("----------", event);
+			this.tagRebuild();
 		},
-		select(){
-			console.log("selelct");
+		keyup(){
+		},
+		_delete(){
 		},
 		enter(){
-			var editor = this.$refs.editor;
-			console.log(editor);
+			var self = this;
+			var rootTag = this.rootTag;
+			var selobj = getSelection();
+			var tag = rootTag.findById(selobj.focusNode.parentElement.id);
+			console.log(selobj);
+			if (!tag || !tag.parentTag) {
+				return;
+			}
+			var parentTag = tag.parentTag;
+			var childTag = tags.getTag(tag.tagName);
+			parentTag.addTag(childTag);
+
+			//setTimeout(function(){
+			//	self.tagRebuild();
+			//});
 		},
 		mouseup(){
 			console.log(getSelection());
+		},
+		tagRebuild() {
+			// 删除不存在的tag
+			var rootTag = this.rootTag;
+			var deleteNotExistTag = function(tag) {
+				var list = [];
+				for (var i = 0; i < tag.children.length; i++) {
+					var _tag = tag.children[i];
+					if (document.getElementById(_tag.tagId)) {
+						list.push(_tag);
+					}
+				}
+				tag.children = list;
+				for (var i = 0; i < tag.children.length; i++){
+					var _tag = tag.children[i];
+					deleteNotExistTag(_tag);
+				}
+			}
+
+			deleteNotExistTag(rootTag);
+
+			// 更新tag内容
+			rootTag.each(function(tag){
+				tag.innerHtmlChange && tag.innerHtmlChange();
+			});
 		},
 	},
 	created(){
@@ -225,50 +270,9 @@ export default {
 }
 </script>
 
-<style>
-.modeditorContainer {
-	display:flex;
-	height:100%;
-}
-
-.tagsContainer {
-	width: 200px;
-}
-
-.previewContainer {
-	flex:1;
-}
-
-.editorContainer {
-	display:flex;
-	flex-direction:column;
-	width:300px;
-}
-
-.navTagContainer {
-	height: 300px;
-}
-
-
-.attrsContainer {
-	flex:1;
-}
-
-#modeditorarea {
-	border:1px solid #ccc;
-	height: 100%;
-}
-
-#modeditorarea:hover {
-	cursor:pointer;
-}
-
-.full-screen {
-	position:absolute;
-	top:50px;
-	bottom:0px;
-	right:0px;
-	left:0px;
+<style scoped>
+.el-col {
+	min-height: 1px;
 }
 
 .hoverTag {
@@ -289,7 +293,8 @@ export default {
 	border:none;
 	border-bottom: 1px solid #A7A7A7;
 	font-size: 16px;
-	width:68%;
+	width:60%;
+	margin-left:4px;
 }
 .attrInputContainer>input:focus {
 	outline:none;

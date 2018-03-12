@@ -1,4 +1,4 @@
-
+import _ from 'lodash';
 import tagFactory from "./tag.js";
 
 var tags = {};
@@ -118,6 +118,12 @@ tags.tagList = [
 	classify: "组件-功能-Tag",
 },
 {
+	name:"文本域",
+	type:"wikiTextarea",
+	tag:"wiki-textarea",
+	classify: "组件-功能-Tag",
+},
+{
 	name:"走马灯",
 	type:"wikiCarousel",
 	tag:"wiki-carousel",
@@ -231,6 +237,8 @@ tags.textTag = function() {
 		}
 	}
 
+	tag.attrs["@blur.stop"] = "blur";
+
 	return tag;
 }
 
@@ -248,6 +256,15 @@ tags.hTag = function(hn) {
 				attrName:"v-text",
 			}
 		}
+	}
+
+	tag.innerHtmlChange = function() {
+		var el = document.getElementById(this.tagId);
+		if (!el) {
+			return;
+		}
+		//console.log([el]);
+		this.vars.text.text = el.innerHTML.trim();
 	}
 
 	return tag;
@@ -621,14 +638,51 @@ tags.wikiTextTag = function() {
 	tag.vars = {
 		text: {
 			text:"文本组件",
+			//text:"",
 			$data:{
 				type:"text",
 			},
 		},
 	};
+	tag.attrs.style["min-height"] = "20px";
 	
+	tag.innerHtmlChange = function() {
+		var el = document.getElementById(this.tagId);
+		if (!el) {
+			return;
+		}
+		//console.log([el]);
+		this.vars.text.text = el.innerHTML.trim();
+	}
 	return tag;
 }
+
+tags.wikiTextareaTag = function() {
+	var tag = tagFactory("wiki-textarea");
+	tag.name = "文本域";
+
+	tag.vars = {
+		text: {
+			text:"文本组件",
+			//text:"",
+			$data:{
+				type:"text",
+			},
+		},
+	};
+	tag.attrs.style["min-height"] = "20px";
+	
+	//tag.innerHtmlChange = function() {
+		//var el = document.getElementById(this.tagId);
+		//if (!el) {
+			//return;
+		//}
+		////console.log([el]);
+		//this.vars.text.text = el.innerHTML.trim();
+	//}
+	return tag;
+}
+
 
 tags.wikiCarouselTag = function() {
 	var tag = tagFactory("wiki-carousel");
@@ -647,7 +701,7 @@ tags.wikiCarouselTag = function() {
 }
 
 tags.getTag = function(typ) {
-	var funcname = typ + "Tag";
+	var funcname = _.camelCase(typ) + "Tag";
 
 	if (tags[funcname] && typeof(tags[funcname]) == "function") {
 		return (tags[funcname])();

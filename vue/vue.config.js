@@ -19,14 +19,14 @@ module.exports = {
 				'vue$':'vue/dist/vue.esm.js'  
 			}, 
 		},
-		module: {
-	  		rules: [
-			{ 
-				test: /\.html$/, 
-				use: 'raw-loader',
-			},
-	 		]
-		}
+		//module: {
+			  //rules: [
+			//{ 
+				//test: /\.html$/, 
+				//use: 'raw-loader',
+			//},
+			 //]
+		//}
 		//externals: {
 			//vue: {
 				//root: 'Vue',

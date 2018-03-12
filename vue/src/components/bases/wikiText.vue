@@ -1,7 +1,11 @@
-import vue from "vue";
 
-vue.component("wiki-text", {
-	template:"<div>{{params.text.text}}</div>",
+<template>
+	<span v-html="params.text.text"></span> 
+</template>	
+
+<script>
+export default {
+	name:"wikiText",
 	props:{
 		params:{
 			type:Object,
@@ -13,5 +17,7 @@ vue.component("wiki-text", {
 				};
 			},
 		},
-	}
-});
+	},
+}
+
+</script>
