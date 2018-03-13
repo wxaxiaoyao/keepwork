@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import _ from 'lodash';
 import ElementUI from 'element-ui';
 import VueResource from 'vue-resource';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -9,10 +8,13 @@ import App from './App.vue';
 import router from "./router";
 import store from "./store";
 
+import "./components/bases";
+
 Vue.config.productionTip = false;
 
 Vue.use(ElementUI);
 Vue.use(VueResource);
+
 
 new Vue({
   render: h => h(App),
@@ -20,6 +22,3 @@ new Vue({
   store,
 }).$mount('#app');
 
-window.app = window.app || {};
-
-app._ = _;

@@ -98,14 +98,16 @@ tag.getContentHtml = function() {
 	return content;
 }
 
-tag.html = function(){
+tag.html = function(opt){
 	var self = this;
 	var htmlStr = "";
+
+	opt = opt || {};
 	// br img  input
 	if (self.tagName == "br" || self.tagName == "img" || self.tagName == "input") {
 		htmlStr = "<" + self.tagName + self.getAttrsHtml() + "/>";
 	} else {
-		htmlStr = "<" + self.tagName + self.getAttrsHtml() + ">" + self.getContentHtml() + "</" + self.tagName + ">";
+		htmlStr = "<" + self.tagName + self.getAttrsHtml() + ">" + (opt.innerHtml || self.getContentHtml()) + "</" + self.tagName + ">";
 	}
 
 	return htmlStr;
@@ -177,7 +179,11 @@ tag.getParams = function(params) {
 
 	params = params || {};
 	if (!isEmptyObject(self.vars)) {
-		params[self.varKey] = self.vars;
+		if (self.varKey) {
+			params[self.varKey] = self.vars;
+		} else {
+			_.merge(params, self.vars);
+		}
 	}
 
 	for(var i = 0; i < self.children.length; i++) {
@@ -186,6 +192,16 @@ tag.getParams = function(params) {
 	}
 
 	return params;
+}
+
+tag.clone = function() {
+	var _tag = _.cloneDeep(this);
+
+	_tag.tagId = "tagId_" + (new Date()).getTime() + "_" + tagId++;
+	_tag.attrs.id = _tag.tagId;
+	_tag.varKey = _tag.tagId;
+
+	return _tag;
 }
 
 function tagFactory(tagName) {

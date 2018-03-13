@@ -118,9 +118,15 @@ tags.tagList = [
 	classify: "组件-功能-Tag",
 },
 {
-	name:"文本域",
-	type:"wikiTextarea",
-	tag:"wiki-textarea",
+	name:"富文本",
+	type:"wikiRichtext",
+	tag:"wiki-richtext",
+	classify: "组件-功能-Tag",
+},
+{
+	name:"MARKDOWN",
+	type:"wikiMarkdown",
+	tag:"wiki-markdown",
 	classify: "组件-功能-Tag",
 },
 {
@@ -233,11 +239,22 @@ tags.textTag = function() {
 				type:"text",  // 文件变量  用于标签内容显示
 				key:"content",  // 变量名
 				attrName:"v-text",
-			}
+		   	}
 		}
 	}
 
-	tag.attrs["@blur.stop"] = "blur";
+	tag.innerHtmlChange = function() {
+		var el = document.getElementById(this.tagId);
+		if (!el) {
+			return;
+		}
+		//console.log([el]);
+		if (el.innerHTML == "<br>") {
+			this.vars.text.text = "";
+		} else {
+			this.vars.text.text = el.innerHTML.trim();
+		}
+	}
 
 	return tag;
 }
@@ -264,7 +281,11 @@ tags.hTag = function(hn) {
 			return;
 		}
 		//console.log([el]);
-		this.vars.text.text = el.innerHTML.trim();
+		if (el.innerHTML == "<br>") {
+			this.vars.text.text = "";
+		} else {
+			this.vars.text.text = el.innerHTML.trim();
+		}
 	}
 
 	return tag;
@@ -646,24 +667,42 @@ tags.wikiTextTag = function() {
 	};
 	tag.attrs.style["min-height"] = "20px";
 	
-	tag.innerHtmlChange = function() {
-		var el = document.getElementById(this.tagId);
-		if (!el) {
-			return;
-		}
-		//console.log([el]);
-		this.vars.text.text = el.innerHTML.trim();
-	}
 	return tag;
 }
 
-tags.wikiTextareaTag = function() {
-	var tag = tagFactory("wiki-textarea");
-	tag.name = "文本域";
+tags.wikiRichtextTag = function() {
+	var tag = tagFactory("wiki-richtext");
+	tag.name = "富文本";
 
 	tag.vars = {
 		text: {
-			text:"文本组件",
+			text:"富文本组件",
+			//text:"",
+			$data:{
+				type:"text",
+			},
+		},
+	};
+	tag.attrs.style["min-height"] = "20px";
+	
+	//tag.innerHtmlChange = function() {
+		//var el = document.getElementById(this.tagId);
+		//if (!el) {
+			//return;
+		//}
+		////console.log([el]);
+		//this.vars.text.text = el.innerHTML.trim();
+	//}
+	return tag;
+}
+
+tags.wikiMarkdownTag = function() {
+	var tag = tagFactory("wiki-markdown");
+	tag.name = "富文本";
+
+	tag.vars = {
+		text: {
+			text:"富文本组件",
 			//text:"",
 			$data:{
 				type:"text",
@@ -704,7 +743,9 @@ tags.getTag = function(typ) {
 	var funcname = _.camelCase(typ) + "Tag";
 
 	if (tags[funcname] && typeof(tags[funcname]) == "function") {
-		return (tags[funcname])();
+		var tag = (tags[funcname])();
+		tag.type = typ;
+		return tag;
 	}
 
 	return undefined;

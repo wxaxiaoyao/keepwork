@@ -2,24 +2,28 @@
 	<div @blur="blur"
 		@focus="focus"
 		@keyup="keyup"
-		@keyup.enter="enter"
-		v-html="params.text.text"
 		style="-webkit-user-modify:read-write-plaintext-only;
 			   -webkit-line-break: normal;
 			   -webkit-tap-highlight-color:rgba(0,0,0,0);
-			   outline:none;"></div>
+			   outline:none;">
+	
+	</div>
 </template>
 
 
 <script>
 import vue from "vue";
+import markdown from "../markdown";
+
 export default {
 	name:"wikiText",
 	data:function() {
-		return {
-		};
+		return {};
 	},
 	computed: {
+		componentHtml(){
+			return this.params.text.text;
+		},
 	},
 	//props:["params"],
 	props:{
@@ -38,16 +42,26 @@ export default {
 	},
 	methods: {
 		focus(){
+			console.log("--------focus---------------");
 		},
 		blur(){
-			this.params.text.text = this.$el.innerHTML;
+			console.log("--------blur----------------");
 		},
 		keyup(){
+			console.log("----------keyup-------------");
+			this.params.text.text = this.$el.innerHTML;
 		},
 		enter(){
+			this.params.text.text = this.params.text.text.trim().split("\n").join("");
+			console.log("-----------", this.params.text.text);
+		},
+		_delete(){
+			console.log(this.params.text.text);
 		},
 	},
 	mounted() {
+		this.$nextTick(function(){
+		});
 	}
 }
 </script>

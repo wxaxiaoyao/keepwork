@@ -1,6 +1,10 @@
 
 <template>
-	<div ref="el" style="-webkit-user-modify:read-write-plaintext-only">{{params.text.text}}</div>
+	<div @blur="blur"
+		@focus="focus"
+
+		v-html="params.text.text"
+		style="-webkit-user-modify:read-write-plaintext-only"></div>
 </template>
 
 
@@ -27,16 +31,21 @@ export default {
 			default: function() {
 				return {
 					text: {
-						text:"文本组件",
+						text:"文本域组件",
 					},
 				};
 			},
 		},
 	},
+	watch:{
+	},
 	methods: {
+		focus(){
+			console.log("--------focus---------------");
+		},
 		blur(){
-			console.log("--------");
-			console.log(event);
+			console.log("--------blur----------------");
+			this.params.text.text = this.$el.innerHTML;
 		},
 		enter(){
 			this.params.text.text = this.params.text.text.trim().split("\n").join("");
@@ -48,11 +57,6 @@ export default {
 	},
 	mounted() {
 		this.$nextTick(function(){
-			var el = document.getElementById(this.$el.id);
-			el.onblur = function(){
-				console.log("---------");
-			}
-			console.log([el]);
 		});
 	}
 }

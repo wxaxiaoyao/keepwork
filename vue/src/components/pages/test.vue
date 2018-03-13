@@ -1,6 +1,8 @@
 <template>
 	<div>
-		testdfs
+		<wiki-text>
+			<a>test</a>
+		</wiki-text>
 	</div>
 </template>
 

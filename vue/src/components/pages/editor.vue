@@ -18,19 +18,14 @@
 		</el-col>
 		<el-col :span="16">
 			<div ref="editor" 
-				style="-webkit-user-modify: read-write-plaintext-only;
-					   -webkit-line-break: normal;
-					   -webkit-tap-highlight-color:rgba(0,0,0,0);
-					   outline:none;"
-				@keyup.enter="enter" 
 				@keyup.delete="_delete" 
 				@keyup="keyup" 
 				@blur="blur" 
 				@mouseup="mouseup">
-					<component :is="tagHtml" :params="tagParams"></component>
+				<tag-component :tag="rootTag"></tag-component>
 			</div>
 			<div>
-				<markdown :mode="mode" :text="text" :blocklist="blocklist"></markdown>
+				<!--<markdown :mode="mode" :text="text" :blocklist="blocklist"></markdown>-->
 			</div>
 		</el-col>
 		<el-col :span="4">
@@ -108,9 +103,8 @@
 
 <script>
 import vue from "vue";
-import markdown from '../markdown';
 import tags from "../modeditor/tags.js";
-import "../bases";
+import tagComponent from "../modeditor/tagConponment.vue";
 export default {
 	name:"editor",
 	data: function() {
@@ -265,7 +259,7 @@ export default {
 	},
 
 	components: {
-		markdown,
+		tagComponent,
 	},
 }
 </script>

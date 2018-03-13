@@ -1,14 +1,16 @@
 
 import vue from "vue";
 import wikiText from "./wikiText.vue";
-import wikiTextarea from "./wikiTextarea.vue";
+import wikiRichtext from "./wikiRichtext.vue";
+import wikiMarkdown from "./wikiMarkdown.vue";
 import wikiCarousel from "./wikiCarousel.vue";
 
 
 var components =  {
 	wikiText,
-	wikiTextarea,
+	wikiRichtext,
 	wikiCarousel,
+	wikiMarkdown,
 }
 
 
