@@ -4,21 +4,21 @@
 		@keyup="keyup"
 		@keyup.enter="enter"
 		v-html="params.text.text"
-		style="-webkit-user-modify:read-write-plaintext-only;
-			   -webkit-line-break: normal;
-			   -webkit-tap-highlight-color:rgba(0,0,0,0);
-			   outline:none;"></div>
+		:style="_style"></div>
 </template>
 
 
 <script>
 import vue from "vue";
+import text from "../common/text.js";
+
 export default {
 	name:"wikiText",
 	data:function() {
 		return {
 		};
 	},
+	mixins:[text],
 	computed: {
 	},
 	//props:["params"],
@@ -39,8 +39,9 @@ export default {
 	methods: {
 		focus(){
 		},
-		blur(){
-			this.params.text.text = this.$el.innerHTML;
+		bluri(){
+			console.log("--1-----------");
+			//this.params.text.text = this.$el.innerHTML;
 		},
 		keyup(){
 		},

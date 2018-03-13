@@ -118,6 +118,12 @@ tags.tagList = [
 	classify: "组件-功能-Tag",
 },
 {
+	name:"WIKI-VAR",
+	type:"wikiVar",
+	tag:"wiki-var",
+	classify: "组件-功能-Tag",
+},
+{
 	name:"富文本",
 	type:"wikiRichtext",
 	tag:"wiki-richtext",
@@ -665,6 +671,32 @@ tags.wikiTextTag = function() {
 			},
 		},
 	};
+	tag.attrs.style["min-height"] = "20px";
+	
+	return tag;
+}
+
+tags.wikiVarTag = function() {
+	var tag = tagFactory("wiki-var");
+	tag.name = "WIKI-VAR";
+
+	tag.vars = {
+		text: {
+			text:"文本组件",
+			//text:"",
+			$data:{
+				type:"text",
+			},
+		},
+		tag: {
+			text:"div",
+			//text:"",
+			$data:{
+				type:"text",
+			},
+		},
+	};
+
 	tag.attrs.style["min-height"] = "20px";
 	
 	return tag;
