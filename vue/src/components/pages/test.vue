@@ -16,15 +16,27 @@ import vue from "vue";
 import tag from "../common/tag.js";
 import container from "../bases/container.vue";
 import tags from "../modeditor/tags.js";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
 	name:'test',
 	data:function(){
-		console.log("----------");
 		return {
-			count:2,
 		}
 	},
+
+	computed: {
+	},
+
+	watch: {
+		getCurrentTag: function(val, oldVal) {
+			console.log(val);
+		},
+	},
+
+	methods: {
+	},
+	
 	mixins: [tag],
 
 	components:{
@@ -32,15 +44,7 @@ export default {
 	},
 
 	mounted(){
-		console.log(this.$store.state);
-		this.count--;
 		console.log(this);
-		if (this.count < 1) {
-			return;
-		}
-		//var tag = tags.getTag("div");
-		//tag.setTagName("richtext");
-		//this.$refs.container.kp_tag.addTag(tag);
 	}
 }
 </script>
