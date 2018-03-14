@@ -12,6 +12,7 @@ attrs.style = {
 var tag = {};
 
 tag.attrs = attrs;
+tag.styles = {};
 tag.children = [];
 tag.data = {};
 tag.tagName = "";
@@ -146,6 +147,12 @@ tag.addTag = function(tag) {
 		return;
 	}
 
+	for (var i = 0; i < self.children.length; i++) {
+		if (self.children[i].tagId == tag.tagId) {
+			return;
+		}
+	}
+
 	self.children.push(tag);
 	tag.parentTag = self;
 
@@ -156,7 +163,7 @@ tag.deleteTag = function(tagId) {
 	tagId = tagId || this.tagId;	
 	var parentTag = this.parentTag;
 
-	if (!parentTag){
+	if (!parentTag && tagId == this.tagId){
 		return;
 	}
 
@@ -202,6 +209,10 @@ tag.clone = function() {
 	_tag.varKey = _tag.tagId;
 
 	return _tag;
+}
+
+tag.setTagName = function(tagName){
+	this.tagName = tagName;
 }
 
 function tagFactory(tagName) {

@@ -9,12 +9,14 @@ import router from "./router";
 import store from "./store";
 
 import "./components/bases";
+import tag from "./components/common/tag.js";
 
 Vue.config.productionTip = false;
 
+Vue.mixin(tag);
+
 Vue.use(ElementUI);
 Vue.use(VueResource);
-
 
 new Vue({
   render: h => h(App),

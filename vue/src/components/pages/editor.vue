@@ -17,6 +17,7 @@
 			</div>
 		</el-col>
 		<el-col :span="16">
+			<richtext></richtext>
 			<div ref="editor" 
 				@keyup.delete="_delete" 
 				@keyup="keyup" 
@@ -256,6 +257,7 @@ export default {
 		},
 	},
 	created(){
+		console.log(this);
 	},
 
 	components: {

@@ -18,7 +18,7 @@ export default {
 		return {
 		};
 	},
-	mixins:[text],
+	//mixins:[text],
 	computed: {
 	},
 	//props:["params"],
