@@ -16,11 +16,7 @@ tag.styles = {};
 tag.children = [];
 tag.data = {};
 tag.tagName = "";
-tag.vars = {
-	text:{
-		text:"",
-	},
-}; // 变量集 未自定义则不配置更改
+tag.vars = undefined; // 变量集 未自定义则不配置更改
 tag.styleCode = "";
 tag.styleList = [];
 tag.attrList = [];
@@ -221,6 +217,10 @@ tag.setTagName = function(tagName){
 
 tag.setVars = function(vars) {
 	this.vars = vars;
+}
+
+tag.getVars = function() {
+	return this.vars;
 }
 
 function tagFactory(tagName) {

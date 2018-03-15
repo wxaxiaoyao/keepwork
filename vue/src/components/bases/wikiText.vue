@@ -5,34 +5,39 @@
 
 <script>
 import vue from "vue";
-import text from "../common/text.js";
 
 export default {
 	name:"wikiText",
 	data:function() {
 		return {
 			tagName:"wiki-text",
-			vars:{
-				text:{
-					text:"文本内容",
-				}
-			}
 		};
+	},
+	props:{
+		vars:{
+			type:Object,
+			default:function() {
+				return {
+					text:{
+						text:"文本内容",
+					},
+				};
+			},
+		},
 	},
 	//mixins:[text],
 	computed: {
 	},
 	//props:["params"],
-	props:{
-	},
 	watch:{
 	},
 	methods: {
 	},
 	mounted() {
+	},
+	created(){
+		//console.log(this, this.vars);
 	}
 }
 </script>
 
-<style scoped>
-</style>

@@ -2,7 +2,7 @@
 import vue from "vue";
 import _ from "lodash";
 
-import base from "../common/base.js";
+import baseComponent from "../common/baseComponent.js";
 import tag from "../common/tag.js";
 import tags from "../modeditor/tags.js";
 import tagEditor from "../common/tagEditor.vue";
@@ -13,7 +13,7 @@ import wikiText from "./wikiText.vue";
 import wikiRichtext from "./wikiRichtext.vue";
 import wikiMarkdown from "./wikiMarkdown.vue";
 import wikiCarousel from "./wikiCarousel.vue";
-import wikiVar from "./wikiVar.vue";
+import wikiTag from "./wikiTag.vue";
 
 var components =  {
 	container,
@@ -22,7 +22,7 @@ var components =  {
 	wikiRichtext,
 	wikiCarousel,
 	wikiMarkdown,
-	wikiVar,
+	wikiTag,
 }
 
 
@@ -32,11 +32,11 @@ for (var key in components) {
 	var compName = "base-" + value.name;
 	var containerCompName = value.name + "";
 	vue.component(compName, {
-		mixins:[base, value],
+		mixins:[value, baseComponent],
 	});
 
 	var compEditContent = "<tagEditor v-if='isEditorMode' v-on:result='handleResult' :tag='tag'></tagEditor>";
-	var compContent = '<' +	compName + ' v-show="!isEditorMode" :tag="tag" v-bind="$attrs" v-on="$listeners"><slot></slot></' + compName + '>';
+	var compContent = '<' +	compName + ' v-show="!isEditorMode" :tag="tag" :vars="tag.vars || vars" v-bind="$attrs" v-on="$listeners"><slot></slot></' + compName + '>';
 	var containerTemplate = '<div :style="styles" :class="classes" @click.stop="click" @mouseenter="mouseenter" @mouseleave="mouseleave">'+ compEditContent + compContent + '</div>';
 	// 组件上容器
 	vue.component(containerCompName, {
@@ -46,6 +46,7 @@ for (var key in components) {
 		components: {
 			tagEditor,
 		},
+		inheritAttrs:false,
 	});
 }
 

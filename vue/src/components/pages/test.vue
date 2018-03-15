@@ -1,6 +1,8 @@
 <template>
 	<div>
 		<wikiParent attr1="attr1" attr2="attr2" ></wikiParent>
+		<wikiTag test="dsd">hello world</wikiTag>
+		<wikiText :vars="vars"></wikiText>
 		<wikiContainer ref="container">
 			<wikiText></wikiText>
 		</wikiContainer>
@@ -49,7 +51,12 @@ export default {
 		return {
 		}
 	},
-
+	props:{
+		vars:{
+			type:Object,
+			default:undefined,
+		},
+	},
 	computed: {
 	},
 

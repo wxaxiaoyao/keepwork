@@ -17,6 +17,9 @@ export default {
 				return tags.getTag(this.tagName || "div");
 			},
 		},
+		vars: {
+			type:Object,
+		},
 		styles:{
 			type: Object,
 			default: function() {

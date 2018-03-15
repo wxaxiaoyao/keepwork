@@ -10,7 +10,9 @@ export default {
 	name:"tagEditor",
 
 	props: {
-		tag:Object, 
+		tag:{
+			type:Object,
+		},
 	},
 
 	inheritAttrs: false,
