@@ -7,7 +7,6 @@
 import vue from "vue";
 import text from "../common/text.js";
 
-console.log(text);
 export default {
 	name:"wikiVar",
 	data:function() {

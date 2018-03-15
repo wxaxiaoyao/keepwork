@@ -1,17 +1,25 @@
 <template>
-  <div>
+  <div @click="click">
 	<router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: 'app',
+
+  methods: {
+	  ...mapActions({
+		  setCurrentTag:"setCurrentTag",
+	  }),
+	  click() {
+		  this.setCurrentTag(undefined);
+	  },
+  },
   components: {
-    HelloWorld
-  }
+  },
 }
 </script>
 

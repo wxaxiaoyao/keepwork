@@ -13,7 +13,7 @@ import tag from "./components/common/tag.js";
 
 Vue.config.productionTip = false;
 
-Vue.mixin(tag);
+//Vue.mixin(tag);
 
 Vue.use(ElementUI);
 Vue.use(VueResource);

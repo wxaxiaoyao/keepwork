@@ -1,29 +1,27 @@
 
 import {mapActions, mapGetters} from "vuex";
+import _const from "../../lib/const.js";
 
 export default {
 	data: function(){
-		return {};
+		return {
+		};
 	},
-	computed: {
-		...mapGetters({
-			getCurrentTag: 'getCurrentTag',
-		}),
+	props: {
 	},
-	methods: {
-		...mapActions({
-			setCurrentTag:'setCurrentTag',
-		}),
-		mouseenter(){
-			this.tag.styles["border"] = "1px solid gray";
-		},
-		mouseleave(){
 
-		},
-		click() {
-			console.log("--------click---------");
-			console.log(this);
-			this.setCurrentTag(this.kp_tag);
-		}
+
+	mounted() {
+		console.log(this);
+		//var self = this;
+		////console.log(self);
+		//if (self.$children.length != 1) {
+			//return ;
+		//}
+		//self.$nextTick(function(){
+			////console.log(self);
+			
+			//self.tag = self.$children[0].tag;
+		//});
 	}
 }

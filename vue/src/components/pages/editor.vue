@@ -17,16 +17,12 @@
 			</div>
 		</el-col>
 		<el-col :span="16">
-			<richtext></richtext>
 			<div ref="editor" 
 				@keyup.delete="_delete" 
 				@keyup="keyup" 
 				@blur="blur" 
 				@mouseup="mouseup">
-				<tag-component :tag="rootTag"></tag-component>
-			</div>
-			<div>
-				<!--<markdown :mode="mode" :text="text" :blocklist="blocklist"></markdown>-->
+				<container :tag="rootTag"></container>
 			</div>
 		</el-col>
 		<el-col :span="4">
@@ -104,12 +100,14 @@
 
 <script>
 import vue from "vue";
+import common_tag from "../common/tag.js";
+import tagContainer from "../common/tagContainer.js";
 import tags from "../modeditor/tags.js";
 import tagComponent from "../modeditor/tagConponment.vue";
 export default {
 	name:"editor",
 	data: function() {
-		var tag = tags.getTag("colDiv");
+		var tag = tags.getTag("container");
 		return {
 			style:{},
 			attrs:{},
@@ -123,29 +121,6 @@ export default {
 			theme:"",
 			tag:tag,
 			rootTag:tag,
-			blocklist:[
-			//{
-			//	//id:1,
-			//	modName:"test",
-			//	cmdName:"test",
-			//	modParams:{
-			//		title:"hello world",
-			//	},
-			//	isWikiBlock:true,
-			//	htmlContent: "<div>html content</div>",
-			//},
-			//{
-			//	//id:1,
-			//	modName:"test",
-			//	cmdName:"test",
-			//	modParams:{
-			//		style:"style1",
-			//		title:"hello world",
-			//	},
-			//	isWikiBlock:true,
-			//	htmlContent: "<div>html content</div>",
-			//},
-			],
 		}
 	},
 	computed: {

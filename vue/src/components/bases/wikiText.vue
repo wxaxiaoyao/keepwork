@@ -1,10 +1,5 @@
 <template>
-	<div @blur="blur"
-		@focus="focus"
-		@keyup="keyup"
-		@keyup.enter="enter"
-		v-html="params.text.text"
-		:style="_style"></div>
+	<div v-html="vars.text.text"></div>
 </template>
 
 
@@ -16,6 +11,12 @@ export default {
 	name:"wikiText",
 	data:function() {
 		return {
+			tagName:"wiki-text",
+			vars:{
+				text:{
+					text:"文本内容",
+				}
+			}
 		};
 	},
 	//mixins:[text],
@@ -23,30 +24,10 @@ export default {
 	},
 	//props:["params"],
 	props:{
-		params:{
-			type:Object,
-			default: function() {
-				return {
-					text: {
-						text:"文本组件",
-					},
-				};
-			},
-		},
 	},
 	watch:{
 	},
 	methods: {
-		focus(){
-		},
-		bluri(){
-			console.log("--1-----------");
-			//this.params.text.text = this.$el.innerHTML;
-		},
-		keyup(){
-		},
-		enter(){
-		},
 	},
 	mounted() {
 	}

@@ -16,7 +16,11 @@ tag.styles = {};
 tag.children = [];
 tag.data = {};
 tag.tagName = "";
-tag.vars = {}; // 变量集 未自定义则不配置更改
+tag.vars = {
+	text:{
+		text:"",
+	},
+}; // 变量集 未自定义则不配置更改
 tag.styleCode = "";
 tag.styleList = [];
 tag.attrList = [];
@@ -213,6 +217,10 @@ tag.clone = function() {
 
 tag.setTagName = function(tagName){
 	this.tagName = tagName;
+}
+
+tag.setVars = function(vars) {
+	this.vars = vars;
 }
 
 function tagFactory(tagName) {
