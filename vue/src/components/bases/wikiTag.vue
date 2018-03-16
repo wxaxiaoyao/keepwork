@@ -1,45 +1,32 @@
 <template>
-	<component :is="component" :tag="tag"></component>
+	<div :style="tag.styles">
+		<!--<slot></slot>-->
+		<component v-for="x in tag.children" :tag="x" :is="x.tagName"></component>
+	</div>
 </template>
 
 <script>
-import vue from "vue";
 
 export default {
-	name:"wikiTag",
-	data:function() {
+	name: "wikiTag",
+	props:["tag"],
+	data: function() {
 		return {
-		};
-	},
-	props:{
-		tagName:{
-			type:String,
-			default:"div",
-		},
-		tag: {
-			type:Object,
-		},
-	},
-	computed: {
-		component() {
-			var html = '<' + this.tagName + '><slot></slot><component v-for="x in tag.children" v-if="!isExist(x)" :tag="x" :is="x.tagName"></component></' + this.tagName + '>';
-			var res = vue.compile(html);
-			return {
-				props:["tag"],
-				render:res.render,
-				staticRenderFns:res.staticRenderFns,
-			};
+			tagName:"wikiTag",
 		}
 	},
-	watch:{
-		
-	},
-	//props:["params"],
 	methods: {
 		isExist(x) {
 			for (var i = 0; i < this.$children.length; i++) {
 				var child = this.$children[i];
+
+				if (this.tag.tagId == x.tagId) {
+					console.log("无法添加自己");
+					return true;
+				}
+
 				if (child.tag && child.tag.tagId == x.tagId) {
+					console.log("已存在", child._isBeingDestroyed, child._isDestroyed, child._isMounted);
 					return true;
 				}
 			}
@@ -47,10 +34,8 @@ export default {
 			return false;
 		}
 	},
-	mounted() {
-	},
 	created(){
-		//console.log(this.tagName);
+		console.log(this);
 	}
 }
 </script>

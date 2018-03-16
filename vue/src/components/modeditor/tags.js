@@ -10,10 +10,10 @@ tags.tagTree = function() {
 	var self = this;
 	var tree = [
 	{
-		classify: "基本Tag",
+		classify: "布局",
 	},
 	{
-		classify: "组件-Tag",
+		classify: "元素",
 	},
 	{
 		classify: "组件-基本-Tag",
@@ -38,10 +38,9 @@ tags.tagTree = function() {
 
 // 定义容器tag
 tags.divTag = function() {
-	var tag = tagFactory("div");
+	var tag = tagFactory("baseTag");
+	tag.attrs.realTagName = "div";
 	tag.name = "容器";
-
-	//tag.attrs.style["display"] = "flex";
 
 	return tag;
 }
@@ -52,7 +51,7 @@ tags.rowDivTag = function() {
 	var tag = self.divTag();
 
 	tag.name = "行容器";
-	tag.attrs.style["display"] = "flex";
+	tag.styles["display"] = "flex";
 
 	return tag;
 }
@@ -63,15 +62,25 @@ tags.colDivTag = function() {
 	var tag = self.divTag();
 
 	tag.name = "列容器";
-	tag.attrs.style["display"] = "flex";
-	tag.attrs.style["flex-direction"] = "column";
+	tag.styles["display"] = "flex";
+	tag.styles["flex-direction"] = "column";
+
+	return tag;
+}
+
+// 文本tag
+tags.textTag = function() {
+	var tag = tagFactory("wikiText");
+	tag.name = "文本";
 
 	return tag;
 }
 
 // 定义图片tag
 tags.imgTag = function() {
-	var tag = tagFactory("img");
+	var tag = tagFactory("baseTag");
+	tag.attrs.realTagName = "img";
+
 	tag.name = "图片";
 	
 	tag.attrs.src = "http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg";
@@ -83,49 +92,6 @@ tags.imgTag = function() {
 		desc: "图片链接",
 	},
 	];
-
-	//tag.vars = [
-		//{
-			//text:"http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg",
-			//$data:{
-				//type:"attr",  // 属性变量
-				//attrName:"ng-src",
-				//key:"src",
-			//},
-		//},
-	//];
-
-	return tag;
-}
-
-// 文本tag
-tags.textTag = function() {
-	var tag = tagFactory("div");
-	tag.name = "文本";
-
-	tag.vars = {
-		text: {
-			text:"这是一个文本",
-			$data: {
-				type:"text",  // 文件变量  用于标签内容显示
-				key:"content",  // 变量名
-				attrName:"v-text",
-		   	}
-		}
-	}
-
-	tag.innerHtmlChange = function() {
-		var el = document.getElementById(this.tagId);
-		if (!el) {
-			return;
-		}
-		//console.log([el]);
-		if (el.innerHTML == "<br>") {
-			this.vars.text.text = "";
-		} else {
-			this.vars.text.text = el.innerHTML.trim();
-		}
-	}
 
 	return tag;
 }

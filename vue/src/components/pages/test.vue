@@ -1,16 +1,10 @@
 <template>
 	<div>
-		<wikiParent attr1="attr1" attr2="attr2" ></wikiParent>
-		<wikiTag test="dsd">hello world</wikiTag>
-		<wikiText :vars="vars"></wikiText>
-		<wikiContainer ref="container">
-			<wikiText></wikiText>
-		</wikiContainer>
-		<richtext></richtext>
-		<el-container>
-			<el-header>Header</el-header>
-			<el-main>Main</el-main>
-		</el-container>
+		<!--<wikiParent attr1="attr1" attr2="attr2" ></wikiParent>-->
+		<wikiTag :tag="tag">
+			<baseTag real-tag-name="h1" style="background-color:gray">hello world</baseTag>
+		</wikiTag>
+		<wikiTag :tag="tag">hello world</wikiTag>
 	</div>
 </template>
 
@@ -18,10 +12,7 @@
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 
-import tag from "../common/tag.js";
-import container from "../bases/container.vue";
 import tags from "../modeditor/tags.js";
-import tagContainer from "../common/tagContainer.js";
 
 vue.component("wikiParent", {
 	template:"<div><wikiChild v-bind='$attrs'></wikiChild></div>",
@@ -49,6 +40,7 @@ export default {
 	name:'test',
 	data:function(){
 		return {
+			tag:tags.getTag("colDiv"),
 		}
 	},
 	props:{
@@ -72,7 +64,6 @@ export default {
 	//mixins: [tag, tagContainer],
 
 	components:{
-		container,
 	},
 
 	mounted(){
@@ -82,4 +73,30 @@ export default {
 </script>
 
 <style>
+  .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
 </style>

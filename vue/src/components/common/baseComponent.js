@@ -3,12 +3,28 @@ import _ from "lodash";
 
 export default {
 	props: {
-		//vars: {
-			//type:Object,
-			//default: function(){
-				//return {};
-			//},
-		//},
+		vars: {
+			type:Object,
+			default: function(){
+				return {
+					text:{
+						text:"this is a text",
+					},
+				};
+			},
+		},
+		styles: {
+			type:Object,
+			default: function(){
+				return {};
+			},
+		},
+		classes: {
+			type:Object,
+			default: function(){
+				return {};
+			},
+		},
 	},
 	created(){
 		if (!this.$parent || !this.$parent.tag) {
@@ -19,9 +35,8 @@ export default {
 		if (this.tagName) {
 			tag.setTagName(this.tagName);
 		}
-
-		if (this.vars && !tag.getVars()) {
-			tag.setVars(this.vars);
-		}
+		tag.vars = Object.assign(this.vars, tag.vars || {});
+		tag.styles = Object.assign(this.styles, tag.styles);
+		tag.classes = Object.assign(this.classes, tag.classes);
 	}
 }

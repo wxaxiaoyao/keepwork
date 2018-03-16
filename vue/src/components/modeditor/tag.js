@@ -3,20 +3,18 @@ import _ from "lodash";
 var styleAttrMap = {}
 var tagId = 0;
 
-var attrs = {};
-attrs.class = []; // 标签类列表
-attrs.style = {
-	//"display":'flex',
-}; // 标签样式
-
 var tag = {};
 
-tag.attrs = attrs;
-tag.styles = {};
-tag.children = [];
-tag.data = {};
+// style class 特殊处理  vue也特殊处理  保持一致
+tag.__flag__ = true; // 用来识别是tag
 tag.tagName = "";
+tag.children = [];
+
+tag.attrs = {};
+tag.styles = {};
+tag.classes = {};
 tag.vars = undefined; // 变量集 未自定义则不配置更改
+
 tag.styleCode = "";
 tag.styleList = [];
 tag.attrList = [];

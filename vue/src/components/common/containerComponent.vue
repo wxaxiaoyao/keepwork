@@ -1,15 +1,36 @@
+<template>
+	<div :style="style" :class="class_"
+	   	@click.stop="click" 
+		@mouseenter="mouseenter" 
+		@mouseleave="mouseleave"> 
+		<tagEditor v-if='isShowEditor' v-on:result='handleResult' :tag='tag'></tagEditor>
+		<component :is="componentName" v-show="isShowComponent" 
+			:style="styles" :class="classes" :tag="tag" :vars="tag.vars || vars" 
+			v-bind="$attrs" v-on="$listeners">
+			<slot></slot>
+		</component>
+	</div>
+</template>
 
-import vue from "vue";
+<script>
+import tagEditor from "../common/tagEditor.vue";
 import {mapActions, mapGetters} from "vuex";
 import tags from "../modeditor/tags.js";
 import _const from "../../lib/const.js";
 
 export default {
-	data: function() {
-		return  {
+	data:function(){
+		return {
+			isShowEditor:false,
+			isShowComponent:true,
+			style:{
+
+			},
+			class_:{
+				
+			},
 		}
 	},
-
 	props: {
 		tag: {
 			type:Object,
@@ -30,12 +51,11 @@ export default {
 		},
 		classes: {
 			type: Object,
-			default: function() {
+			default: function(){
 				return {};
-			}
+			},
 		},
 	},
-
 	computed: {
 		isEditorMode() {
 			if (this.getMode != _const.EDITOR_MODE_EDITOR) {
@@ -52,7 +72,6 @@ export default {
 			getMode: "getMode",
 		}),
 	},
-
 	methods: {
 		...mapActions({
 			setCurrentTag:'setCurrentTag',
@@ -62,12 +81,9 @@ export default {
 			this.tag.vars.text.text = payload;
 		},
 		mouseenter(){
-			//console.log("--------mouseenter-----------");
-			//this.styles["background-color"] = "blue";
+			//console.log("----------");
 		},
 		mouseleave(){
-			//console.log("--------mouseenter-----------");
-			//this.styles["background-color"] = "gray";
 		},
 		click() {
 			console.log("--------click---------");
@@ -75,15 +91,20 @@ export default {
 			this.setCurrentTag(this.tag);
 		},
 	},
-
 	created() {
-		//this.tag.setTagName(this.tagName);
-		//this.tag.setVars(this.vars);
+		console.log(this.componentName);
+		// 传入值具有较高优先级
+		if (this.vars) {
+			this.tag.vars = Object.assign(this.tag.vars || {}, this.vars);
+		}
+		this.tag.styles = Object.assign(this.tag.styles, this.baseStyle);
+		this.tag.classes = Object.assign(this.tag.classes, this.baseClass);
 	},
 
 	mounted() {
-		var $parent = this.$parent;
-		while($parent && !$parent.tag) {
+		var self = this;
+		var $parent = self.$parent;
+		while($parent && !($parent.tag && $parent.tag.__flag__)) {
 			$parent = $parent.$parent;
 		}
 
@@ -91,19 +112,28 @@ export default {
 			return;
 		}
 
-		$parent.tag.addTag(this.tag);
+		if ($parent.tag.tagId == self.tag.tagId) {
+			return;
+		}
+
+		$parent.tag.addTag(self.tag);
 	},
 
 	beforeDestroy() {
 		var $parent = this.$parent;
-		while($parent && !parent.tag) {
+		while($parent && !($parent.tag && $parent.tag.__flag__)) {
 			$parent = $parent.$parent;
 		}
 		if (!$parent) {
 			return;
 		}
+		console.log(this);
 		var $parent = this.$parent;
 		$parent.tag.deleteTag(this.tag.tagId);
 	},
+	components: {
+		tagEditor,
+	},
+	inheritAttrs:false,
 }
-
+</script>

@@ -25,10 +25,8 @@ export default {
 			},
 		},
 	},
-	//mixins:[text],
 	computed: {
 	},
-	//props:["params"],
 	watch:{
 	},
 	methods: {
@@ -36,7 +34,7 @@ export default {
 	mounted() {
 	},
 	created(){
-		//console.log(this, this.vars);
+	//	console.log(this, this.test);
 	}
 }
 </script>

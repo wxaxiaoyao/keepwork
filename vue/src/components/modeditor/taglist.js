@@ -3,20 +3,17 @@ export default [
 {
 	name:"行容器",
 	type:"rowDiv",
-	tag:"div",
-	classify: "基本Tag",
+	classify: "布局",
 },
 {
 	name:"列容器",
 	type:"colDiv",
-	tag:"div",
-	classify: "基本Tag",
+	classify: "布局",
 },
 {
 	name:"文本",
 	type:"text",
-	tag:"div",
-	classify: "基本Tag",
+	classify: "元素",
 },
 {
 	name:"图标",
