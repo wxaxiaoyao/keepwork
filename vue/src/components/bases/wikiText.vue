@@ -34,7 +34,7 @@ export default {
 	mounted() {
 	},
 	created(){
-	//	console.log(this, this.test);
+		console.log(this);
 	}
 }
 </script>

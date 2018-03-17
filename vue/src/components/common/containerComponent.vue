@@ -5,7 +5,7 @@
 		@mouseleave="mouseleave"> 
 		<tagEditor v-if='isShowEditor' v-on:result='handleResult' :tag='tag'></tagEditor>
 		<component :is="componentName" v-show="isShowComponent" 
-			:style="styles" :class="classes" :tag="tag" :vars="tag.vars || vars" 
+			:style="compStyle" :class="compClass" :tag="tag" :vars="tag.vars || vars" 
 			v-bind="$attrs" v-on="$listeners">
 			<slot></slot>
 		</component>
@@ -57,6 +57,12 @@ export default {
 		},
 	},
 	computed: {
+		compStyle() {
+			return this.tag.styles;	
+		},
+		compClass(){
+			return this.tag.classes;
+		},
 		isEditorMode() {
 			if (this.getMode != _const.EDITOR_MODE_EDITOR) {
 				return false;
@@ -86,19 +92,18 @@ export default {
 		mouseleave(){
 		},
 		click() {
-			console.log("--------click---------");
-			//console.log(this);
+			console.log("-------setCurrentTag---------", this.tag);
 			this.setCurrentTag(this.tag);
 		},
 	},
 	created() {
-		console.log(this.componentName);
+		//console.log(this.componentName);
 		// 传入值具有较高优先级
 		if (this.vars) {
 			this.tag.vars = Object.assign(this.tag.vars || {}, this.vars);
 		}
-		this.tag.styles = Object.assign(this.tag.styles, this.baseStyle);
-		this.tag.classes = Object.assign(this.tag.classes, this.baseClass);
+		this.tag.styles = Object.assign(this.tag.styles, this.styles);
+		this.tag.classes = Object.assign(this.tag.classes, this.classes);
 	},
 
 	mounted() {
@@ -120,17 +125,13 @@ export default {
 	},
 
 	beforeDestroy() {
-		var $parent = this.$parent;
-		while($parent && !($parent.tag && $parent.tag.__flag__)) {
-			$parent = $parent.$parent;
-		}
-		if (!$parent) {
+		if (!this.tag || !this.tag.parentTag) {
 			return;
 		}
-		console.log(this);
-		var $parent = this.$parent;
-		$parent.tag.deleteTag(this.tag.tagId);
+
+		this.tag.parentTag.deleteTag(this.tag.tagId);
 	},
+
 	components: {
 		tagEditor,
 	},

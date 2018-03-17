@@ -38,8 +38,8 @@ tags.tagTree = function() {
 
 // 定义容器tag
 tags.divTag = function() {
-	var tag = tagFactory("baseTag");
-	tag.attrs.realTagName = "div";
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "div";
 	tag.name = "容器";
 
 	return tag;
@@ -606,6 +606,18 @@ tags.containerTag = function() {
 	var tag = tagFactory("container");
 
 	return tag;
+}
+
+tags.getTagByVNode = function(vnode) {
+	var tagName = "wikiText";
+	if (vnode.componentOptions) {
+		tagName = vnode.componentOptions.tag;
+	}
+	//console.log(vnode, tagName);
+	var tag = tagFactory(tagName);
+	tag.name =  tagName;
+
+	return tag;	
 }
 
 tags.getTag = function(typ) {

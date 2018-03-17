@@ -15,7 +15,7 @@ export default {
 		  setCurrentTag:"setCurrentTag",
 	  }),
 	  click() {
-		  this.setCurrentTag(undefined);
+		  //this.setCurrentTag(undefined);
 	  },
   },
   components: {

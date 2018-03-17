@@ -5,11 +5,13 @@ import _ from "lodash";
 import baseComponent from "../common/baseComponent.js";
 import containerComponent from "../common/containerComponent.vue";
 
+import tag from "./tag.js";
+
 import tags from "../modeditor/tags.js";
 import tagEditor from "../common/tagEditor.vue";
 
-import baseTag from "./baseTag.vue";
-import wikiTag from "./wikiTag.vue";
+//import baseTag from "./baseTag.vue";
+//import wikiTag from "./wikiTag.vue";
 
 import richtext from "./richtext.vue";
 import wikiText from "./wikiText.vue";
@@ -18,8 +20,9 @@ import wikiMarkdown from "./wikiMarkdown.vue";
 import wikiCarousel from "./wikiCarousel.vue";
 
 var components =  {
-	baseTag,
-	wikiTag,
+	tag,
+	//baseTag,
+	//wikiTag,
 	richtext,
 	wikiText,
 	wikiRichtext,
