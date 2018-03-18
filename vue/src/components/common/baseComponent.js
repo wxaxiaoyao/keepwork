@@ -7,9 +7,6 @@ export default {
 			type:Object,
 			default: function(){
 				return {
-					text:{
-						text:"this is a text",
-					},
 				};
 			},
 		},

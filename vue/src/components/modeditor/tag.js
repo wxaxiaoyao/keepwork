@@ -31,25 +31,27 @@ tag.setStyle = function(key, value) {
 
 }
 
-tag.getAttrsHtml = function(){
+tag.getAttrsHtml = function(tagName){
 	var self = this;
-	var str = "";
-	var attrs = self.attrs;
+	var str = ' :style="tag.styles" :class="tag.classes"';
+	var attrs = _.cloneDeep(self.attrs);
 	var vars = self.vars;
-	var valPrefix = "params";
-	if (self.varKey) {
-		valPrefix += "." + self.varKey;
+
+	if (tagName && tagName.indexOf("el-") == 0) {
+
+	} else {
+		str += ' :tag="tag"';
 	}
-
-	// 默认:params为tag全部参数
-	str += ' :params="' + valPrefix + '"';
-
 	// 具体指定参数到属性
 	for (var key in vars) {
 		var value = vars[key];
-		if (value.$data && value.$data.type == "text" && value.$data.attrName) {
-			str += ' ' + value.$data.attrName + '="' + valPrefix + "." + key + '.text"';
-		}
+		var attrName = value.$data.attrName;
+		var attrNamePrefix = value.$data.attrNamePrefix || "";
+		var defaultValue = attrs[attrName];
+		attrs[attrName] = undefined;
+
+		defaultValue = defaultValue ? (" || '" + defaultValue + "'") : "";
+		str += ' ' + attrNamePrefix + attrName + '="tag.vars.' + key + "." + (value.$data.key || 'text') + defaultValue + '"';
 	}
 
 	//str += " v-on:blur.native=blur";
@@ -60,16 +62,6 @@ tag.getAttrsHtml = function(){
 		if (typeof(value) == "string") {
 			str += " " + key + '="' + value + '"';
 		}
-	}
-
-
-	var style = attrs.style || {};
-	if (!isEmptyObject(style)) {
-		str += " style=" + '"';
-		for (var key in style) {
-			str += key + ":" + style[key] + ";";
-		}
-		str += '"';
 	}
 
 	return str;

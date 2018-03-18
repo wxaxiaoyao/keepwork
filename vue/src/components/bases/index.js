@@ -37,7 +37,7 @@ for (var key in components) {
 	var compName = "base-" + value.name;
 	var containerCompName = value.name + "";
 	vue.component(compName, {
-		mixins:[value, baseComponent],
+		mixins:[baseComponent, value],
 	});
 
 	// 组件上容器

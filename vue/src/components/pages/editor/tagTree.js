@@ -1,0 +1,112 @@
+var tagTree = [
+{
+	label:"布局",
+	children:[
+	{
+		label:"flex布局",
+		children:[
+			{
+				label:"行容器",
+				type:"rowDiv",
+			},
+			{
+				label:"列容器",
+				type:"colDiv",
+			},
+		],
+	},
+	{
+		label:"layout布局",
+		children:[
+			{
+				label:"布局行",
+				type:"elRow",
+			},
+			{
+				label:"布局列",
+				type:"elCol",
+			},
+		],
+   	},
+	{
+		label:"container布局",
+		children:[
+			{
+				label:"外层容器",
+				type:"elContainer",
+			},
+			{
+				label:"顶栏容器",
+				type:"elHeader",
+			},
+			{
+				label:"侧栏容器",
+				type:"elAside",
+			},
+			{
+				label:"主区域容器",
+				type:"elMain",
+			},
+			{
+				label:"底栏容器",
+				type:"elFooter",
+			},
+		],
+	},
+	]
+},
+{
+	label:"HTML元素",
+	children: [
+		{
+			label:"文本",
+			type:"span",
+		},
+		{
+			label:"段落",
+			type:"p",
+		},
+		{
+			label:"图片",
+			type:"img",
+		},
+		{
+			label:"一级标题",
+			type:"h1",
+		},
+		{
+			label:"二级标题",
+			type:"h2",
+		},
+		{
+			label:"三级标题",
+			type:"h3",
+		},
+		{
+			label:"链接",
+			type:"a",
+		},
+		
+	]
+},
+{
+	label:"ELEMENTUI",
+	children:[
+		{
+			label:"按钮",
+			type:"elButton",
+		},
+	],
+},
+{
+	label:"组件",
+	children: [
+		{
+			label:"走马灯",
+			type:"wikiCarousel",
+		},
+	]
+},
+];
+
+export default tagTree;

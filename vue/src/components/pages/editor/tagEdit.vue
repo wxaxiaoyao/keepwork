@@ -7,7 +7,7 @@
 			</div>
 			<div class="attrInputContainer" v-for="x in attrList" :key="x.id">
 				<span>{{x.name || x.attrName}}</span>	
-				<input type="text" :placeholder="x.desc || x.name || x.attrName" v-model="attrs[x.attrName]" @change="attrChange(x)"/>
+				<input type="text" :placeholder="x.desc || x.name || x.attrName" v-model="attrs[x.attrName]"/>
 			</div>
 		</el-tab-pane>
 		<el-tab-pane label="样式">
@@ -48,7 +48,6 @@
 
 <script>
 import vue from "vue";
-import {mapActions, mapGetters} from "vuex";
 
 export default {
 	data: function() {
@@ -64,10 +63,12 @@ export default {
 			attrList:[],
 		}
 	},
+	props: {
+		tag: {
+			type:Object,
+		}
+	},
 	computed: {
-		...mapGetters({
-			tag: 'getCurrentTag',
-		}),
 		navTagList() {
 			if (!this.tag) {
 				return;
@@ -95,9 +96,6 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions({
-			setCurrentTag:'setCurrentTag',
-		}),
   	},
 }
 </script>

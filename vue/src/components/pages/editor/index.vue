@@ -1,20 +1,14 @@
 <template>
 	<el-row>
 		<el-col :span="4">
-			<tagList v-on:selectTag="clickAddTag"></tagList>
+			<el-tree :data="tagTree" :props="tagTreeProps" @node-click="clickAddTag"></el-tree>
 		</el-col>
 		<el-col :span="16">
 			<tag :tag="rootTag"><wikiText></wikiText></tag>
 		</el-col>
 		<el-col :span="4">
-			<div>
-				<el-tabs type="border-card">
-					<el-tab-pane label="Tag导航">
-						<tagNav></tagNav>
-					</el-tab-pane>
-				</el-tabs>
-				<tagEdit></tagEdit>
-			</div>
+			<tagNav :tag="tag" v-on:selectTag="selectTag"></tagNav>
+			<tagEdit :tag="tag"></tagEdit>
 		</el-col>
 	</el-row>
 </template>
@@ -25,6 +19,7 @@ import {mapActions, mapGetters} from "vuex";
 import tagList from "./tagList.vue";
 import tagNav from "./tagNav.vue";
 import tagEdit from "./tagEdit.vue";
+import tagTree from "./tagTree.js";
 
 import tags from "../../modeditor/tags.js";
 
@@ -36,13 +31,16 @@ export default {
 			mode:"editor",
 			text:"",
 			theme:"",
+			tag:null,
 			rootTag:tag,
+			tagTree:tagTree,
+			tagTreeProps:{
+				children:"children",
+				label:"label",
+			},
 		}
 	},
 	computed: {
-		...mapGetters({
-			tag: 'getCurrentTag',
-		}),
 		tagHtml: function() {
 			var tagHtmlStr = this.rootTag.html();
 			//console.log(tagHtmlStr);
@@ -62,14 +60,16 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions({
-			setCurrentTag:'setCurrentTag',
-		}),
-		clickAddTag(tag) {
+		clickAddTag(tag, node, nodeComp) {
+			if (!tag.type) {
+				return;
+			}
 			this.tag.addTag(tags.getTag(tag.type));	
 		},
+		selectTag(tag) {
+			this.tag = tag;
+		},
 		blur() {
-			console.log("----------", event);
 			this.tagRebuild();
 		},
 		keyup(){
@@ -123,7 +123,7 @@ export default {
 		},
 	},
 	mounted() {
-		this.setCurrentTag(this.rootTag);
+		this.tag = this.rootTag;
 	},
 	created(){
 	},

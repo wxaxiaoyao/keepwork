@@ -1,40 +1,6 @@
 import _ from 'lodash';
 import tagFactory from "./tag.js";
-import tagList from "./taglist.js";
 var tags = {};
-
-tags.tagList = tagList;
-
-// tag树型结构
-tags.tagTree = function() {
-	var self = this;
-	var tree = [
-	{
-		classify: "布局",
-	},
-	{
-		classify: "元素",
-	},
-	{
-		classify: "组件-基本-Tag",
-	},
-	{
-		classify: "组件-功能-Tag",
-	},
-	];
-
-	var tagList = self.tagList;
-	for (var i = 0; i < tagList.length; i++){
-		for (var j = 0; j < tree.length; j++) {
-			if (tree[j].classify == tagList[i].classify) {
-				tree[j].nodes = tree[j].nodes || [];
-				tree[j].nodes.push(tagList[i]);
-			}
-		}
-	}
-	
-	return tree;
-}
 
 // 定义容器tag
 tags.divTag = function() {
@@ -78,9 +44,8 @@ tags.textTag = function() {
 
 // 定义图片tag
 tags.imgTag = function() {
-	var tag = tagFactory("baseTag");
-	tag.attrs.realTagName = "img";
-
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "img";
 	tag.name = "图片";
 	
 	tag.attrs.src = "http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg";
@@ -93,12 +58,43 @@ tags.imgTag = function() {
 	},
 	];
 
+	tag.vars = {
+		src: {
+			text:undefined,
+			$data:{
+				type:"text",
+				attrName:"src",
+				attrNamePrefix:":",
+				desc:"图片地址",
+			}
+		},
+	}
+
 	return tag;
 }
 
 // 标题
+tags.spanTag = function() {
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "span";
+	tag.name = "文本";
+
+	tag.vars = {
+		text: {
+			text:"文本",
+			$data: {
+				type:"text",  // 文件变量  用于标签内容显示
+				attrName:"v-text",
+			}
+		},
+	}
+
+	return tag;
+}
+// 标题
 tags.hTag = function(hn) {
-	var tag = tagFactory(hn);
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = hn;
 	tag.name = "标题";
 
 	tag.vars = {
@@ -106,22 +102,17 @@ tags.hTag = function(hn) {
 			text:"这是一个标题",
 			$data: {
 				type:"text",  // 文件变量  用于标签内容显示
-				key:"content",  // 变量名
 				attrName:"v-text",
 			}
-		}
-	}
-
-	tag.innerHtmlChange = function() {
-		var el = document.getElementById(this.tagId);
-		if (!el) {
-			return;
-		}
-		//console.log([el]);
-		if (el.innerHTML == "<br>") {
-			this.vars.text.text = "";
-		} else {
-			this.vars.text.text = el.innerHTML.trim();
+		},
+		tagName: {
+			text:undefined,
+			$data:{
+				type:"text",
+				attrName:"tagName",
+				attrNamePrefix:":",
+				desc:"h1,h2,h3,h4,h5,h6",
+			}
 		}
 	}
 
@@ -133,7 +124,6 @@ tags.h1Tag = function() {
 	var self = this;
 
 	var tag = self.hTag("h1");
-
 	tag.name = "一级标题";
 
 	return tag;
@@ -142,9 +132,7 @@ tags.h1Tag = function() {
 // 二级标题
 tags.h2Tag = function() {
 	var self = this;
-
 	var tag = self.hTag("h2");
-
 	tag.name = "二级标题";
 
 	return tag;
@@ -153,38 +141,36 @@ tags.h2Tag = function() {
 // 三级标题
 tags.h3Tag = function() {
 	var self = this;
-
 	var tag = self.hTag("h3");
-
 	tag.name = "三级标题";
 
 	return tag;
 }
 
-// 段落标签
+// 段落
 tags.pTag = function() {
-	var tag = tagFactory("p");
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "p";
 	tag.name = "段落";
-
-	//tag.addTag(tags.textTag({text:"这是一个段落"}));
 
 	tag.vars = {
 		text: {
 			text:"这是一个段落",
 			$data: {
 				type:"text",  // 文件变量  用于标签内容显示
-				key:"content",  // 变量名
 				attrName:"v-text",
 			}
-		}
+		},
 	}
 
 	return tag;
 }
 
+
 // 链接
 tags.aTag = function() {
-	var tag = tagFactory("a");
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "a";
 	tag.name = "链接";
 
 	tag.attrList = [
@@ -201,7 +187,6 @@ tags.aTag = function() {
 			text:"这是一个链接",
 			$data: {
 				type:"text",  // 文件变量  用于标签内容显示
-				key:"content",  // 变量名
 				attrName:"v-text",
 			}
 		}
@@ -230,7 +215,8 @@ tags.iTag = function(){
 
 // element ui base on vue 组件
 tags.elRowTag = function() {
-	var tag = tagFactory("el-row");
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "el-row";
 	tag.name = "布局行";
 
 	tag.attrList = [
@@ -256,7 +242,8 @@ tags.elRowTag = function() {
 }
 
 tags.elColTag = function() {
-	var tag = tagFactory("el-col");
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "el-col";
 	tag.name = "布局列";
 
 	tag.attrList = [
@@ -324,8 +311,9 @@ tags.elColTag = function() {
 }
 
 tags.elContainerTag = function() {
-	var tag = tagFactory("el-container");
-	tag.name = "布局-外层容器";
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "el-container";
+	tag.name = "外层容器";
 	
 	tag.attrList = [
 	{
@@ -350,8 +338,9 @@ tags.elContainerTag = function() {
 }
 
 tags.elHeaderTag = function() {
-	var tag = tagFactory("el-header");
-	tag.name = "布局-顶栏容器";
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "el-header";
+	tag.name = "顶栏容器";
 	
 	tag.attrList = [
 	{
@@ -376,8 +365,9 @@ tags.elHeaderTag = function() {
 }
 
 tags.elAsideTag = function() {
-	var tag = tagFactory("el-aside");
-	tag.name = "布局-侧栏容器";
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "el-aside";
+	tag.name = "侧栏容器";
 	
 	tag.attrList = [
 	{
@@ -402,15 +392,17 @@ tags.elAsideTag = function() {
 }
 
 tags.elMainTag = function(){
-	var tag = tagFactory("el-main");
-	tag.name = "布局-主区域容器";
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "el-main";
+	tag.name = "主区域容器";
 	
 	return tag;
 }
 
 tags.elFooterTag = function(){
-	var tag = tagFactory("el-footer");
-	tag.name = "布局-底栏容器";
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "el-footer";
+	tag.name = "底栏容器";
 	
 	tag.attrList = [
 	{
@@ -435,19 +427,20 @@ tags.elFooterTag = function(){
 }
 
 tags.elButtonTag = function() {
-	var tag = tagFactory("el-button");
+	var tag = tagFactory("tag");
+	tag.attrs.tagName = "el-button";
 	tag.name = "按钮";
 	
-	tag.vars = [
-		{
+	tag.vars = {
+		text: {
 			text:"这是一个按钮",
 
 			$data: {
-				type:"text",  // 文件变量  用于标签内容显示
-				key:"content",  // 变量名
+				type:"text",  // 文件变量  
+				attrName:"v-text",
 			}
 		}
-	];
+	};
 
 	return tag;
 	

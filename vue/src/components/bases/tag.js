@@ -18,16 +18,20 @@ export default {
 		},
 	},
 
+	watch:{
+	},
 	computed: {
-		compStyle() {
-			return this.tag.styles;
-		},
-		compClass() {
-			return this.tag.classes;
+		attrStr(){
+			var tagName = this.tagName || this.tag.attrs.tagName || "div";
+			return this.tag.getAttrsHtml(tagName);
 		},
 		compileTemplate() {
 			var tagName = this.tagName || this.tag.attrs.tagName || "div";
-			var template = '<' + tagName + ' :style="compStyle" :class="compClass"><component v-for="x in tag.children" :tag="x" :is="x.tagName" :style="x.styles" :class="x.classes"></component></' + tagName + '>';
+			var attrStr = this.attrStr;
+			var template = '<' + tagName + attrStr + '><component v-for="x in tag.children" :tag="x" :is="x.tagName" :style="x.styles" :class="x.classes"></component></' + tagName + '>';
+			if (tagName == "img" || tagName == "br" || tagName == "input") {
+				template = '<' + tagName + attrStr + '/>';
+			}
 			return vue.compile(template);
 		},
 	},
