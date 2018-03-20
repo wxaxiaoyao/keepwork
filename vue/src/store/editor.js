@@ -1,19 +1,18 @@
 import _const from "../lib/const.js";
 
 const state = {
-	rootTag:null,
-	currentTag:null,
+	tagId:null, // 当前tag id
 	mode:_const.EDITOR_MODE_EDITOR,
 };
 
 const getters = {
-	getCurrentTag: (state) => state.currentTag,
+	getTagId: (state) => state.tagId,
 	getMode: (state) => state.mode,
 };
 
 const actions = {
-	setCurrentTag({commit, state}, tag) {
-		commit("setCurrentTag", tag);
+	setTagId({commit, state}, tagId) {
+		commit("setTagId", tagId);
 	},
 	setMode(context, mode) {
 		context.commit("setMode", mode);
@@ -21,8 +20,8 @@ const actions = {
 };
 
 const mutations = {
-	setCurrentTag(state, tag) {
-		state.currentTag = tag;
+	setTagId(state, tagId) {
+		state.tagId = tagId;
 	},
 	setMode(state, mode) {
 		state.mode = mode;

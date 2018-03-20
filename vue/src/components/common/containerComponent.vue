@@ -5,7 +5,8 @@
 		@mouseleave="mouseleave"> 
 		<tagEditor v-if='isShowEditor' v-on:result='handleResult' :tag='tag'></tagEditor>
 		<component :is="componentName" v-show="isShowComponent" 
-			:style="compStyle" :class="compClass" :tag="tag" :vars="tag.vars || vars" 
+			:style="compStyle" :class="compClass" 
+			:tag="tag" :vars="tag.vars || vars" 
 			v-bind="$attrs" v-on="$listeners">
 			<slot></slot>
 		</component>
@@ -27,7 +28,9 @@ export default {
 
 			},
 			class_:{
-				
+				componentContainerClass: true,
+				actived:false,
+				hover:false,
 			},
 		}
 	},
@@ -50,7 +53,7 @@ export default {
 			}
 		},
 		classes: {
-			type: Object,
+			type: null,
 			default: function(){
 				return {};
 			},
@@ -67,37 +70,65 @@ export default {
 			if (this.getMode != _const.EDITOR_MODE_EDITOR) {
 				return false;
 			}
-			if (this.tag && this.currentTag && this.tag.tagId == this.currentTag.tagId) {
+
+			return true;
+		},
+		isActive() {
+			if (this.getMode != _const.EDITOR_MODE_EDITOR) {
+				return false;
+			}
+			if (this.tag && this.tagId && this.tag.tagId == this.tagId) {
 				return true;
 			}
 
 			return false;
 		},
 		...mapGetters({
-			currentTag: 'getCurrentTag',
+			tagId: 'getTagId',
 			getMode: "getMode",
 		}),
 	},
+	watch:{
+		isActive: function(val, oldVal) {
+			console.log(val);
+			this.class_.actived = val;
+		},
+		classes: function(val, oldVal) {
+			oldVal = oldVal || {};
+			for (var key in oldVal) {
+				delete this.tag.classes[key];
+			}
+			this.tag.classes = Object.assign(this.tag.classes, this.classes);
+		},
+		styles: function(val, oldVal) {
+			this.tag.styles = Object.assign(this.tag.styles, this.styles);
+		},
+		vars: function(val, oldVal) {
+			if (this.vars) {
+				this.tag.vars = Object.assign(this.tag.vars || {}, this.vars);
+			}
+		},
+	},
 	methods: {
 		...mapActions({
-			setCurrentTag:'setCurrentTag',
+			setTagId:'setTagId',
 		}),
 		handleResult(payload) {
 			console.log(payload, this);	
 			this.tag.vars.text.text = payload;
 		},
 		mouseenter(){
-			//console.log("----------");
+			this.class_.hover = true;
 		},
 		mouseleave(){
+			this.class_.hover = false;
 		},
 		click() {
-			console.log("-------setCurrentTag---------", this.tag);
-			this.setCurrentTag(this.tag);
+			this.setTagId(this.tag.tagId);
 		},
 	},
 	created() {
-		//console.log(this.componentName);
+		console.log(this, this.componentName);
 		// 传入值具有较高优先级
 		if (this.vars) {
 			this.tag.vars = Object.assign(this.tag.vars || {}, this.vars);
@@ -128,7 +159,6 @@ export default {
 		if (!this.tag || !this.tag.parentTag) {
 			return;
 		}
-
 		this.tag.parentTag.deleteTag(this.tag.tagId);
 	},
 
@@ -138,3 +168,18 @@ export default {
 	inheritAttrs:false,
 }
 </script>
+
+<style scoped>
+.componentContainerClass {
+
+}
+.componentContainerClass:hover {
+	cursor: pointer;
+}
+.hover {
+	border: 1px dashed red;
+}
+.actived {
+	border: 1px solid green;
+}
+</style>

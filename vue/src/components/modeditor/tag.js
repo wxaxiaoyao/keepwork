@@ -11,7 +11,9 @@ tag.tagName = "";
 tag.children = [];
 
 tag.attrs = {};
-tag.styles = {};
+tag.styles = {
+	//"height":"100%",
+};
 tag.classes = {};
 tag.vars = undefined; // 变量集 未自定义则不配置更改
 

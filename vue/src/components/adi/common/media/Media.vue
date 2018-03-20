@@ -1,0 +1,55 @@
+<template>
+  <div class='comp-media'>
+    <a :href='link'>
+      <div v-if='isImage' class="img" :style="loadImg"></div>
+      <video v-else-if='isVideo' :src='src'></video>
+    </a>
+  </div>
+</template>
+
+<script>
+import Media from './media.types'
+import compBaseMixin from '../comp.base.mixin'
+
+export default {
+  name: 'AdiMedia',
+  mixins: [compBaseMixin],
+  computed: {
+    isImage() {
+      return Media.isImage(this.source.src)
+    },
+    isVideo() {
+      return Media.isVideo(this.source.src)
+    },
+    hasMedia() {
+      return this.source.src && this.source.src !== ''
+    },
+    src() {
+      return this.source.src
+    },
+    link() {
+      return this.source.link
+    },
+    loadImg() {
+      return this.generateStyleString({
+        background: 'url(' + this.source.src + ')',
+        'background-position': 'center',
+        'background-size': 'cover'
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.comp-media {
+  width: 100%;
+  height: 100%;
+
+  .img {
+    width: 100%;
+    height: 100%;
+  }
+}
+</style>
+

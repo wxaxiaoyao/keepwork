@@ -17,7 +17,7 @@ export default {
 			},
 		},
 		classes: {
-			type:Object,
+			type:null,
 			default: function(){
 				return {};
 			},
@@ -34,6 +34,6 @@ export default {
 		}
 		tag.vars = Object.assign(this.vars, tag.vars || {});
 		tag.styles = Object.assign(this.styles, tag.styles);
-		tag.classes = Object.assign(this.classes, tag.classes);
+		//tag.classes = Object.assign(this.classes, tag.classes);
 	}
 }

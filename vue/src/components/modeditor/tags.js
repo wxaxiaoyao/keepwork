@@ -105,15 +105,15 @@ tags.hTag = function(hn) {
 				attrName:"v-text",
 			}
 		},
-		tagName: {
-			text:undefined,
-			$data:{
-				type:"text",
-				attrName:"tagName",
-				attrNamePrefix:":",
-				desc:"h1,h2,h3,h4,h5,h6",
-			}
-		}
+		//tagName: {
+			//text:undefined,
+			//$data:{
+				//type:"text",
+				//attrName:"tagName",
+				//attrNamePrefix:":",
+				//desc:"h1,h2,h3,h4,h5,h6",
+			//}
+		//}
 	}
 
 	return tag;

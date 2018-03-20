@@ -56,7 +56,7 @@ var tagTree = [
 	]
 },
 {
-	label:"HTML元素",
+	label:"元素",
 	children: [
 		{
 			label:"文本",

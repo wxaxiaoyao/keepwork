@@ -10,19 +10,16 @@ import tag from "./tag.js";
 import tags from "../modeditor/tags.js";
 import tagEditor from "../common/tagEditor.vue";
 
-//import baseTag from "./baseTag.vue";
-//import wikiTag from "./wikiTag.vue";
-
 import richtext from "./richtext.vue";
 import wikiText from "./wikiText.vue";
 import wikiRichtext from "./wikiRichtext.vue";
 import wikiMarkdown from "./wikiMarkdown.vue";
 import wikiCarousel from "./wikiCarousel.vue";
 
+import adiComponents from "./adi.js";
+
 var components =  {
 	tag,
-	//baseTag,
-	//wikiTag,
 	richtext,
 	wikiText,
 	wikiRichtext,
@@ -30,12 +27,10 @@ var components =  {
 	wikiMarkdown,
 }
 
-
-for (var key in components) {
-	var value = components[key];
-
-	var compName = "base-" + value.name;
-	var containerCompName = value.name + "";
+function tagComp(value, key) {
+	var name = key || value.name;
+	var compName = "base-" + key;
+	var containerCompName = key + "";
 	vue.component(compName, {
 		mixins:[baseComponent, value],
 	});
@@ -56,6 +51,17 @@ for (var key in components) {
 		},
 		inheritAttrs:false,
 	});
+
+}
+
+for (var key in components) {
+	var value = components[key];
+	tagComp(value, key);
+}
+
+for (var key in adiComponents) {
+	var value = adiComponents[key];
+	tagComp(value, key);
 }
 
 

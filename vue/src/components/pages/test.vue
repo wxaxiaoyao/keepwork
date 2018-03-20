@@ -1,10 +1,7 @@
 <template>
 	<div>
 		<!--<wikiParent attr1="attr1" attr2="attr2" ></wikiParent>-->
-		<wikiTag :tag="tag">
-			<baseTag real-tag-name="h1" style="background-color:gray">hello world</baseTag>
-		</wikiTag>
-		<wikiTag :tag="tag">hello world</wikiTag>
+		<ModTitle></ModTitle>
 	</div>
 </template>
 

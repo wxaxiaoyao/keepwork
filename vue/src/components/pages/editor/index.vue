@@ -28,6 +28,7 @@ export default {
 	data: function() {
 		var tag = tags.getTag("colDiv");
 		return {
+			value:true,
 			mode:"editor",
 			text:"",
 			theme:"",
@@ -41,6 +42,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters({
+			tagId: 'getTagId',
+		}),
 		tagHtml: function() {
 			var tagHtmlStr = this.rootTag.html();
 			//console.log(tagHtmlStr);
@@ -59,7 +63,15 @@ export default {
 			return this.rootTag.getParams();
 		},
 	},
+	watch:{
+		tagId:function(tagId) {
+			this.tag = this.rootTag.findById(tagId);
+		},
+	},
 	methods: {
+		...mapActions({
+			setTagId:'setTagId',
+		}),
 		clickAddTag(tag, node, nodeComp) {
 			if (!tag.type) {
 				return;
@@ -68,6 +80,7 @@ export default {
 		},
 		selectTag(tag) {
 			this.tag = tag;
+			tag && this.setTagId(tag.tagId);
 		},
 		blur() {
 			this.tagRebuild();
@@ -123,7 +136,8 @@ export default {
 		},
 	},
 	mounted() {
-		this.tag = this.rootTag;
+		this.rootTag.styles["min-height"]="40px";
+		this.selectTag(this.rootTag);
 	},
 	created(){
 	},
@@ -140,13 +154,4 @@ export default {
 .el-col {
 	min-height: 1px;
 }
-
-.hoverTag {
-	background-color: #f0f0f0;
-}
-
-.activeTag {
-	border: 1px solid red;
-}
-
 </style>
