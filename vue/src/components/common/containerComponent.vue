@@ -37,9 +37,9 @@ export default {
 	props: {
 		tag: {
 			type:Object,
-			default: function(){
-				return tags.getTag(this.tagName || "div");
-			},
+			default: function() {
+				return tags.getTag(this.componentName || "div");
+			}
 		},
 		vars: {
 			type:Object,
@@ -90,7 +90,6 @@ export default {
 	},
 	watch:{
 		isActive: function(val, oldVal) {
-			console.log(val);
 			this.class_.actived = val;
 		},
 		classes: function(val, oldVal) {
@@ -128,7 +127,11 @@ export default {
 		},
 	},
 	created() {
-		console.log(this, this.componentName);
+		//console.log("--------------create---------------",this.tag.tagName);
+		//console.log(this, this.componentName);
+		//if (!this.tag) {
+		//	this.tag = tags.getTag(this.componentName);
+		//}
 		// 传入值具有较高优先级
 		if (this.vars) {
 			this.tag.vars = Object.assign(this.tag.vars || {}, this.vars);
@@ -156,15 +159,21 @@ export default {
 	},
 
 	beforeDestroy() {
+		
+	},
+
+	destroyed() {
 		if (!this.tag || !this.tag.parentTag) {
 			return;
 		}
+		//console.log("--------------destroy---------------",this.tag.tagName);
 		this.tag.parentTag.deleteTag(this.tag.tagId);
 	},
 
 	components: {
 		tagEditor,
 	},
+
 	inheritAttrs:false,
 }
 </script>

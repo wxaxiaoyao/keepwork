@@ -4,7 +4,7 @@
 			<el-tree :data="tagTree" :props="tagTreeProps" @node-click="clickAddTag"></el-tree>
 		</el-col>
 		<el-col :span="16">
-			<tag :tag="rootTag"><wikiText></wikiText></tag>
+			<tag :tag="rootTag"></tag>
 		</el-col>
 		<el-col :span="4">
 			<tagNav :tag="tag" v-on:selectTag="selectTag"></tagNav>
@@ -22,17 +22,19 @@ import tagEdit from "./tagEdit.vue";
 import tagTree from "./tagTree.js";
 
 import tags from "../../modeditor/tags.js";
+import adi from "../../bases/adi.js";
 
 export default {
 	name:"editor",
 	data: function() {
-		var tag = tags.getTag("colDiv");
+		//var tag = tags.getTag("colDiv");
+		var tag = adi.setMod("ModTitle").getTag();
 		return {
 			value:true,
 			mode:"editor",
 			text:"",
 			theme:"",
-			tag:null,
+			tag:tag,
 			rootTag:tag,
 			tagTree:tagTree,
 			tagTreeProps:{
@@ -65,7 +67,10 @@ export default {
 	},
 	watch:{
 		tagId:function(tagId) {
-			this.tag = this.rootTag.findById(tagId);
+			var tag = this.rootTag.findById(tagId);
+			if (tag) {
+				this.tag = tag;
+			}
 		},
 	},
 	methods: {
@@ -136,7 +141,8 @@ export default {
 		},
 	},
 	mounted() {
-		this.rootTag.styles["min-height"]="40px";
+		//this.rootTag.styles["min-height"]="40px";
+		//console.log(this.rootTag);
 		this.selectTag(this.rootTag);
 	},
 	created(){

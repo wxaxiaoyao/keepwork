@@ -1,14 +1,13 @@
 <template>
 	<div>
-		<!--<wikiParent attr1="attr1" attr2="attr2" ></wikiParent>-->
-		<ModTitle></ModTitle>
+		<tag :tag="tag"></tag>
 	</div>
 </template>
 
 <script>
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
-
+import adi from "../bases/adi.js";
 import tags from "../modeditor/tags.js";
 
 vue.component("wikiParent", {
@@ -37,7 +36,7 @@ export default {
 	name:'test',
 	data:function(){
 		return {
-			tag:tags.getTag("colDiv"),
+			tag:adi.setMod("ModTitle").getTag(),
 		}
 	},
 	props:{
@@ -57,14 +56,12 @@ export default {
 
 	methods: {
 	},
-	
-	//mixins: [tag, tagContainer],
 
 	components:{
 	},
 
 	mounted(){
-		//console.log(this);
+		console.log(this);
 	}
 }
 </script>

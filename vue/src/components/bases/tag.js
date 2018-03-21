@@ -28,10 +28,12 @@ export default {
 		compileTemplate() {
 			var tagName = this.tagName || this.tag.attrs.tagName || "div";
 			var attrStr = this.attrStr;
-			var template = '<' + tagName + attrStr + '><component v-for="x in tag.children" :tag="x" :is="x.tagName" :style="x.styles" :class="x.classes"></component></' + tagName + '>';
+			var template = '<' + tagName + attrStr + '><tag v-for="x in tag.children" :tag="x" :tagName="x.tagName"></tag></' + tagName + '>';
 			if (tagName == "img" || tagName == "br" || tagName == "input") {
 				template = '<' + tagName + attrStr + '/>';
 			}
+			//console.log(this.tag.styles, this.tag.classes, this.tag.attrs, this.tag.vars);
+			//console.log(template);
 			return vue.compile(template);
 		},
 	},

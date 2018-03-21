@@ -53,7 +53,7 @@ tag.getAttrsHtml = function(tagName){
 		attrs[attrName] = undefined;
 
 		defaultValue = defaultValue ? (" || '" + defaultValue + "'") : "";
-		str += ' ' + attrNamePrefix + attrName + '="tag.vars.' + key + "." + (value.$data.key || 'text') + defaultValue + '"';
+		str += ' ' + attrNamePrefix + attrName + '="tag.vars.' + key + (value.$data.key || '') + defaultValue + '"';
 	}
 
 	//str += " v-on:blur.native=blur";
@@ -63,6 +63,8 @@ tag.getAttrsHtml = function(tagName){
 
 		if (typeof(value) == "string") {
 			str += " " + key + '="' + value + '"';
+		} else if (typeof(value) == "number") {
+			str += " :" + key + '="' + value + '"';
 		}
 	}
 
@@ -117,7 +119,7 @@ tag.each = function(callback) {
 tag.findById = function(tagId) {
 	var self = this;
 
-	if (self.attrs.id == tagId) {
+	if (self.tagId == tagId) {
 		return self;
 	}
 
@@ -197,7 +199,6 @@ tag.clone = function() {
 	var _tag = _.cloneDeep(this);
 
 	_tag.tagId = "tagId_" + (new Date()).getTime() + "_" + tagId++;
-	_tag.attrs.id = _tag.tagId;
 	_tag.varKey = _tag.tagId;
 
 	return _tag;
@@ -219,7 +220,6 @@ function tagFactory(tagName) {
 	var _tag = _.cloneDeep(tag);
 
 	_tag.tagId = "tagId_" + (new Date()).getTime() + "_" + tagId++;
-	_tag.attrs.id = _tag.tagId;
 	_tag.tagName = tagName;
 	_tag.varKey = _tag.tagId;
 

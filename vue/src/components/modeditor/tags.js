@@ -4,8 +4,7 @@ var tags = {};
 
 // 定义容器tag
 tags.divTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "div";
+	var tag = tagFactory("div");
 	tag.name = "容器";
 
 	return tag;
@@ -44,8 +43,7 @@ tags.textTag = function() {
 
 // 定义图片tag
 tags.imgTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "img";
+	var tag = tagFactory("img");
 	tag.name = "图片";
 	
 	tag.attrs.src = "http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg";
@@ -75,8 +73,7 @@ tags.imgTag = function() {
 
 // 标题
 tags.spanTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "span";
+	var tag = tagFactory("span");
 	tag.name = "文本";
 
 	tag.vars = {
@@ -93,8 +90,7 @@ tags.spanTag = function() {
 }
 // 标题
 tags.hTag = function(hn) {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = hn;
+	var tag = tagFactory(hn);
 	tag.name = "标题";
 
 	tag.vars = {
@@ -169,8 +165,7 @@ tags.pTag = function() {
 
 // 链接
 tags.aTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "a";
+	var tag = tagFactory("a");
 	tag.name = "链接";
 
 	tag.attrList = [
@@ -215,8 +210,7 @@ tags.iTag = function(){
 
 // element ui base on vue 组件
 tags.elRowTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "el-row";
+	var tag = tagFactory("el-row");
 	tag.name = "布局行";
 
 	tag.attrList = [
@@ -242,8 +236,7 @@ tags.elRowTag = function() {
 }
 
 tags.elColTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "el-col";
+	var tag = tagFactory("el-col");
 	tag.name = "布局列";
 
 	tag.attrList = [
@@ -311,8 +304,7 @@ tags.elColTag = function() {
 }
 
 tags.elContainerTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "el-container";
+	var tag = tagFactory("el-container");
 	tag.name = "外层容器";
 	
 	tag.attrList = [
@@ -338,8 +330,7 @@ tags.elContainerTag = function() {
 }
 
 tags.elHeaderTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "el-header";
+	var tag = tagFactory("el-header");
 	tag.name = "顶栏容器";
 	
 	tag.attrList = [
@@ -365,8 +356,7 @@ tags.elHeaderTag = function() {
 }
 
 tags.elAsideTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "el-aside";
+	var tag = tagFactory("el-aside");
 	tag.name = "侧栏容器";
 	
 	tag.attrList = [
@@ -392,16 +382,14 @@ tags.elAsideTag = function() {
 }
 
 tags.elMainTag = function(){
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "el-main";
+	var tag = tagFactory("el-main");
 	tag.name = "主区域容器";
 	
 	return tag;
 }
 
 tags.elFooterTag = function(){
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "el-footer";
+	var tag = tagFactory("el-footer");
 	tag.name = "底栏容器";
 	
 	tag.attrList = [
@@ -427,8 +415,7 @@ tags.elFooterTag = function(){
 }
 
 tags.elButtonTag = function() {
-	var tag = tagFactory("tag");
-	tag.attrs.tagName = "el-button";
+	var tag = tagFactory("el-button");
 	tag.name = "按钮";
 	
 	tag.vars = {
@@ -482,49 +469,6 @@ tags.elButtonTag = function() {
 	//return tag;
 //}
 
-tags.wikiTextTag = function() {
-	var tag = tagFactory("wiki-text");
-	tag.name = "文本";
-
-	tag.vars = {
-		text: {
-			text:"文本组件",
-			//text:"",
-			$data:{
-				type:"text",
-			},
-		},
-	};
-	tag.attrs.style["min-height"] = "20px";
-	
-	return tag;
-}
-
-tags.wikiVarTag = function() {
-	var tag = tagFactory("wiki-var");
-	tag.name = "WIKI-VAR";
-
-	tag.vars = {
-		text: {
-			text:"文本组件",
-			//text:"",
-			$data:{
-				type:"text",
-			},
-		},
-		tag: {
-			text:"div",
-			//text:"",
-			$data:{
-				type:"text",
-			},
-		},
-	};
-
-	tag.attrs.style["min-height"] = "20px";
-	
-	return tag;
-}
 
 tags.wikiRichtextTag = function() {
 	var tag = tagFactory("wiki-richtext");
@@ -595,12 +539,6 @@ tags.wikiCarouselTag = function() {
 	return tag;
 }
 
-tags.containerTag = function() {
-	var tag = tagFactory("container");
-
-	return tag;
-}
-
 tags.getTagByVNode = function(vnode) {
 	var tagName = "wikiText";
 	if (vnode.componentOptions) {
@@ -615,14 +553,16 @@ tags.getTagByVNode = function(vnode) {
 
 tags.getTag = function(typ) {
 	var funcname = _.camelCase(typ) + "Tag";
+	var tag = undefined;
 
 	if (tags[funcname] && typeof(tags[funcname]) == "function") {
-		var tag = (tags[funcname])();
-		tag.type = typ;
-		return tag;
+		tag = (tags[funcname])();
+	} else {
+		tag = tagFactory(typ);
 	}
+	tag.type = typ;
 
-	return undefined;
+	return tag;
 }
 
 export default tags;

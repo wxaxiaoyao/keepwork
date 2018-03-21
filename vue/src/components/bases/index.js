@@ -59,9 +59,9 @@ for (var key in components) {
 	tagComp(value, key);
 }
 
-for (var key in adiComponents) {
-	var value = adiComponents[key];
-	tagComp(value, key);
-}
+//for (var key in adiComponents) {
+	//var value = adiComponents[key];
+	//tagComp(value, key);
+//}
 
 

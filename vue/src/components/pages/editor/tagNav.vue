@@ -10,7 +10,7 @@
 				<div v-if="tag && tag.children">
 					<div v-for="(x, $index) in tag.children" :key="x.tagId" class="navTagSubItemContainer">
 						<span @click="clickSelectTag(x)">
-							{{x.name || x.type}}
+							{{x.name || x.type || x.tagName}}
 						</span>
 						<span @click.stop="clickDeleteTag($index)"><i class="fa fa-trash-o"></i></span>
 						<span v-show="$index != 0" @click.stop="clickSwapTag($index - 1, $index)"><i class="fa fa-arrow-up"></i></span>
@@ -53,6 +53,7 @@ export default {
 	},
 	watch:{
 		tag: function(tag){
+			//console.log(tag);
 		}
 	},
 	methods: {
@@ -74,7 +75,10 @@ export default {
 			vue.set(tag.children, index1, tag.children[index2]);
 			vue.set(tag.children, index2, tmp);
 		},
-  	}
+  	},
+	created() {
+		//console.log(this.tag);
+	},
 }
 </script>
 

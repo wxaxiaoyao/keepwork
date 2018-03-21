@@ -29,9 +29,6 @@ export default {
 		}
 		var tag = this.$parent.tag;
 
-		if (this.tagName) {
-			tag.setTagName(this.tagName);
-		}
 		tag.vars = Object.assign(this.vars, tag.vars || {});
 		tag.styles = Object.assign(this.styles, tag.styles);
 		//tag.classes = Object.assign(this.classes, tag.classes);
