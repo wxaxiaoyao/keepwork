@@ -3,6 +3,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+	lintOnSave: false,
 	devServer: {
 		port:3030,
 	},
@@ -30,12 +31,12 @@ module.exports = {
 			}]),
 		]
 		//module: {
-			  //rules: [
+			//rules: [
 			//{ 
 				//test: /\.html$/, 
 				//use: 'raw-loader',
 			//},
-			 //]
+			//]
 		//}
 		//externals: {
 			//vue: {

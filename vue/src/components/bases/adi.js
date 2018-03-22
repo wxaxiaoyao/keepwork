@@ -2,11 +2,25 @@ import vue from "vue";
 import _ from "lodash";
 
 import adiComponents from "../adi/common/index.js";
+import adiComponentProps from "../adi/common/comp.properties.js";
 import mods from "../adi//mod/index.js";
 import tags from "../modeditor/tags.js";
 
 for (var key in adiComponents){
-	vue.component(key, adiComponents[key]);
+	(function(key){
+		vue.component(key, {
+			props:{
+				source: {
+					type: Object,
+					//required: true,
+					default: function(){
+						return adiComponentProps[key];
+					}
+				}
+			},
+			extends:adiComponents[key],
+		});
+	})(key);
 }
 
 var adi = {

@@ -1,13 +1,13 @@
 <template>
 	<el-row>
 		<el-col :span="4">
-			<el-tree :data="tagTree" :props="tagTreeProps" @node-click="clickAddTag"></el-tree>
+			<tagTree v-on:addTag="addTag"></tagTree>
 		</el-col>
 		<el-col :span="16">
 			<tag :tag="rootTag"></tag>
 		</el-col>
 		<el-col :span="4">
-			<tagNav :tag="tag" v-on:selectTag="selectTag"></tagNav>
+			<tagNav :rootTag="rootTag" :tag="tag" v-on:selectTag="selectTag"></tagNav>
 			<tagEdit :tag="tag"></tagEdit>
 		</el-col>
 	</el-row>
@@ -16,10 +16,9 @@
 <script>
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
-import tagList from "./tagList.vue";
 import tagNav from "./tagNav.vue";
 import tagEdit from "./tagEdit.vue";
-import tagTree from "./tagTree.js";
+import tagTree from "./tagTree.vue";
 
 import tags from "../../modeditor/tags.js";
 import adi from "../../bases/adi.js";
@@ -27,8 +26,8 @@ import adi from "../../bases/adi.js";
 export default {
 	name:"editor",
 	data: function() {
-		//var tag = tags.getTag("colDiv");
-		var tag = adi.setMod("ModTitle").getTag();
+		var tag = tags.getTag("div");
+		//var tag = adi.setMod("ModTitle").getTag();
 		return {
 			value:true,
 			mode:"editor",
@@ -36,11 +35,6 @@ export default {
 			theme:"",
 			tag:tag,
 			rootTag:tag,
-			tagTree:tagTree,
-			tagTreeProps:{
-				children:"children",
-				label:"label",
-			},
 		}
 	},
 	computed: {
@@ -77,7 +71,8 @@ export default {
 		...mapActions({
 			setTagId:'setTagId',
 		}),
-		clickAddTag(tag, node, nodeComp) {
+		addTag(tag, node, nodeComp) {
+			this.mode = "test";
 			if (!tag.type) {
 				return;
 			}
@@ -106,10 +101,6 @@ export default {
 			var parentTag = tag.parentTag;
 			var childTag = tags.getTag(tag.tagName);
 			parentTag.addTag(childTag);
-
-			//setTimeout(function(){
-			//	self.tagRebuild();
-			//});
 		},
 		mouseup(){
 			//console.log(getSelection());
@@ -149,9 +140,9 @@ export default {
 	},
 
 	components: {
-		tagList,
 		tagNav,
 		tagEdit,
+		tagTree,
 	},
 }
 </script>

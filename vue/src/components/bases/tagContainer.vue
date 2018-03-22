@@ -4,12 +4,9 @@
 		@mouseover.stop="mouseover" 
 		@mouseout.stop="mouseout"> 
 		<tagEditor v-if='isShowEditor' v-on:result='handleResult' :tag='tag'></tagEditor>
-		<component :is="componentName" v-show="isShowComponent" 
-			:style="compStyle" :class="compClass" 
-			:tag="tag" :vars="tag.vars || vars" 
-			v-bind="$attrs" v-on="$listeners">
-			<slot></slot>
-		</component>
+		<!--<div v-show="isShowComponent">-->
+		<slot v-show="isShowComponent"></slot>
+		<!--</div>-->
 	</div>
 </template>
 
@@ -35,33 +32,8 @@ export default {
 		}
 	},
 	props: {
-		tagName: {
-			type:String,
-			//default: "div",
-		},
-		tag: {
-			type:Object,
-			default: function() {
-				//console.log(this.tagName, this.componentName, this);
-				return tags.getTag(this.tagName || this.componentName || "div");
-			}
-		},
-		vars: {
-			type:Object,
-		},
-		styles:{
-			type: Object,
-			default: function() {
-				return {
-					//"background-color":"gray",
-				};
-			}
-		},
-		classes: {
-			type: null,
-			default: function(){
-				return {};
-			},
+		tag:{
+			type:null,
 		},
 	},
 	computed: {
@@ -75,7 +47,6 @@ export default {
 			if (this.getMode != _const.EDITOR_MODE_EDITOR) {
 				return false;
 			}
-
 			return true;
 		},
 		isActive() {
@@ -128,64 +99,30 @@ export default {
 			setHoverTagId: "setHoverTagId",
 		}),
 		handleResult(payload) {
-			console.log(payload, this);	
 			this.tag.vars.text.text = payload;
 		},
 		mouseover(){
+			if (!this.tag) {
+				return;
+			}
 			this.setHoverTagId(this.tag.tagId);
-			//this.class_.hover = true;
 		},
 		mouseout(){
-			//this.setHoverTagId(undefined);
-			//this.class_.hover = false;
 		},
 		click() {
 			this.setTagId(this.tag.tagId);
 		},
 	},
 	created() {
-		//console.log("--------------create---------------",this.tag.tagName);
-		//console.log(this, this.componentName);
-		//if (!this.tag) {
-		//	this.tag = tags.getTag(this.componentName);
-		//}
-		// 传入值具有较高优先级
-		if (this.vars) {
-			this.tag.vars = Object.assign(this.tag.vars || {}, this.vars);
-		}
-		this.tag.styles = Object.assign(this.tag.styles, this.styles);
-		this.tag.classes = Object.assign(this.tag.classes, this.classes);
 	},
 
 	mounted() {
-		var self = this;
-		var $parent = self.$parent;
-		while($parent && !($parent.tag && $parent.tag.__flag__)) {
-			$parent = $parent.$parent;
-		}
-
-		if (!$parent) {
-			return;
-		}
-
-		if ($parent.tag.tagId == self.tag.tagId) {
-			return;
-		}
-
-		$parent.tag.addTag(self.tag);
 	},
 
 	beforeDestroy() {
-		
 	},
 
 	destroyed() {
-		if (!this.tag || !this.tag.parentTag) {
-			return;
-		}
-		//console.log("--------------destroy---------------",this.tag.tagName);
-		// 只能手动删除tag
-		//this.tag.parentTag.deleteTag(this.tag.tagId);
 	},
 
 	components: {

@@ -37,6 +37,7 @@
 			</div>
 		</el-tab-pane>
 		<el-tab-pane label="变量">
+			<JsonEditor :objData="jsonData" v-model="jsonData" ></JsonEditor>
 			<div v-for="(value, key) in vars">
 				<div class="attrInputContainer">
 					<input type="text" :placeholder="key" v-model="value.text"/>
@@ -48,10 +49,12 @@
 
 <script>
 import vue from "vue";
+import _ from "lodash";
 
 export default {
 	data: function() {
 		return {
+			jsonData:{},
 			attrKey:"",
 			attrValue:"",
 			styleKey:"",
@@ -84,6 +87,12 @@ export default {
 		},
 	},
 	watch: {
+		jsonData: function(val) {
+			if (!this.tag) {
+				return;
+			}
+			this.tag.vars = _.merge(this.tag.vars || {}, val);
+		},
 		tag: function(tag) {
 			if (!tag) {
 				return;
@@ -93,6 +102,9 @@ export default {
 			this.classes = tag.classes;
 		    this.vars = tag.vars;	
 			this.attrList = tag.attrList;
+
+			_.merge(this.jsonData, this.vars || {});
+			console.log("----------", this.jsonData);
 		},
 	},
 	methods: {

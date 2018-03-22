@@ -90,6 +90,39 @@ var tagTree = [
 	]
 },
 {
+	label:"ADI组件",
+	children: [
+		{
+			label:"按钮",
+			type:"AdiButton",
+		},
+		{
+			label:"标签",
+			type:"AdiLabel",
+		},
+		{
+			label:"标题",
+			type:"AdiTitle",
+		},
+		{
+			label:"轮播",
+			type:"AdiImgLoop",
+		},
+		{
+			label:"多媒体",
+			type:"AdiMedia",
+		},
+		{
+			label:"菜单",
+			type:"AdiMedia",
+		},
+		{
+			label:"Markdown",
+			type:"AdiMarkdown",
+		},
+	],
+},
+{
 	label:"ELEMENTUI",
 	children:[
 		{

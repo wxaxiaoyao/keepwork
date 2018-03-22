@@ -1,6 +1,9 @@
-
+import _ from "lodash";
 import vue from "vue";
+import {mapActions, mapGetters} from "vuex";
 import tags from "../modeditor/tags.js";
+import _const from "../../lib/const.js";
+import tagContainer from "./tagContainer.vue";
 
 export default {
 	name: "tag",
@@ -11,29 +14,37 @@ export default {
 	props:{
 		tag: {
 			type:Object,
+			default: function() {
+				return tags.getTag("div");
+			}
 		},
 		tagName: {
 			type:String,
-			//default:"div",
+			default:"div",
 		},
 	},
 
 	watch:{
 	},
 	computed: {
+		...mapGetters({
+			mode: "getMode",
+		}),
 		attrStr(){
-			var tagName = this.tagName || this.tag.attrs.tagName || "div";
-			return this.tag.getAttrsHtml(tagName);
+			return this.tag.getAttrsHtml(this.tagName);
 		},
 		compileTemplate() {
-			var tagName = this.tagName || this.tag.attrs.tagName || "div";
+			var tagName = this.tagName;
 			var attrStr = this.attrStr;
-			var template = '<' + tagName + attrStr + '><tag v-for="x in tag.children" :tag="x" :tagName="x.tagName"></tag></' + tagName + '>';
+			var template = '<' + tagName + attrStr + '>{{tag.text || ""}}<tag v-for="x in tag.children" :tag="x" :tagName="x.tagName"></tag></' + tagName + '>';
 			if (tagName == "img" || tagName == "br" || tagName == "input") {
 				template = '<' + tagName + attrStr + '/>';
 			}
 			//console.log(this.tag.styles, this.tag.classes, this.tag.attrs, this.tag.vars);
-			//console.log(template);
+			if (this.mode == _const.EDITOR_MODE_EDITOR) {
+				template = "<tagContainer :tag='tag'>" + template + "</tagContainer>";
+			}
+			console.log(template);
 			return vue.compile(template);
 		},
 	},
@@ -54,9 +65,38 @@ export default {
 	methods: {
 	},
 	created(){
+		var tag = this.tag;
 		var vnodes = this.$slots.default || [];
-		for (var i = 0; i < vnodes.length; i++) {
-			this.tag.addTag(tags.getTagByVNode(vnodes[i]));
+		tag.setTagName(this.tagName);
+		//console.log(vnodes);
+		var _vnodeToTag = function(tag, vnodes) {
+			if (!vnodes) {
+				return;
+			}
+			for (var i = 0; i < vnodes.length; i++) {
+				var vnode = vnodes[i];
+				var options = vnode.componentOptions;
+
+				if (!options) {
+					tag.text = vnode.text;
+					continue;
+				}
+
+				var tagName = options.tag;
+				var subtag = tags.getTag(tagName);
+				_.merge(subtag.attrs, options.propsData);					
+				if (vnode.data && vnode.data.attrs) {
+					_.merge(subtag.attrs, vnode.data.attrs);					
+				}
+				tag.addTag(subtag);
+
+				_vnodeToTag(subtag, options.children);
+			}
 		}
-	}
+
+		_vnodeToTag(tag, vnodes);
+	},
+	components: {
+		tagContainer,
+	},
 }

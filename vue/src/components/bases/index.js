@@ -27,37 +27,41 @@ var components =  {
 	wikiMarkdown,
 }
 
-function tagComp(value, key) {
-	var name = key || value.name;
-	var compName = "base-" + key;
-	var containerCompName = key + "";
-	vue.component(compName, {
-		mixins:[baseComponent, value],
-	});
-
-	// 组件上容器
-	vue.component(containerCompName, {
-		props:{
-			componentName: {
-				type:String,
-				default:compName,
-			},
-		},
-
-		mixins:[containerComponent],
-
-		components: {
-			tagEditor,
-		},
-		inheritAttrs:false,
-	});
-
-}
-
 for (var key in components) {
-	var value = components[key];
-	tagComp(value, key);
+	vue.component(key, components[key]);
 }
+
+//function tagComp(value, key) {
+	//var name = key || value.name;
+	//var compName = "base-" + key;
+	//var containerCompName = key + "";
+	//vue.component(compName, {
+		//mixins:[baseComponent, value],
+	//});
+
+	//// 组件上容器
+	//vue.component(containerCompName, {
+		//props:{
+			//componentName: {
+				//type:String,
+				//default:compName,
+			//},
+		//},
+
+		//mixins:[containerComponent],
+
+		//components: {
+			//tagEditor,
+		//},
+		//inheritAttrs:false,
+	//});
+
+//}
+
+//for (var key in components) {
+	//var value = components[key];
+	//tagComp(value, key);
+//}
 
 //for (var key in adiComponents) {
 	//var value = adiComponents[key];

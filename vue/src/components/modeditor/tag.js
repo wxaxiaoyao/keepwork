@@ -61,6 +61,10 @@ tag.getAttrsHtml = function(tagName){
 	for (var key in attrs) {
 		var value = attrs[key];
 
+		if (!value) {
+			continue;
+		}
+
 		if (typeof(value) == "string") {
 			str += " " + key + '="' + value + '"';
 		} else if (typeof(value) == "number") {

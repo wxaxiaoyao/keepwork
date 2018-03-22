@@ -33,14 +33,6 @@ tags.colDivTag = function() {
 	return tag;
 }
 
-// 文本tag
-tags.textTag = function() {
-	var tag = tagFactory("wikiText");
-	tag.name = "文本";
-
-	return tag;
-}
-
 // 定义图片tag
 tags.imgTag = function() {
 	var tag = tagFactory("img");
@@ -64,6 +56,7 @@ tags.imgTag = function() {
 				attrName:"src",
 				attrNamePrefix:":",
 				desc:"图片地址",
+				key:".text",
 			}
 		},
 	}
@@ -71,7 +64,7 @@ tags.imgTag = function() {
 	return tag;
 }
 
-// 标题
+// 文本
 tags.spanTag = function() {
 	var tag = tagFactory("span");
 	tag.name = "文本";
@@ -82,6 +75,7 @@ tags.spanTag = function() {
 			$data: {
 				type:"text",  // 文件变量  用于标签内容显示
 				attrName:"v-text",
+				key:".text",
 			}
 		},
 	}
@@ -99,6 +93,7 @@ tags.hTag = function(hn) {
 			$data: {
 				type:"text",  // 文件变量  用于标签内容显示
 				attrName:"v-text",
+				key:".text",
 			}
 		},
 		//tagName: {
@@ -425,6 +420,7 @@ tags.elButtonTag = function() {
 			$data: {
 				type:"text",  // 文件变量  
 				attrName:"v-text",
+				key:".text",
 			}
 		}
 	};
@@ -537,18 +533,6 @@ tags.wikiCarouselTag = function() {
 	};
 	
 	return tag;
-}
-
-tags.getTagByVNode = function(vnode) {
-	var tagName = "wikiText";
-	if (vnode.componentOptions) {
-		tagName = vnode.componentOptions.tag;
-	}
-	//console.log(vnode, tagName);
-	var tag = tagFactory(tagName);
-	tag.name =  tagName;
-
-	return tag;	
 }
 
 tags.getTag = function(typ) {

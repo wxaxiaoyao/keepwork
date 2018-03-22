@@ -1,5 +1,14 @@
 <template>
 	<div>
+		<div class="c1">
+			<div class="c2">
+				test
+			</div>
+		</div>
+		<div class="c2">
+			test
+		</div>
+		<JsonEditor :objData="json" v-model="json"></JsonEditor>
 		<tag :tag="tag"></tag>
 	</div>
 </template>
@@ -37,6 +46,7 @@ export default {
 	data:function(){
 		return {
 			tag:adi.setMod("ModTitle").getTag(),
+			json:{},
 		}
 	},
 	props:{
@@ -66,7 +76,12 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
+.c1 {
+	.c2 {
+		background-color:gray;
+	}
+}
   .el-row {
     margin-bottom: 20px;
     &:last-child {
