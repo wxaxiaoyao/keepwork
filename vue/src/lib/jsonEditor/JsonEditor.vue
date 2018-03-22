@@ -1,27 +1,34 @@
 <template>
-    <json-view :parsedData="parsedData" v-model="parsedData"></json-view>
+    <json-view :parsedData="parsedData" v-model="jsonData"></json-view>
 </template>
 
 
 <script>
+import JsonView from "./JsonView.vue";
+Array.prototype.rmIndex = function (index) {
+  this.splice(index, 1)
+  return this
+}
+
 export default {
     name: 'JsonEditor',
     props: { 'objData': { required: true } },
     data: function() {
         return {
-            'parsedData': [],
+			'jsonData': [],
         }
     },
+	computed: {
+		parsedData() {
+			return this.jsonParse(this.objData);
+		},
+	},
     created: function() {
-        this.parsedData = this.jsonParse(this.objData)
     },
     watch: {
-		'objData': function(newValue, oldValue) {
-			this.parsedData = this.jsonParse(this.objData)
-		},
-        'parsedData': {
+        'jsonData': {
             handler(newValue, oldValue) {
-                this.$emit('input', this.makeJson(this.parsedData))
+				this.$emit('input', this.makeJson(this.parsedData))
 　　　　　　  },
 　　　　    deep: true
 　　　　}   
@@ -173,7 +180,10 @@ export default {
 
             return revertMain(dataArr)
         }
-    }
+    },
+	components:{
+		JsonView,	
+	},
 }
 
 </script>

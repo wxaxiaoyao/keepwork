@@ -47,6 +47,9 @@ tag.getAttrsHtml = function(tagName){
 	// 具体指定参数到属性
 	for (var key in vars) {
 		var value = vars[key];
+		if (!value.$data) {
+			continue;
+		}
 		var attrName = value.$data.attrName;
 		var attrNamePrefix = value.$data.attrNamePrefix || "";
 		var defaultValue = attrs[attrName];
