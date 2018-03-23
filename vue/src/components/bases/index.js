@@ -28,7 +28,10 @@ var components =  {
 }
 
 for (var key in components) {
-	vue.component(key, components[key]);
+	var component = components[key];
+	vue.component(key, {
+		mixins:[baseComponent, component],
+	});
 }
 
 //function tagComp(value, key) {

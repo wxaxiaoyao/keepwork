@@ -4,11 +4,6 @@
 
 
 <script>
-import JsonView from "./JsonView.vue";
-Array.prototype.rmIndex = function (index) {
-  this.splice(index, 1)
-  return this
-}
 
 export default {
     name: 'JsonEditor',
@@ -182,7 +177,6 @@ export default {
         }
     },
 	components:{
-		JsonView,	
 	},
 }
 

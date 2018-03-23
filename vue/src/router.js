@@ -1,13 +1,11 @@
 import Vue from 'vue';
 import VueRouter from "vue-router";
 
-import HelloWorld from "./components/HelloWorld.vue";
 import test from "./components/pages/test.vue";
 import uieditor from "./components/pages/uieditor.vue";
 import editor from "./components/pages/editor";
 
 Vue.use(VueRouter);
-
 
 export default new VueRouter({
 	mode:"history",

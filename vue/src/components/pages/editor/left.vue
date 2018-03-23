@@ -1,0 +1,51 @@
+<template>
+	<el-tabs class="left-el-tabs" type="border-card" tab-position="left">
+		<el-tab-pane label="文件">
+			文件列表
+		</el-tab-pane>	
+		<el-tab-pane label="元素">
+			<tagTree v-on:addTag="addTag"></tagTree>
+		</el-tab-pane>	
+		<el-tab-pane label="编辑">
+			<tagNav :rootTag="rootTag"></tagNav>
+			<tagEdit :rootTag="rootTag"></tagEdit>
+		</el-tab-pane>	
+		<el-tab-pane label="导出">
+			导出ADI配置文件
+			导出模块源码
+		</el-tab-pane>	
+	</el-tabs>
+
+</template>
+
+<script>
+import tagTree from "./tagTree.vue";
+import tagNav from "./tagNav.vue";
+import tagEdit from "./tagEdit.vue";
+
+export default {
+	props: ["rootTag"],
+	components: {
+		tagTree,
+		tagNav,
+		tagEdit,
+	},
+	methods: {
+		addTag(tag){
+			this.$emit("addTag", tag);
+		},
+	},
+}
+</script>
+
+<style>
+.el-tabs {
+	height:100%;
+}
+.left-el-tabs .el-tabs__content {
+	padding:0px;
+}
+.left-el-tabs .el-tabs__header.is-left {
+	margin-right:0px;
+}
+</style>

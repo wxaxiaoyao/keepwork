@@ -211,6 +211,22 @@ tag.clone = function() {
 	return _tag;
 }
 
+tag.getNextTag = function() {
+	var self = this;
+	var parentTag = self.parentTag;
+	if (!parentTag) {
+		return undefined;
+	}
+
+	var index = parentTag.children.findIndex(t => t.tagId === self.tagId);
+
+	if (index < 0 || (index + 1) >= parentTag.children.length) {
+		return undefined;
+	}
+
+	return parentTag.children[index + 1];
+}
+
 tag.setTagName = function(tagName){
 	this.tagName = tagName;
 }

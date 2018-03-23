@@ -77,21 +77,6 @@ export default {
 			}
 			this.oldHoverTagId = oldTagId;
 		},
-		classes: function(val, oldVal) {
-			oldVal = oldVal || {};
-			for (var key in oldVal) {
-				delete this.tag.classes[key];
-			}
-			this.tag.classes = Object.assign(this.tag.classes, this.classes);
-		},
-		styles: function(val, oldVal) {
-			this.tag.styles = Object.assign(this.tag.styles, this.styles);
-		},
-		vars: function(val, oldVal) {
-			if (this.vars) {
-				this.tag.vars = Object.assign(this.tag.vars || {}, this.vars);
-			}
-		},
 	},
 	methods: {
 		...mapActions({

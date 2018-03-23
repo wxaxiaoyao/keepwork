@@ -44,7 +44,6 @@
 
 <script>
 import ItemAddForm from './ItemAddForm.vue'
-import ArrayView from "./ArrayView.vue";
 
 export default {
     name: 'JsonView',
@@ -60,6 +59,7 @@ export default {
 	watch: {
 		parsedData: function(val) {
 			this.flowData = val;
+            this.$emit('input', val);
 		}
 	},
 
@@ -69,7 +69,6 @@ export default {
 
     components: {
         'item-add-form': ItemAddForm,
-		ArrayView,
     },
     methods: {
         'delItem': function (parentDom, item, index) {

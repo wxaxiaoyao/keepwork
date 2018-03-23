@@ -1,9 +1,5 @@
 <template>
-	<el-tabs type="border-card">
-		<el-tab-pane label="元素列表">
-			<el-tree :data="tagTree" :props="tagTreeProps" @node-click="clickSelectTag"></el-tree>
-		</el-tab-pane>	
-	</el-tabs>
+	<el-tree :data="tagTree" :props="tagTreeProps" @node-click="clickSelectTag"></el-tree>
 </template>
 
 <script>

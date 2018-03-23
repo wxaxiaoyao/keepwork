@@ -35,6 +35,11 @@ export default {
 	data:function() {
 		return {
 			isFocus:false,
+			vars: {
+				text:{
+					text:"文本",
+				},
+			},
 		};
 	},
 	computed: {
@@ -45,16 +50,6 @@ export default {
 	},
 	//props:["params"],
 	props:{
-		params:{
-			type:Object,
-			default: function() {
-				return {
-					text: {
-						text:"文本组件",
-					},
-				};
-			},
-		},
 	},
 	watch:{
 	},

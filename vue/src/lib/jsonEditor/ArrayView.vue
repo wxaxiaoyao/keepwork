@@ -59,7 +59,7 @@ export default {
         }
     },
     components: {
-        'item-add-form': ItemAddForm
+        ItemAddForm,
     },
     methods: {
         'delItem': function (parentDom, item, index) {
@@ -99,7 +99,7 @@ export default {
             this.$emit('input', this.flowData)
             this.cancelNewItem()
         }
-    }
+    },
 }
 
 </script>

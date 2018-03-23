@@ -3,7 +3,8 @@ import _const from "../lib/const.js";
 const state = {
 	tagId:null, // 当前tag id
 	hoverTagId:null, // 鼠标悬浮tag id
-	mode:_const.EDITOR_MODE_EDITOR,
+	//mode:_const.EDITOR_MODE_EDITOR,
+	mode:_const.EDITOR_MODE_NORMAL,
 };
 
 const getters = {

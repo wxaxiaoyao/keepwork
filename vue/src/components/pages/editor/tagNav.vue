@@ -1,5 +1,5 @@
 <template>
-	<el-tabs type="border-card">
+	<el-tabs class="tag-nav-el-tabs" type="border-card">
 		<!--<el-tab-pane label="Tag导航">-->
 			<!--<div>-->
 				<!--<div style="cursor:pointer">-->
@@ -21,7 +21,7 @@
 		<!--</el-tab-pane>-->
 		<el-tab-pane label="TagTree">
 			<el-tree :data="[rootTag]" :props="treeProps" :expand-on-click-node="false" :highlight-current="true" 
-				node-key="tagId" ref="tree" @node-click="clickSelectTag">
+				node-key="tagId" ref="tree" @node-click="clickSelectTag" :default-expand-all="true">
 				<span @mouseover="mouseover(data)" class="custom-tree-node" slot-scope="{ node, data }">
 					<el-button size="mini" type="text" @click="clickSelectTag(data, node)">{{node.label}}</el-button>
 					<el-button size="mini" type="text" @click.stop="clickDeleteTag(data)" v-show="isShowDeleteIcon(data)">DELETE</el-button>
@@ -106,7 +106,7 @@ export default {
 		},
 		clickSelectTag(tag, node) {
 			this.setTagId(tag.tagId);
-			this.$emit("selectTag", tag);
+			//this.$emit("selectTag", tag);
 		},
 		isShowDeleteIcon(tag) {
 			if (!this.rootTag || this.rootTag.tagId == tag.tagId) {
@@ -140,6 +140,12 @@ export default {
 			var parentTag = tag.parentTag;
 			var index = parentTag.children.findIndex(t => t.tagId === tag.tagId);			
 			parentTag.children.splice(index,1);
+
+			if (index == parentTag.children.length) {
+				this.setTagId(parentTag.tagId);
+			} else {
+				this.setTagId(parentTag.children[index].tagId);
+			}
 		},
 		clickSwapTag(tag, offset) {
 			var parentTag = tag.parentTag;
@@ -174,6 +180,9 @@ export default {
 </script>
 
 <style>
+.tag-nav-el-tabs .el-tabs__content {
+	padding:0px;
+}
 .navTagSubItemContainer {
 	paddiv-left:20px;
 }

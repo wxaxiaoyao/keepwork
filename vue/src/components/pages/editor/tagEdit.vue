@@ -1,14 +1,12 @@
 <template>
 	<el-tabs type="border-card">
-		<el-tab-pane label="属性">
-			<div class="attrInputContainer">
-				<input type="text" style="width:30%" placeholder="属性" v-model="attrKey" @blur="attrKeyBlur()"/>
-				<input type="text" style="width:60%" placeholder="值" v-model="attrValue" @blur="attrValueBlur()"/>
-			</div>
-			<div class="attrInputContainer" v-for="x in attrList" :key="x.id">
-				<span>{{x.name || x.attrName}}</span>	
-				<input type="text" :placeholder="x.desc || x.name || x.attrName" v-model="attrs[x.attrName]"/>
-			</div>
+		<el-tab-pane label="变量">
+			<JsonEditor :objData="jsonData" v-model="tag.vars" ></JsonEditor>
+			<!--<div v-for="(value, key) in vars">-->
+				<!--<div class="attrInputContainer">-->
+					<!--<input type="text" :placeholder="key" v-model="value.text"/>-->
+				<!--</div>-->
+			<!--</div>-->
 		</el-tab-pane>
 		<el-tab-pane label="样式">
 			<div class="attrInputContainer">
@@ -36,12 +34,14 @@
 				<input type="text" placeholder="内边距[padding]" v-model="style['padding']"/>
 			</div>
 		</el-tab-pane>
-		<el-tab-pane label="变量">
-			<JsonEditor :objData="jsonData" v-model="tag.vars" ></JsonEditor>
-			<div v-for="(value, key) in vars">
-				<div class="attrInputContainer">
-					<input type="text" :placeholder="key" v-model="value.text"/>
-				</div>
+		<el-tab-pane label="属性">
+			<div class="attrInputContainer">
+				<input type="text" style="width:30%" placeholder="属性" v-model="attrKey" @blur="attrKeyBlur()"/>
+				<input type="text" style="width:60%" placeholder="值" v-model="attrValue" @blur="attrValueBlur()"/>
+			</div>
+			<div class="attrInputContainer" v-for="x in attrList" :key="x.id">
+				<span>{{x.name || x.attrName}}</span>	
+				<input type="text" :placeholder="x.desc || x.name || x.attrName" v-model="attrs[x.attrName]"/>
 			</div>
 		</el-tab-pane>
 	</el-tabs>
@@ -50,7 +50,7 @@
 <script>
 import vue from "vue";
 import _ from "lodash";
-import JsonEditor from "../../../lib/jsonEditor/JsonEditor.vue";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
 	data: function() {
@@ -66,12 +66,19 @@ export default {
 			attrList:[],
 		}
 	},
-	props: {
-		tag: {
-			type:Object,
-		}
-	},
+	props: ["rootTag"],
 	computed: {
+		...mapGetters({
+			tagId: 'getTagId',
+			getMode: "getMode",
+		}),
+		tag(){
+			if (!this.rootTag) {
+				return {};
+			}
+
+			return this.rootTag.findById(this.tagId) || {};
+		},
 		jsonData() {
 			return this.vars || {};
 		},
@@ -90,13 +97,6 @@ export default {
 		},
 	},
 	watch: {
-		jsonData: function(val) {
-			if (!this.tag) {
-				return;
-			}
-			this.tag.vars = _.merge(this.tag.vars || {}, val);
-		},
-	
 		tag: function(tag) {
 			if (!tag) {
 				return;
@@ -106,18 +106,13 @@ export default {
 			this.classes = tag.classes;
 		    this.vars = tag.vars;	
 			this.attrList = tag.attrList;
-
-			_.merge(this.jsonData, this.vars || {});
-			console.log("----------", this.jsonData);
 		},
 	},
 	methods: {
   	},
 	created() {
-		console.log(this.tag);
 	},
 	components:{
-		JsonEditor,
 	}
 }
 </script>

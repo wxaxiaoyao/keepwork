@@ -2,35 +2,37 @@
 import _ from "lodash";
 
 export default {
+	data: function() {
+		return {
+		}
+	},
 	props: {
-		vars: {
+		tag: {
 			type:Object,
-			default: function(){
-				return {
-				};
-			},
-		},
-		styles: {
-			type:Object,
-			default: function(){
-				return {};
-			},
-		},
-		classes: {
-			type:null,
-			default: function(){
-				return {};
-			},
 		},
 	},
+	watch: {
+		"tag.vars": function(val) {
+			this.vars = val;
+		}
+	},
 	created(){
-		if (!this.$parent || !this.$parent.tag) {
+		if (!this.tag) {
 			return;
 		}
-		var tag = this.$parent.tag;
+		var tag = this.tag;
 
-		tag.vars = Object.assign(this.vars, tag.vars || {});
-		tag.styles = Object.assign(this.styles, tag.styles);
-		//tag.classes = Object.assign(this.classes, tag.classes);
+		if (this.vars) {
+			console.log(this.vars, tag.vars);
+			tag.vars = _.merge(this.vars, tag.vars || {});
+		} 
+
+		//if (this.styles) {
+			//tag.styles = Object.assign(this.styles, tag.styles || {});
+		//}
+
+		//if (this.classes) {
+			//tag.classes = Object.assign(this.classes, tag.classes || {});
+		//}
 	}
 }
