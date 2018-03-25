@@ -1,4 +1,5 @@
 import _ from 'lodash';
+
 import tagFactory from "./tag.js";
 var tags = {};
 
@@ -65,13 +66,13 @@ tags.imgTag = function() {
 }
 
 // 文本
-tags.spanTag = function() {
+tags.spanTag = function(text) {
 	var tag = tagFactory("span");
 	tag.name = "文本";
 
 	tag.vars = {
 		text: {
-			text:"文本",
+			text: text || "文本",
 			$data: {
 				type:"text",  // 文件变量  用于标签内容显示
 				attrName:"v-text",
@@ -532,6 +533,37 @@ tags.wikiCarouselTag = function() {
 		}
 	};
 	
+	return tag;
+}
+
+tags.htmlTag = function(html) {
+	var tag = this.getTag("div");
+	tag.vars = {
+		text: {
+			text: html || "文本",
+			$data: {
+				type:"text",  // 文件变量  用于标签内容显示
+				attrName:"v-html",
+				key:".text",
+			}
+		},
+	}
+
+	return tag;
+}
+
+tags.wikiMdTag = function(text) {
+	var tag = tagFactory("wiki-md");
+	tag.vars = {
+		text: {
+			text: text || "markdwon文本",
+			$data: {
+				type:"text",  // 文件变量  用于标签内容显示
+				key:".text",
+			}
+		},
+	}
+
 	return tag;
 }
 

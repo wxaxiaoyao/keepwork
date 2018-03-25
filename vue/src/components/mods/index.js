@@ -1,6 +1,6 @@
 
-import test from "./test.js";
+import modTest from "./modTest.js";
 
 export default {
-	test,	
+	modTest,
 };

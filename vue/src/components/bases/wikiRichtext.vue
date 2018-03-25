@@ -26,7 +26,6 @@
 <script>
 import vue from "vue";
 import markdown from "../../lib/markdown/markdown.js";
-import global from "../../global.js";
 
 var md = markdown();
 

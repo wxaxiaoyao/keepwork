@@ -2,35 +2,20 @@
 import vue from "vue";
 import _ from "lodash";
 
-import baseComponent from "../common/baseComponent.js";
-import containerComponent from "../common/containerComponent.vue";
-
-import tag from "./tag.js";
-
-import tags from "../modeditor/tags.js";
-import tagEditor from "../common/tagEditor.vue";
-
-import richtext from "./richtext.vue";
-import wikiText from "./wikiText.vue";
-import wikiRichtext from "./wikiRichtext.vue";
-import wikiMarkdown from "./wikiMarkdown.vue";
+import common from "./common.js";
+import wikiMd from "./wikiMd.vue";
 import wikiCarousel from "./wikiCarousel.vue";
-
 import adiComponents from "./adi.js";
 
 var components =  {
-	tag,
-	richtext,
-	wikiText,
-	wikiRichtext,
+	wikiMd,
 	wikiCarousel,
-	wikiMarkdown,
 }
 
 for (var key in components) {
 	var component = components[key];
 	vue.component(key, {
-		mixins:[baseComponent, component],
+		mixins:[common, component],
 	});
 }
 

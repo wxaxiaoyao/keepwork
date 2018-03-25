@@ -18,7 +18,6 @@
 import vue from "vue";
 import markdown from "../../lib/markdown/markdown.js";
 import tags from "../modeditor/tags.js";
-import global from "../../global.js";
 
 var md = markdown();
 
@@ -73,7 +72,7 @@ export default {
 			//console.log(event.target.innerHTML);
 			//this.params.text.text = event.target.innerHTML;
 			console.log("------------");
-			global.objectEvent.dispatchEvent("innerHTMLChange",{event:event});
+			//global.objectEvent.dispatchEvent("innerHTMLChange",{event:event});
 			this.tagRebuild();
 		},
 		keyup(){

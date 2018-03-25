@@ -17,6 +17,7 @@
     "lodash": "^4.17.5",
     "markdown-it": "^8.4.1",
     "mavon-editor": "^2.5.2",
+    "node-gitlab-api": "^2.2.6",
     "vue": "^2.5.13",
     "vue-codemirror": "^4.0.4",
     "vue-json-edit": "^1.1.5",

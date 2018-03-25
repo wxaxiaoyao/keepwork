@@ -101,10 +101,10 @@ export default {
 			if (!tag) {
 				return;
 			}
-			this.style = tag.styles;
-			this.attrs = tag.attrs;
-			this.classes = tag.classes;
-		    this.vars = tag.vars;	
+			this.style = tag.styles || {};
+			this.attrs = tag.attrs || {};
+			this.classes = tag.classes || {};
+			this.vars = tag.vars || {};	
 			this.attrList = tag.attrList;
 		},
 	},

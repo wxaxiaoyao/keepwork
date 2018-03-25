@@ -9,7 +9,6 @@ module.exports = {
 	},
 	configureWebpack: {
 		entry:{
-			test:"./src/components/mods/test.js",
 		},
 		output:{
 			//libraryTarget: 'umd',

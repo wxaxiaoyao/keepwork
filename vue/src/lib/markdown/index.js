@@ -1,15 +1,19 @@
-import markdown from "./md.js";
+import markdown from "./markdown.js";
 import mdconf from "./mdconf.js";
 
 // md 构造函数
 function mdwiki(options) {
 	options = options || {};
 
-	var md = markdown(options);
-
+	var md = {
+		md:markdown(options),
+		template:{
+			blocklist:[],
+		}
+	}
 
 	md.getBlockList = function() {
-		return md.template.blockList;
+		return md.template.blocklist;
 	}
 	// md.bind
 	md.parseBlock = function (block) {
@@ -18,10 +22,10 @@ function mdwiki(options) {
 		var content = token.content;
 		var text = token.text;
 		var line = text.split("\n")[0];
-		var isWikiBlock = token.tag == "pre"  && /^```@([\w_\/]+)/.test(line);
+		var isMod = token.tag == "pre"  && /^```@([\w_\/]+)/.test(line);
 
-		block.isWikiBlock = isWikiBlock;
-		if (!isWikiBlock) {
+		block.isMod = isMod;
+		if (!isMod) {
 			//block.blockUrl = undefined;
 			block.isTemplate = false;
 			block.modName = undefined;
@@ -46,23 +50,20 @@ function mdwiki(options) {
 			block.isTemplate = modName == "template";
 			block.templateContent = block.isTemplate ? templateContent : undefined;
 
-			if (typeof(block.modParams) == "string" && !block.modParams.trim()) {
-				block.modParams = undefined;
-			}
 		}
 	}
 
 	md.parse = function (text, theme) {
 		theme = theme || "";
 		text = theme + '\n' + text;
-		themeLineCount = theme.split("\n").length;
-
-		var tokenList = md.md.parse(text);
-		var blockList = md.template.blockList;
+		var self = this;
+		var themeLineCount = theme.split("\n").length;
+		var tokenList = self.md.parse(text);
+		var blocklist = self.template.blocklist;
 		var template = undefined;
 		for (var i = 0; i < tokenList.length; i++) {
 			var token = tokenList[i];
-			var block = blockList[i] || {};
+			var block = blocklist[i] || {};
 
 			block.token = token;
 			block.mdName = md.mdName;
@@ -76,16 +77,16 @@ function mdwiki(options) {
 			}
 			block.token.start = block.token.start - themeLineCount;
 			block.token.end = block.token.end - themeLineCount;
-			blockList[i] = block;
+			blocklist[i] = block;
 			//console.log(blcok);
 			if (block.isTemplate) {
 				template = block;
 			}
 		}
 
-		var size = blockList.length;
+		var size = blocklist.length;
 		for (var i = tokenList.length; i < size; i++) {
-			blockList.pop();
+			blocklist.pop();
 		}
 
 		var templateText = md.template.text;
@@ -108,8 +109,8 @@ function mdwiki(options) {
 		} else {
 			md.template.isChange = false;
 		}
-		//console.log(blockList);
-		return blockList;
+		console.log(blocklist);
+		return blocklist;
 	}
 
 	return md;

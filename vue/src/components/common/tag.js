@@ -5,6 +5,8 @@ import tags from "../modeditor/tags.js";
 import _const from "../../lib/const.js";
 import tagContainer from "./tagContainer.vue";
 
+import mods from "../index.js";
+
 export default {
 	name: "tag",
 	data: function() {
@@ -26,6 +28,8 @@ export default {
 
 	watch:{
 	},
+	
+	inheritAttrs: false,
 	computed: {
 		...mapGetters({
 			mode: "getMode",
@@ -36,7 +40,7 @@ export default {
 		compileTemplate() {
 			var tagName = this.tagName;
 			var attrStr = this.attrStr;
-			var template = '<' + tagName + attrStr + '>{{tag.text || ""}}<tag v-for="x in tag.children" :tag="x" :tagName="x.tagName"></tag></' + tagName + '>';
+			var template = '<' + tagName + attrStr + ' v-bind="$attrs" v-on="$listeners">{{tag.text ||""}}<tag v-for="x in tag.children" :tag="x" :tagName="x.tagName"></tag></' + tagName + '>';
 			if (tagName == "img" || tagName == "br" || tagName == "input") {
 				template = '<' + tagName + attrStr + '/>';
 			}
@@ -55,7 +59,7 @@ export default {
 
 		return this.compileRender(arg1,arg2,arg3,arg4);
 	}, 
-	staticRenderFns(createElement) {
+	staticRenderFns(arg1, arg2, arg3, arg4) {
 		var res = this.compileTemplate;
 		this.compileStaticRenderFns = res.staticRenderFns;
 
@@ -65,10 +69,13 @@ export default {
 	methods: {
 	},
 	created(){
+		var self = this;
 		var tag = this.tag;
+		var subtag = undefined;
 		var vnodes = this.$slots.default || [];
 		tag.setTagName(this.tagName);
-		//console.log(vnodes);
+		console.log(vnodes, tag.tagId);
+	
 		var _vnodeToTag = function(tag, vnodes) {
 			if (!vnodes) {
 				return;
@@ -79,6 +86,9 @@ export default {
 
 				if (!options) {
 					tag.text = vnode.text;
+					//var subtag = tags.spanTag(vnode.text);
+					//subtag.isVnode = true;
+					//tag.addTag(subtag);
 					continue;
 				}
 
@@ -88,15 +98,19 @@ export default {
 				if (vnode.data && vnode.data.attrs) {
 					_.merge(subtag.attrs, vnode.data.attrs);					
 				}
+				subtag.isVnode = true;
 				tag.addTag(subtag);
 
 				_vnodeToTag(subtag, options.children);
 			}
 		}
 
-		_vnodeToTag(tag, vnodes);
+		if (!tag.isVnode) {
+			_vnodeToTag(tag, vnodes);
+		}
 	},
 	components: {
 		tagContainer,
+		...mods,
 	},
 }

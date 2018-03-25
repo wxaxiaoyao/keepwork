@@ -47,7 +47,7 @@ tag.getAttrsHtml = function(tagName){
 	// 具体指定参数到属性
 	for (var key in vars) {
 		var value = vars[key];
-		if (!value.$data) {
+		if (!value.$data || !value.$data.attrName) {
 			continue;
 		}
 		var attrName = value.$data.attrName;
@@ -139,6 +139,45 @@ tag.findById = function(tagId) {
 	}
 
 	return undefined;
+}
+
+tag.findByPath = function(path, srcTag) {
+	if (!path) {
+		return undefined;
+	}
+
+	path = path.split("-");
+
+	var	rootTag = srcTag || this;
+	while(rootTag.parentTag) {
+		rootTag = rootTag.parentTag;
+	}
+
+	var dstTag = rootTag;
+	path.forEach(function(v) {
+		dstTag = dstTag.children[_.toNumber(v)];	
+	});
+
+	return dstTag;
+}
+
+tag.getTagPath = function() {
+	var path = [];
+	var curTag = this;
+	var parentTag = curTag.parentTag;
+
+	while(parentTag) {
+		var index = parentTag.children.findIndex(t => t.tagId == curTag.tagId);
+		path.push(index);
+		curTag = parentTag;
+		parentTag = curTag.parentTag;
+	}
+
+	_.reverse(path);
+
+	path = path.join("-");
+
+	return path;
 }
 
 tag.addTag = function(tag) {
