@@ -7,7 +7,7 @@
 		<el-container>
 			<div class="split-strip"></div>
 			<el-aside width="50%">
-				<codemirror ref="codemirror" :value="value" @change="change" @cursorActivity="cursorActivity"></codemirror>
+				<code-editor></code-editor>
 			</el-aside>
 			<div class="split-strip"></div>
 			<el-main>
@@ -22,14 +22,12 @@
 <script>
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
+import {Base64} from "js-base64";
 import components from "../../../components/index.js";
-import codemirror from "../../bases/codemirror.vue";
 import markdown from "../../../lib/markdown/index.js";
 
 import left from "./left.vue";
-import tagNav from "./tagNav.vue";
-import tagEdit from "./tagEdit.vue";
-import tagTree from "./tagTree.vue";
+import codeEditor from "./codeEditor.vue";
 
 import tags from "../../modeditor/tags.js";
 import adi from "../../bases/adi.js";
@@ -40,9 +38,8 @@ export default {
 		var tag = tags.getTag("div");
 		//var tag = adi.setMod("ModTitle").getTag();
 		return {
+			projectId:4980659,
 			value:undefined,
-			cmOptions: {
-			},
 			markdown: markdown(),
 			mode:"editor",
 			text:"",
@@ -54,6 +51,7 @@ export default {
 	computed: {
 		...mapGetters({
 			tagId: 'getTagId',
+			getFileByPath: 'gitlab/file',
 		}),
 		codemirror() {
 			return this.$refs.codemirror.codemirror;
@@ -75,6 +73,7 @@ export default {
 		tagParams() {
 			return this.rootTag.getParams();
 		},
+
 	},
 	watch:{
 		tagId:function(tagId) {
@@ -83,17 +82,17 @@ export default {
 				this.tag = tag;
 			}
 		},
+		pageUrl:function(url) {
+		},
+		pageContent: function(val) {
+			console.log(val);
+		},
 	},
 	methods: {
 		...mapActions({
 			setTagId:'setTagId',
+			setFile: 'gitlab/setFile',
 		}),
-		change(val) {
-			this.render(val.text);
-		},
-		cursorActivity(pos) {
-			console.log(pos);
-		},
 		render(text) {
 			var self = this;
 			var blocklist = this.markdown.parse(text);
@@ -195,11 +194,8 @@ export default {
 	},
 
 	components: {
-		codemirror,
 		left,
-		tagNav,
-		tagEdit,
-		tagTree,
+		codeEditor,
 	},
 }
 </script>

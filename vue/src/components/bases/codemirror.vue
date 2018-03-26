@@ -93,7 +93,16 @@ export default {
 	name:"codemirror",
 
 	data: function() {
+		var self = this;
 		return {
+			keyMap:{
+				"Ctrl-S": function(cm) {
+					self.$emit("save", {
+						filename: self.currentFilename,
+						text:self.codemirror.getValue()
+					});
+				},
+			},
 		};
 	},
 
@@ -138,7 +147,7 @@ export default {
 	},
 	watch: {
 		"value": function(val) {
-			this.swapDoc(val,filename, val.text);	
+			this.swapDoc(val.filename, val.text);	
 		},
 	},
 	methods: {
@@ -165,6 +174,8 @@ export default {
 				var pos = self.codemirror.getCursor();
 				self.$emit("cursorActivity", pos);
 			});
+
+			self.codemirror.setOption("extraKeys", this.keyMap);
 
 			self.codemirror.setValue(self.text);
 		},

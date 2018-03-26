@@ -1,7 +1,7 @@
 <template>
 	<el-tabs class="left-el-tabs" type="border-card" tab-position="left">
 		<el-tab-pane label="文件">
-			文件列表
+			<fileTree></fileTree>
 		</el-tab-pane>	
 		<el-tab-pane label="元素">
 			<tagTree v-on:addTag="addTag"></tagTree>
@@ -22,10 +22,12 @@
 import tagTree from "./tagTree.vue";
 import tagNav from "./tagNav.vue";
 import tagEdit from "./tagEdit.vue";
+import fileTree from "./fileTree.vue";
 
 export default {
 	props: ["rootTag"],
 	components: {
+		fileTree,
 		tagTree,
 		tagNav,
 		tagEdit,

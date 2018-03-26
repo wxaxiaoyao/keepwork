@@ -23,6 +23,8 @@ global.g_app = {
 };
 
 //console.log(g_app);
+console.log(process.env.TEST)
+console.log(process.env.NODE_ENV)
 
 Vue.use(ElementUI);
 
