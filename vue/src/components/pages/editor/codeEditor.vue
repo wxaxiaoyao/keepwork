@@ -25,33 +25,16 @@ export default {
 		...mapGetters({
 			pagePath: "getPagePath",
 			pageContent: "getPageContent",
-			getFileByPath: 'gitlab/file',
-			files: 'gitlab/files',
 		}),
 	},
 
 	watch: {
-		pagePath: function(path) {
-			if (this.pages[path]) {
-				this.value = {filename:path, text: this.pages[path].content};
-				return;
-			}
-			this.setFile({projectId: this.projectId, path:path, ref:"master"});
-		},
-
-		files: function(files) {
-			var file = files[this.pagePath];
-			if (!file) {
-				return ;
-			}
-
+		pageContent: function() {
 			this.value = {
 				filename: this.pagePath,
-				text:Base64.decode(file.content),
+				text: this.pageContent,
 			};
-
-			//console.log(files);
-		},
+		}
 	},
 
 	methods: {

@@ -1,5 +1,5 @@
 <template>
-	<el-tree :data="tree" :props="fileTreeProps" @node-click="clickSelectFile">
+	<el-tree :data="fileTree" :props="fileTreeProps" @node-click="clickSelectFile">
 		<span class="custom-tree-node" slot-scope="{node, data}">
 			<span v-if="data.type == 'tree'" class="custom-tree-node">
 				<span>
@@ -7,13 +7,14 @@
 				</span>
 			</span>
 			<span v-if="data.type == 'blob'" class="custom-tree-node">
-				<span style="text-overflow:ellipsis">
-					<i class="el-icon-loading" v-if="data.type == 'blob'"></i>
+				<span class="tree-node-text">
+					<i v-show="data.isConflict" @click="clickFixedConflict(data)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
+					<i v-show="!data.isConflict" :class='isRefresh(data) ? "fa fa-refresh fa-spin" : data.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"'></i>
 					<span>{{node.label}}</span>
 				</span>
-				<span>
+				<span class="tree-node-btn-group">
 					<i class="fa fa-external-link"></i>
-					<i class="el-icon-delete"></i>
+					<i @click="clickDeleteBtn(data)" class="el-icon-delete"></i>
 				</span>
 			</span>
 		</span>
@@ -26,53 +27,57 @@ import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
+	components:{
+	},
 	data: function(){
 		return {
 			projectId:4980659,
 			rootPath: "xiaoyao",
 			fileTreeProps: {
 				children:"nodes",
-				label:"text",
-			}
+				label:"name",
+			},
+			fileTree:[],
 		}
 	},
 
 	computed: {
 		...mapGetters({
 			tagId: 'getTagId',
-			trees: 'gitlab/trees',
+			getPageByPath: 'getPageByPath',
+			pages: 'getPages',
 		}),
 		tree() {
-			var filter = function(node) {
-				var path = node.path;
-				if (node.type == "tree") {
-					node.text = node.name;
-					node.url = node.path;
-					node.pagename = node.text;
-					return true;
-				}
-				if (path.indexOf(".md") == path.length - 3) {
-					node.text = node.name.substring(0, node.name.length-3);
-					node.url = node.path.substring(0, node.path.length-3);
-					node.pagename = node.text;
-					return true;
-				}
-				return false;
-			}
-			var trees = this.trees[this.projectId] || [];
+		},
+	},
+
+	watch: {
+		pages: function(val) {
+			this.fileTree = this.getFileTree();
+		}
+	},
+	
+	methods: {
+		...mapActions({
+			setPagePath: "setPagePath",
+			setPageContent: "setPageContent",
+			setPage: "setPage",
+			loadPage: "loadPage",
+			deletePage: "deletePage",
+
+			loadTree: "loadTree",
+		}),
+		getFileTree() {
+			var pages = this.pages;
 			var roottree = [], i, j, k, name;
 
-			if (!trees || !trees[this.rootPath]) {
-				return [];
-			}
-			var datas = trees[this.rootPath];
-			for (i = 0; i < datas.length; i++) {
-				var node = datas[i];
+			for (var key in pages) {
+				var node = pages[key];
 				var paths = node.path.split("/");
 				var tree = roottree;
 				var path = "";
 
-				if (!filter(node)) {
+				if (node.type == "blob" && node.path.indexOf(".md") < 0) {
 					continue;
 				}
 
@@ -86,7 +91,6 @@ export default {
 					if (k == tree.length) {
 						tree.push({
 							path: paths.slice(0,j+1).join("/"), 
-							text:name, 
 							name:name, 
 							type:"tree", 
 							nodes:[]
@@ -103,8 +107,7 @@ export default {
 				}
 
 				if (k == tree.length) {
-					node.nodes = [];
-					tree.push(node);
+					tree.push({nodes:[]});
 				} 
 				tree = tree[k];
 
@@ -118,29 +121,30 @@ export default {
 
 			return roottree;
 		},
-	},
-
-	watch: {
-		tree: function(val) {
-			console.log(val);
-		}
-	},
-	
-	methods: {
-		...mapActions({
-			setTree:"gitlab/setTree",
-			setPagePath: "setPagePath",
-		}),
+		isRefresh(data) {
+			return (this.getPageByPath(data.path) || {}).isRefresh;
+		},
 		clickSelectFile(data, node, tree) {
-			//console.log(data);
-			if (data.type == "blob") {
-				this.setPagePath(data.path);
+			if (data.type == "tree") {
+				return;
 			}
+
+			var page = this.getPageByPath(data.path);
+			if (page.content == undefined) {
+				this.loadPage({path:data.path});
+			} else {
+				this.setPageContent(page.content);
+			}
+
+			this.setPagePath(data.path);
+		},
+		clickDeleteBtn(data) {
+			this.deletePage({path:data.path});
 		},
 	},
 
 	mounted() {
-		this.setTree({projectId: this.projectId, path: this.rootPath, recursive:true});
+		this.loadTree();
 	}
 }
 </script>
@@ -153,5 +157,21 @@ export default {
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
+}
+.custom-tree-node i {
+	margin-right:2px;
+}
+.tree-node-text {
+	flex:8;
+	text-overflow:ellipsis;
+	overflow-x: hidden;
+}
+.tree-node-btn-group {
+	flex:2;
+	display:none;
+}
+.custom-tree-node:hover .tree-node-btn-group {
+	display:flex;
+	justify-content:flex-end;
 }
 </style>
