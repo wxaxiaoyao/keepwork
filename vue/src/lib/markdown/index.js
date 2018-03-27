@@ -48,8 +48,6 @@ function mdwiki(options) {
 			block.cmdName = cmdName;
 			block.modParams = modParams;
 			block.isTemplate = modName == "template";
-			block.templateContent = block.isTemplate ? templateContent : undefined;
-
 		}
 	}
 

@@ -39,7 +39,7 @@ export default {
 		var tag = tags.getTag("div");
 		//var tag = adi.setMod("ModTitle").getTag();
 		return {
-			splitStrip1_width:"340px",
+			splitStrip1_width:"18%",
 			splitStrip2_width:"50%",
 			value:undefined,
 			markdown: markdown(),
@@ -157,7 +157,7 @@ export default {
 			this.splitStrip = undefined;
 		},
 		render(text) {
-			console.log(text);
+			//console.log(text);
 			var self = this;
 			var blocklist = this.markdown.parse(text);
 			var tag = tags.getTag("div");

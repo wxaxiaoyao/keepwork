@@ -5,14 +5,14 @@
 			<span class="custom-tree-node" slot-scope="{node, data}">
 				<span v-if="data.type == 'tree'" class="custom-tree-node">
 					<span>
-						<span>{{node.label}}</span>
+						<span>{{data.name}}</span>
 					</span>
 				</span>
 				<span v-if="data.type == 'blob'" class="custom-tree-node">
 					<span class="tree-node-text">
 						<i v-show="data.isConflict" @click="clickFixedConflict(data)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
 						<i v-show="!data.isConflict" :class='isRefresh(data) ? "fa fa-refresh fa-spin" : isModify(data) ? "fa fa-pencil-square-o" : "fa fa-file-o"'></i>
-						<span>{{node.label}}</span>
+						<span>{{data.name}}</span>
 					</span>
 					<span class="tree-node-btn-group">
 						<i @click="clickOpenBtn(data)"class="fa fa-external-link" data-toggle="tooltip" title="打开"></i>
@@ -22,7 +22,11 @@
 				</span>
 			</span>
 		</el-tree>
-		<!--<fileTreeNode :nodes="fileTree"></fileTreeNode>-->
+		<el-tree ref="treeComp" :data="fileTree" :props="fileTreeProps" 
+			node-key="path" :highlight-current="true" 
+			:render-content="renderContent"
+			@node-click="clickSelectPage">
+		</el-tree>
 	</div>
 </template>
 
@@ -31,13 +35,13 @@
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import storage from "../../../lib/storage.js";
-import fileTreeNode from "./fileTreeNode.vue";
+import FileTreeNode from "./fileTreeNode.vue";
 
 let pageDB = undefined;
 
 export default {
 	components:{
-		fileTreeNode,
+		FileTreeNode,
 	},
 	data: function(){
 		return {
@@ -79,6 +83,9 @@ export default {
 			setSwitchPage: "setSwitchPage",
 			loadTree: "loadTree",
 		}),
+		renderContent(h, { node, data, store  }){
+			return (<FileTreeNode node={node} data={data}></FileTreeNode>)
+		},
 		getFileTree() {
 			var pages = this.pages;
 			var roottree = [], i, j, k, name;
