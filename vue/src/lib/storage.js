@@ -81,7 +81,7 @@ var indexedDB = {
 	storeList:[
 		{
 			storeName:"sitepage",
-			storeKey:"url",
+			storeKey:"path",
 		},
 	],
 	openCallbackList:[],

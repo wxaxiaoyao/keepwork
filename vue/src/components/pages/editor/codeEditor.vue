@@ -1,5 +1,5 @@
 <template>
-	<codemirror ref="codemirror" :value="value" 
+	<codemirror ref="codemirror" :value="value" class="kp_forbit_copy"
 		@change="change" 
 		@save="save"
 		@cursorActivity="cursorActivity"></codemirror>
@@ -10,50 +10,66 @@ import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import {Base64} from "js-base64";
 
+import storage from "../../../lib/storage.js";
+
 import codemirror from "../../bases/codemirror.vue";
+
+const tempContentKey = "cmeditor_temp_content";
 
 export default {
 	data: function() {
 		return {
-			value:{},
+			value:{
+				text:storage.sessionStorageGetItem(tempContentKey) || (""),
+				filename:null,
+			},
 			pages:{},
-			projectId: 4980659,
 		};
 	},
 
 	computed: {
 		...mapGetters({
 			pagePath: "getPagePath",
-			pageContent: "getPageContent",
+			getPageContentByPath: "getPageContentByPath",
+			switchPage: "switchPage",
 		}),
 	},
 
 	watch: {
-		pageContent: function() {
+		switchPage(isSwitchPage) {
+			if (!isSwitchPage) {
+				return;
+			}
 			this.value = {
 				filename: this.pagePath,
-				text: this.pageContent,
+				text: this.getPageContentByPath(this.pagePath),
 			};
+			this.setSwitchPage(false);
 		}
 	},
 
 	methods: {
 		...mapActions({
-			setPageContent:'setPageContent',
-			setFile: 'gitlab/setFile',
-			saveFile: 'gitlab/saveFile',
+			setPage: "setPage",
+			setPageContent: "setPageContent",
+			savePage: "savePage",
+			setSwitchPage: "setSwitchPage",
 		}),
-		urlToPath(url) {
-			return url + ".md";
-		},
-		change(val) {
-			console.log(val);
-			//this.setPageContent(val);
+		change(payload) {
+			this.setPageContent(payload.text);
+
+			if (!payload.filename) {
+				storage.sessionStorageSetItem(tempContentKey, payload.text);
+				return;
+			}
+			this.setPage({
+				path:payload.filename,
+				content:payload.text,
+			});
 		},
 		save(payload) {
 			let {filename, text} = payload;
-			this.saveFile({
-				projectId:this.projectId,
+			this.savePage({
 				path: filename,
 				content: text,
 			});

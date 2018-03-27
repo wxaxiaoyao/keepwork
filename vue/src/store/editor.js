@@ -1,15 +1,49 @@
 import vue from "vue";
 import {Base64} from "js-base64";
+import Hashes from "jshashes";
 import _const from "../lib/const.js";
 import gitlab from "../api/gitlab.js";
+import storage from "../lib/storage.js";
 
 const SET_PAGE_PATH = 'SET_PAGE_PATH';
 const SET_PAGE_CONTENT = 'SET_PAGE_CONTENT';
 const SET_PAGE = 'SET_PAGE';
 const SET_PAGES = 'SET_PAGES';
+const SET_SWITCH_PAGE = 'SET_SWITCH_PAGE';
+
+const sha1 = new Hashes.SHA1().setUTF8(true);
+
+let pageDB = undefined;
+storage.indexedDBRegisterOpenCallback(function(){
+	pageDB = storage.indexedDBGetStore("sitepage");
+});
+
+const getStringByteLength = function(str) {
+	var totalLength = 0;     
+	var charCode;  
+	for (var i = 0; i < str.length; i++) {  
+		charCode = str.charCodeAt(i);  
+		if (charCode < 0x007f)  {     
+			totalLength++;     
+		} else if ((0x0080 <= charCode) && (charCode <= 0x07ff))  {     
+			totalLength += 2;     
+		} else if ((0x0800 <= charCode) && (charCode <= 0xffff))  {     
+			totalLength += 3;   
+		} else{  
+			totalLength += 4;   
+		}          
+	}  
+	return totalLength;   
+}
+
+const gitsha = function(content) {
+	var header = "blob " + getStringByteLength(content) + "\0";
+	var text = header + content;
+	return sha1.hex(text);
+}
 
 const treeNodeToPage = function(node) {
-	var paths = node.path.split("/");
+	let paths = node.path.split("/");
 	let page = {
 		name:node.name,
 		path:node.path,
@@ -17,7 +51,9 @@ const treeNodeToPage = function(node) {
 		id:node.id,
 		username:paths[0],
 	}
+
 	page.name = page.name.replace(/\.md$/, "");
+	page.url = page.path.replace(/\.md$/, "");
 
 	return page;
 }
@@ -28,7 +64,8 @@ const state = {
 	tagPath:null, // 当前tag path
 	//mode:_const.EDITOR_MODE_EDITOR,
 	pagePath:"", //当前页面URL
-	pageContent:"", // 当前页内容
+	pageContent:"", // 当前页面内容
+	switchPage:false, // 是否切换页面
 	pages:{},       // 页面节点信息
 	gits:{},        // 数据源
 	mode:_const.EDITOR_MODE_NORMAL,
@@ -41,12 +78,31 @@ const getters = {
 	getMode: (state) => state.mode,
 	getPagePath: (state) => state.pagePath,
 	getPageContent: (state) => state.pageContent,
+	switchPage: (state) => state.switchPage,	
 	getPages: (state) => state.pages,
-	getPageByPath: (state) => (path) => state.pages[path],
+	getPageByPath: (state) => (path) => (state.pages[path] || {}),
+	getPageContentByPath: (state) => (path) => (state.pages[path] || {}).content,
 	getGit: (state) => (key) => (state.gits[key] || {projectId:4980659, git:gitlab, ref:"master", rootPath:"xiaoyao"}),
 };
 
 const actions = {
+	indexDB_savePage({commit, getters:{getPageByPath}}, page) {
+		let oldpage = getPageByPath(page.path) || {};
+
+		if (page.content != undefined && page.content != oldpage.content) {
+			page.isModify = true;
+		}
+		
+		pageDB.setItem({
+			...oldpage,
+			...page,
+		});
+
+		commit(SET_PAGE, page);
+	},
+	indexDB_deletePage(context, pagePath) {
+		pageDB.deleteItem(pagePath);
+	},
 	setTagId({commit, state}, tagId) {
 		commit("setTagId", tagId);
 	},
@@ -65,44 +121,81 @@ const actions = {
 	setPageContent(context, pageContent) {
 		context.commit(SET_PAGE_CONTENT, pageContent)
 	},
-	setPage({commit}, page) {
-		commit(SET_PAGE, page);
+	setSwitchPage({commit}, switchPage) {
+		commit(SET_SWITCH_PAGE, switchPage);	
 	},
-	async loadPage(context, page) {
-		let {commit, state} = context;
+	setPage({commit, dispatch}, page) {
+		dispatch("indexDB_savePage", page);
+	},
+	loadPage(context, page) {
+		let {commit, state, dispatch, getters:{getPageByPath}} = context;
 		let {path} = page;
-		commit(SET_PAGE, {path:path, isRefresh:true});
-		let {projectId, git, ref} = context.getters.getGit();
-		let file = await git.projects.repository.files.show(projectId, page.path, ref);
-		page.id = file.blob_id;
-		page.content = Base64.decode(file.content);
-		page.isRefresh = false;
-		commit(SET_PAGE, page);
-		if (state.pagePath == path) {
-			commit(SET_PAGE_CONTENT, page.content);
+		let _loadPageFromServer = async function() {
+			commit(SET_PAGE, {path:path, isRefresh:true});
+			let {projectId, git, ref} = context.getters.getGit();
+			let file = await git.projects.repository.files.show(projectId, page.path, ref);
+			page.id = file.blob_id;
+			page.content = Base64.decode(file.content);
+			page.isRefresh = false;
+			commit(SET_PAGE, page);
+			if (state.pagePath == path) {
+				commit(SET_SWITCH_PAGE, true);
+			}
+			//dispatch("indexDB_savePage", page);
 		}
+		let _loadPageFromDB = function(page) {
+			if (state.pagePath == path) {
+				commit(SET_SWITCH_PAGE, true);
+			}
+			commit(SET_PAGE, page);
+		}
+		pageDB.getItem(path, function(data){
+			if (!data) {
+				_loadPageFromServer();
+				return;
+			}
+			var oldpage = getPageByPath(path);
+			if (data.id == oldpage.id) {
+				console.log("本地最新");
+				_loadPageFromDB(data);
+
+			} else if (data.id != oldpage.id && oldpage.isModify) {
+				console.log("冲突");
+				_loadPageFromDB(data);
+			} else {
+				console.log("服务器最新");
+				_loadPageFromServer();
+				return;
+			}
+		}, function() {
+			_loadPageFromServer();
+		})
 	},
 	async savePage(context, page) {
 		let {path, content} = page;
-		let {commit, getters} = context;
+		let {commit, getters, dispatch} = context;
 		let {projectId, git} = getters.getGit();
 		commit(SET_PAGE, {path:path, isRefresh:true});
 		await git.projects.repository.files.edit(projectId, path, 'master',{
 			content:content,
 			commit_message: 'update with keepwork editor',
 		});
-		commit(SET_PAGE, {path:path, content:content, isRefresh:false});
 
+		let sha = gitsha(content);
+		commit(SET_PAGE, {path:path, content:content, isRefresh:false});
+		dispatch("indexDB_savePage", {...page, isModify:false, id:sha});
 	},
 	async deletePage(context, page) {
 		let {path} = page;
-		let {commit, getters:{getGit}} = context;
+		let {commit, getters:{getGit}, dispatch} = context;
 		let {projectId, git} = getGit();
 		commit(SET_PAGE, {path:path, isRefresh:true});
 		await git.projects.repository.files.remove(projectId, path, 'master',{
 			commit_message: 'delete by keepwork',
 		});
 		commit(SET_PAGE, {path:path, isRefresh:false});
+
+		dispatch("indexDB_deletePage", path);
 	},
 	async loadTree(context, payload) {
 		let {commit, getters: {getGit}} = context;
@@ -137,7 +230,10 @@ const mutations = {
 		vue.set(state, "pagePath", pagePath);		
 	},
 	[SET_PAGE_CONTENT](state, pageContent) {
-		vue.set(state, "pageContent", pageContent);
+		vue.set(state, "pageContent", pageContent);		
+	},
+	[SET_SWITCH_PAGE](state, switchPage) {
+		vue.set(state, 'switchPage', switchPage);
 	},
 	[SET_PAGE](state, page) {
 		vue.set(state.pages, page.path, {

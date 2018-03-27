@@ -1,33 +1,43 @@
 <template>
-	<el-tree :data="fileTree" :props="fileTreeProps" @node-click="clickSelectFile">
-		<span class="custom-tree-node" slot-scope="{node, data}">
-			<span v-if="data.type == 'tree'" class="custom-tree-node">
-				<span>
-					<span>{{node.label}}</span>
+	<div class="kp_forbit_copy">
+		<el-tree ref="treeComp" :data="fileTree" :props="fileTreeProps" 
+			node-key="path" :highlight-current="true" @node-click="clickSelectPage">
+			<span class="custom-tree-node" slot-scope="{node, data}">
+				<span v-if="data.type == 'tree'" class="custom-tree-node">
+					<span>
+						<span>{{node.label}}</span>
+					</span>
+				</span>
+				<span v-if="data.type == 'blob'" class="custom-tree-node">
+					<span class="tree-node-text">
+						<i v-show="data.isConflict" @click="clickFixedConflict(data)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
+						<i v-show="!data.isConflict" :class='isRefresh(data) ? "fa fa-refresh fa-spin" : isModify(data) ? "fa fa-pencil-square-o" : "fa fa-file-o"'></i>
+						<span>{{node.label}}</span>
+					</span>
+					<span class="tree-node-btn-group">
+						<i @click="clickOpenBtn(data)"class="fa fa-external-link" data-toggle="tooltip" title="打开"></i>
+						<i @click="clickGitBtn(data)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
+						<i @click="clickDeleteBtn(data)" class="fa fa-trash-o" data-toggle="tooltip" title="删除"></i>
+					</span>
 				</span>
 			</span>
-			<span v-if="data.type == 'blob'" class="custom-tree-node">
-				<span class="tree-node-text">
-					<i v-show="data.isConflict" @click="clickFixedConflict(data)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
-					<i v-show="!data.isConflict" :class='isRefresh(data) ? "fa fa-refresh fa-spin" : data.isModify ? "fa fa-pencil-square-o" : "fa fa-file-o"'></i>
-					<span>{{node.label}}</span>
-				</span>
-				<span class="tree-node-btn-group">
-					<i class="fa fa-external-link"></i>
-					<i @click="clickDeleteBtn(data)" class="el-icon-delete"></i>
-				</span>
-			</span>
-		</span>
-	</el-tree>
+		</el-tree>
+		<!--<fileTreeNode :nodes="fileTree"></fileTreeNode>-->
+	</div>
 </template>
 
 
 <script>
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
+import storage from "../../../lib/storage.js";
+import fileTreeNode from "./fileTreeNode.vue";
+
+let pageDB = undefined;
 
 export default {
 	components:{
+		fileTreeNode,
 	},
 	data: function(){
 		return {
@@ -44,10 +54,13 @@ export default {
 	computed: {
 		...mapGetters({
 			tagId: 'getTagId',
+			pagePath: 'getPagePath',
 			getPageByPath: 'getPageByPath',
 			pages: 'getPages',
+			switchPage: 'switchPage',
 		}),
-		tree() {
+		treeComp() {
+			return this.$refs.treeComp;
 		},
 	},
 
@@ -60,11 +73,10 @@ export default {
 	methods: {
 		...mapActions({
 			setPagePath: "setPagePath",
-			setPageContent: "setPageContent",
 			setPage: "setPage",
 			loadPage: "loadPage",
 			deletePage: "deletePage",
-
+			setSwitchPage: "setSwitchPage",
 			loadTree: "loadTree",
 		}),
 		getFileTree() {
@@ -124,8 +136,16 @@ export default {
 		isRefresh(data) {
 			return (this.getPageByPath(data.path) || {}).isRefresh;
 		},
-		clickSelectFile(data, node, tree) {
+		isModify(data) {
+			return this.getPageByPath(data.path).isModify;
+		},
+		clickSelectPage(data, node, tree) {
+			var self = this;
+
 			if (data.type == "tree") {
+				setTimeout(function() {
+					self.treeComp.setCurrentKey(self.pagePath);
+				});
 				return;
 			}
 
@@ -133,10 +153,14 @@ export default {
 			if (page.content == undefined) {
 				this.loadPage({path:data.path});
 			} else {
-				this.setPageContent(page.content);
+				this.setSwitchPage(true);
 			}
 
 			this.setPagePath(data.path);
+		},
+		clickGitBtn(data) {
+			//window.open()
+
 		},
 		clickDeleteBtn(data) {
 			this.deletePage({path:data.path});
@@ -145,6 +169,11 @@ export default {
 
 	mounted() {
 		this.loadTree();
+	},
+
+	created() {
+		var self = this;
+		
 	}
 }
 </script>

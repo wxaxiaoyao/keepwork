@@ -16,7 +16,6 @@ import "codemirror/addon/fold/foldcode.js";
 import "codemirror/addon/fold/markdown-fold.js";
 import "codemirror/addon/fold/xml-fold.js";
 
-import storage from "../../lib/storage.js";
 vue.component("vueCodemirror", codemirror);
 
 function wikiCmdFold(cm, start) {
@@ -87,7 +86,6 @@ function wrapfunc(self, funcname) {
 
 CodeMirror.registerHelper("fold", "wikiCmdFold", wikiCmdFold);
 
-const tempContentKey = "cmeditor_temp_content";
 
 export default {
 	name:"codemirror",
@@ -130,9 +128,7 @@ export default {
 			type:Object,
 			default: function() {
 				return {
-					text:storage.sessionStorageGetItem(tempContentKey) || (""),
-					filename:null,
-				}
+				};
 			}
 		}
 	},
@@ -163,9 +159,6 @@ export default {
 
 				// change
 				var text = self.codemirror.getValue();
-				if (!self.currentFilename) {
-					storage.sessionStorageSetItem(tempContentKey, text);
-				}
 
 				self.$emit("change", {filename:self.currentFilename, text:text});
 			});
@@ -180,6 +173,7 @@ export default {
 			self.codemirror.setValue(self.text);
 		},
 		swapDoc(filename, text) {
+			text = text || "";
 			if (filename) {
 				if (!this.docMap[filename]) {
 					this.docMap[filename] = CodeMirror.Doc(text, 'markdown');
