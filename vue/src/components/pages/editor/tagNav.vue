@@ -1,39 +1,15 @@
 <template>
-	<el-tabs class="tag-nav-el-tabs" type="border-card">
-		<!--<el-tab-pane label="Tag导航">-->
-			<!--<div>-->
-				<!--<div style="cursor:pointer">-->
-					<!--<span v-for="x in navTagList" :key="x.id" @click="clickSelectTag(x)">-->
-						<!--<i class="fa fa-chevron-right"></i>{{x.name || x.type}}-->
-					<!--</span>-->
-				<!--</div>-->
-				<!--<div v-if="tag && tag.children">-->
-					<!--<div v-for="(x, $index) in tag.children" :key="x.tagId" class="navTagSubItemContainer">-->
-						<!--<span @click="clickSelectTag(x)">-->
-							<!--{{x.name || x.type || x.tagName}}-->
-						<!--</span>-->
-						<!--<span @click.stop="clickDeleteTag(x)"><i class="fa fa-trash-o"></i></span>-->
-						<!--<span v-show="$index != 0" @click.stop="clickSwapTag(x, -1)"><i class="fa fa-arrow-up"></i></span>-->
-						<!--<span v-show="$index != tag.children.length - 1" @click.stop="clickSwapTag(x, 1)"><i class="fa fa-arrow-down"></i></span>-->
-					<!--</div>-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</el-tab-pane>-->
-		<el-tab-pane label="TagTree">
-			<el-tree :data="[rootTag]" :props="treeProps" :expand-on-click-node="false" :highlight-current="true" 
-				node-key="tagId" ref="tree" @node-click="clickSelectTag" :default-expand-all="true">
-				<span @mouseover="mouseover(data)" class="custom-tree-node" slot-scope="{ node, data }">
-					<el-button size="mini" type="text" @click="clickSelectTag(data, node)">{{node.label}}</el-button>
-					<el-button size="mini" type="text" @click.stop="clickDeleteTag(data)" v-show="isShowDeleteIcon(data)">DELETE</el-button>
-					<el-button size="mini" type="text" @click.stop="clickSwapTag(data, -1)" v-show="isShowSortIcon(data, -1)">UP</el-button>
-					<el-button size="mini" type="text" @click.stop="clickSwapTag(data, +1)" v-show="isShowSortIcon(data, +1)">DOWN</el-button>
-					<!--<span @click.stop="clickDeleteTag(data)" v-show="isShowDeleteIcon(data)"><i class="el-icon-delete"></i></span>-->
-					<!--<span @click.stop="clickSwapTag(data, -1)" v-show="isShowSortIcon(data, -1)"><i class="el-icon-sort-up"></i></span>-->
-					<!--<span @click.stop="clickSwapTag(data, +1)" v-show="isShowSortIcon(data, +1)"><i class="el-icon-sort-down"></i></span>-->
-			  	</span>
-			</el-tree>
-		</el-tab-pane>
-	</el-tabs>
+	<el-tree :data="[rootTag]" :props="treeProps" :expand-on-click-node="false" :highlight-current="true" 
+		node-key="tagId" ref="tree" @node-click="clickSelectTag" :default-expand-all="true">
+		<span :style="customTreeNodeStyle" slot-scope="{ node, data }">
+			<span @click="clickSelectTag(data, node)">{{node.label}}</span>
+			<span>
+				<span @click.stop="clickSwapTag(data, -1)" v-show="isShowSortIcon(data, -1)"><i class="fa fa-arrow-up"></i></span>
+				<span @click.stop="clickSwapTag(data, +1)" v-show="isShowSortIcon(data, +1)"><i class="fa fa-arrow-down"></i></span>
+				<span @click.stop="clickDeleteTag(data)" v-show="isShowDeleteIcon(data)"><i class="fa fa-trash-o"></i></span>
+			</span>
+		</span>
+	</el-tree>
 </template>
 
 <script>
@@ -49,6 +25,14 @@ export default {
 				},
 				children:"children",
 			},
+			customTreeNodeStyle : {
+				"flex": "1",
+				"display": "flex",
+				"align-items": "center",
+				"justify-content": "space-between",
+				"font-size": "14px",
+				"padding-right": "8px",
+			}
 		}
 	},
 	props: {
@@ -174,24 +158,7 @@ export default {
 		if (!this.rootTag) {
 			return;
 		}
-		//this.$refs.tree.setCurrentKey(this.rootTag.tagId);
 	},
 }
 </script>
 
-<style>
-.tag-nav-el-tabs .el-tabs__content {
-	padding:0px;
-}
-.navTagSubItemContainer {
-	paddiv-left:20px;
-}
-.navTagSubItemContainer:hover{
-	cursor:pointer;
-}
-.custom-tree-node: {
-	
-}
-.custom-tree-node span:hover {
-}
-</style>

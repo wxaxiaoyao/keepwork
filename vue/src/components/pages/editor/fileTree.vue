@@ -1,5 +1,6 @@
 <template>
 	<div class="kp_forbit_copy">
+		<!--<el-tree :data="openedPageTree" :props="fileTreeProps" node-key="path" :default-expand-all="true" :highlight-current="true" @node-click="clickSelectPage"></el-tree>-->
 		<el-tree ref="treeComp" :data="fileTree" :props="fileTreeProps" 
 			node-key="path" :highlight-current="true" @node-click="clickSelectPage">
 			<span class="custom-tree-node" slot-scope="{node, data}">
@@ -22,11 +23,11 @@
 				</span>
 			</span>
 		</el-tree>
-		<el-tree ref="treeComp" :data="fileTree" :props="fileTreeProps" 
-			node-key="path" :highlight-current="true" 
-			:render-content="renderContent"
-			@node-click="clickSelectPage">
-		</el-tree>
+		<!--<el-tree ref="treeComp" :data="fileTree" :props="fileTreeProps" -->
+			<!--node-key="path" :highlight-current="true" -->
+			<!--:render-content="renderContent"-->
+			<!--@node-click="clickSelectPage">-->
+		<!--</el-tree>-->
 	</div>
 </template>
 
@@ -52,6 +53,7 @@ export default {
 				label:"name",
 			},
 			fileTree:[],
+			openedPages:{},
 		}
 	},
 
@@ -63,6 +65,13 @@ export default {
 			pages: 'getPages',
 			switchPage: 'switchPage',
 		}),
+		openedPageTree() {
+			let tree = {name:"已打开页面", type:"tree", path:"", nodes:[]};
+			for (key in this.openedPages) {
+				tree.nodes.push(this.openedPages[key]);
+			}
+			return [tree];
+		},
 		treeComp() {
 			return this.$refs.treeComp;
 		},
@@ -151,11 +160,11 @@ export default {
 
 			if (data.type == "tree") {
 				setTimeout(function() {
-					self.treeComp.setCurrentKey(self.pagePath);
+					self.$refs.treeComp.setCurrentKey(self.pagePath);
 				});
 				return;
 			}
-
+			this.$set(this.openedPages, data.path, data);
 			var page = this.getPageByPath(data.path);
 			if (page.content == undefined) {
 				this.loadPage({path:data.path});

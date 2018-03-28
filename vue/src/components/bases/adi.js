@@ -7,21 +7,20 @@ import mods from "../adi//mod/index.js";
 import tags from "../modeditor/tags.js";
 
 for (var key in adiComponents){
-	vue.component(key, adiComponents[key]);
-	//(function(key){
-		//vue.component(key, {
-			//props:{
-				//source: {
-					//type: Object,
-					////required: true,
-					//default: function(){
-						//return adiComponentProps[key];
-					//}
-				//}
-			//},
-			//extends:adiComponents[key],
-		//});
-	//})(key);
+	//vue.component(key, adiComponents[key]);
+	(function(key){
+		vue.component(key, {
+			props:{
+				options: {
+					type:Object,
+					default: function() {
+						return {};
+					},
+				},
+			},
+			extends:adiComponents[key],
+		});
+	})(key);
 }
 
 var adi = {
@@ -81,7 +80,6 @@ adi.setMod = function(name, modData) {
 
 	this.mod = mod;
 	this.modData = _.merge(_.cloneDeep(this.mod.properties), modData || {});
-	console.log(this.modData);
 
     var styleID = Number(this.modData.styleID) >= this.mod.styles.length ? this.mod.styles.length - 1 : Number(this.modData.styleID);
     this.style = this.mod.styles[styleID || 0];
@@ -91,7 +89,32 @@ adi.setMod = function(name, modData) {
 	this.setTag(this.tag, "root");
 	this.tag.addTag(parseMod(this));
 
-	this.toTemplateStyle();
+	return this;
+}
+
+adi.loadTemplateStyle = function(template, style) {
+	if (typeof(template) == "string") {
+		try {
+			template = JSON.parse(template);
+		} catch {
+			return;
+		}
+	}
+	if (typeof(style) == "string") {
+		try {
+			style = JSON.parse(style);
+		} catch {
+			return;
+		}
+	}
+
+	this.template = template;
+	this.style = style;
+
+	this.tag = tags.getTag("div");
+	this.setTag(this.tag, "root");
+	this.tag.addTag(parseMod(this));
+
 	return this;
 }
 
@@ -142,6 +165,7 @@ adi.getStyles = function(name) {
 
 adi.setTag = function(tag, name) {
 	tag.aliasName = name;
+
 	_.merge(tag.attrs, this.getProps(name));
 	_.merge(tag.classes, this.getClasses(name));
 	_.merge(tag.styles, this.getStyles(name));
@@ -160,7 +184,6 @@ adi.toStyle = function() {
 }
 
 adi.toTemplateStyle = function() {
-	console.log(this.tag);
 	if (!this.tag || this.tag.children.length != 1) {
 		return;
 	}
@@ -178,6 +201,7 @@ adi.toTemplateStyle = function() {
 		style.data[aliasName] = tag.styles;
 		style.props[aliasName] = tag.attrs;
 		if (tag.tagName == "el-row") {
+			aliasName = aliasName.replace(/Row$/, "");
 			template[aliasName] = [];
 			for (var i = 0; i < tag.children.length; i++) {
 				var subTag = tag.children[i];
@@ -201,7 +225,7 @@ adi.toTemplateStyle = function() {
 	}
 
 	_toTemplate(tag, template);
-	console.log(JSON.stringify(style), JSON.stringify(template));
+	return {style:JSON.stringify(style, null, 2), template:JSON.stringify(template["root"], null, 2)};
 }
 
 export default adi;

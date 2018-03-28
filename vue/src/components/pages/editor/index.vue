@@ -278,7 +278,6 @@ html, body {
 	overflow-y: hidden;
 }
 
-
 #editorContainer {
 	height:100%;
 }

@@ -114,11 +114,15 @@ var tagTree = [
 		},
 		{
 			label:"菜单",
-			type:"AdiMedia",
+			type:"AdiMenu",
 		},
 		{
 			label:"Markdown",
 			type:"AdiMarkdown",
+		},
+		{
+			label:"画板",
+			type:"AdiBoard",
 		},
 	],
 },
@@ -138,6 +142,51 @@ var tagTree = [
 			label:"走马灯",
 			type:"wikiCarousel",
 		},
+	]
+},
+{
+	label:"adi模块",
+	children:[
+	{
+		label:"ModMarkdown",
+		type:"ModMarkdown",
+	},
+	{
+		label:"ModHeader",
+		type:"ModHeader",
+	},
+	{
+		label:"ModTitle",
+		type:"ModTitle",
+	},
+	{
+		label:"ModMixPosition",
+		type:"ModMixPosition",
+	},
+	{
+		label:"ModMixLayer",
+		type:"ModMixLayer",
+	},
+	{
+		label:"ModImgLoop",
+		type:"ModImgLoop",
+	},
+	{
+		label:"ModParacraft",
+		type:"ModParacraft",
+	},
+	{
+		label:"ModQQ",
+		type:"ModQQ",
+	},
+	{
+		label:"ModText",
+		type:"ModText",
+	},
+	{
+		label:"ModBoard",
+		type:"ModBoard",
+	},
 	]
 },
 ];

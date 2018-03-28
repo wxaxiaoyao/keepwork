@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from "vue-router";
 
 import test from "./components/pages/test.vue";
-import uieditor from "./components/pages/uieditor.vue";
+import modeditor from "./components/pages/modeditor";
 import editor from "./components/pages/editor";
 
 Vue.use(VueRouter);
@@ -15,8 +15,8 @@ export default new VueRouter({
 		component: test,
 	},
 	{
-		path:"/uieditor",
-		component: uieditor,
+		path:"/modeditor",
+		component: modeditor,
 	},
 	{
 		path:"/editor",

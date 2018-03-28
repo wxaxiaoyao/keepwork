@@ -3,19 +3,22 @@
 		<el-tab-pane label="文件">
 			<fileTree></fileTree>
 		</el-tab-pane>	
-		<el-tab-pane label="元素">
-			<tagTree v-on:addTag="addTag"></tagTree>
-		</el-tab-pane>	
 		<el-tab-pane label="编辑">
-			<tagNav :rootTag="rootTag"></tagNav>
-			<tagEdit :rootTag="rootTag"></tagEdit>
+			<el-tabs type="border-card">
+				<el-tab-pane label="导航">
+					<tagNav :rootTag="rootTag"></tagNav>
+					<tagEdit :rootTag="rootTag"></tagEdit>
+				</el-tab-pane>
+				<el-tab-pane label="元素">
+					<tagTree v-on:addTag="addTag"></tagTree>
+				</el-tab-pane>
+			</el-tabs>
 		</el-tab-pane>	
 		<el-tab-pane label="导出">
 			导出ADI配置文件
 			导出模块源码
 		</el-tab-pane>	
 	</el-tabs>
-
 </template>
 
 <script>
@@ -41,10 +44,11 @@ export default {
 </script>
 
 <style>
-.el-tabs {
+.el-tabs, .el-tab-pane {
 	height:100%;
 }
 .left-el-tabs .el-tabs__content {
+	height:100%;
 	padding:0px;
 }
 .left-el-tabs .el-tabs__header.is-left {

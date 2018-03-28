@@ -40,7 +40,7 @@ export default {
 		compileTemplate() {
 			var tagName = this.tagName;
 			var attrStr = this.attrStr;
-			var template = '<' + tagName + attrStr + ' v-bind="$attrs" v-on="$listeners">{{tag.text ||""}}<tag v-for="x in tag.children" :tag="x" :tagName="x.tagName"></tag></' + tagName + '>';
+			var template = '<' + tagName + attrStr + ' v-bind="$attrs" v-on="$listeners">{{tag.text ||""}}<tag v-for="(x,index) in tag.children" :key="index" :tag="x" :tagName="x.tagName"></tag></' + tagName + '>';
 			if (tagName == "img" || tagName == "br" || tagName == "input") {
 				template = '<' + tagName + attrStr + '/>';
 			}
@@ -48,7 +48,7 @@ export default {
 			if (this.mode == _const.EDITOR_MODE_EDITOR) {
 				template = "<tagContainer :tag='tag'>" + template + "</tagContainer>";
 			}
-			console.log(template);
+			//console.log(template);
 			return vue.compile(template);
 		},
 	},
@@ -74,7 +74,7 @@ export default {
 		var subtag = undefined;
 		var vnodes = this.$slots.default || [];
 		tag.setTagName(this.tagName);
-		console.log(vnodes, tag.tagId);
+		//console.log(vnodes, tag.tagId);
 	
 		var _vnodeToTag = function(tag, vnodes) {
 			if (!vnodes) {
