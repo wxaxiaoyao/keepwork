@@ -92,6 +92,10 @@ adi.setMod = function(name, modData) {
 	return this;
 }
 
+adi.setTheme = function(theme) {
+	this.theme = theme;
+}
+
 adi.loadTemplateStyle = function(template, style) {
 	if (typeof(template) == "string") {
 		try {

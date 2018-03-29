@@ -45,16 +45,15 @@ export default {
 			markdown: markdown(),
 			mode:"editor",
 			text:"",
-			theme:"",
 			tag:tag,
 			rootTag:tag,
 		}
 	},
 	computed: {
 		...mapGetters({
+			theme: 'theme',
 			tagId: 'getTagId',
 			pageContent: 'getPageContent',
-
 		}),
 		codemirror() {
 			return this.$refs.codemirror.codemirror;
@@ -79,6 +78,9 @@ export default {
 
 	},
 	watch:{
+		theme: function(theme) {
+			adi.setTheme(theme);
+		},
 		tagId:function(tagId) {
 			var tag = this.rootTag.findById(tagId);
 			if (tag) {
@@ -249,6 +251,8 @@ export default {
 	mounted() {
 		//this.rootTag.styles["min-height"]="40px";
 		//console.log(this.rootTag);
+		console.log(this.theme);
+		adi.setTheme(this.theme);
 		this.selectTag(this.rootTag);
 		var self = this;
 	},

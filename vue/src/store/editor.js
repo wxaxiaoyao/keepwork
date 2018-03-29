@@ -125,6 +125,10 @@ const actions = {
 		commit(SET_SWITCH_PAGE, switchPage);	
 	},
 	setPage({commit, dispatch}, page) {
+		if (!page.path) {
+			return;
+		}
+
 		dispatch("indexDB_savePage", page);
 	},
 	loadPage(context, page) {
@@ -175,6 +179,11 @@ const actions = {
 		let {path, content} = page;
 		let {commit, getters, dispatch} = context;
 		let {projectId, git} = getters.getGit();
+
+		if (!path) {
+			return;
+		}
+
 		commit(SET_PAGE, {path:path, isRefresh:true});
 		await git.projects.repository.files.edit(projectId, path, 'master',{
 			content:content,
@@ -189,6 +198,11 @@ const actions = {
 		let {path} = page;
 		let {commit, getters:{getGit}, dispatch} = context;
 		let {projectId, git} = getGit();
+
+		if (!path) {
+			return;
+		}
+
 		commit(SET_PAGE, {path:path, isRefresh:true});
 		await git.projects.repository.files.remove(projectId, path, 'master',{
 			commit_message: 'delete by keepwork',

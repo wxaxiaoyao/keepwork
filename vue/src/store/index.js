@@ -3,6 +3,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
+import theme from "./theme.js";
 import editor from "./editor.js";
 import test from "./test.js";
 
@@ -13,6 +14,7 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
 	modules:{
+		theme,
 		editor,
 		test,
 	},

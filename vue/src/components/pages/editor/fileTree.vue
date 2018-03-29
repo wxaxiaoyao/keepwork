@@ -183,11 +183,7 @@ export default {
 		},
 		clickSelectPage(data, node, tree) {
 			var self = this;
-			setTimeout(function() {
-				self.$refs.treeComp.setCurrentKey(self.pagePath);
-				self.$refs.openedTreeComp.setCurrentKey(self.pagePath);
-			},10);
-
+			self.setCurrentItem(self.pagePath);
 			if (data.type == "tree") {
 				return;
 			}
@@ -203,12 +199,21 @@ export default {
 			this.setPagePath(data.path);
 		},
 		clickCloseBtn(data) {
+			console.log(data.path, this.pagePath);
 			this.$set(this.openedPages, data.path, undefined);
 			if (data.path == this.pagePath) {
 				this.setPagePath(undefined);
 				this.setSwitchPage(true);
-				this.$refs.treeComp.setCurrentKey(data.path.replace(/\/[\w\.]*$/, ""));
+				let curKey = data.path.replace(/\/[^\/]*$/, "");
+				this.setCurrentItem(curKey);
 			}
+		},
+		setCurrentItem(path) {
+			var self = this;
+			setTimeout(function(){
+				self.$refs.treeComp.setCurrentKey(path);
+				self.$refs.openedTreeComp.setCurrentKey(path);
+			}, 10);	
 		},
 		clickOpenBtn(data) {
 			

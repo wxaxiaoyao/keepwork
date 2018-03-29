@@ -16,6 +16,7 @@ import "./components/common";
 
 Vue.config.productionTip = false;
 
+
 global._ = _;
 
 global.g_app = {

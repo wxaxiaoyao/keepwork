@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
 import {codemirror} from "vue-codemirror";
 import "codemirror/lib/codemirror.css";
 import 'codemirror/mode/javascript/javascript.js';
@@ -59,7 +60,17 @@ export default {
 		modTree,
 	},
 
+	computed: {
+		...mapGetters({
+			theme: 'theme',
+			tagId: 'getTagId',
+		}),
+	},
+
 	watch: {
+		theme: function(theme) {
+			adi.setTheme(theme);
+		},
 		rootTag: {
 			handler: function(val) {
 				var templateStyle = adi.toTemplateStyle() || {};
@@ -110,6 +121,7 @@ export default {
 	},
 
 	mounted() {
+		adi.setTheme(this.theme);
 		this.initCodeMirror();
 	},
 }
