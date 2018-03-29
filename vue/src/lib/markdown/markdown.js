@@ -397,11 +397,12 @@ function header(obj) {
 function br(obj) {
 	var cur_line = obj.lines[obj.start];
 	var i = 0, htmlContent = "", text = cur_line , content="";	
-	if (!is_empty_line(cur_line) || obj.lines.length == (obj.start + 1) || !is_empty_line(obj.lines[obj.start+1])) {
+	//if (!is_empty_line(cur_line) || obj.lines.length == (obj.start + 1) || !is_empty_line(obj.lines[obj.start+1])) {
+	if (!is_empty_line(cur_line)) {
 		return;
 	}
 
-	for (i = obj.start + 1; i < obj.lines.length; i++) {
+	for (i = obj.start; i < obj.lines.length; i++) {
 		if (!is_empty_line(obj.lines[i])) {
 			break;
 		}
@@ -802,6 +803,7 @@ function markdown(options) {
 	}
 
 	md.block_parse = function(text, env) {
+		text = text.replace(/\n$/, "");
 		var self = this;
 		var params = {}, tokens = [], lines = text.split("\n"), start = 0;
 		//console.log(lines);	
@@ -843,7 +845,7 @@ function markdown(options) {
 	md.render = function(text) {
 		var tokens = this.parse(text);
 
-		console.log(tokens);
+		//console.log(tokens);
 
 		var htmlContent = "";
 		for (var i = 0; i < tokens.length; i++) {

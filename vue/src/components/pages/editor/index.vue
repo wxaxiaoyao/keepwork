@@ -179,7 +179,7 @@ export default {
 						}
 					}
 				} else {
-					subtag = tags.wikiMdTag(block.text);;
+					subtag = tags.wikiMdTag(block.text);
 				}
 				tag.addTag(subtag);
 			});

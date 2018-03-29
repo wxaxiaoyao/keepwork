@@ -42,7 +42,7 @@ export default {
 			}
 			this.value = {
 				filename: this.pagePath,
-				text: this.getPageContentByPath(this.pagePath),
+				text:this.pagePath && this.getPageContentByPath(this.pagePath) ,
 			};
 			this.setSwitchPage(false);
 		}

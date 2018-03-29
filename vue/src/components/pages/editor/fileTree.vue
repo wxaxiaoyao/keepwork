@@ -1,24 +1,44 @@
 <template>
 	<div class="kp_forbit_copy">
-		<!--<el-tree :data="openedPageTree" :props="fileTreeProps" node-key="path" :default-expand-all="true" :highlight-current="true" @node-click="clickSelectPage"></el-tree>-->
-		<el-tree ref="treeComp" :data="fileTree" :props="fileTreeProps" 
-			node-key="path" :highlight-current="true" @node-click="clickSelectPage">
+		<el-tree ref="openedTreeComp" :data="openedPageTree" :props="fileTreeProps" node-key="path" :default-expand-all="true" :highlight-current="true" @node-click="clickSelectPage">
 			<span class="custom-tree-node" slot-scope="{node, data}">
 				<span v-if="data.type == 'tree'" class="custom-tree-node">
 					<span>
-						<span>{{data.name}}</span>
+						<span>{{data.aliasname || data.name}}</span>
 					</span>
 				</span>
 				<span v-if="data.type == 'blob'" class="custom-tree-node">
 					<span class="tree-node-text">
 						<i v-show="data.isConflict" @click="clickFixedConflict(data)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
 						<i v-show="!data.isConflict" :class='isRefresh(data) ? "fa fa-refresh fa-spin" : isModify(data) ? "fa fa-pencil-square-o" : "fa fa-file-o"'></i>
-						<span>{{data.name}}</span>
+						<span>{{data.aliasname || data.name}}</span>
 					</span>
 					<span class="tree-node-btn-group">
-						<i @click="clickOpenBtn(data)"class="fa fa-external-link" data-toggle="tooltip" title="打开"></i>
-						<i @click="clickGitBtn(data)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
-						<i @click="clickDeleteBtn(data)" class="fa fa-trash-o" data-toggle="tooltip" title="删除"></i>
+						<i @click.stop="clickOpenBtn(data)"class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="访问"></i>
+						<i @click.stop="clickGitBtn(data)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
+						<i @click.stop="clickCloseBtn(data)" class="fa fa-times" aria-hidden="true" data-toggle="tooltip" title="关闭"></i>
+					</span>
+				</span>
+			</span>
+		</el-tree>
+		<el-tree ref="treeComp" :data="fileTree" :props="fileTreeProps" 
+			node-key="path" :highlight-current="true" @node-click="clickSelectPage">
+			<span class="custom-tree-node" slot-scope="{node, data}">
+				<span v-if="data.type == 'tree'" class="custom-tree-node">
+					<span>
+						<span>{{data.aliasname || data.name}}</span>
+					</span>
+				</span>
+				<span v-if="data.type == 'blob'" class="custom-tree-node">
+					<span class="tree-node-text">
+						<i v-show="data.isConflict" @click="clickFixedConflict(data)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
+						<i v-show="!data.isConflict" :class='isRefresh(data) ? "fa fa-refresh fa-spin" : isModify(data) ? "fa fa-pencil-square-o" : "fa fa-file-o"'></i>
+						<span>{{data.aliasname || data.name}}</span>
+					</span>
+					<span class="tree-node-btn-group">
+						<i @click.stop="clickOpenBtn(data)"class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="访问"></i>
+						<i @click.stop="clickGitBtn(data)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
+						<i @click.stop="clickDeleteBtn(data)" class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>
 					</span>
 				</span>
 			</span>
@@ -67,7 +87,10 @@ export default {
 		}),
 		openedPageTree() {
 			let tree = {name:"已打开页面", type:"tree", path:"", nodes:[]};
-			for (key in this.openedPages) {
+			for (var key in this.openedPages) {
+				if (!this.openedPages[key]) {
+					continue;
+				}
 				tree.nodes.push(this.openedPages[key]);
 			}
 			return [tree];
@@ -80,7 +103,10 @@ export default {
 	watch: {
 		pages: function(val) {
 			this.fileTree = this.getFileTree();
-		}
+			this.fileTree[0].aliasname = "我的页面";
+		},
+		pagePath: function(val) {
+		},
 	},
 	
 	methods: {
@@ -157,13 +183,15 @@ export default {
 		},
 		clickSelectPage(data, node, tree) {
 			var self = this;
+			setTimeout(function() {
+				self.$refs.treeComp.setCurrentKey(self.pagePath);
+				self.$refs.openedTreeComp.setCurrentKey(self.pagePath);
+			},10);
 
 			if (data.type == "tree") {
-				setTimeout(function() {
-					self.$refs.treeComp.setCurrentKey(self.pagePath);
-				});
 				return;
 			}
+
 			this.$set(this.openedPages, data.path, data);
 			var page = this.getPageByPath(data.path);
 			if (page.content == undefined) {
@@ -173,6 +201,17 @@ export default {
 			}
 
 			this.setPagePath(data.path);
+		},
+		clickCloseBtn(data) {
+			this.$set(this.openedPages, data.path, undefined);
+			if (data.path == this.pagePath) {
+				this.setPagePath(undefined);
+				this.setSwitchPage(true);
+				this.$refs.treeComp.setCurrentKey(data.path.replace(/\/[\w\.]*$/, ""));
+			}
+		},
+		clickOpenBtn(data) {
+			
 		},
 		clickGitBtn(data) {
 			//window.open()

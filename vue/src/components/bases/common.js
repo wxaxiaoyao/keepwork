@@ -22,7 +22,7 @@ export default {
 		var tag = this.tag;
 
 		if (this.vars) {
-			console.log(this.vars, tag.vars);
+			//console.log(this.vars, tag.vars);
 			tag.vars = _.merge(this.vars, tag.vars || {});
 		} 
 

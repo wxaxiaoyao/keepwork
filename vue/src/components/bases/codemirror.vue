@@ -180,7 +180,7 @@ export default {
 				}
 				this.codemirror.swapDoc(this.docMap[filename]);
 			} else {
-				this.codemirror.swapDoc(editor.originDoc);
+				this.codemirror.swapDoc(this.originDoc);
 			}
 			this.currentFilename = filename;
 			if (text) {

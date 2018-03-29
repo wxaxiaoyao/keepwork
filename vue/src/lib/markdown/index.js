@@ -52,10 +52,13 @@ function mdwiki(options) {
 	}
 
 	md.parse = function (text, theme) {
-		theme = theme || "";
-		text = theme + '\n' + text;
 		var self = this;
-		var themeLineCount = theme.split("\n").length;
+		var themeLineCount = 0;
+		if (theme) {
+			text = theme + "\n" + text;
+			themeLineCount = theme.split("\n").length;
+		}
+
 		var tokenList = self.md.parse(text);
 		var blocklist = self.template.blocklist;
 		var template = undefined;
@@ -107,7 +110,7 @@ function mdwiki(options) {
 		} else {
 			md.template.isChange = false;
 		}
-		console.log(blocklist);
+		//console.log(blocklist);
 		return blocklist;
 	}
 
