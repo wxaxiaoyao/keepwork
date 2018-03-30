@@ -219,8 +219,13 @@ export default {
 			
 		},
 		clickGitBtn(data) {
-			//window.open()
-
+			let gitcfg = { 
+				rawBaseUrl:"https://gitlab.com",
+				externalUsername:"wxaxiaoyao",
+				projectName:"keepworkdatasource",
+			}
+			let url = gitcfg.rawBaseUrl + "/" + gitcfg.externalUsername + "/" + gitcfg.projectName + '/blob/' + "master" + '/' + data.path;
+			window.open(url);
 		},
 		clickDeleteBtn(data) {
 			this.deletePage({path:data.path});
