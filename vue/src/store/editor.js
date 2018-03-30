@@ -82,7 +82,7 @@ const getters = {
 	getPages: (state) => state.pages,
 	getPageByPath: (state) => (path) => (state.pages[path] || {}),
 	getPageContentByPath: (state) => (path) => (state.pages[path] || {}).content,
-	getGit: (state) => (key) => (state.gits[key] || {projectId:4980659, git:gitlab, ref:"master", rootPath:"xiaoyao"}),
+	getGit: (state) => (key) => (state.gits[key] || {projectId:4980659, git:gitlab.api, ref:"master", rootPath:"xiaoyao"}),
 };
 
 const actions = {

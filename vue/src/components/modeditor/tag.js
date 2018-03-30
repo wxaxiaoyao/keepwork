@@ -180,23 +180,24 @@ tag.getTagPath = function() {
 	return path;
 }
 
-tag.addTag = function(tag) {
+tag.addTag = function(t) {
 	var self = this;
 
-	if (!tag || typeof(tag) != "object") {
+	if (!t || typeof(t) != "object") {
 		return;
 	}
 
 	for (var i = 0; i < self.children.length; i++) {
-		if (self.children[i].tagId == tag.tagId) {
+		if (self.children[i].tagId == t.tagId) {
 			return;
 		}
 	}
 
-	self.children.push(tag);
-	tag.parentTag = self;
+	self.children.push(t);
+	//self.children[self.children.length] = t;
+	t.parentTag = self;
 
-	return tag;
+	return t;
 }
 
 tag.deleteTag = function(tagId) {
@@ -276,6 +277,21 @@ tag.setVars = function(vars) {
 
 tag.getVars = function() {
 	return this.vars;
+}
+
+tag.clean = function() {
+	const _clean = function(tag) {
+		delete tag.parentTag;
+		delete tag.attrList;
+		delete tag.styleList;
+		for (var i = 0; i < tag.children.length; i++) {
+			_clean(tag.children[i]);
+		}
+	}
+
+	_clean(this);
+
+	return this;
 }
 
 function tagFactory(tagName) {

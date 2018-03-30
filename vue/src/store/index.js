@@ -5,6 +5,9 @@ import createPersistedState from "vuex-persistedstate";
 
 import theme from "./theme.js";
 import editor from "./editor.js";
+import user from "./user.js";
+import mods from "./mods.js";
+
 import test from "./test.js";
 
 Vue.use(Vuex)
@@ -16,6 +19,8 @@ export default new Vuex.Store({
 	modules:{
 		theme,
 		editor,
+		user,
+		mods,
 		test,
 	},
 
@@ -28,6 +33,6 @@ export default new Vuex.Store({
 	strict: debug,
 
 	plugins: [createPersistedState({
-		paths: ["test"],
+		paths: ["test", "user"],
 	})],
 });

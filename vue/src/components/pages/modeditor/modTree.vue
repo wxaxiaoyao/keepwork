@@ -3,10 +3,9 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
 
-import mods from "../../adi/mod/index.js";
-
-const getModTree = function() {
+const getModTree = function(mods) {
 	var trees = [];
 	for (var key in mods) {
 		var mod = mods[key];
@@ -37,11 +36,23 @@ export default {
 				children:"children",
 				label:"label",
 			},
-			modTree:getModTree(),
 		}
 	},
 
+	computed: {
+		...mapGetters({
+			systemMods:"mods/systemMods",
+		}),
+
+		modTree() {
+			let mods = _.cloneDeep(this.systemMods);
+			return getModTree(mods);
+		},
+	},
+
 	methods: {
+		...mapActions({
+		}),
 		clickSelectMod(data, node) {
 			if (data.type != "style") {
 				return ;

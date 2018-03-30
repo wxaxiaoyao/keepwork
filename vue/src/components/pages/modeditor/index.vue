@@ -13,6 +13,7 @@
 		</el-aside>
 		<el-main>
 			<el-row class="preview-row">
+				<el-button @click="clickSaveBtn">保存</el-button>
 				<el-col :span="18">
 					<tag :tag="rootTag"></tag>
 				</el-col>
@@ -91,6 +92,22 @@ export default {
 	},
 
 	methods:{
+		...mapActions({
+			loadSystemMods: "mods/loadSystemMods",
+			submitTagMods: "mods/submitTagMods",
+			setTagMod: "mods/setTagMod",
+		}),
+		clickSaveBtn() {
+			var tag = _.cloneDeep(this.rootTag);
+
+			var mod = {
+				name:"title",
+				type:"tag",
+				tag: tag.clean(),
+			};
+			this.setTagMod(mod);
+			this.submitTagMods();
+		},
 		initCodeMirror() {
 			var codemirror = this.$refs.cmstyle.codemirror;
 			codemirror.setSize("100%", "100%");
@@ -115,14 +132,16 @@ export default {
 			}
 		},
 		selectMod(data) {
-			adi.setMod(data.mod.name, data.modData);
+			adi.setMod(data.mod, data.modData);
 			this.rootTag = adi.getTag();
 		},
 	},
 
 	mounted() {
-		adi.setTheme(this.theme);
+		//this.loadSystemMods();
 		this.initCodeMirror();
+
+		adi.setTheme(this.theme);
 	},
 }
 </script>

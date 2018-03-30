@@ -11,7 +11,7 @@ import {mapActions, mapGetters} from "vuex";
 import tags from "../modeditor/tags.js";
 import modTest from "../mods/modTest.js";
 
-
+import mods from "../adi/mod/index.js";
 
 export default {
 	name:'test',
@@ -34,6 +34,8 @@ export default {
 	methods: {
 		...mapActions({
 			setKey:"test/setKey",
+			setSystemMods: "mods/setSystemMods",
+			submitSystemMods: "mods/submitSystemMods",
 		}),
 	},
 
@@ -42,13 +44,6 @@ export default {
 	},
 
 	mounted(){
-		if (this.key) {
-			console.log(this.key);
-			this.setKey("test");
-		} else {
-			console.log("set key");
-			this.setKey("hello world");
-		}
 	}
 }
 </script>

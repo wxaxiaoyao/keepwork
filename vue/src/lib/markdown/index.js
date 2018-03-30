@@ -62,8 +62,39 @@ function mdwiki(options) {
 		var tokenList = self.md.parse(text);
 		var blocklist = self.template.blocklist;
 		var template = undefined;
+		var tokens = [];
+		var index = 0;
+		var tmpToken = undefined;
+
 		for (var i = 0; i < tokenList.length; i++) {
 			var token = tokenList[i];
+			if (token.tag == "pre") {
+				if (tmpToken) {
+					tokens[index++] = tmpToken;
+					tmpToken = undefined;
+				}
+				tokens[index++] = token;
+				continue;
+			} 
+
+			if (tmpToken) {
+				tmpToken.text += token.text;
+				tmpToken.end = token.end;
+			} else {
+				tmpToken = {
+					text: token.text,
+					start: token.start,
+					end: token.end,
+				};
+			}
+		}
+
+		if (tmpToken) {
+			tokens[index++] = tmpToken;
+		}
+
+		for (var i = 0; i < tokens.length; i++) {
+			var token = tokens[i];
 			var block = blocklist[i] || {};
 
 			block.token = token;
@@ -86,7 +117,7 @@ function mdwiki(options) {
 		}
 
 		var size = blocklist.length;
-		for (var i = tokenList.length; i < size; i++) {
+		for (var i = tokens.length; i < size; i++) {
 			blocklist.pop();
 		}
 

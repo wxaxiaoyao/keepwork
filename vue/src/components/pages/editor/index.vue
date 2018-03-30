@@ -54,6 +54,7 @@ export default {
 			theme: 'theme',
 			tagId: 'getTagId',
 			pageContent: 'getPageContent',
+			getTagMod: "mods/tagMod",
 		}),
 		codemirror() {
 			return this.$refs.codemirror.codemirror;
@@ -163,27 +164,30 @@ export default {
 			var self = this;
 			var blocklist = this.markdown.parse(text);
 			var tag = tags.getTag("div");
+			console.log(blocklist);
 			blocklist.forEach(function(block, index){
 				var tagName = "wiki-md";
 				var subtag = undefined;
 				if (block.isMod) {
-					tagName = block.modName;
-					if (block.modParams && block.modParams.tag) {
-						subtag = block.modParams.tag;
-					} else if(components[tagName]){
-						subtag = tags.getTag(tagName);
-						subtag.attrs.params = {
-							params: block.modParams,
-							$data: {
-								attrName:":params",
-								key:".params",
-							}
-						}
-					}
+					subtag = (self.getTagMod(block.modName) || {}).tag;
+					subtag = tags.getTagByTag(subtag);
+					//tagName = block.modName;
+					//if (block.modParams && block.modParams.tag) {
+					//	subtag = block.modParams.tag;
+					//} else if(components[tagName]){
+					//	subtag = tags.getTag(tagName);
+					//	subtag.attrs.params = {
+					//		params: block.modParams,
+					//		$data: {
+					//			attrName:":params",
+					//			key:".params",
+					//		}
+					//	}
+					//}
 				} else {
 					subtag = tags.wikiMdTag(block.text);
 				}
-				tag.addTag(subtag);
+				subtag && tag.addTag(subtag);
 			});
 			self.rootTag = tag;
 			
@@ -269,7 +273,7 @@ export default {
 </script>
 
 <style>
-html,body, .el-container, .el-aside, .el-row, .el-col {
+html,body, .el-container, .el-aside {
 	height:100%;
 }
 html, body {

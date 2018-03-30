@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @click="click">
+  <div id="app">
 	<router-view></router-view>
   </div>
 </template>
@@ -12,12 +12,14 @@ export default {
 
   methods: {
 	  ...mapActions({
-		  setCurrentTag:"setCurrentTag",
+		  loadTagMods: "mods/loadTagMods",
 	  }),
-	  click() {
-		  //this.setCurrentTag(undefined);
-	  },
   },
+
+  mounted() {
+	  this.loadTagMods();
+  },
+
   components: {
   },
 }

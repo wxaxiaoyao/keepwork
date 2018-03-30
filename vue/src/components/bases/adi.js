@@ -72,11 +72,12 @@ function parseMod(m, template, root) {
 	return tag;
 }
 
-adi.setMod = function(name, modData) {
-	var mod = this.mods[name];
+adi.setMod = function(mod, modData) {
 	if (!mod) {
 		return;
 	}
+
+	console.log(mod);
 
 	this.mod = mod;
 	this.modData = _.merge(_.cloneDeep(this.mod.properties), modData || {});

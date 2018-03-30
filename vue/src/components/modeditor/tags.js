@@ -567,7 +567,29 @@ tags.wikiMdTag = function(text) {
 	return tag;
 }
 
+tags.getTagByTag = function(tag) {
+	if (!tag) {
+		return ;
+	}
+
+	const _cloneTag = function(tag) {
+		let _tag = tagFactory(tag.tagName);
+		_.merge(_tag, tag);
+		_tag.children = [];
+		for (let i = 0; i < tag.children.length; i++) {
+			var _subtag = _cloneTag(tag.children[i]);
+			_tag.addTag(_subtag);
+		}
+
+		return _tag;
+	}
+	
+	return _cloneTag(tag);
+}
+
 tags.getTag = function(typ) {
+	typ = typ || "div";
+
 	var funcname = _.camelCase(typ) + "Tag";
 	var tag = undefined;
 
