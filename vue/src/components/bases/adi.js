@@ -45,20 +45,12 @@ function parseMod(m, template, root) {
 			if (typeof(element) == "string") {
 				comTag = tags.getTag(m.compType(element));
 				m.setTag(comTag, element);
-				source = m.modData[element] || {};
 				comTag.vars = {
-					source:source,
+					source:m.modData[element] || {},
+					options:m.getOptions(element) || {},
 				}
-				source.$data = {
-					attrNamePrefix:":",
-					attrName:"source",
-				}
-				var options = m.getOptions(element) || {};
-				comTag.vars.options = options;
-				options.$data = {
-					attrNamePrefix:":",
-					attrName:"options",
-				}
+				comTag.attrs[":source"] = tag.varsPrefix + ".source";
+				comTag.attrs[":options"] = tag.varsPrefix + ".options";
 			} else if(Array.isArray(element)) {
 				comTag = parseMod(m, element, key);
 			} else {

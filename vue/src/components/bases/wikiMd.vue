@@ -14,16 +14,14 @@ export default {
 	data: function() {
 		return {
 			vars: {
-				text: {
-					text:"",
-				}
+				text: "",
 			}
 		}
 	},
 
 	computed: {
 		html() {
-			return md.render(this.vars.text.text); 
+			return md.render(this.vars.text); 
 		},
 	}
 }

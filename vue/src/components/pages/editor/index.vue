@@ -14,7 +14,7 @@
 			</el-aside>
 			<div class="split-strip kp_forbit_copy" @mousedown="splitStripMousedown('splitStrip2')"></div>
 			<el-main ref="splitStrip2R">
-				<tag :tag="rootTag"></tag>
+				<markdown :text="pageContent"></markdown>
 			</el-main>
 		</el-container>
 	</el-container>
@@ -25,8 +25,7 @@ import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import {Base64} from "js-base64";
 import components from "../../../components/index.js";
-import markdown from "../../../lib/markdown/index.js";
-
+import markdown from "../../bases/markdown.vue";
 import left from "./left.vue";
 import codeEditor from "./codeEditor.vue";
 
@@ -37,12 +36,10 @@ export default {
 	name:"editor",
 	data: function() {
 		var tag = tags.getTag("div");
-		//var tag = adi.setMod("ModTitle").getTag();
 		return {
 			splitStrip1_width:"18%",
 			splitStrip2_width:"50%",
 			value:undefined,
-			markdown: markdown(),
 			mode:"editor",
 			text:"",
 			tag:tag,
@@ -58,20 +55,6 @@ export default {
 		}),
 		codemirror() {
 			return this.$refs.codemirror.codemirror;
-		},
-		tagHtml: function() {
-			var tagHtmlStr = this.rootTag.html();
-			//console.log(tagHtmlStr);
-			var res = vue.compile(tagHtmlStr);
-			return {
-				//template: tagHtmlStr,
-				props:['params'],
-				created(){
-					//console.log(this);
-				},
-				render: res.render,
-				staticRenderFns: res.staticRenderFns,
-			}
 		},
 		tagParams() {
 			return this.rootTag.getParams();
@@ -89,7 +72,6 @@ export default {
 			}
 		},
 		pageContent:function(text) {
-			//console.log(text);
 			this.render(text);
 		},
 	},
@@ -160,37 +142,13 @@ export default {
 			this.splitStrip = undefined;
 		},
 		render(text) {
-			//console.log(text);
-			var self = this;
-			var blocklist = this.markdown.parse(text);
-			var tag = tags.getTag("div");
-			console.log(blocklist);
-			blocklist.forEach(function(block, index){
-				var tagName = "wiki-md";
-				var subtag = undefined;
-				if (block.isMod) {
-					subtag = (self.getTagMod(block.modName) || {}).tag;
-					subtag = tags.getTagByTag(subtag);
-					//tagName = block.modName;
-					//if (block.modParams && block.modParams.tag) {
-					//	subtag = block.modParams.tag;
-					//} else if(components[tagName]){
-					//	subtag = tags.getTag(tagName);
-					//	subtag.attrs.params = {
-					//		params: block.modParams,
-					//		$data: {
-					//			attrName:":params",
-					//			key:".params",
-					//		}
-					//	}
-					//}
-				} else {
-					subtag = tags.wikiMdTag(block.text);
-				}
-				subtag && tag.addTag(subtag);
-			});
-			self.rootTag = tag;
-			
+			this.text = this.pageContent;
+			//var self = this;
+			//this.renderTimer && clearTimeout(this.renderTimer);
+			//this.renderTimer = setTimeout(function() {
+			//	self.text = self.pageContent;
+			//	self.renderTimer = undefined;
+			//}, 100);
 		},
 		addTag(tag, node, nodeComp) {
 			this.mode = "test";
@@ -253,12 +211,9 @@ export default {
 		},
 	},
 	mounted() {
-		//this.rootTag.styles["min-height"]="40px";
-		//console.log(this.rootTag);
 		console.log(this.theme);
 		adi.setTheme(this.theme);
 		this.selectTag(this.rootTag);
-		var self = this;
 	},
 	beforeMount() {
 	},
@@ -268,6 +223,7 @@ export default {
 	components: {
 		left,
 		codeEditor,
+		markdown,
 	},
 }
 </script>

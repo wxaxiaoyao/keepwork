@@ -65,6 +65,7 @@ function mdwiki(options) {
 		var tokens = [];
 		var index = 0;
 		var tmpToken = undefined;
+		var text = "";
 
 		for (var i = 0; i < tokenList.length; i++) {
 			var token = tokenList[i];
@@ -77,12 +78,14 @@ function mdwiki(options) {
 				continue;
 			} 
 
+			text = (token.text[0] == "\n" ? "\n" : "") + token.text;
+
 			if (tmpToken) {
-				tmpToken.text += token.text;
+				tmpToken.text += text;
 				tmpToken.end = token.end;
 			} else {
 				tmpToken = {
-					text: token.text,
+					text: text,
 					start: token.start,
 					end: token.end,
 				};
@@ -92,6 +95,8 @@ function mdwiki(options) {
 		if (tmpToken) {
 			tokens[index++] = tmpToken;
 		}
+
+		//console.log(tokenList, tokens);
 
 		for (var i = 0; i < tokens.length; i++) {
 			var token = tokens[i];

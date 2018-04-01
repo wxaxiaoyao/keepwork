@@ -39,29 +39,10 @@ tags.imgTag = function() {
 	var tag = tagFactory("img");
 	tag.name = "图片";
 	
-	tag.attrs.src = "http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg";
-	tag.attrList = [
-	{
-		name: "图片地址",
-		attrName: "src",
-		defaultValue: tag.attrs.src,
-		desc: "图片链接",
-	},
-	];
-
+	tag.attrs[":src"] = tag.varsPrefix + ".src";
 	tag.vars = {
-		src: {
-			text:undefined,
-			$data:{
-				type:"text",
-				attrName:"src",
-				attrNamePrefix:":",
-				desc:"图片地址",
-				key:".text",
-			}
-		},
+		src: "http://www.runoob.com/try/bootstrap/layoutit/v3/default3.jpg",
 	}
-
 	return tag;
 }
 
@@ -70,42 +51,23 @@ tags.spanTag = function(text) {
 	var tag = tagFactory("span");
 	tag.name = "文本";
 
+	tag.attrs["v-text"] = tag.varsPrefix + ".text";
+
 	tag.vars = {
-		text: {
-			text: text || "文本",
-			$data: {
-				type:"text",  // 文件变量  用于标签内容显示
-				attrName:"v-text",
-				key:".text",
-			}
-		},
+		text: text || "文本",
 	}
 
 	return tag;
 }
 // 标题
-tags.hTag = function(hn) {
+tags.hTag = function(hn, text) {
 	var tag = tagFactory(hn);
 	tag.name = "标题";
 
+	tag.attrs["v-text"] = tag.varsPrefix + ".text";
+
 	tag.vars = {
-		text: {
-			text:"这是一个标题",
-			$data: {
-				type:"text",  // 文件变量  用于标签内容显示
-				attrName:"v-text",
-				key:".text",
-			}
-		},
-		//tagName: {
-			//text:undefined,
-			//$data:{
-				//type:"text",
-				//attrName:"tagName",
-				//attrNamePrefix:":",
-				//desc:"h1,h2,h3,h4,h5,h6",
-			//}
-		//}
+		text: text ||  "这是一个标题",
 	}
 
 	return tag;
@@ -140,19 +102,13 @@ tags.h3Tag = function() {
 }
 
 // 段落
-tags.pTag = function() {
+tags.pTag = function(text) {
 	var tag = tagFactory("tag");
-	tag.attrs.tagName = "p";
 	tag.name = "段落";
 
+	tag.attrs["v-text"] = tag.varsPrefix + ".text";
 	tag.vars = {
-		text: {
-			text:"这是一个段落",
-			$data: {
-				type:"text",  // 文件变量  用于标签内容显示
-				attrName:"v-text",
-			}
-		},
+		text: text || "这是一个段落",
 	}
 
 	return tag;
@@ -164,23 +120,11 @@ tags.aTag = function() {
 	var tag = tagFactory("a");
 	tag.name = "链接";
 
-	tag.attrList = [
-	{
-		name: "链接地址",
-		attrName: "href",
-		defaultValue:"",
-		desc: "链接地址",
-	},
-	];
-	
+	tag.attrs[":href"] = tag.varsPrefix + ".href";
+	tag.attrs["v-text"] = tag.varsPrefix + ".text";
 	tag.vars = {
-		text: {
-			text:"这是一个链接",
-			$data: {
-				type:"text",  // 文件变量  用于标签内容显示
-				attrName:"v-text",
-			}
-		}
+		text: "这是一个链接",
+		href: "#",
 	}
 
 	return tag;
@@ -192,14 +136,6 @@ tags.iTag = function(){
 	tag.name = "图标";
 
 	tag.attrs.class = "el-icon-info";
-	tag.attrList = [
-	{
-		name: "图标类名",
-		attrName: "class",
-		defaultValue:"",
-		desc: "图标类名",
-	},
-	];
 
 	return tag;
 }
@@ -217,16 +153,6 @@ tags.elRowTag = function() {
 		desc: "栅格间隔",
 	},
 	];
-	//tag.vars = [
-		//{
-			//text:"",
-			//$data:{
-				//type:"attr",  // 属性变量
-				//attrName:":gutter",
-				//key:"gutter", // 栅格间隔
-			//},
-		//},
-	//];
 
 	return tag;
 }
@@ -482,14 +408,6 @@ tags.wikiRichtextTag = function() {
 	};
 	tag.attrs.style["min-height"] = "20px";
 	
-	//tag.innerHtmlChange = function() {
-		//var el = document.getElementById(this.tagId);
-		//if (!el) {
-			//return;
-		//}
-		////console.log([el]);
-		//this.vars.text.text = el.innerHTML.trim();
-	//}
 	return tag;
 }
 
@@ -508,14 +426,6 @@ tags.wikiMarkdownTag = function() {
 	};
 	tag.attrs.style["min-height"] = "20px";
 	
-	//tag.innerHtmlChange = function() {
-		//var el = document.getElementById(this.tagId);
-		//if (!el) {
-			//return;
-		//}
-		////console.log([el]);
-		//this.vars.text.text = el.innerHTML.trim();
-	//}
 	return tag;
 }
 
@@ -555,13 +465,13 @@ tags.htmlTag = function(html) {
 tags.wikiMdTag = function(text) {
 	var tag = tagFactory("wiki-md");
 	tag.vars = {
+		text: text || "markdwon文本",
+	}
+
+	tag.$vars = {
 		text: {
-			text: text || "markdwon文本",
-			$data: {
-				type:"text",  // 文件变量  用于标签内容显示
-				key:".text",
-			}
-		},
+			type:"text",  // 文件变量  用于标签内容显示
+		}
 	}
 
 	return tag;

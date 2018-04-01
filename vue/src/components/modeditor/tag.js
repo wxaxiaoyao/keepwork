@@ -15,8 +15,9 @@ tag.styles = {
 	//"height":"100%",
 };
 tag.classes = {};
+tag.varsPrefix = "tag.vars";
 tag.vars = undefined; // 变量集 未自定义则不配置更改
-
+tag.$vars = {};       // var 描述
 tag.styleCode = "";
 tag.styleList = [];
 tag.attrList = [];
@@ -38,6 +39,7 @@ tag.getAttrsHtml = function(tagName){
 	var str = ' :style="tag.styles" :class="tag.classes"';
 	var attrs = _.cloneDeep(self.attrs);
 	var vars = self.vars;
+	var $vars = self.$vars;
 
 	if (tagName && tagName.indexOf("el-") == 0) {
 
@@ -47,16 +49,17 @@ tag.getAttrsHtml = function(tagName){
 	// 具体指定参数到属性
 	for (var key in vars) {
 		var value = vars[key];
-		if (!value.$data || !value.$data.attrName) {
+		var $data = $vars[key];
+		if (!$data || !$data.attrName) {
 			continue;
 		}
-		var attrName = value.$data.attrName;
-		var attrNamePrefix = value.$data.attrNamePrefix || "";
+		var attrName = $data.attrName;
+		var attrNamePrefix = $data.attrNamePrefix || "";
 		var defaultValue = attrs[attrName];
 		attrs[attrName] = undefined;
 
 		defaultValue = defaultValue ? (" || '" + defaultValue + "'") : "";
-		str += ' ' + attrNamePrefix + attrName + '="tag.vars.' + key + (value.$data.key || '') + defaultValue + '"';
+		str += ' ' + attrNamePrefix + attrName + '="tag.vars.' + key + ($data.key || '') + defaultValue + '"';
 	}
 
 	//str += " v-on:blur.native=blur";
@@ -180,6 +183,18 @@ tag.getTagPath = function() {
 	return path;
 }
 
+tag.setChildrenTag = function(index, tag) {
+	var self = this;
+	if (!tag || typeof(tag) != "object") {
+		return;
+	}
+
+	self.children.splice(index, 1, tag);
+	tag.parentTag = self;
+
+	return
+}
+
 tag.addTag = function(t) {
 	var self = this;
 
@@ -194,7 +209,6 @@ tag.addTag = function(t) {
 	}
 
 	self.children.push(t);
-	//self.children[self.children.length] = t;
 	t.parentTag = self;
 
 	return t;

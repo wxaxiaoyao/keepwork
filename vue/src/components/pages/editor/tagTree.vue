@@ -28,6 +28,9 @@ export default {
 
 	methods: {
 		clickSelectTag(tag) {
+			if (!tag.type) {
+				return;
+			}
 			this.$emit("addTag", tag);
 		}
 	}
