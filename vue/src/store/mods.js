@@ -3,18 +3,21 @@ import {Base64} from "js-base64";
 import mods from "../components/adi/mod/index.js";
 
 const systemModPath = "https://gitlab.com/wxaxiaoyao/keepworkdatasource/raw/master/xiaoyao_data/mods.json";
+const defaultStyleName = "default";
 
 const SET_SYSTEM_MODS = 'SET_SYSTEM_MODS';
 const SET_SYSTEM_MOD = 'SET_SYSTEM_MOD';
 const SET_TAG_MODS = 'SET_TAG_MODS';
 const SET_TAG_MOD = 'SET_TAG_MOD';
+const SET_TAG_MOD_STYLE = 'SET_TAG_MOD_STYLE';
+const DELETE_TAG_MOD = "DELETE_TAG_MOD";
 
 const systemModsFunc = () => {
 	var systemMods = {};
 	for (var key in mods) {
 		var mod = mods[key];
 		systemMods[mod.name] = {
-			name:mod.name,
+			modName:mod.name,
 			components: _.cloneDeep(mod.components),
 			properties: _.cloneDeep(mod.properties),
 			styles: _.cloneDeep(mod.styles),
@@ -47,8 +50,9 @@ const getters = {
 	mods: (state) => ({...state.systemMods, ...state.userMods}),
 	tagMods: (state) => (state.tagMods),
 	systemMods: (state) => state.systemMods,
-	mod: (state) => (modName) => (state.userMods[modName] || state.systemMods[modName]),
-	tagMod: (state) => (modName) => (state.tagMods[modName]),
+	mod: (state) => (modName, styleName) => (state.userMods[modName] || state.systemMods[modName])[styleName || defaultStyleName],
+	tagMod: (state) => (modName) => (state.tagMods[modName] || {}),
+	tagModStyle: (state) => (modName, styleName) => (state.tagMods[modName] || {})[styleName || defaultStyleName],
 }
 
 const actions = {
@@ -57,7 +61,7 @@ const actions = {
 	},
 
 	setSystemMod({commit}, mod) {
-		if (!mod.name) {
+		if (!mod.modName) {
 			return;
 		}
 
@@ -68,16 +72,28 @@ const actions = {
 		commit(SET_SYSTEM_MODS, mods);
 	},
 
-	setTagMod({commit}, mod) {
-		if (!mod.name) {
+	setTagModStyle({commit, dispatch}, style) {
+		commit(SET_TAG_MOD_STYLE, style);	
+		dispatch("submitTagMods");
+	},
+
+	deleteTagMod({commit, dispatch}, modName) {
+		commit(DELETE_TAG_MOD, modName);
+		dispatch("submitTagMods");
+	},
+
+	setTagMod({commit, dispatch}, mod) {
+		if (!mod.modName) {
 			return;
 		}
 
 		commit(SET_TAG_MOD, mod);
+		dispatch("submitTagMods");
 	},
 
-	setTagMods({commit}, mods) {
+	setTagMods({commit, dispatch}, mods) {
 		commit(SET_TAG_MODS, mods);
+		dispatch("submitTagMods");
 	},
 
 	async loadSystemMods({rootGetters, commit}) {
@@ -125,7 +141,7 @@ const mutations = {
 		});
 	},
 	[SET_SYSTEM_MOD](state, mod) {
-		vue.set(state.systemMods, mod.name, mod);
+		vue.set(state.systemMods, mod.modName, mod);
 	},
 	[SET_TAG_MODS](state, mods) {
 		vue.set(state, "tagMods", {
@@ -133,9 +149,21 @@ const mutations = {
 			...(mods || {}),
 		});
 	},
-	[SET_TAG_MOD](state, mod) {
-		vue.set(state.tagMods, mod.name, mod);
+	[DELETE_TAG_MOD](state, modName) {
+		vue.delete(state.tagMods, modName);	
 	},
+
+	[SET_TAG_MOD](state, mod) {
+		vue.set(state.tagMods, mod.modName, mod);
+	},
+	[SET_TAG_MOD_STYLE](state, style) {
+		const styles = state.tagMods[style.modName].styles;
+		if (!style.tag) {
+			vue.delete(styles, style.styleName);
+		} else {
+			vue.set(styles, style.styleName, style);
+		}
+	}
 }
 
 export default {

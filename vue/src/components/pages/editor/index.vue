@@ -143,12 +143,6 @@ export default {
 		},
 		render(text) {
 			this.text = this.pageContent;
-			//var self = this;
-			//this.renderTimer && clearTimeout(this.renderTimer);
-			//this.renderTimer = setTimeout(function() {
-			//	self.text = self.pageContent;
-			//	self.renderTimer = undefined;
-			//}, 100);
 		},
 		addTag(tag, node, nodeComp) {
 			this.mode = "test";

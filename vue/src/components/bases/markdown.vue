@@ -31,6 +31,7 @@ export default {
 	computed: {
 		...mapGetters({
 			getTagMod: "mods/tagMod",
+			tagMods: "mods/tagMods",
 		}),
 	},
 
@@ -38,19 +39,27 @@ export default {
 		text: function(text) {
 			this.parseText(text);
 		},
+		tagMods: function() {
+			this.parseText(this.text);
+		},
 	},
 
 	methods: {
 		getTagByBlock(block) {
 			var tag = undefined;
 			if (block.isMod) {
-				tag = (this.getTagMod(block.modName) || {}).tag;
+				var mod = this.getTagMod(block.modName);
+				if (!mod || !mod.styles || !mod.styles[block.styleName]){
+					return tags.getTag();
+				}
+				var modStyle = mod.styles[block.styleName];
+				var tag = modStyle.tag;
 				tag = tags.getTagByTag(tag);
 			} else {
 				tag = tags.wikiMdTag(block.text);
 			}
 
-			return tag;
+			return tag || tags.getTag();
 		},
 		parseText(text) {
 			var tag = this.rootTag;
@@ -63,9 +72,18 @@ export default {
 					this.blocklist[i] = _.cloneDeep(block);
 					subtag = this.getTagByBlock(block);
 					subtag && tag.setChildrenTag(i, subtag);
+					this.blocklist[i].tag = subtag;
 				} else if (oldblock.isMod) {
-
+					//console.log(oldblock);
+					if (oldblock.modName == block.modName && tag.children[i].tagName == block.modName) {
+						// 更新数据
+					} else {
+						// 重新构造tag
+						subtag = this.getTagByBlock(block);
+						subtag && tag.setChildrenTag(i, subtag);
+					}
 				} else {
+					tag.children[i].vars = tag.children[i].vars || {};
 					tag.children[i].vars.text = block.text;
 				}
 			}
@@ -73,6 +91,7 @@ export default {
 				this.blocklist.pop();
 				tag.children.pop();
 			}
+			//console.log(tag.children, this.blocklist);
 		},
 	},
 

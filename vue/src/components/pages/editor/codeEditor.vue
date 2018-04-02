@@ -48,7 +48,7 @@ export default {
 				return;
 			}
 			// 切换文件 立即写入
-			this.savePageToDB();
+			this.savePageToDB(this.value.filename);
 			
 			// 切换文件
 			this.value = {
@@ -70,12 +70,14 @@ export default {
 		}),
 
 		savePageToDB(){
+			var value = this.$refs.codemirror.getValue();
+			var filename = value.filename;
+			var text = value.text;
 			this.change.timer && clearTimeout(this.change.timer);
-			if (this.change.filename) {
-				//console.log(this.change.filename, this.codemirror.getValue());
+			if (filename) {
 				this.setPage({
-					path: this.change.filename,
-					content: this.codemirror.getValue(),
+					path: filename,
+					content: text,
 				});
 			}
 		},
@@ -118,6 +120,14 @@ export default {
 		cursorActivity() {
 
 		},
+	},
+
+	created() {
+		const self = this;
+		g_app.events.$on(g_app.consts.EVENT_ADD_MOD_TO_EDITOR, function(style){
+			self.value = self.$refs.codemirror.getValue();
+			self.value.text += '\n```@' + style.modName + '/' + style.styleName + '\n' +'```\n';
+		});
 	},
 
     components:{

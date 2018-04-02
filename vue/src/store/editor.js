@@ -62,6 +62,7 @@ const state = {
 	tagId:null, // 当前tag id
 	hoverTagId:null, // 鼠标悬浮tag id
 	tagPath:null, // 当前tag path
+	hoverTagPath:null, // 鼠标悬浮tag path
 	//mode:_const.EDITOR_MODE_EDITOR,
 	pagePath:"", //当前页面URL
 	pageContent:"", // 当前页面内容

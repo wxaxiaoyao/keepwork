@@ -30,12 +30,15 @@ function mdwiki(options) {
 			block.isTemplate = false;
 			block.modName = undefined;
 			block.cmdName = undefined;
+			block.styleName = undefined;
 			block.modParams = undefined;
 		} else {
 			var wikiCmdRE = /^```@([\w_\/]+)/;
 			var wikiModNameRE = /^([\w_]+)/;
+			var wikiStyleNameRE = /([\w_]+)$/;
 			var cmdName = line.match(wikiCmdRE)[1];
 			var modName = cmdName.match(wikiModNameRE)[1];
+			var styleName = cmdName.match(wikiStyleNameRE)[1];
 			var modParams = undefined;
 			try {
 				modParams = angular.fromJson(content)
@@ -46,6 +49,7 @@ function mdwiki(options) {
 
 			block.modName = modName;
 			block.cmdName = cmdName;
+			block.styleName = styleName;
 			block.modParams = modParams;
 			block.isTemplate = modName == "template";
 		}

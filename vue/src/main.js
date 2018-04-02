@@ -11,6 +11,8 @@ import router from "./router";
 import store from "./store";
 
 import "./lib/jsonEditor";
+import consts from "./lib/const.js";
+
 import "./components/bases";
 import "./components/common";
 
@@ -21,6 +23,8 @@ global._ = _;
 
 global.g_app = {
 	_: _,
+	events: new Vue(),
+	consts: consts,
 };
 
 //console.log(g_app);

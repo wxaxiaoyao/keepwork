@@ -1,17 +1,45 @@
 import _ from "lodash";
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
+import {create} from "jss";
+import preset from 'jss-preset-default'
+
 import tags from "../modeditor/tags.js";
 import _const from "../../lib/const.js";
 import tagContainer from "./tagContainer.vue";
 
 import mods from "../index.js";
 
+const jss = create({
+	...preset(),
+	createGenerateClassName: () => {
+		return (rule, sheet) => {
+			return rule.key;
+		};
+	},
+});
+
+const classStyle = {
+	tagHover:{
+		//border:"4px dashed red",
+	},
+	tagActived:{
+		border:"4px solid green",
+	},
+};
+jss.createStyleSheet(classStyle).attach();
+
 export default {
 	name: "tag",
+	inheritAttrs: false,
 	data: function() {
 		return {
-		}
+			styles: {},
+			classes:{
+				tagActived:false,
+				tagHover:false,
+			},
+		};
 	},
 	props:{
 		tag: {
@@ -26,30 +54,58 @@ export default {
 		},
 	},
 
-	watch:{
-	},
-	
-	inheritAttrs: false,
 	computed: {
 		...mapGetters({
+			tagId: 'getTagId',
 			mode: "getMode",
+			hoverTagId:"getHoverTagId",
 		}),
+		tagStyle() {
+			return {...this.tag.styles, ...this.styles};
+		},
+		tagClass() {
+			return {...this.tag.classes, ...this.classes};
+		},
+		isActive() {
+			if (this.mode != _const.EDITOR_MODE_EDITOR) {
+				return false;
+			}
+			if (this.tagId && this.tag.tagId == this.tagId) {
+				return true;
+			}
+
+			return false;
+		},
 		attrStr(){
 			return this.tag.getAttrsHtml(this.tagName);
 		},
 		compileTemplate() {
 			var tagName = this.tagName;
 			var attrStr = this.attrStr;
-			var template = '<' + tagName + attrStr + ' v-bind="$attrs" v-on="$listeners">{{tag.text ||""}}<tag v-for="(x,index) in tag.children" :key="index" :tag="x" :tagName="x.tagName"></tag></' + tagName + '>';
+			var editorModeAttrStr = ' @click.stop="click" @mouseover.stop="mouseover" @mouseout.stop="mouseout"';
+			if (this.mode != _const.EDITOR_MODE_EDITOR) {
+				editorModeAttrStr = "";
+			}
+			var attrStr = editorModeAttrStr + attrStr + ' :style="tagStyle" :class="tagClass" v-bind="$attrs" v-on="$listeners"';
+			var template = '<' + tagName + attrStr + '>{{tag.text ||""}}<tag v-for="(x,index) in tag.children" :key="index" :tag="x" :tagName="x.tagName"></tag></' + tagName + '>';
 			if (tagName == "img" || tagName == "br" || tagName == "input") {
 				template = '<' + tagName + attrStr + '/>';
 			}
-			//console.log(this.tag.styles, this.tag.classes, this.tag.attrs, this.tag.vars);
-			if (this.mode == _const.EDITOR_MODE_EDITOR) {
-				template = "<tagContainer :tag='tag'>" + template + "</tagContainer>";
-			}
-			//console.log(template);
 			return vue.compile(template);
+		},
+	},
+
+	watch:{
+		isActive: function(val, oldVal) {
+			this.classes.tagActived = val;
+		},
+		hoverTagId: function(tagId, oldTagId) {
+			if (this.tag.tagId == tagId) {
+				this.classes.tagHover = true;
+			} else {
+				this.classes.tagHover = false;
+			}
+			this.oldHoverTagId = oldTagId;
 		},
 	},
 
@@ -67,7 +123,23 @@ export default {
 	},
 	
 	methods: {
+		...mapActions({
+			setTagId:'setTagId',
+			setHoverTagId: "setHoverTagId",
+		}),
+		click() {
+			//console.log(this.tag, event);
+			this.setTagId(this.tag.tagId);
+		},
+		mouseover() {
+			this.setHoverTagId(this.tag.tagId);
+		},
+		mouseout() {
+			this.setHoverTagId(undefined);
+
+		},
 	},
+
 	created(){
 		var self = this;
 		var tag = this.tag;
@@ -114,3 +186,4 @@ export default {
 		...mods,
 	},
 }
+

@@ -36,7 +36,7 @@ tag.setStyle = function(key, value) {
 
 tag.getAttrsHtml = function(tagName){
 	var self = this;
-	var str = ' :style="tag.styles" :class="tag.classes"';
+	var str = '';
 	var attrs = _.cloneDeep(self.attrs);
 	var vars = self.vars;
 	var $vars = self.$vars;

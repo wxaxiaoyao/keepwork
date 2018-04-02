@@ -81,6 +81,7 @@ export default {
 		...mapActions({
 			setTagId:'setTagId',
 			setHoverTagId:'setHoverTagId',
+			setTagPath:"setTagPath",
 		}),
 		mouseover(tag){
 			if (!this.tag) {
@@ -90,7 +91,7 @@ export default {
 		},
 		clickSelectTag(tag, node) {
 			this.setTagId(tag.tagId);
-			//this.$emit("selectTag", tag);
+			this.setTagPath(tag.getTagPath());
 		},
 		isShowDeleteIcon(tag) {
 			if (!this.rootTag || this.rootTag.tagId == tag.tagId) {

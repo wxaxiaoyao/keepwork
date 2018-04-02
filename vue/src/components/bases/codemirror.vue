@@ -189,6 +189,12 @@ export default {
 				CodeMirror.signal(this.codemirror, "change", this.codemirror);
 			}
 		},
+		getValue() {
+			return {
+				filename: this.currentFilename,
+				text: this.codemirror.getValue(),
+			};	
+		},
 	},
 	created() {
 		this.docMap = {};	

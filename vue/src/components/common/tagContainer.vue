@@ -1,12 +1,9 @@
 <template>
 	<div :style="style" :class="class_"
-	   	@click.stop="click" 
 		@mouseover.stop="mouseover" 
 		@mouseout.stop="mouseout"> 
 		<tagEditor v-if='isShowEditor' v-on:result='handleResult' :tag='tag'></tagEditor>
-		<!--<div v-show="isShowComponent">-->
-		<slot v-show="isShowComponent"></slot>
-		<!--</div>-->
+		<slot v-show="isShowComponent" @click.native="click"></slot>
 	</div>
 </template>
 
@@ -95,6 +92,7 @@ export default {
 		mouseout(){
 		},
 		click() {
+			console.log('----------');
 			this.setTagId(this.tag.tagId);
 		},
 	},

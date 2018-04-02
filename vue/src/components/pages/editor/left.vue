@@ -3,23 +3,27 @@
 		<el-tab-pane label="文件">
 			<fileTree></fileTree>
 		</el-tab-pane>	
-		<el-tab-pane label="编辑">
-			<el-tabs type="border-card">
-				<el-tab-pane label="导航">
-					<tagNav :rootTag="rootTag"></tagNav>
-				</el-tab-pane>
-				<el-tab-pane label="元素">
-					<tagTree v-on:addTag="addTag"></tagTree>
-				</el-tab-pane>
-				<el-tab-pane label="编辑">
-					<tagEdit :rootTag="rootTag"></tagEdit>
-				</el-tab-pane>
-			</el-tabs>
-		</el-tab-pane>	
+		<el-tab-pane label="模块">
+			<modTree></modTree>
+		</el-tab-pane>
+		<!--<el-tab-pane label="编辑">-->
+			<!--<el-tabs type="border-card">-->
+				<!--<el-tab-pane label="导航">-->
+					<!--<tagNav :rootTag="rootTag"></tagNav>-->
+				<!--</el-tab-pane>-->
+				<!--<el-tab-pane label="元素">-->
+					<!--<tagTree v-on:addTag="addTag"></tagTree>-->
+				<!--</el-tab-pane>-->
+				<!--<el-tab-pane label="编辑">-->
+					<!--<tagEdit :rootTag="rootTag"></tagEdit>-->
+				<!--</el-tab-pane>-->
+			<!--</el-tabs>-->
+		<!--</el-tab-pane>	-->
 	</el-tabs>
 </template>
 
 <script>
+import modTree from "./modTree.vue";
 import tagTree from "./tagTree.vue";
 import tagNav from "./tagNav.vue";
 import tagEdit from "./tagEdit.vue";
@@ -28,6 +32,7 @@ import fileTree from "./fileTree.vue";
 export default {
 	props: ["rootTag"],
 	components: {
+		modTree,
 		fileTree,
 		tagTree,
 		tagNav,

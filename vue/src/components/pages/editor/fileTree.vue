@@ -183,7 +183,7 @@ export default {
 		},
 		clickSelectPage(data, node, tree) {
 			var self = this;
-			self.setCurrentItem(self.pagePath);
+			self.setCurrentItem(data.path);
 			if (data.type == "tree") {
 				return;
 			}
@@ -199,18 +199,20 @@ export default {
 			this.setPagePath(data.path);
 		},
 		clickCloseBtn(data) {
-			console.log(data.path, this.pagePath);
 			this.$set(this.openedPages, data.path, undefined);
 			if (data.path == this.pagePath) {
 				this.setPagePath(undefined);
 				this.setSwitchPage(true);
 				let curKey = data.path.replace(/\/[^\/]*$/, "");
 				this.setCurrentItem(curKey);
-			}
+		   } else {
+				this.setCurrentItem(this.pagePath);
+		   }
 		},
 		setCurrentItem(path) {
 			var self = this;
 			setTimeout(function(){
+				//console.log(path);
 				self.$refs.treeComp.setCurrentKey(path);
 				self.$refs.openedTreeComp.setCurrentKey(path);
 			}, 10);	
