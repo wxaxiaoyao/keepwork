@@ -39,6 +39,10 @@
 				<input type="text" style="width:30%" placeholder="属性" v-model="attrKey" @blur="attrKeyBlur()"/>
 				<input type="text" style="width:60%" placeholder="值" v-model="attrValue" @blur="attrValueBlur()"/>
 			</div>
+			<div class="attrInputContainer">
+				<span>标签KEY</span>	
+				<input type="text" v-model="tag.key"/>
+			</div>
 			<div class="attrInputContainer" v-for="x in attrList" :key="x.id">
 				<span>{{x.name || x.attrName}}</span>	
 				<input type="text" :placeholder="x.desc || x.name || x.attrName" v-model="attrs[x.attrName]"/>
@@ -64,6 +68,7 @@ export default {
 			classes:{},
 			vars:{},
 			attrList:[],
+			tag:{},
 		}
 	},
 	props: ["rootTag"],
@@ -72,13 +77,6 @@ export default {
 			tagId: 'getTagId',
 			getMode: "getMode",
 		}),
-		tag(){
-			if (!this.rootTag) {
-				return {};
-			}
-
-			return this.rootTag.findById(this.tagId) || {};
-		},
 		jsonData() {
 			return this.vars || {};
 		},
@@ -97,10 +95,12 @@ export default {
 		},
 	},
 	watch: {
-		tag: function(tag) {
+		tagId: function(tagId) {
+			var tag = this.rootTag.findById(tagId);
 			if (!tag) {
 				return;
 			}
+			this.tag = tag;
 			this.style = tag.styles || {};
 			this.attrs = tag.attrs || {};
 			this.classes = tag.classes || {};

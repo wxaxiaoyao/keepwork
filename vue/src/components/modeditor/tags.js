@@ -481,7 +481,6 @@ tags.getTagByTag = function(tag) {
 	if (!tag) {
 		return ;
 	}
-
 	const _cloneTag = function(tag) {
 		let _tag = tagFactory(tag.tagName);
 		_.merge(_tag, tag);

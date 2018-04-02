@@ -293,6 +293,34 @@ tag.getVars = function() {
 	return this.vars;
 }
 
+tag.setVarsByKey = function(data) {
+	data = data || {};
+	
+	const _setVarsByKey = function(tag) {
+		if (tag.key && data[tag.key]) {
+			tag.vars = _.merge(tag.vars || {}, data[tag.key]);
+		}
+
+		_.each(tag.children, _setVarsByKey);
+	}
+
+	_setVarsByKey(this);
+}
+
+tag.getVarsByKey = function(keys) {
+	var data = {};
+	const _getVarsBykey = function(tag) {
+		if (tag.key && (!keys || keys[tag.key])) {
+			data[tag.key] = _.cloneDeep(tag.vars);
+		}
+
+		_.each(tag.children, _getVarsBykey);
+	}	
+
+	_getVarsBykey(this);
+	return data;
+}
+
 tag.clean = function() {
 	const _clean = function(tag) {
 		delete tag.parentTag;

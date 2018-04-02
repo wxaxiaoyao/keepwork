@@ -55,6 +55,7 @@ export default {
 				var modStyle = mod.styles[block.styleName];
 				var tag = modStyle.tag;
 				tag = tags.getTagByTag(tag);
+				tag && tag.setVarsByKey(block.modParams);
 			} else {
 				tag = tags.wikiMdTag(block.text);
 			}
@@ -65,9 +66,11 @@ export default {
 			var tag = this.rootTag;
 			var subtag = undefined, tmpTag = undefined;
 			var blocklist = md.parse(text);
+			//console.log(blocklist);
 			for (var i = 0; i < blocklist.length; i++) {
 				var block = blocklist[i];
 				var oldblock = this.blocklist[i];
+			
 				if (!oldblock || oldblock.isMod != block.isMod) {
 					this.blocklist[i] = _.cloneDeep(block);
 					subtag = this.getTagByBlock(block);
@@ -77,6 +80,7 @@ export default {
 					//console.log(oldblock);
 					if (oldblock.modName == block.modName && tag.children[i].tagName == block.modName) {
 						// 更新数据
+						tag.children[i].setVarsByKey(block.modParams);
 					} else {
 						// 重新构造tag
 						subtag = this.getTagByBlock(block);
