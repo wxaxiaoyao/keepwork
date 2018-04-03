@@ -128,7 +128,6 @@ export default {
 			setHoverTagId: "setHoverTagId",
 		}),
 		click() {
-			//console.log(this.tag, event);
 			this.setTagId(this.tag.tagId);
 		},
 		mouseover() {

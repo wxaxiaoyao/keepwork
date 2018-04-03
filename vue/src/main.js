@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import 'element-ui/lib/theme-chalk/index.css';
 import 'font-awesome/css/font-awesome.min.css';
+import 'github-markdown-css/github-markdown.css';
 
 
 import App from './App.vue';

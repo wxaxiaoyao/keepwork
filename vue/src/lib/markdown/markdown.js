@@ -402,7 +402,7 @@ function br(obj) {
 		return;
 	}
 
-	for (i = obj.start; i < obj.lines.length; i++) {
+	for (i = obj.start + 1; i < obj.lines.length; i++) {
 		if (!is_empty_line(obj.lines[i])) {
 			break;
 		}

@@ -7,6 +7,7 @@ var tags = {};
 tags.divTag = function() {
 	var tag = tagFactory("div");
 	tag.name = "容器";
+	tag.isContainer = true;
 
 	return tag;
 }
@@ -17,6 +18,7 @@ tags.rowDivTag = function() {
 	var tag = self.divTag();
 
 	tag.name = "行容器";
+	tag.isContainer = true;
 	tag.styles["display"] = "flex";
 
 	return tag;
@@ -28,6 +30,7 @@ tags.colDivTag = function() {
 	var tag = self.divTag();
 
 	tag.name = "列容器";
+	tag.isContainer = true;
 	tag.styles["display"] = "flex";
 	tag.styles["flex-direction"] = "column";
 
@@ -103,7 +106,7 @@ tags.h3Tag = function() {
 
 // 段落
 tags.pTag = function(text) {
-	var tag = tagFactory("tag");
+	var tag = tagFactory("p");
 	tag.name = "段落";
 
 	tag.attrs["v-text"] = tag.varsPrefix + ".text";
@@ -144,6 +147,7 @@ tags.iTag = function(){
 tags.elRowTag = function() {
 	var tag = tagFactory("el-row");
 	tag.name = "布局行";
+	tag.isContainer = true;
 
 	tag.attrList = [
 	{
@@ -160,6 +164,7 @@ tags.elRowTag = function() {
 tags.elColTag = function() {
 	var tag = tagFactory("el-col");
 	tag.name = "布局列";
+	tag.isContainer = true;
 
 	tag.attrList = [
 	{
@@ -228,6 +233,7 @@ tags.elColTag = function() {
 tags.elContainerTag = function() {
 	var tag = tagFactory("el-container");
 	tag.name = "外层容器";
+	tag.isContainer = true;
 	
 	tag.attrList = [
 	{
@@ -254,6 +260,7 @@ tags.elContainerTag = function() {
 tags.elHeaderTag = function() {
 	var tag = tagFactory("el-header");
 	tag.name = "顶栏容器";
+	tag.isContainer = true;
 	
 	tag.attrList = [
 	{
@@ -280,6 +287,7 @@ tags.elHeaderTag = function() {
 tags.elAsideTag = function() {
 	var tag = tagFactory("el-aside");
 	tag.name = "侧栏容器";
+	tag.isContainer = true;
 	
 	tag.attrList = [
 	{
@@ -306,6 +314,7 @@ tags.elAsideTag = function() {
 tags.elMainTag = function(){
 	var tag = tagFactory("el-main");
 	tag.name = "主区域容器";
+	tag.isContainer = true;
 	
 	return tag;
 }
@@ -313,6 +322,7 @@ tags.elMainTag = function(){
 tags.elFooterTag = function(){
 	var tag = tagFactory("el-footer");
 	tag.name = "底栏容器";
+	tag.isContainer = true;
 	
 	tag.attrList = [
 	{
@@ -340,17 +350,10 @@ tags.elButtonTag = function() {
 	var tag = tagFactory("el-button");
 	tag.name = "按钮";
 	
+	tag.attrs["v-text"] = tag.varsPrefix + ".text";
 	tag.vars = {
-		text: {
-			text:"这是一个按钮",
-
-			$data: {
-				type:"text",  // 文件变量  
-				attrName:"v-text",
-				key:".text",
-			}
-		}
-	};
+		text: "按钮",
+	}
 
 	return tag;
 	
@@ -396,6 +399,7 @@ tags.elButtonTag = function() {
 tags.wikiRichtextTag = function() {
 	var tag = tagFactory("wiki-richtext");
 	tag.name = "富文本";
+
 
 	tag.vars = {
 		text: {

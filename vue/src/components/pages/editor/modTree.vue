@@ -50,7 +50,7 @@ export default {
 
 				tree.push(node);
 			}
-			console.log(tree);
+			//console.log(tree);
 
 			return tree;
 		},

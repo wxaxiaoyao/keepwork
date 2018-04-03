@@ -336,6 +336,28 @@ tag.clean = function() {
 	return this;
 }
 
+tag.isContainerTag = function() {
+	const containerTag = {
+		"div": true,
+	}
+
+	if (this.isContainer || containerTag[this.tagName]) {
+		return true;
+	}
+
+	return false;
+}
+
+tag.getContainerTag = function() {
+	var t = this;
+
+	while(t && !t.isContainerTag()) {
+		t = t.parentTag;
+	}
+
+	return t;
+}
+
 function tagFactory(tagName) {
 	var _tag = _.cloneDeep(tag);
 

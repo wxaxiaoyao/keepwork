@@ -1,5 +1,5 @@
 <template>
-	<tag :tag="rootTag"></tag>
+	<tag :tag="rootTag" class="markdown-body"></tag>
 </template>
 
 <script>
@@ -38,6 +38,12 @@ export default {
 	watch: {
 		text: function(text) {
 			this.parseText(text);
+			//var self = this;
+			//self.renderTimer  && clearTimeout(self.renderTimer);
+			//self.renderTimer = setTimeout(function() {
+			//	self.parseText(text);
+			//	self.renderTimer = undefined;
+			//}, 1000);
 		},
 		tagMods: function() {
 			this.parseText(this.text);

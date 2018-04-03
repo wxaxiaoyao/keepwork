@@ -70,26 +70,27 @@ function mdwiki(options) {
 		var index = 0;
 		var tmpToken = undefined;
 		var text = "";
+		var texts = [];
 
 		for (var i = 0; i < tokenList.length; i++) {
 			var token = tokenList[i];
 			if (token.tag == "pre") {
 				if (tmpToken) {
+					tmpToken.text = texts.join("\n");
 					tokens[index++] = tmpToken;
 					tmpToken = undefined;
+					texts = [];
 				}
 				tokens[index++] = token;
 				continue;
 			} 
 
-			text = (token.text[0] == "\n" ? "\n" : "") + token.text;
+			texts.push(token.text);
 
 			if (tmpToken) {
-				tmpToken.text += text;
 				tmpToken.end = token.end;
 			} else {
 				tmpToken = {
-					text: text,
 					start: token.start,
 					end: token.end,
 				};
@@ -97,6 +98,7 @@ function mdwiki(options) {
 		}
 
 		if (tmpToken) {
+			tmpToken.text = texts.join("\n");
 			tokens[index++] = tmpToken;
 		}
 
