@@ -74,7 +74,9 @@ export default {
 				return;
 			}
 			var tree = this.$refs.tree;
-			tree.setCurrentKey(tagId);
+			setTimeout(function() {
+				tree.setCurrentKey(tagId);
+			}, 100);
 		},
 	},
 	methods: {

@@ -24,7 +24,7 @@ global._ = _;
 
 global.g_app = {
 	_: _,
-	events: new Vue(),
+	vue: new Vue(), // vue inst
 	consts: consts,
 };
 

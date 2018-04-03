@@ -74,12 +74,12 @@ const actions = {
 
 	setTagModStyle({commit, dispatch}, style) {
 		commit(SET_TAG_MOD_STYLE, style);	
-		dispatch("submitTagMods");
+		//dispatch("submitTagMods");
 	},
 
 	deleteTagMod({commit, dispatch}, modName) {
 		commit(DELETE_TAG_MOD, modName);
-		dispatch("submitTagMods");
+		//dispatch("submitTagMods");
 	},
 
 	setTagMod({commit, dispatch}, mod) {
@@ -88,12 +88,12 @@ const actions = {
 		}
 
 		commit(SET_TAG_MOD, mod);
-		dispatch("submitTagMods");
+		//dispatch("submitTagMods");
 	},
 
 	setTagMods({commit, dispatch}, mods) {
 		commit(SET_TAG_MODS, mods);
-		dispatch("submitTagMods");
+		//dispatch("submitTagMods");
 	},
 
 	async loadSystemMods({rootGetters, commit}) {

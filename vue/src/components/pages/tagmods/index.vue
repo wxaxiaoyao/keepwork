@@ -57,6 +57,7 @@ export default {
 			rootTag: tag,
 			tag: tag,
 			mod: {},
+			isSubmitTagMods: false,
 		}
 	},
 
@@ -64,12 +65,28 @@ export default {
 		...mapGetters({
 			tagId: "getTagId",
 			getTagMod: "mods/tagMod",
+			tagMods: "mods/tagMods",
 		}),
 	},
 
 	watch: {
 		tagId: function(tagId) {
 			this.tag = this.rootTag.findById(tagId);
+		},
+		tagMods: {
+			handler: function() {
+				if (!this.isSubmitTagMods) {
+					return;
+				}
+				var self = this;
+				this.submitTagMods().then(function() {
+					self.$message("模块提交成功");
+				}).catch(function(){
+					self.$message("模块提交失败");
+				});
+				this.isSubmitTagMods = false;
+			},
+			deep: true,
 		},
 	},
 
@@ -78,7 +95,7 @@ export default {
 			setTagId:'setTagId',
 			setTagMod:"mods/setTagMod",
 			setMode: "setMode",
-			submitTagMods: "mods/submitSystemMods",
+			submitTagMods: "mods/submitTagMods",
 		}),
 		editModStyle(style){
 			this.mod.modName = style.modName;
@@ -104,7 +121,7 @@ export default {
 				tag: _.cloneDeep(this.rootTag).clean(),
 			}
 			this.setTagMod(tagMod);
-			this.$message("模块提交成功");
+			this.isSubmitTagMods = true;
 		},
 	},
 

@@ -23,6 +23,7 @@
 						<template slot="prepend">标签KEY</template>
 					</el-input>
 				</div>
+				<JsonEditor :objData="classes || {}" v-model="tag.classes"></JsonEditor>
 				<div>
 					<el-autocomplete class="inline-input" v-model="attrKey" :fetch-suggestions="queryAttrKeySearch" placeholder="请输入属性名">
 					</el-autocomplete>
