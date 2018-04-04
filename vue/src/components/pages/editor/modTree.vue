@@ -66,7 +66,7 @@ export default {
 			if (data.type != "style") {
 				return;
 			}
-			g_app.events.$emit(g_app.consts.EVENT_ADD_MOD_TO_EDITOR, data.style);
+			g_app.vue.$emit(g_app.consts.EVENT_ADD_MOD_TO_EDITOR, data.style);
 		},
 	}
 }

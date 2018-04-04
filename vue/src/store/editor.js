@@ -4,18 +4,20 @@ import Hashes from "jshashes";
 import _const from "../lib/const.js";
 import gitlab from "../api/gitlab.js";
 import storage from "../lib/storage.js";
+import indexedDB from "../lib/indexedDB.js";
 
 const SET_PAGE_PATH = 'SET_PAGE_PATH';
 const SET_PAGE_CONTENT = 'SET_PAGE_CONTENT';
 const SET_PAGE = 'SET_PAGE';
 const SET_PAGES = 'SET_PAGES';
 const SET_SWITCH_PAGE = 'SET_SWITCH_PAGE';
+const DELETE_PAGE = 'DELETE_PAGE';
 
 const sha1 = new Hashes.SHA1().setUTF8(true);
 
 let pageDB = undefined;
-storage.indexedDBRegisterOpenCallback(function(){
-	pageDB = storage.indexedDBGetStore("sitepage");
+indexedDB.open().then(function(){
+	pageDB = indexedDB.getStore("sitepage");
 });
 
 const getStringByteLength = function(str) {
@@ -99,6 +101,7 @@ const actions = {
 			...page,
 		});
 
+		//console.log(oldpage, page);
 		commit(SET_PAGE, page);
 	},
 	indexDB_deletePage(context, pagePath) {
@@ -154,7 +157,7 @@ const actions = {
 			}
 			commit(SET_PAGE, page);
 		}
-		pageDB.getItem(path, function(data){
+		pageDB.getItem(path).then(function(data){
 			if (!data) {
 				_loadPageFromServer();
 				return;
@@ -178,21 +181,23 @@ const actions = {
 	},
 	async savePage(context, page) {
 		let {path, content} = page;
-		let {commit, getters, dispatch} = context;
+		let {commit, getters, dispatch, state} = context;
 		let {projectId, git} = getters.getGit();
 
 		if (!path) {
 			return;
 		}
 
-		commit(SET_PAGE, {path:path, isRefresh:true});
-		await git.projects.repository.files.edit(projectId, path, 'master',{
+		let oper =  (state.pages[path] && state.pages[path].id) ? "edit" : "create";
+
+		commit(SET_PAGE, {...page, isRefresh:true});
+		await git.projects.repository.files[oper](projectId, path, 'master',{
 			content:content,
 			commit_message: 'update with keepwork editor',
 		});
 
 		let sha = gitsha(content);
-		commit(SET_PAGE, {path:path, content:content, isRefresh:false});
+		commit(SET_PAGE, {...page, isRefresh:false});
 		dispatch("indexDB_savePage", {...page, isModify:false, id:sha});
 	},
 	async deletePage(context, page) {
@@ -211,6 +216,7 @@ const actions = {
 		commit(SET_PAGE, {path:path, isRefresh:false});
 
 		dispatch("indexDB_deletePage", path);
+		commit(DELETE_PAGE, path);
 	},
 	async loadTree(context, payload) {
 		let {commit, getters: {getGit}} = context;
@@ -255,6 +261,9 @@ const mutations = {
 			...(state.pages[page.path] || {}),
 			...page,
 		});
+	},
+	[DELETE_PAGE](state, path) {
+		vue.delete(state.pages, path);
 	},
 	[SET_PAGES](state, pages) {
 		vue.set(state, "pages", {

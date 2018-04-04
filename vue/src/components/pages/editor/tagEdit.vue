@@ -1,7 +1,6 @@
 <template>
 	<div class="flex-container">
 		<div class="tag-path-container">
-			<!--<span>标签路径:</span>-->
 			<el-breadcrumb separator-class="el-icon-arrow-right">
 				<el-breadcrumb-item v-for="(x, index) in navTagList" :key="index" @click.native="clickSelectTag(x)"><span style="cursor:pointer">{{x.name || x.tagName}}</span></el-breadcrumb-item>
 			</el-breadcrumb>
@@ -23,7 +22,6 @@
 						<template slot="prepend">标签KEY</template>
 					</el-input>
 				</div>
-				<JsonEditor :objData="classes || {}" v-model="tag.classes"></JsonEditor>
 				<div>
 					<el-autocomplete class="inline-input" v-model="attrKey" :fetch-suggestions="queryAttrKeySearch" placeholder="请输入属性名">
 					</el-autocomplete>
@@ -32,6 +30,9 @@
 					<el-button @click="clickAddAttr">添加</el-button>
 				</div>
 				<JsonEditor :objData="attrs || {}" v-model="tag.attrs"></JsonEditor>
+			</el-tab-pane>
+			<el-tab-pane label="类名">
+				<JsonEditor :objData="classes || {}" v-model="tag.classes"></JsonEditor>
 			</el-tab-pane>
 			<el-tab-pane label="变量">
 				<JsonEditor :objData="vars || {}" v-model="tag.vars" ></JsonEditor>

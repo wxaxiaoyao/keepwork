@@ -279,6 +279,6 @@ storage.indexedDBGetStore = function(storeName) {
 	}
 }
 // 打开数据库
-storage.indexedDBOpen();
+//storage.indexedDBOpen();
 
 export default storage;

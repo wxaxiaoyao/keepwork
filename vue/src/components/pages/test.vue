@@ -13,6 +13,7 @@ import modTest from "../mods/modTest.js";
 
 import mods from "../adi/mod/index.js";
 
+import {user} from "../../api/keepwork.js";
 export default {
 	name:'test',
 	data:function(){
@@ -43,7 +44,9 @@ export default {
 		modTest,
 	},
 
-	mounted(){
+	async mounted(){
+		const data = await user.login({username:"xiaoyao", password:"wuxiangan"});
+		console.log(data);
 	}
 }
 </script>

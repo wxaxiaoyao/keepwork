@@ -97,11 +97,13 @@ export default {
 					tag.children[i].vars.text = block.text;
 				}
 			}
-			for (var i = blocklist.length; i < this.blocklist.length; i++) {
+			var size = this.blocklist.length;
+			for (var i = blocklist.length; i < size; i++) {
 				this.blocklist.pop();
 				tag.children.pop();
 			}
-			//console.log(tag.children, this.blocklist);
+			
+			//console.log(tag.children, this.blocklist, blocklist, text);
 		},
 	},
 

@@ -1,5 +1,22 @@
 <template>
 	<div class="kp_forbit_copy">
+		<el-dialog :visible.sync="isShowNewFile" title="新增文件" width="500px">
+			<el-form :model="newFileForm" label-width="80px" label-position="right" style="width:300px;">
+				<el-form-item label="类型">
+					<el-select v-model="newFileForm.type" placeholder="请选择类型">
+						<el-option label="文件" value="blob"></el-option>
+						<el-option label="目录" value="tree"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="文件名">
+					<el-input v-model="newFileForm.filename" placeholder="请输入文件名"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer" v-loading="newFileForm.isLoading">
+		        <el-button @click="isShowNewFile = false">取 消</el-button>
+				<el-button type="primary" @click="clickSubmitNewFileBtn()">确 定</el-button>
+			</div>
+		</el-dialog>
 		<el-tree ref="openedTreeComp" :data="openedPageTree" :props="fileTreeProps" node-key="path" :default-expand-all="true" :highlight-current="true" @node-click="clickSelectPage">
 			<span class="custom-tree-node" slot-scope="{node, data}">
 				<span v-if="data.type == 'tree'" class="custom-tree-node">
@@ -9,7 +26,7 @@
 				</span>
 				<span v-if="data.type == 'blob'" class="custom-tree-node">
 					<span class="tree-node-text">
-						<i v-show="data.isConflict" @click="clickFixedConflict(data)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
+						<i v-show="data.isConflict" @click.stop="clickFixedConflict(data)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
 						<i v-show="!data.isConflict" :class='isRefresh(data) ? "fa fa-refresh fa-spin" : isModify(data) ? "fa fa-pencil-square-o" : "fa fa-file-o"'></i>
 						<span>{{data.aliasname || data.name}}</span>
 					</span>
@@ -26,7 +43,12 @@
 			<span class="custom-tree-node" slot-scope="{node, data}">
 				<span v-if="data.type == 'tree'" class="custom-tree-node">
 					<span>
+						<i v-show="data.isConflict" @click.stop="clickFixedConflict(data)" class="fa fa-warning" aria-hidden="true" data-toggle="tooltip" title="冲突"></i>
+						<i v-show="!data.isConflict" :class='isRefresh(data) ? "fa fa-refresh fa-spin" : isModify(data) ? "fa fa-pencil-square-o" : "fa fa-file-o"'></i>
 						<span>{{data.aliasname || data.name}}</span>
+					</span>
+					<span>
+						<el-button type="text" @click.native.stop="clickNewFileBtn(data)">+</el-button>
 					</span>
 				</span>
 				<span v-if="data.type == 'blob'" class="custom-tree-node">
@@ -38,7 +60,7 @@
 					<span class="tree-node-btn-group">
 						<i @click.stop="clickOpenBtn(data)"class="fa fa-external-link" aria-hidden="true" data-toggle="tooltip" title="访问"></i>
 						<i @click.stop="clickGitBtn(data)" class="fa fa-git" aria-hidden="true" data-toggle="tooltip" title="git"></i>
-						<i @click.stop="clickDeleteBtn(data)" class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>
+						<i @click.stop="clickDeleteBtn(data, node)" class="fa fa-trash-o" aria-hidden="true" data-toggle="tooltip" title="删除"></i>
 					</span>
 				</span>
 			</span>
@@ -74,7 +96,9 @@ export default {
 			},
 			fileTree:[],
 			openedPages:{},
-		}
+			isShowNewFile:false,
+			newFileForm:{ type:"blob", isLoading:false },
+		};
 	},
 
 	computed: {
@@ -102,8 +126,6 @@ export default {
 
 	watch: {
 		pages: function(val) {
-			this.fileTree = this.getFileTree();
-			this.fileTree[0].aliasname = "我的页面";
 		},
 		pagePath: function(val) {
 		},
@@ -113,6 +135,7 @@ export default {
 		...mapActions({
 			setPagePath: "setPagePath",
 			setPage: "setPage",
+			savePage: "savePage",
 			loadPage: "loadPage",
 			deletePage: "deletePage",
 			setSwitchPage: "setSwitchPage",
@@ -229,13 +252,49 @@ export default {
 			let url = gitcfg.rawBaseUrl + "/" + gitcfg.externalUsername + "/" + gitcfg.projectName + '/blob/' + "master" + '/' + data.path;
 			window.open(url);
 		},
-		clickDeleteBtn(data) {
-			this.deletePage({path:data.path});
+		clickNewFileBtn(data) {
+			this.isShowNewFile = true;
+			this.newFileForm.data = data;
+		},
+		async clickSubmitNewFileBtn() {
+			const form = this.newFileForm;
+			if (!form.filename) {
+				this.$message("文件名不能为空");
+				return;
+			}
+			const node = this.newFileForm.data;
+			let path = node.path + '/' + form.filename + (form.type == "tree" ? "/.gitkeep" : ".md");
+			const page = this.getPageByPath(path);
+			if (page && page.path) {
+				this.$message("文件已存在");
+				return;
+			}
+			let newNode = {
+				path:path,
+			    name:form.filename,
+			    type:form.type,
+			    content:"",
+			    url:path.replace(/\.md$/, ""),
+			    username:node.username,
+			}
+			form.isLoading = true;
+			await this.savePage(newNode);
+			node.nodes.push(_.clone(newNode));
+			this.isShowNewFile = false;
+			form.isLoading = false;
+		},
+		async clickDeleteBtn(data, node) {
+			await this.deletePage({path:data.path});
+			const parentNode = node.parent.data;
+			const index = parentNode.nodes.findIndex(d => d.path == data.path);
+			parentNode.nodes.splice(index, 1);
 		},
 	},
 
-	mounted() {
-		this.loadTree();
+	async mounted() {
+		await this.loadTree();
+		this.fileTree = this.getFileTree();
+		this.fileTree[0].aliasname = "我的页面";
 	},
 
 	created() {

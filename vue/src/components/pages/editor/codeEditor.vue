@@ -124,7 +124,7 @@ export default {
 
 	created() {
 		const self = this;
-		g_app.events.$on(g_app.consts.EVENT_ADD_MOD_TO_EDITOR, function(style){
+		g_app.vue.$on(g_app.consts.EVENT_ADD_MOD_TO_EDITOR, function(style){
 			self.value = self.$refs.codemirror.getValue();
 			self.value.text += '\n```@' + style.modName + '/' + style.styleName + '\n' +'```\n';
 		});

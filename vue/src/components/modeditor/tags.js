@@ -469,7 +469,7 @@ tags.htmlTag = function(html) {
 tags.wikiMdTag = function(text) {
 	var tag = tagFactory("wiki-md");
 	tag.vars = {
-		text: text || "markdwon文本",
+		text: text == undefined ? "markdwon文本" : text,
 	}
 
 	tag.$vars = {

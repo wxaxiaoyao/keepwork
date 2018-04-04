@@ -14,3 +14,17 @@ nws.http:register_filter(function(ctx, next_filter)
 	
 	next_filter()
 end)
+
+
+-- cros
+nws.http:register_filter(function(ctx, next_filter)
+	ctx.response:set_header("Access-Control-Allow-Origin", "*")
+	ctx.response:set_header("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, DELETE")
+	ctx.response:set_header("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With, Authorization")
+	
+	if ctx.request.method == "OPTIONS" then
+		return ctx.response:send()
+	end
+
+	next_filter()
+end)
