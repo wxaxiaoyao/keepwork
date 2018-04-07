@@ -7,6 +7,7 @@ const defaultConfig = {
 	host:"https://gitlab.com",
 	token:"Ed9S7hSfiruewMR-jitR",
 	ref:"master",
+	branch:"master",
 	projectId:4980659,
 	//rootPath:"xiaoyao",
 };
@@ -49,10 +50,6 @@ export const gitlabFactory = (config) => {
 	
 	const api  = gitlabApi({host:cfg.host, token:cfg.token});
 	const git = {api, cfg};
-
-	git.getContent = function(path) {
-		return this.api.projects.repository.files.show(this.cfg.projectId, path, this.cfg.ref).then(file => Base64.decode(file.content));
-	};
 
 	return git;
 }
