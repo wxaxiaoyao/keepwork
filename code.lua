@@ -8,6 +8,8 @@ cd /root/workspace/lua/keepwork/;
 git reset --hard HEAD;
 git pull origin master;
 r.js -o build.js;
+cd /root/workspace/lua/keepwork/vue/;
+npm run build;
 ./start.sh restart;
 ]]
 
