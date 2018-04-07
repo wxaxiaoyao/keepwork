@@ -11,13 +11,28 @@ export const keepworkEndpoint = axios.create({
 
 export const post = (...args) => keepworkEndpoint.post(...args).then(res => res.data.data);
 
+export const get = (url, params, config) => keepworkEndpoint.get(url, {
+   	params:params,
+	...(config || {}),
+}).then(res => res.data.data);
+
 export const user = {
 	login: (...args) => post("user/login", ...args),
+	register: (...args) => post("user/register", ...args),
+	isLogin: (...args) => get("user/is_login", ...args),
 }
 
+export const dataSource = {
+	getDefaultDataSource: (...args) => get("data_source/get_default_data_source", ...args),
+}
+
+export const mod = {
+}
 
 export const keepwork = {
 	user,
+	dataSource,
+	mod,
 }
 
 export default keepwork;

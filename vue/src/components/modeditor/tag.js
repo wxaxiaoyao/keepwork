@@ -293,6 +293,21 @@ tag.getVars = function() {
 	return this.vars;
 }
 
+tag.getTagByKey = function(key) {
+	if (this.key == key) {
+		return this;
+	}
+
+	for (var i = 0; i < this.children.length; i++) {
+		let t = this.children[i].getTagByKey(key);
+		if (t) {
+			return t;
+		}
+	}
+
+	return ;
+}
+
 tag.setVarsByKey = function(data) {
 	data = data || {};
 	

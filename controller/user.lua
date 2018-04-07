@@ -10,6 +10,21 @@ local visit_history_model = nws.import("model/visit_history")
 local favorite_model = nws.import("model/favorite")
 local fans_model = nws.import("model/fans")
 
+-- 是否登陆
+function user:is_login(ctx) 
+	if ctx.username then
+		return (errors:wrap(nil, true))
+	end
+	return (errors:wrap(nil, false))
+end
+
+--function user:login_register(ctx) 
+	--local params = ctx.request:get_params()
+	--if not params.username or not params.password then
+		--return (errors:wrap(errors.PARAMS_ERROR, params))
+	--end
+--end
+
 -- 用户登录
 function user:login(ctx)
 	local params = ctx.request:get_params()

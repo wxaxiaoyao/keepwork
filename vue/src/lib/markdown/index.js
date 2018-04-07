@@ -138,12 +138,14 @@ function mdwiki(options) {
 			md.template.text = template.text;
 			md.template.token = template.token;
 			md.template.modName = template.modName;
+			md.template.styleName = template.styleName;
 			md.template.cmdName = template.cmdName;
 			md.template.modParams = template.modParams;
 		} else {
 			md.template.text = undefined;
 			md.template.token = undefined;
-			md.template.modName = undefined;
+			md.template.modName = "template";
+			md.template.styleName = "default";
 			md.template.cmdName = undefined;
 			md.template.modParams = undefined;
 		}

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<tag tagName="modTest"></tag>
+		hello world
 	</div>
 </template>
 
@@ -12,20 +12,18 @@ import tags from "../modeditor/tags.js";
 import modTest from "../mods/modTest.js";
 
 import mods from "../adi/mod/index.js";
-
+import tagLogin from "../bases/tagLogin.vue";
 import {user} from "../../api/keepwork.js";
 export default {
 	name:'test',
 	data:function(){
 		return {
-			test:"test",
 		}
 	},
 	props:{
 	},
 	computed: {
 		...mapGetters({
-			key:"test/key",
 		}),
 	},
 
@@ -34,18 +32,24 @@ export default {
 
 	methods: {
 		...mapActions({
-			setKey:"test/setKey",
-			setSystemMods: "mods/setSystemMods",
-			submitSystemMods: "mods/submitSystemMods",
 		}),
+		submitLoginForm() {
+			this.$refs.loginForm.validate(function(valid){
+				console.log(valid);
+				if (!valid) {
+					console.log("invalid");
+					return;
+				}
+			});
+		}
 	},
 
 	components:{
-		modTest,
+		tagLogin,
 	},
 
 	async mounted(){
-		const data = await user.login({username:"xiaoyao", password:"wuxiangan"});
+		const data = await user.isLogin();
 		console.log(data);
 	}
 }

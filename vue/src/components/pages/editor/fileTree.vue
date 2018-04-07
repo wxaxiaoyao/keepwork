@@ -77,6 +77,7 @@
 <script>
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
+import gitlab from "@/api/gitlab.js";
 import storage from "../../../lib/storage.js";
 import FileTreeNode from "./fileTreeNode.vue";
 
@@ -103,6 +104,7 @@ export default {
 
 	computed: {
 		...mapGetters({
+			user: "user/userinfo",
 			tagId: 'getTagId',
 			pagePath: 'getPagePath',
 			getPageByPath: 'getPageByPath',
@@ -244,13 +246,7 @@ export default {
 			
 		},
 		clickGitBtn(data) {
-			let gitcfg = { 
-				rawBaseUrl:"https://gitlab.com",
-				externalUsername:"wxaxiaoyao",
-				projectName:"keepworkdatasource",
-			}
-			let url = gitcfg.rawBaseUrl + "/" + gitcfg.externalUsername + "/" + gitcfg.projectName + '/blob/' + "master" + '/' + data.path;
-			window.open(url);
+			window.open(gitlab.getFileGitUrl(data.path));
 		},
 		clickNewFileBtn(data) {
 			this.isShowNewFile = true;
@@ -292,7 +288,7 @@ export default {
 	},
 
 	async mounted() {
-		await this.loadTree();
+		await this.loadTree({path:this.user.username});
 		this.fileTree = this.getFileTree();
 		this.fileTree[0].aliasname = "我的页面";
 	},

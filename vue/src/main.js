@@ -13,6 +13,7 @@ import store from "./store";
 
 import "./lib/jsonEditor";
 import consts from "./lib/const.js";
+import config from "./config.js";
 
 import "./components/bases";
 import "./components/common";
@@ -26,11 +27,8 @@ global.g_app = {
 	_: _,
 	vue: new Vue(), // vue inst
 	consts: consts,
-};
-
-//console.log(g_app);
-console.log(process.env.TEST)
-console.log(process.env.NODE_ENV)
+	config: config,
+}
 
 Vue.use(ElementUI);
 
@@ -39,4 +37,5 @@ new Vue({
   router,
   store,
 }).$mount('#app');
+
 

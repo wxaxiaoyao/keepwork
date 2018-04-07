@@ -68,16 +68,35 @@ export default {
 
 			return tag || tags.getTag();
 		},
+		getTemplateTag(template) {
+			template = template || {};
+			const modName = "template";
+			const styleName = template.styleName || "default";
+			const mod = this.getTagMod(modName);
+			if (!mod || !mod.styles || !mod.styles[styleName]){
+				return tags.getTag();;
+			}
+			const modStyle = mod.styles[styleName];
+			return tags.getTagByTag(modStyle.tag);
+		},
+		getMainTag() {
+			return this.rootTag.getTagByKey("main") || this.rootTag;
+		},
 		parseText(text) {
-			var tag = this.rootTag;
+			const self = this;
 			var subtag = undefined, tmpTag = undefined;
 			var blocklist = md.parse(text);
-			//console.log(blocklist);
+			if (md.template.isChange) {
+				self.rootTag = self.getTemplateTag();
+			}
+			var tag = self.getMainTag();
 			for (var i = 0; i < blocklist.length; i++) {
 				var block = blocklist[i];
 				var oldblock = this.blocklist[i];
-			
-				if (!oldblock || oldblock.isMod != block.isMod) {
+				
+				if (block.isTemplate) {
+					tag.setChildrenTag(i, tags.getTag());
+				} else if (!oldblock || oldblock.isMod != block.isMod) {
 					this.blocklist[i] = _.cloneDeep(block);
 					subtag = this.getTagByBlock(block);
 					subtag && tag.setChildrenTag(i, subtag);

@@ -140,10 +140,9 @@ const actions = {
 		let {path} = page;
 		let _loadPageFromServer = async function() {
 			commit(SET_PAGE, {path:path, isRefresh:true});
-			let {projectId, git, ref} = context.getters.getGit();
-			let file = await git.projects.repository.files.show(projectId, page.path, ref);
+			let file = await gitlab.getFile(page.path);
 			page.id = file.blob_id;
-			page.content = Base64.decode(file.content);
+			page.content = file.content;
 			page.isRefresh = false;
 			commit(SET_PAGE, page);
 			if (state.pagePath == path) {
@@ -182,16 +181,14 @@ const actions = {
 	async savePage(context, page) {
 		let {path, content} = page;
 		let {commit, getters, dispatch, state} = context;
-		let {projectId, git} = getters.getGit();
-
 		if (!path) {
 			return;
 		}
 
-		let oper =  (state.pages[path] && state.pages[path].id) ? "edit" : "create";
+		let oper =  (state.pages[path] && state.pages[path].id) ? "editFile" : "createFile";
 
 		commit(SET_PAGE, {...page, isRefresh:true});
-		await git.projects.repository.files[oper](projectId, path, 'master',{
+		await gitlab[oper](path, {
 			content:content,
 			commit_message: 'update with keepwork editor',
 		});
@@ -203,14 +200,13 @@ const actions = {
 	async deletePage(context, page) {
 		let {path} = page;
 		let {commit, getters:{getGit}, dispatch} = context;
-		let {projectId, git} = getGit();
 
 		if (!path) {
 			return;
 		}
 
 		commit(SET_PAGE, {path:path, isRefresh:true});
-		await git.projects.repository.files.remove(projectId, path, 'master',{
+		await gitlab.removeFile(path, {
 			commit_message: 'delete by keepwork',
 		});
 		commit(SET_PAGE, {path:path, isRefresh:false});
@@ -220,11 +216,7 @@ const actions = {
 	},
 	async loadTree(context, payload) {
 		let {commit, getters: {getGit}} = context;
-		let {projectId, git, rootPath} = getGit();
-		let list = await git.projects.repository.tree(projectId, {
-			path:rootPath,
-			recursive: true,
-		});
+		let list = await gitlab.getTree(payload.path, {...payload, recursive: true,});
 		let pages = {};
 		list.forEach(function(node){
 			pages[node.path] = treeNodeToPage(node);

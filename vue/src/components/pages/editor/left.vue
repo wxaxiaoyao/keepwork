@@ -1,5 +1,5 @@
 <template>
-	<el-tabs class="left-el-tabs" type="border-card" tab-position="left">
+	<el-tabs class="left-el-tabs" type="border-card">
 		<el-tab-pane label="文件">
 			<fileTree></fileTree>
 		</el-tab-pane>	

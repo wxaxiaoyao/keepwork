@@ -1,41 +1,47 @@
 import vue from "vue";
-import {gitlabFactory} from "../api/gitlab.js";
+
+const SET_TOKEN = 'SET_TOKEN';
+const SET_AUTH = "SET_AUTH";
+const SET_USERINFO = 'SET_USERINFO';
 
 const state = {
 	username: "xiaoyao",  // 当前认证用户名
-	userinfo: {
-
-	},
-
-	dataSources: {
-		"xiaoyao" : {
-			projectId: 4980659,
-			externalUsername: "xiaoyao",
-			projectName: "keepworkdatasource",
-			token:"Ed9S7hSfiruewMR-jitR",
-			ref: "master",
-			branch: "master",
-		},
-	},
+	isAuth:false, // 是否认证
+	token:null,
+	userinfo: {},
 }
 
 const getters = {
-	getUserinfo: (state) => (username) => (state.userinfo[username] || {}),
-	getDataSource: (state) => (username) => (gitlabFactory(state.dataSources[username || state.username])),
+	isAuth: (state) => state.isAuth,
+	token: (state) => state.token,
+	userinfo: (state) => state.userinfo,
 }
 
 const actions = {
-	getUserinfo(){
-
+	setToken({commit}, token) {
+		commit(SET_TOKEN, token); 
 	},
-
-	getDataSource() {
-
-	}
+	setAuth({commit}, auth) {
+		commit(SET_AUTH, auth);
+	},
+	setUserinfo({commit}, userinfo){
+		commit(SET_USERINFO, userinfo);
+	},
 }
 
 const mutations = {
-
+	[SET_TOKEN](state, token) {
+		vue.set(state, "token", token);		
+	},
+	[SET_AUTH](state, auth) {
+		vue.set(state, "isAuth", auth);
+	},
+	[SET_USERINFO](state, userinfo) {
+		vue.set(state, "userinfo", {
+			...(state.userinfo || {}),
+			...(userinfo || {}),
+		});
+	},
 }
 
 export default {

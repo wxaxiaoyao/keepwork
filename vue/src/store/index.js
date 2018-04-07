@@ -4,6 +4,7 @@ import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
 import theme from "./theme.js";
+import app from "./app.js";
 import editor from "./editor.js";
 import user from "./user.js";
 import mods from "./mods.js";
@@ -18,6 +19,7 @@ const debug = process.env.NODE_ENV !== 'production'
 export default new Vuex.Store({
 	modules:{
 		theme,
+		app,
 		editor,
 		user,
 		mods,
@@ -33,6 +35,7 @@ export default new Vuex.Store({
 	strict: debug,
 
 	plugins: [createPersistedState({
+		storage: window.sessionStorage,
 		paths: ["test", "user"],
 	})],
 });
