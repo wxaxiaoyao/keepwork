@@ -149,63 +149,18 @@ export default {
 			if (!tag.type) {
 				return;
 			}
-			this.tag.addTag(tags.getTag(tag.type));	
+			const subTag = tags.getTag(tag.type);
+			if (tag.type.indexOf("Adi") == 0){
+				subTag.vars = adi.getComponentProperties(tag.type);
+			}
+			this.tag.addTag(subTag);	
 		},
 		selectTag(tag) {
 			this.tag = tag;
 			tag && this.setTagId(tag.tagId);
 		},
-		blur() {
-			this.tagRebuild();
-		},
-		keyup(){
-		},
-		_delete(){
-		},
-		enter(){
-			var self = this;
-			var rootTag = this.rootTag;
-			var selobj = getSelection();
-			var tag = rootTag.findById(selobj.focusNode.parentElement.id);
-			console.log(selobj);
-			if (!tag || !tag.parentTag) {
-				return;
-			}
-			var parentTag = tag.parentTag;
-			var childTag = tags.getTag(tag.tagName);
-			parentTag.addTag(childTag);
-		},
-		mouseup(){
-			//console.log(getSelection());
-		},
-		tagRebuild() {
-			// 删除不存在的tag
-			var rootTag = this.rootTag;
-			var deleteNotExistTag = function(tag) {
-				var list = [];
-				for (var i = 0; i < tag.children.length; i++) {
-					var _tag = tag.children[i];
-					if (document.getElementById(_tag.tagId)) {
-						list.push(_tag);
-					}
-				}
-				tag.children = list;
-				for (var i = 0; i < tag.children.length; i++){
-					var _tag = tag.children[i];
-					deleteNotExistTag(_tag);
-				}
-			}
-
-			deleteNotExistTag(rootTag);
-
-			// 更新tag内容
-			rootTag.each(function(tag){
-				tag.innerHtmlChange && tag.innerHtmlChange();
-			});
-		},
 	},
 	mounted() {
-		console.log(this.theme);
 		adi.setTheme(this.theme);
 		this.selectTag(this.rootTag);
 	},

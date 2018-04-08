@@ -39,14 +39,17 @@ const gitlab = {
 	}
 }
 
+const encodeUrl = function(url) {
+	return encodeURIComponent(url).replace(/\./g,'%2E')
+}
 export const gitlabFactory = (config) => {
 	config = _.mapKeys(config || {}, (value, key) => _.camelCase(key));
-	console.log(config);
 	const cfg = {
 		...defaultConfig,
 		...((gitlab.gits[config.username] || {}).cfg || {}),
 		...(config || {}),
 	};
+	//console.log(cfg);
 	
 	const api  = gitlabApi({host:cfg.host, token:cfg.token});
 	const git = {api, cfg};
@@ -70,6 +73,10 @@ const getUsernameByPath = function(path) {
 }
 
 gitlab.initConfig = function(config){
+	if (!config || !config.username) {
+		return;
+	}
+	
 	this.gits[config.username] = gitlabFactory(config);
 }
 
@@ -93,11 +100,13 @@ gitlab.getFile = function(path) {
 
 gitlab.editFile = function(path, options) {
 	const git = this.getGitByPath(path);
+	//path = encodeUrl(path);
 	return git.api.projects.repository.files.edit(git.cfg.projectId, path, git.cfg.branch, options);
 }
 
 gitlab.createFile = function(path, options) {
 	const git = this.getGitByPath(path);
+	//path = encodeUrl(path);
 	return git.api.projects.repository.files.create(git.cfg.projectId, path, git.cfg.branch, options);
 }
 

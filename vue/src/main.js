@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import vue from 'vue';
 import ElementUI from 'element-ui';
 import _ from 'lodash';
 
@@ -7,7 +7,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'github-markdown-css/github-markdown.css';
 
 
-import App from './App.vue';
+import app from './app.vue';
 import router from "./router";
 import store from "./store";
 
@@ -18,22 +18,22 @@ import config from "./config.js";
 import "./components/bases";
 import "./components/common";
 
-Vue.config.productionTip = false;
+vue.config.productionTip = false;
 
 
 global._ = _;
 
 global.g_app = {
 	_: _,
-	vue: new Vue(), // vue inst
+	vue: new vue(), // vue inst
 	consts: consts,
 	config: config,
 }
 
-Vue.use(ElementUI);
+vue.use(ElementUI);
 
-new Vue({
-  render: h => h(App),
+new vue({
+  render: h => h(app),
   router,
   store,
 }).$mount('#app');

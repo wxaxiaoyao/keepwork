@@ -82,7 +82,7 @@ export default {
 		compileTemplate() {
 			var tagName = this.tagName;
 			var attrStr = this.attrStr;
-			var editorModeAttrStr = ' @click.stop="click" @mouseover.stop="mouseover" @mouseout.stop="mouseout"';
+			var editorModeAttrStr = ' @click.stop.prevent="click" @click.native.stop.prevent="click" @mouseover.stop.prevent="mouseover" @mouseout.stop.prevent="mouseout"';
 			if (this.mode != _const.EDITOR_MODE_EDITOR) {
 				editorModeAttrStr = "";
 			}

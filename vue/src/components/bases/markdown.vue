@@ -17,8 +17,10 @@ export default {
 	name: "markdown",
 
 	data: function() {
+		const roottag = tags.getTag();
+		roottag.classes["container"] = true;
 		return {
-			rootTag: tags.getTag(),
+			rootTag: roottag,
 		};
 	},
 

@@ -8,7 +8,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import git from "@/api/gitlab.js";
+import gitlab from "@/api/gitlab.js";
 import {mod, keepworkEndpoint} from "@/api/keepwork.js";
 
 import kpHeader from "./components/pages/common/header.vue";
@@ -31,6 +31,7 @@ export default {
 		...mapGetters({
 			layout:"app/layout",
 			token:"user/token",
+			dataSources: "dataSource/dataSources",
 		}),
 
 		appLayout() {
@@ -46,14 +47,18 @@ export default {
 
 	methods: {
 		...mapActions({
+			loadTagMods: "mods/loadTagMods",
 		}),
 		setAPIToken() {
 			keepworkEndpoint.defaults.headers.common['Authorization'] = this.token;
 		},
 	},
 
-	async created() {
-		this.setAPIToken();
+	created() {
+		const self = this;
+		self.setAPIToken();
+		self.loadTagMods();
+		_.map(self.dataSources, (val) => gitlab.initConfig(val));
 	},
 
 	mounted() {
@@ -63,6 +68,10 @@ export default {
 </script>
 
 <style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+}
 .appContiner {
 	font-family: 'Avenir', Helvetica, Arial, sans-serif;
 	 -webkit-font-smoothing: antialiased;

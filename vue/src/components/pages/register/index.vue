@@ -10,7 +10,7 @@
 						<el-input type="password" v-model="registerForm.password" @keyup.native.enter="submitRegisterForm"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button @click.prevent="submitRegisterForm">登陆</el-button>
+						<el-button @click.prevent="submitRegisterForm">注册</el-button>
 					</el-form-item>
 				</el-form>
 			</el-col>

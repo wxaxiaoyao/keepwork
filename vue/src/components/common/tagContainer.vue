@@ -92,7 +92,6 @@ export default {
 		mouseout(){
 		},
 		click() {
-			console.log('----------');
 			this.setTagId(this.tag.tagId);
 		},
 	},

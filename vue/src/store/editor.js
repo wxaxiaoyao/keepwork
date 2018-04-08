@@ -191,6 +191,7 @@ const actions = {
 		await gitlab[oper](path, {
 			content:content,
 			commit_message: 'update with keepwork editor',
+		}).catch(function(){
 		});
 
 		let sha = gitsha(content);

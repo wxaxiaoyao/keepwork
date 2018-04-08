@@ -49,6 +49,7 @@ export default {
 			setToken:"user/setToken",
 			setAuth:"user/setAuth",
 			setUserinfo: "user/setUserinfo",
+			setDataSource: "dataSource/setDataSource",
 		}),
 		async loginSuccess(token, userinfo) {
 			const self = this;
@@ -59,7 +60,10 @@ export default {
 			self.setUserinfo(userinfo);
 
 			const ds = await dataSource.getDefaultDataSource();
-			ds && gitlab.initConfig(ds);
+			if (ds && ds.username) {
+				gitlab.initConfig(ds);
+				self.setDataSource(ds);
+			}
 			self.$router.push({name:"home"});
 		},
 		submitLoginForm() {

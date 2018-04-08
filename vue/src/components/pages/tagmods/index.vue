@@ -45,6 +45,7 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 
+import adi from "../../bases/adi.js";
 import modTree from "./modTree.vue";
 import tagNav from "../editor/tagNav.vue";
 import tagEdit from "../editor/tagEdit.vue";
@@ -95,6 +96,7 @@ export default {
 			setTagId:'setTagId',
 			setTagMod:"mods/setTagMod",
 			setMode: "setMode",
+			loadTagMods: "mods/loadTagMods",
 			submitTagMods: "mods/submitTagMods",
 		}),
 		editModStyle(style){
@@ -104,7 +106,11 @@ export default {
 		},
 		addTag(tag){
 			const containerTag = this.tag.getContainerTag();
-			var subtag = tags.getTag(tag.type);
+			const subtag = tags.getTag(tag.type);
+			if (tag.type.indexOf("Adi") == 0){
+				subtag.vars = _.cloneDeep(adi.getComponentProperties(tag.type));
+				subtag.attrs[":source"] = "tag.vars";
+			}
 			containerTag && containerTag.addTag(subtag);
 			this.setTagId(subtag.tagId);
 		},
@@ -132,8 +138,9 @@ export default {
 		tagTree,
 	},
 
-	created() {
+	async created() {
 		this.setMode("editor");
+		await this.loadTagMods();
 	},
 
 	mounted() {

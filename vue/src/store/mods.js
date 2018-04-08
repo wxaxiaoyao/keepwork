@@ -1,5 +1,8 @@
 import vue from "vue"; 
 import {Base64} from "js-base64";
+
+import gitlab from "@/api/gitlab.js";
+
 import mods from "../components/adi/mod/index.js";
 
 const systemModPath = "https://gitlab.com/wxaxiaoyao/keepworkdatasource/raw/master/xiaoyao_data/mods.json";
@@ -8,6 +11,7 @@ const defaultStyleName = "default";
 const SET_SYSTEM_MODS = 'SET_SYSTEM_MODS';
 const SET_SYSTEM_MOD = 'SET_SYSTEM_MOD';
 const SET_TAG_MODS = 'SET_TAG_MODS';
+const SET_TAG_MODS_STATE = 'SET_TAG_MODS_STATE';
 const SET_TAG_MOD = 'SET_TAG_MOD';
 const SET_TAG_MOD_STYLE = 'SET_TAG_MOD_STYLE';
 const DELETE_TAG_MOD = "DELETE_TAG_MOD";
@@ -29,6 +33,7 @@ const systemModsFunc = () => {
 
 const state = {
 	systemMods: systemModsFunc(),
+	tagModsState:"unload",
 	tagMods: {},
 	userMods: {},
 }
@@ -41,6 +46,7 @@ function fromJson(str) {
 	try {
 		return JSON.parse(str);
 	} catch {
+		console.log(str);
 	}
 
 	return undefined;
@@ -97,36 +103,38 @@ const actions = {
 	},
 
 	async loadSystemMods({rootGetters, commit}) {
-		const {api, cfg} = rootGetters["user/getDataSource"]();
+		//const {api, cfg} = rootGetters["user/getDataSource"]();
 		
-		let file = await api.projects.repository.files.show(cfg.projectId, "xiaoyao_data/mods.json", cfg.ref);
+		//let file = await api.projects.repository.files.show(cfg.projectId, "xiaoyao_data/mods.json", cfg.ref);
 
-		file.content = Base64.decode(file.content);
-		let mods = fromJson(file.content) || {};
+		//file.content = Base64.decode(file.content);
+		//let mods = fromJson(file.content) || {};
 
-		commit(SET_SYSTEM_MODS, mods);
+		//commit(SET_SYSTEM_MODS, mods);
 	},
 
-	async loadTagMods({rootGetters, commit}) {
-		const {api, cfg} = rootGetters["user/getDataSource"]();
-		let file = await api.projects.repository.files.show(cfg.projectId, "xiaoyao_data/tag_mods.json", cfg.ref);
-		file.content = Base64.decode(file.content);
-		let mods = fromJson(file.content) || {};
+	async loadTagMods({state, commit}) {
+		if (state.tagModsState == "loaded" || state.tagModsState == "loading") {
+			return;
+		}
+	
+		commit(SET_TAG_MODS_STATE, "loading");
+		let content = await gitlab.getContent(g_app.config.tagModsPath);
+		let mods = fromJson(content) || {};
 		
 		commit(SET_TAG_MODS, mods);
+		commit(SET_TAG_MODS_STATE, "loaded");
 	},
 
 	async submitSystemMods({state, getters, rootGetters}) {
-		const {api, cfg} = rootGetters["user/getDataSource"]();
-		await api.projects.repository.files.edit(cfg.projectId, "xiaoyao_data/mods.json", cfg.branch, {
-			content:toJson(state.systemMods),
-			commit_message:"update with keepwork mod editor",
-		});
+		//await gitlab.editFile(g_app.config.tagModsPath, {
+			//content:toJson(state.systemMods),
+			//commit_message:"update with keepwork mod editor",
+		//});
 	},
 
 	async submitTagMods({state, getters, rootGetters}) {
-		const {api, cfg} = rootGetters["user/getDataSource"]();
-		await api.projects.repository.files.edit(cfg.projectId, "xiaoyao_data/tag_mods.json", cfg.branch, {
+		await gitlab.editFile(g_app.config.tagModsPath, {
 			content:toJson(state.tagMods),
 			commit_message:"update with keepwork mod editor",
 		});
@@ -148,6 +156,9 @@ const mutations = {
 			...state.tagMods,
 			...(mods || {}),
 		});
+	},
+	[SET_TAG_MODS_STATE](state, tagModsState) {
+		state.tagModsState = tagModsState;
 	},
 	[DELETE_TAG_MOD](state, modName) {
 		vue.delete(state.tagMods, modName);	

@@ -13,6 +13,7 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import gitlab from "@/api/gitlab.js";
+import {dataSource} from "@/api/keepwork.js";
 
 import markdown from "../../bases/markdown.vue";
 export default {
@@ -28,31 +29,42 @@ export default {
 		}
 	},
 
+	watch: {
+	},
+
+	computed: {
+		...mapGetters({
+			getDataSource:"dataSource/getDataSource",
+		}),
+	},
+
 	methods: {
 		...mapActions({
-			loadUserDefaultDataSource: "user/loadUserDefaultDataSource",
 			loadTagMods: "mods/loadTagMods",
 		}),
 	},
 
-	async created() {
-		await this.loadTagMods();
+	created() {
 	},
 
 	async mounted() {
-		console.log(this.$route);
 		const self = this;
 		const username = this.$route.params.username;
 		const path = this.$route.fullPath;
 		const pagepath = decodeURIComponent(path) + g_app.config.pageSuffix;
 
-		const content = await gitlab.getContent(pagepath).catch(function(e){
-			self.isPageExist = false;
+		self.isLoading = true;
+
+		const tasks = [this.loadTagMods(),];
+		self.getDataSource(username) || tasks.push(dataSource.getDefaultDataSource({username:username}).then(ds => gitlab.initConfig(ds)));
+		Promise.all(tasks).then(async function() {
+			const content = await gitlab.getContent(pagepath).catch(function(e){
+				self.isPageExist = false;
+			});
+
+			self.isLoading = false;
+			self.text = content || "";
 		});
-
-		self.text = content || "";
-		//const dataSources = await this.loadUserDefaultDataSource(username); 
-
 	}
 }
 </script>

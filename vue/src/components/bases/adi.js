@@ -2,7 +2,7 @@ import vue from "vue";
 import _ from "lodash";
 
 import adiComponents from "../adi/common/index.js";
-//import adiComponentProps from "../adi/common/comp.properties.js";
+import adiComponentProps from "../adi/common/comp.properties.js";
 import mods from "../adi//mod/index.js";
 import tags from "../modeditor/tags.js";
 
@@ -62,6 +62,10 @@ function parseMod(m, template, root) {
 	}
 
 	return tag;
+}
+
+adi.getComponentProperties = function(compName) {
+	return adiComponentProps[compName] || {};
 }
 
 adi.setMod = function(mod, modData) {

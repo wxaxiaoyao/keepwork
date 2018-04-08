@@ -8,6 +8,7 @@ import app from "./app.js";
 import editor from "./editor.js";
 import user from "./user.js";
 import mods from "./mods.js";
+import dataSource from "./dataSource.js";
 
 import test from "./test.js";
 
@@ -23,6 +24,7 @@ export default new Vuex.Store({
 		editor,
 		user,
 		mods,
+		dataSource,
 		test,
 	},
 
@@ -35,7 +37,9 @@ export default new Vuex.Store({
 	strict: debug,
 
 	plugins: [createPersistedState({
+		paths: ["user"],
+	}), createPersistedState({
 		storage: window.sessionStorage,
-		paths: ["test", "user"],
+		paths: ["dataSource", "mods"],
 	})],
 });

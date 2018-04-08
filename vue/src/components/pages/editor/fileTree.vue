@@ -289,8 +289,13 @@ export default {
 
 	async mounted() {
 		await this.loadTree({path:this.user.username});
+		const username = this.user.username;
 		this.fileTree = this.getFileTree();
-		this.fileTree[0].aliasname = "我的页面";
+		const rootnode = this.fileTree[0] || {username:username, path:username, aliasname:"我的页面", url:username, name:username, type:"tree"};
+		this.fileTree[0] = rootnode;
+		rootnode.aliasname = "我的页面";
+
+
 	},
 
 	created() {

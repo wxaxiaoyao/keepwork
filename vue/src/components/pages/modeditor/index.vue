@@ -93,6 +93,7 @@ export default {
 
 	methods:{
 		...mapActions({
+			setMode: "setMode",
 			loadSystemMods: "mods/loadSystemMods",
 			submitTagMods: "mods/submitTagMods",
 			setTagMod: "mods/setTagMod",
@@ -139,6 +140,7 @@ export default {
 
 	mounted() {
 		//this.loadSystemMods();
+		this.setMode("editor");
 		this.initCodeMirror();
 
 		adi.setTheme(this.theme);
