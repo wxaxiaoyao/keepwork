@@ -8,7 +8,7 @@
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 
-import tags from "../modeditor/tags.js";
+import {tags} from "@/lib/tags";
 import modTest from "../mods/modTest.js";
 
 import mods from "../adi/mod/index.js";

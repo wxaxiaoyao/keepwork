@@ -24,12 +24,12 @@
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import {Base64} from "js-base64";
+
+import {tags} from "@/lib/tags";
 import components from "../../../components/index.js";
 import markdown from "../../bases/markdown.vue";
 import left from "./left.vue";
 import codeEditor from "./codeEditor.vue";
-
-import tags from "../../modeditor/tags.js";
 import adi from "../../bases/adi.js";
 
 export default {

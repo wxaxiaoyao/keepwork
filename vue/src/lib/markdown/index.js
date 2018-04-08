@@ -12,6 +12,9 @@ function mdwiki(options) {
 		}
 	}
 
+	md.render = function(text) {
+		return this.md.render(text);
+	}
 	md.getBlockList = function() {
 		return md.template.blocklist;
 	}

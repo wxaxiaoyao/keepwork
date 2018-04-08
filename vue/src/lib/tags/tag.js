@@ -1,26 +1,6 @@
 import _ from "lodash";
 
-var styleAttrMap = {}
-var tagId = 0;
-
-var tag = {};
-
-// style class 特殊处理  vue也特殊处理  保持一致
-tag.__flag__ = true; // 用来识别是tag
-tag.tagName = "";
-tag.children = [];
-
-tag.attrs = {};
-tag.styles = {
-	//"height":"100%",
-};
-tag.classes = {};
-tag.varsPrefix = "tag.vars";
-tag.vars = undefined; // 变量集 未自定义则不配置更改
-tag.$vars = {};       // var 描述
-tag.styleCode = "";
-tag.styleList = [];
-tag.attrList = [];
+let tagId = 0;
 
 function isEmptyObject(obj) {
 	for (var key in obj) {
@@ -30,11 +10,27 @@ function isEmptyObject(obj) {
 	return true;
 }
 
-tag.setStyle = function(key, value) {
+export const Tag = function(tagName) {
+	this.tagName = tagName || "div";
+	this.__flag__ = true; // 用来识别是tag
+	this.children = [];
+	this.attrs = {};
+	this.styles = {};
+	this.classes = {};
+	this.varsPrefix = "tag.vars";
+	this.vars = undefined; // 变量集 未自定义则不配置更改
+	this.$vars = {};       // var 描述
+	this.styleCode = "";
+	this.styleList = [];
+	this.attrList = [];
+	this.tagId = "tagId_" + (new Date()).getTime() + "_" + tagId++;
+}
+
+Tag.prototype.setStyle = function(key, value) {
 
 }
 
-tag.getAttrsHtml = function(tagName){
+Tag.prototype.getAttrsHtml = function(tagName){
 	var self = this;
 	var str = '';
 	var attrs = _.cloneDeep(self.attrs);
@@ -81,7 +77,7 @@ tag.getAttrsHtml = function(tagName){
 	return str;
 }
 
-tag.getContentHtml = function() {
+Tag.prototype.getContentHtml = function() {
 	var self = this;
 
 	var content = "";
@@ -103,7 +99,7 @@ tag.getContentHtml = function() {
 	return content;
 }
 
-tag.html = function(opt){
+Tag.prototype.html = function(opt){
 	var self = this;
 	var htmlStr = "";
 
@@ -118,7 +114,7 @@ tag.html = function(opt){
 	return htmlStr;
 }
 
-tag.each = function(callback) {
+Tag.prototype.each = function(callback) {
 	callback && callback(this);
 	
 	for (var i = 0; i < this.children.length; i++){
@@ -126,7 +122,7 @@ tag.each = function(callback) {
 	}	
 }
 
-tag.findById = function(tagId) {
+Tag.prototype.findById = function(tagId) {
 	var self = this;
 
 	if (self.tagId == tagId) {
@@ -144,7 +140,7 @@ tag.findById = function(tagId) {
 	return undefined;
 }
 
-tag.findByPath = function(path, srcTag) {
+Tag.prototype.findByPath = function(path, srcTag) {
 	if (!path) {
 		return undefined;
 	}
@@ -164,7 +160,7 @@ tag.findByPath = function(path, srcTag) {
 	return dstTag;
 }
 
-tag.getTagPath = function() {
+Tag.prototype.getTagPath = function() {
 	var path = [];
 	var curTag = this;
 	var parentTag = curTag.parentTag;
@@ -183,7 +179,7 @@ tag.getTagPath = function() {
 	return path;
 }
 
-tag.setChildrenTag = function(index, tag) {
+Tag.prototype.setChildrenTag = function(index, tag) {
 	var self = this;
 	if (!tag || typeof(tag) != "object") {
 		return;
@@ -195,7 +191,7 @@ tag.setChildrenTag = function(index, tag) {
 	return
 }
 
-tag.addTag = function(t) {
+Tag.prototype.addTag = function(t) {
 	var self = this;
 
 	if (!t || typeof(t) != "object") {
@@ -214,7 +210,7 @@ tag.addTag = function(t) {
 	return t;
 }
 
-tag.deleteTag = function(tagId) {
+Tag.prototype.deleteTag = function(tagId) {
 	tagId = tagId || this.tagId;	
 	var parentTag = this.parentTag;
 
@@ -236,7 +232,7 @@ tag.deleteTag = function(tagId) {
 	}
 }
 
-tag.getParams = function(params) {
+Tag.prototype.getParams = function(params) {
 	var self = this;
 
 	params = params || {};
@@ -256,7 +252,7 @@ tag.getParams = function(params) {
 	return params;
 }
 
-tag.clone = function() {
+Tag.prototype.clone = function() {
 	var _tag = _.cloneDeep(this);
 
 	_tag.tagId = "tagId_" + (new Date()).getTime() + "_" + tagId++;
@@ -265,7 +261,7 @@ tag.clone = function() {
 	return _tag;
 }
 
-tag.getNextTag = function() {
+Tag.prototype.getNextTag = function() {
 	var self = this;
 	var parentTag = self.parentTag;
 	if (!parentTag) {
@@ -281,19 +277,19 @@ tag.getNextTag = function() {
 	return parentTag.children[index + 1];
 }
 
-tag.setTagName = function(tagName){
+Tag.prototype.setTagName = function(tagName){
 	this.tagName = tagName;
 }
 
-tag.setVars = function(vars) {
+Tag.prototype.setVars = function(vars) {
 	this.vars = vars;
 }
 
-tag.getVars = function() {
+Tag.prototype.getVars = function() {
 	return this.vars;
 }
 
-tag.getTagByKey = function(key) {
+Tag.prototype.getTagByKey = function(key) {
 	if (this.key == key) {
 		return this;
 	}
@@ -308,7 +304,7 @@ tag.getTagByKey = function(key) {
 	return ;
 }
 
-tag.setVarsByKey = function(data) {
+Tag.prototype.setVarsByKey = function(data) {
 	data = data || {};
 	
 	const _setVarsByKey = function(tag) {
@@ -322,7 +318,7 @@ tag.setVarsByKey = function(data) {
 	_setVarsByKey(this);
 }
 
-tag.getVarsByKey = function(keys) {
+Tag.prototype.getVarsByKey = function(keys) {
 	var data = {};
 	const _getVarsBykey = function(tag) {
 		if (tag.key && (!keys || keys[tag.key])) {
@@ -336,7 +332,7 @@ tag.getVarsByKey = function(keys) {
 	return data;
 }
 
-tag.clean = function() {
+Tag.prototype.clean = function() {
 	const _clean = function(tag) {
 		delete tag.parentTag;
 		delete tag.attrList;
@@ -351,7 +347,7 @@ tag.clean = function() {
 	return this;
 }
 
-tag.isContainerTag = function() {
+Tag.prototype.isContainerTag = function() {
 	const containerTag = {
 		"div": true,
 	}
@@ -363,7 +359,7 @@ tag.isContainerTag = function() {
 	return false;
 }
 
-tag.getContainerTag = function() {
+Tag.prototype.getContainerTag = function() {
 	var t = this;
 
 	while(t && !t.isContainerTag()) {
@@ -373,14 +369,8 @@ tag.getContainerTag = function() {
 	return t;
 }
 
-function tagFactory(tagName) {
-	var _tag = _.cloneDeep(tag);
-
-	_tag.tagId = "tagId_" + (new Date()).getTime() + "_" + tagId++;
-	_tag.tagName = tagName;
-	_tag.varKey = _tag.tagId;
-
-	return _tag;
+export const tagFactory = function(tagName) {
+	return new Tag(tagName);
 }
 
-export default tagFactory;
+export default Tag;

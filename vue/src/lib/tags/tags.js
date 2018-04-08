@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import tagFactory from "./tag.js";
+import {tagFactory} from "./tag.js";
 var tags = {};
 
 // 定义容器tag
@@ -450,17 +450,11 @@ tags.wikiCarouselTag = function() {
 	return tag;
 }
 
-tags.htmlTag = function(html) {
+tags.htmlTag = function(text) {
 	var tag = this.getTag("div");
+	tag.attrs["v-html"] = tag.varsPrefix + ".text";
 	tag.vars = {
-		text: {
-			text: html || "文本",
-			$data: {
-				type:"text",  // 文件变量  用于标签内容显示
-				attrName:"v-html",
-				key:".text",
-			}
-		},
+		text: text == undefined ? "文本" : text,
 	}
 
 	return tag;

@@ -34,10 +34,10 @@ import {codemirror} from "vue-codemirror";
 import "codemirror/lib/codemirror.css";
 import 'codemirror/mode/javascript/javascript.js';
 
+import {tags} from "@/lib/tags";
 import tagNav from "../editor/tagNav.vue";
 import tagEdit from "../editor/tagEdit.vue";
 import modTree from "./modTree.vue";
-import tags from "../../modeditor/tags.js";
 import adi from "../../bases/adi.js";
 
 export default {

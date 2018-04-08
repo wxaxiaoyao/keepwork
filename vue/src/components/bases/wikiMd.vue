@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import markdown from "../../lib/markdown/markdown.js";
+import markdown from "@/lib/markdown/markdown.js";
 
 var md = markdown();
 

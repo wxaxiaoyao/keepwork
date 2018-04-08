@@ -7,9 +7,8 @@ import {mapActions, mapGetters} from "vuex";
 import tag from "../common/tag.js";
 
 import wikiMd from "./wikiMd.vue";
-
-import tags from "../modeditor/tags.js";
-import markdown from "../../lib/markdown/index.js";
+import {tags} from "@/lib/tags";
+import markdown from "@/lib/markdown";
 
 const md = markdown();
 
@@ -65,7 +64,7 @@ export default {
 				tag = tags.getTagByTag(tag);
 				tag && tag.setVarsByKey(block.modParams);
 			} else {
-				tag = tags.wikiMdTag(block.text);
+				tag = tags.htmlTag(md.render(block.text));
 			}
 
 			return tag || tags.getTag();
@@ -115,7 +114,7 @@ export default {
 					}
 				} else {
 					tag.children[i].vars = tag.children[i].vars || {};
-					tag.children[i].vars.text = block.text;
+					tag.children[i].vars.text = md.render(block.text);
 				}
 			}
 			var size = this.blocklist.length;

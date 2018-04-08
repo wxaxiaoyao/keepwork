@@ -44,13 +44,14 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {tags} from "@/lib/tags";
 
 import adi from "../../bases/adi.js";
 import modTree from "./modTree.vue";
 import tagNav from "../editor/tagNav.vue";
 import tagEdit from "../editor/tagEdit.vue";
 import tagTree from "../editor/tagTree.vue";
-import tags from "../../modeditor/tags.js";
+//import tags from "../../modeditor/tags.js";
 export default {
 	data: function() {
 		const tag = tags.getTag();

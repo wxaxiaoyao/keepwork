@@ -4,7 +4,7 @@ import {mapActions, mapGetters} from "vuex";
 import {create} from "jss";
 import preset from 'jss-preset-default'
 
-import tags from "../modeditor/tags.js";
+import {tags} from "@/lib/tags";
 import _const from "../../lib/const.js";
 import tagContainer from "./tagContainer.vue";
 
