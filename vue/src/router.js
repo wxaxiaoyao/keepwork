@@ -10,6 +10,8 @@ import modeditor from "./components/pages/modeditor";
 import editor from "./components/pages/editor";
 import tagmods from "./components/pages/tagmods/index.vue";
 import login from "./components/pages/login/index.vue";
+import register from "./components/pages/register/index.vue";
+
 import notfound from "./components/pages/notfound/index.vue";
 import userpage from "./components/pages/userpage/index.vue";
 import home from "./components/pages/home/index.vue";
@@ -61,7 +63,7 @@ export const router = new VueRouter({
 	{
 		name:"register",
 		path: routerPrefix + "/register",
-		component: login,
+		component: register,
 	},
 	{
 		path: '/(www|wiki)/*',

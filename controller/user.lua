@@ -71,7 +71,7 @@ function user:register(ctx)
 	local token = nws.util.encode_jwt({user_id = userinfo.user_id, username=userinfo.username}, nws.config.token.secret, nws.config.token.expire)
 
 	-- 数据格式转换
-	userinfo = convert_model.user_new_to_old(userinfo)
+	--userinfo = convert_model.user_new_to_old(userinfo)
 	return errors:wrap(nil, {token=token, userinfo=userinfo})
 end
 
