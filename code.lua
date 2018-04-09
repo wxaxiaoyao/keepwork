@@ -9,7 +9,8 @@ git reset --hard HEAD;
 git pull origin master;
 r.js -o build.js;
 cd /root/workspace/lua/keepwork/vue/;
-/usr/local/bin/npm run build;
+echo $PATH
+/usr/local/bin/npm run build --scripts-prepend-node-path=/usr/bin;
 cd /root/workspace/lua/keepwork/;
 ./start.sh restart;
 ]]
