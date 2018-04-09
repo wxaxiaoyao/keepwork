@@ -93,36 +93,64 @@ var tagTree = [
 	label:"ADI组件",
 	children: [
 		{
-			label:"按钮",
-			type:"AdiButton",
-		},
-		{
-			label:"标签",
-			type:"AdiLabel",
-		},
-		{
-			label:"标题",
-			type:"AdiTitle",
-		},
-		{
-			label:"轮播",
+			label:"轮播 AdiImgLoop",
 			type:"AdiImgLoop",
+			source:"AdiComponent",
 		},
 		{
-			label:"多媒体",
-			type:"AdiMedia",
+			label:"标题 AdiTitle",
+			type:"AdiTitle",
+			source:"AdiComponent",
 		},
 		{
-			label:"菜单",
+			label:"按钮 AdiButton",
+			type:"AdiButton",
+			source:"AdiComponent",
+		},
+		{
+			label:"菜单 AdiMenu",
 			type:"AdiMenu",
+			source:"AdiComponent",
 		},
 		{
-			label:"Markdown",
+			label:"多媒体 AdiMedia",
+			type:"AdiMedia",
+			source:"AdiComponent",
+		},
+		{
+			label:"标签 AdiMedia",
+			type:"AdiLabel",
+			source:"AdiComponent",
+		},
+		{
+			label:"Markdown AdiMarkdown",
 			type:"AdiMarkdown",
+			source:"AdiComponent",
 		},
 		{
-			label:"画板",
+			label:"画板 AdiBoard",
 			type:"AdiBoard",
+			source:"AdiComponent",
+		},
+		{
+			label:"文本 AdiDescLabel",
+			type:"AdiDescLabel",
+			source:"AdiComponent",
+		},
+		{
+			label:"VIPRead AdiVipRead",
+			type:"AdiVipRead",
+			source:"AdiComponent",
+		},
+		{
+			label:"评论 AdiVipRead",
+			type:"AdiComment",
+			source:"AdiComponent",
+		},
+		{
+			label:"对话框 AdiInnerModal",
+			type:"AdiInnerModal",
+			source:"AdiComponent",
 		},
 	],
 },
@@ -150,44 +178,64 @@ var tagTree = [
 	{
 		label:"ModMarkdown",
 		type:"ModMarkdown",
+		source:"AdiMod",
 	},
 	{
 		label:"ModHeader",
 		type:"ModHeader",
+		source:"AdiMod",
 	},
 	{
 		label:"ModTitle",
 		type:"ModTitle",
+		source:"AdiMod",
 	},
 	{
 		label:"ModMixPosition",
 		type:"ModMixPosition",
+		source:"AdiMod",
 	},
 	{
 		label:"ModMixLayer",
 		type:"ModMixLayer",
+		source:"AdiMod",
 	},
 	{
 		label:"ModImgLoop",
 		type:"ModImgLoop",
+		source:"AdiMod",
 	},
 	{
 		label:"ModParacraft",
 		type:"ModParacraft",
+		source:"AdiMod",
 	},
 	{
 		label:"ModQQ",
 		type:"ModQQ",
+		source:"AdiMod",
 	},
 	{
 		label:"ModText",
 		type:"ModText",
+		source:"AdiMod",
 	},
 	{
 		label:"ModBoard",
 		type:"ModBoard",
+		source:"AdiMod",
 	},
-	]
+	{
+		label:"ModVipRead",
+		type:"ModVipRead",
+		source:"AdiMod",
+	},
+	{
+		label:"ModComment",
+		type:"ModComment",
+		source:"AdiMod",
+	},
+	],
 },
 ];
 

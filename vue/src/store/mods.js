@@ -118,7 +118,6 @@ const actions = {
 			return;
 		}
 	
-		commit(SET_TAG_MODS_STATE, "loading");
 		let content = await gitlab.getContent(g_app.config.tagModsPath);
 		let mods = fromJson(content) || {};
 		

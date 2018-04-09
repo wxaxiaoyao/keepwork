@@ -13,6 +13,9 @@ const getters = {
 
 const actions = {
 	setDataSource({commit}, dataSource) {
+		if (!dataSource || !dataSource.username) {
+			return;
+		}
 		commit(SET_DATA_SOURCE, dataSource);
 	}
 }

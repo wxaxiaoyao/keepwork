@@ -3,7 +3,7 @@ import _ from "lodash";
 
 import adiComponents from "../adi/common/index.js";
 import adiComponentProps from "../adi/common/comp.properties.js";
-import mods from "../adi//mod/index.js";
+import mods from "../adi/mod/index.js";
 import {tags} from "@/lib/tags";
 
 for (var key in adiComponents){
@@ -73,6 +73,9 @@ adi.setMod = function(mod, modData) {
 		return;
 	}
 
+	if (typeof(mod) == "string") {
+		mod = mods[mod];
+	}
 	console.log(mod);
 
 	this.mod = mod;

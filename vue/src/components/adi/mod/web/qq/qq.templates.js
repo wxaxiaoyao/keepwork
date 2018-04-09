@@ -1,10 +1,8 @@
 export default [
-  // template 1
+  // template 0
   [
-    { colLogo: 'logo' },
-    { colDesc: 'desc' }
-    // {
-    //   colGroup: [[{ colWorldName: 'worldName' }, { colVersion: 'version' }]]
-    // }
+    {
+      colPicDesc: [{ colPic: 'pic' }, { colDesc: 'desc' }]
+    }
   ]
 ]

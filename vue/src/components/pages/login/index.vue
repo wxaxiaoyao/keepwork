@@ -25,7 +25,7 @@ import {mapActions, mapGetters} from "vuex";
 import gitlab from "@/api/gitlab.js";
 import {user, dataSource, keepworkEndpoint} from "@/api/keepwork.js";
 export default {
-	name:"tagLogin",
+	name:"login",
 	data:function(){
 		return {
 			loginForm:{
@@ -49,6 +49,7 @@ export default {
 			setToken:"user/setToken",
 			setAuth:"user/setAuth",
 			setUserinfo: "user/setUserinfo",
+			setUserDataSource: "user/setUserDataSource",
 			setDataSource: "dataSource/setDataSource",
 		}),
 		async loginSuccess(token, userinfo) {
@@ -63,6 +64,7 @@ export default {
 			if (ds && ds.username) {
 				gitlab.initConfig(ds);
 				self.setDataSource(ds);
+				self.setUserDataSource(ds);
 			}
 			self.$router.push({name:"home"});
 		},

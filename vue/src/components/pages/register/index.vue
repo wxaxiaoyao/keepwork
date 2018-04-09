@@ -25,7 +25,7 @@ import {mapActions, mapGetters} from "vuex";
 import gitlab from "@/api/gitlab.js";
 import {user, dataSource, keepworkEndpoint} from "@/api/keepwork.js";
 export default {
-	name:"tagregister",
+	name:"register",
 	data:function(){
 		return {
 			registerForm:{

@@ -5,7 +5,7 @@ export default {
   props: {
     source: Object,
     options: Object,
-    editorMode: {
+    editMode: {
       type: Boolean,
       default: false
     }
@@ -13,7 +13,8 @@ export default {
   computed: {
     properties() {
       return _.merge(
-        _.cloneDeep(compDefaultProperties[this.$options.name]) || {},
+        {},
+        compDefaultProperties[this.$options.name] || {},
         this.source || {}
       )
     }

@@ -48,6 +48,7 @@ export default {
 	},
 
 	async mounted() {
+		console.log("userpage");
 		const self = this;
 		const username = this.$route.params.username;
 		const path = this.$route.fullPath;
@@ -55,7 +56,7 @@ export default {
 
 		self.isLoading = true;
 
-		const tasks = [this.loadTagMods(),];
+		const tasks = [];
 		self.getDataSource(username) || tasks.push(dataSource.getDefaultDataSource({username:username}).then(ds => gitlab.initConfig(ds)));
 		Promise.all(tasks).then(async function() {
 			const content = await gitlab.getContent(pagepath).catch(function(e){

@@ -1,6 +1,6 @@
 <template>
   <div class='comp-label'>
-    <a :href='properties.link'>
+    <a :target='properties.target' :href='properties.link'>
       <label> {{properties.text}} </label>
     </a>
   </div>
@@ -14,3 +14,11 @@ export default {
   mixins: [compBaseMixin]
 }
 </script>
+
+<style lang="scss" scoped>
+.comp-label {
+  a {
+    text-decoration: none;
+  }
+}
+</style>

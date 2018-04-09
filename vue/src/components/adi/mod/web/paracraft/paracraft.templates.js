@@ -1,12 +1,77 @@
 export default [
-  // template 1
+  // template 0
   [
     { colPreview: 'preview' },
     {
-      colGroup: [{ colWorldName: 'worldName' }]
+      colGroupLeft: [
+        {
+          colGroupA: [
+            { colWorldName: 'worldName' },
+            {
+              colGroupVersionAndUpdateTime: [
+                { colVersion: 'version' },
+                { colUpdateTime: 'updateTime' }
+              ]
+            }
+          ]
+        },
+        {
+          colGroupB: [{ colAuthor: 'author' }]
+        },
+        {
+          colGroupC: [
+            {
+              colGroupCA: [
+                { colViewTimesImg: 'viewTimesImg' },
+                { colViewTimes: 'viewTimes' },
+                { colSize: 'size' }
+              ]
+            },
+            {
+              colGroupCB: [{ colDownload: 'download' }, { colEnter: 'enter' }]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      colInnerModal: 'innerModal'
     }
-    // {
-    //   colGroup: [[{ colWorldName: 'worldName' }, { colVersion: 'version' }]]
-    // }
+  ],
+  // template 1
+  [
+    {
+      colGroupA: [
+        {
+          colGroupAA: [{ colWorldName: 'worldName' }, { colAuthor: 'author' }]
+        },
+        {
+          colGroupAB: [{ colDownload: 'download' }, { colEnter: 'enter' }]
+        }
+      ]
+    },
+    {
+      colGroupB: [{ colPreview: 'preview' }, { colDesc: 'desc' }]
+    },
+    {
+      colInnerModal: 'innerModal'
+    }
+  ],
+  // template 2
+  [
+    {
+      colPreview: 'preview',
+      colGroupA: [
+        { colWorldName: 'worldName' },
+        { colAuthor: 'author' },
+        { colDesc: 'desc' },
+        {
+          colGroupAA: [{ colDownload: 'download' }, { colEnter: 'enter' }]
+        }
+      ]
+    },
+    {
+      colInnerModal: 'innerModal'
+    }
   ]
 ]

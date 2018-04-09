@@ -31,6 +31,8 @@ export default {
 		...mapGetters({
 			layout:"app/layout",
 			token:"user/token",
+			isAuth:"user/isAuth",
+			userDataSource: "user/dataSource",
 			dataSources: "dataSource/dataSources",
 		}),
 
@@ -48,6 +50,7 @@ export default {
 	methods: {
 		...mapActions({
 			loadTagMods: "mods/loadTagMods",
+			setDataSource: "dataSource/setDataSource",
 		}),
 		setAPIToken() {
 			keepworkEndpoint.defaults.headers.common['Authorization'] = this.token;
@@ -57,7 +60,7 @@ export default {
 	created() {
 		const self = this;
 		self.setAPIToken();
-		self.loadTagMods();
+		self.setDataSource(self.userDataSource);
 		_.map(self.dataSources, (val) => gitlab.initConfig(val));
 	},
 

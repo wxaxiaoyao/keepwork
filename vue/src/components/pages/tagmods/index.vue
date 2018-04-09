@@ -65,6 +65,7 @@ export default {
 
 	computed: {
 		...mapGetters({
+			theme:"theme",
 			tagId: "getTagId",
 			getTagMod: "mods/tagMod",
 			tagMods: "mods/tagMods",
@@ -107,10 +108,12 @@ export default {
 		},
 		addTag(tag){
 			const containerTag = this.tag.getContainerTag();
-			const subtag = tags.getTag(tag.type);
-			if (tag.type.indexOf("Adi") == 0){
+			let subtag = tags.getTag(tag.type);
+			if (tag.source == "AdiComponent"){
 				subtag.vars = _.cloneDeep(adi.getComponentProperties(tag.type));
 				subtag.attrs[":source"] = "tag.vars";
+			} else if (tag.source == "AdiMod") {
+				subtag = adi.setMod(tag.type).getTag();
 			}
 			containerTag && containerTag.addTag(subtag);
 			this.setTagId(subtag.tagId);
@@ -141,7 +144,7 @@ export default {
 
 	async created() {
 		this.setMode("editor");
-		await this.loadTagMods();
+		adi.setTheme(this.theme);
 	},
 
 	mounted() {
