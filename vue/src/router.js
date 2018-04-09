@@ -32,6 +32,7 @@ export const router = new VueRouter({
 		component: home,
 	},
 	{
+		name:"modeditor",
 		path: routerPrefix + "/modeditor",
 		component: modeditor,
 	},
@@ -41,11 +42,16 @@ export const router = new VueRouter({
 		component: editor,
 		meta:{
 			requireAuth: true,
+			requireMods: true,
 		},
 	},
 	{
+		name:"tagmods",
 		path: routerPrefix + "/tagmods",
 		component: tagmods,
+		meta: {
+			requireMods: true,
+		},
 	},
 	{
 		name:"login",
@@ -86,29 +92,30 @@ router.beforeEach((to, from, next) => {
 });
 
 // mods加载钩子
-router.beforeEach(async function(to, from, next){
+//router.beforeEach(async function(to, from, next){
+router.afterEach(async function(to, from){
 	if (to.matched.some(record => record.meta.requireMods)) {
 		await store.dispatch("mods/loadTagMods");	
 	}
-	next();
+	//next();
 });
 
 // 数据源钩子
-//router.afterEach(async function(to, from){
-	//const some = function(record) {
-		//if (!record.meta.requireDataSource) {
-			//return false;
-		//}
-		//return true;
-	//}
-	//if (to.matched.some(some)) {
-		 //const username = (to.params || {}).username;
-		 //const ds = await dataSource.getDefaultDataSource({username:username});
-		 //if (ds) {
-			//gitlab.initConfig(ds);
-			//store.dispatch("dataSource/setDataSource", ds);
-		 //} 
-	//}
-//})
+router.afterEach(async function(to, from){
+	const some = function(record) {
+		if (!record.meta.requireDataSource) {
+			return false;
+		}
+		return true;
+	}
+	if (to.matched.some(some)) {
+		 const username = (to.params || {}).username;
+		 const ds = await dataSource.getDefaultDataSource({username:username});
+		 if (ds) {
+			gitlab.initConfig(ds);
+			store.dispatch("dataSource/setDataSource", ds);
+		 } 
+	}
+})
 
 export default router;
