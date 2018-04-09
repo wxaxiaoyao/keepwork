@@ -1,6 +1,7 @@
 <template>
 	<div>
 		hello world
+		<toc :text="text"></toc>
 	</div>
 </template>
 
@@ -14,10 +15,13 @@ import modTest from "../mods/modTest.js";
 import mods from "../adi/mod/index.js";
 import tagLogin from "../bases/tagLogin.vue";
 import {user} from "../../api/keepwork.js";
+
+import toc from "../bases/toc.vue";
 export default {
 	name:'test',
 	data:function(){
 		return {
+			text:`# test\n hellowrld \n## header2 \n this is test`,
 		}
 	},
 	props:{
@@ -46,6 +50,7 @@ export default {
 
 	components:{
 		tagLogin,
+		toc,
 	},
 
 	async mounted(){

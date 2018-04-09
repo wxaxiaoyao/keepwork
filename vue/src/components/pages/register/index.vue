@@ -73,9 +73,11 @@ export default {
 					username:self.registerForm.username,
 					password:self.registerForm.password,
 				}).then(function(data){
-					if (!data || !data.token) {
+					if (data.error.id != 0) {
+						self.$message(data.error.message);
 						return;
 					}
+					data = data.data;
 					self.registerSuccess(data.token, data.userinfo);
 				})
 			});

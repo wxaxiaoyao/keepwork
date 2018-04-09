@@ -8,9 +8,8 @@ import tag from "../common/tag.js";
 
 import wikiMd from "./wikiMd.vue";
 import {tags} from "@/lib/tags";
-import markdown from "@/lib/markdown";
+import md from "@/lib/markdown";
 
-const md = markdown();
 
 export default {	
 	name: "markdown",

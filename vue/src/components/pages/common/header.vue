@@ -11,6 +11,8 @@
 							<el-dropdown-item>我的主页</el-dropdown-item>
 							<el-dropdown-item>设置</el-dropdown-item>
 							<el-dropdown-item command="editor">编辑器</el-dropdown-item>
+							<el-dropdown-item command="tagModEditor">TagModEditor</el-dropdown-item>
+							<el-dropdown-item command="adiModEditor">AdiModEditor</el-dropdown-item>
 							<el-dropdown-item divided command="logout">退出</el-dropdown-item>
 						</el-dropdown-menu>
 					</el-dropdown>
@@ -52,6 +54,8 @@ export default {
 				this.$router.push({name:"login"});
 			} else if (cmd == "editor") {
 				this.$router.push({name:"editor"});
+			} else if (cmd == "tagModEditor" || cmd == "adiModEditor") {
+				this.$router.push({name:cmd});
 			}
 		},
 		clickLoginBtn() {

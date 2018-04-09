@@ -2,7 +2,7 @@ import markdown from "./markdown.js";
 import mdconf from "./mdconf.js";
 
 // md 构造函数
-function mdwiki(options) {
+export const mdFactory = function(options) {
 	options = options || {};
 
 	var md = {
@@ -74,6 +74,9 @@ function mdwiki(options) {
 		var tmpToken = undefined;
 		var text = "";
 		var texts = [];
+
+		self.tokens = tokenList;
+		console.log(self.tokens);
 
 		for (var i = 0; i < tokenList.length; i++) {
 			var token = tokenList[i];
@@ -164,4 +167,4 @@ function mdwiki(options) {
 	return md;
 }
 
-export default mdwiki;
+export default mdFactory();

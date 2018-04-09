@@ -6,9 +6,9 @@ import gitlab from "@/api/gitlab.js";
 import {dataSource} from "@/api/keepwork.js";
 
 import test from "./components/pages/test.vue";
-import modeditor from "./components/pages/modeditor";
 import editor from "./components/pages/editor";
-import tagmods from "./components/pages/tagmods/index.vue";
+import adiModEditor from "./components/pages/adiModEditor/index.vue";
+import tagModEditor from "./components/pages/tagModEditor/index.vue";
 import login from "./components/pages/login/index.vue";
 import register from "./components/pages/register/index.vue";
 
@@ -34,9 +34,9 @@ export const router = new VueRouter({
 		component: home,
 	},
 	{
-		name:"modeditor",
-		path: routerPrefix + "/modeditor",
-		component: modeditor,
+		name:"adiModEditor",
+		path: routerPrefix + "/adiModEditor",
+		component: adiModEditor,
 	},
 	{
 		name:"editor",
@@ -48,9 +48,9 @@ export const router = new VueRouter({
 		},
 	},
 	{
-		name:"tagmods",
-		path: routerPrefix + "/tagmods",
-		component: tagmods,
+		name:"tagModEditor",
+		path: routerPrefix + "/tagModEditor",
+		component: tagModEditor,
 		meta: {
 			requireMods: true,
 		},

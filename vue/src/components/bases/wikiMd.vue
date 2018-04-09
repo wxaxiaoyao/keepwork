@@ -4,9 +4,7 @@
 </template>
 
 <script>
-import markdown from "@/lib/markdown/markdown.js";
-
-var md = markdown();
+import md from "@/lib/markdown/markdown.js";
 
 export default {
 	name:"wikiMd",

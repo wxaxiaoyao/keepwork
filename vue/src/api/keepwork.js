@@ -19,21 +19,21 @@ const resultHandle = res => {
 	return res.data.data;
 }
 
-export const post = (...args) => keepworkEndpoint.post(...args).then(resultHandle);
+export const post = (...args) => keepworkEndpoint.post(...args).then(res => res.data);
 
 export const get = (url, params, config) => keepworkEndpoint.get(url, {
    	params:params,
 	...(config || {}),
-}).then(resultHandle);
+}).then(res => res.data);
 
 export const user = {
 	login: (...args) => post("user/login", ...args),
 	register: (...args) => post("user/register", ...args),
-	isLogin: (...args) => get("user/is_login", ...args),
+	isLogin: (...args) => get("user/is_login", ...args).then(res => res.data),
 }
 
 export const dataSource = {
-	getDefaultDataSource: (...args) => get("data_source/get_default_data_source", ...args),
+	getDefaultDataSource: (...args) => get("data_source/get_default_data_source", ...args).then(res => res.data),
 }
 
 export const mod = {

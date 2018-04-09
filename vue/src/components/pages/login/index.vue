@@ -79,10 +79,11 @@ export default {
 					username:self.loginForm.username,
 					password:self.loginForm.password,
 				}).then(function(data){
-					if (!data || !data.token) {
-						//self.$message("用户名或密码错误");
+					if (data.error.id != 0) {
+						self.$message(data.error.message);
 						return;
 					}
+					data = data.data;
 					self.loginSuccess(data.token, data.userinfo);
 				})
 			});
