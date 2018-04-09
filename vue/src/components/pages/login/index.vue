@@ -80,7 +80,7 @@ export default {
 					password:self.loginForm.password,
 				}).then(function(data){
 					if (!data || !data.token) {
-						self.$message("用户名或密码错误");
+						//self.$message("用户名或密码错误");
 						return;
 					}
 					self.loginSuccess(data.token, data.userinfo);

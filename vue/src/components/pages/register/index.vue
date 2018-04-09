@@ -74,7 +74,6 @@ export default {
 					password:self.registerForm.password,
 				}).then(function(data){
 					if (!data || !data.token) {
-						self.$message("用户名或密码错误");
 						return;
 					}
 					self.registerSuccess(data.token, data.userinfo);

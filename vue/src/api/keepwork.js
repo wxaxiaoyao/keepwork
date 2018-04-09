@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Message  } from 'element-ui';
 
 const httpProto = window.location.origin.replace(/:.*$/, "");
 
@@ -9,12 +10,21 @@ export const keepworkEndpoint = axios.create({
 	baseURL:host + "/api/v1/",
 });
 
-export const post = (...args) => keepworkEndpoint.post(...args).then(res => res.data.data);
+const resultHandle = res => {
+	const error = res.data.error;
+	if (error.id) {
+		Message.error(error.message);
+	}
+
+	return res.data.data;
+}
+
+export const post = (...args) => keepworkEndpoint.post(...args).then(resultHandle);
 
 export const get = (url, params, config) => keepworkEndpoint.get(url, {
    	params:params,
 	...(config || {}),
-}).then(res => res.data.data);
+}).then(resultHandle);
 
 export const user = {
 	login: (...args) => post("user/login", ...args),
