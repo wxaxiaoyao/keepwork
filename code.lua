@@ -9,7 +9,8 @@ git reset --hard HEAD;
 git pull origin master;
 r.js -o build.js;
 cd /root/workspace/lua/keepwork/vue/;
-npm run build;
+/usr/local/bin/npm run build;
+cd /root/workspace/lua/keepwork/;
 ./start.sh restart;
 ]]
 
