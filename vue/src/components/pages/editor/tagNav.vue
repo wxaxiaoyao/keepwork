@@ -2,7 +2,7 @@
 	<el-tree :data="[rootTag]" :props="treeProps" :expand-on-click-node="false" :highlight-current="true" 
 		node-key="tagId" ref="tree" @node-click="clickSelectTag" :default-expand-all="true">
 		<span :style="customTreeNodeStyle" slot-scope="{ node, data }">
-			<span @click="clickSelectTag(data, node)">{{node.label}}</span>
+			<span @click="clickSelectTag(data, node)">{{data.aliasname || data.name || data.key || data.tagName}}</span>
 			<span>
 				<span @click.stop="clickSwapTag(data, -1)" v-show="isShowSortIcon(data, -1)"><i class="fa fa-arrow-up"></i></span>
 				<span @click.stop="clickSwapTag(data, +1)" v-show="isShowSortIcon(data, +1)"><i class="fa fa-arrow-down"></i></span>

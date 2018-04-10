@@ -76,7 +76,7 @@ export const mdFactory = function(options) {
 		var texts = [];
 
 		self.tokens = tokenList;
-		console.log(self.tokens);
+		//console.log(self.tokens);
 
 		for (var i = 0; i < tokenList.length; i++) {
 			var token = tokenList[i];

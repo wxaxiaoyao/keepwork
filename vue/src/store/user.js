@@ -15,7 +15,7 @@ const state = {
 const getters = {
 	isAuth: (state) => state.isAuth,
 	token: (state) => state.token,
-	userinfo: (state) => state.userinfo,
+	userinfo: (state) => (state.userinfo || {}),
 	dataSource: (state) => state.dataSource,
 }
 

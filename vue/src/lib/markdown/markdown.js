@@ -373,11 +373,11 @@ function header(obj) {
 	if (i == header_list.length) {
 		return ;
 	}
-	var content = cur_line.substring(header_list[i].length);
+	var content = cur_line.substring(header_list[i].length).trim();
 	var text = cur_line;
 	var tag = "h" + (i+1);
 	var hn_render = obj.md.rule_render["hn"];
-	var htmlContent = '<' + tag + '>' + obj.md.line_parse(content) + '</' + tag + '>';
+	var htmlContent = '<' + tag + ' id="'+ content + '">' + obj.md.line_parse(content) + '</' + tag + '>';
 	if (hn_render) {
 		htmlContent = hn_render({md:obj.md, content:content, text:text}) || htmlContent;
 	}

@@ -3,11 +3,13 @@ import vue from "vue";
 import _ from "lodash";
 
 import common from "./common.js";
+import toc from "./toc.vue";
 import wikiMd from "./wikiMd.vue";
 import wikiCarousel from "./wikiCarousel.vue";
 import adiComponents from "./adi.js";
 
 var components =  {
+	toc,
 	wikiMd,
 	wikiCarousel,
 }

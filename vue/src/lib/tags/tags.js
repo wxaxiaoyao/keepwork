@@ -166,6 +166,7 @@ tags.elColTag = function() {
 	tag.name = "布局列";
 	tag.isContainer = true;
 
+	tag.styles["min-height"] = "1px";
 	tag.attrList = [
 	{
 		name: "栅格列数",
@@ -479,8 +480,9 @@ tags.getTagByTag = function(tag) {
 	if (!tag) {
 		return ;
 	}
+	const self = this;
 	const _cloneTag = function(tag) {
-		let _tag = tagFactory(tag.tagName);
+		let _tag = self.getTag(tag.tagName);
 		_.merge(_tag, tag);
 		_tag.children = [];
 		for (let i = 0; i < tag.children.length; i++) {

@@ -59,6 +59,10 @@ var tagTree = [
 	label:"元素",
 	children: [
 		{
+			label:"容器",
+			type:"div",
+		},
+		{
 			label:"文本",
 			type:"span",
 		},
@@ -88,6 +92,19 @@ var tagTree = [
 		},
 		
 	]
+},
+{
+	label:"组件",
+	children: [
+		{
+			label:"TOC",
+			type:'toc',
+		},
+		{
+			label:"走马灯",
+			type:"wikiCarousel",
+		},
+	],
 },
 {
 	label:"ADI组件",
@@ -162,15 +179,6 @@ var tagTree = [
 			type:"elButton",
 		},
 	],
-},
-{
-	label:"组件",
-	children: [
-		{
-			label:"走马灯",
-			type:"wikiCarousel",
-		},
-	]
 },
 {
 	label:"adi模块",

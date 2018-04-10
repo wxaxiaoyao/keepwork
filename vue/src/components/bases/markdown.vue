@@ -77,6 +77,7 @@ export default {
 				return tags.getTag();;
 			}
 			const modStyle = mod.styles[styleName];
+			//console.log(mod, styleName, modStyle.tag);
 			return tags.getTagByTag(modStyle.tag);
 		},
 		getMainTag() {
@@ -87,9 +88,14 @@ export default {
 			var subtag = undefined, tmpTag = undefined;
 			var blocklist = md.parse(text);
 			if (md.template.isChange) {
-				self.rootTag = self.getTemplateTag();
+				self.rootTag = self.getTemplateTag(md.template);
 			}
 			var tag = self.getMainTag();
+			if (this.mainTagId != tag.tagId) {
+				this.blocklist = [];
+				this.mainTagId = tag.tagId;
+			}
+			//console.log(tag);
 			for (var i = 0; i < blocklist.length; i++) {
 				var block = blocklist[i];
 				var oldblock = this.blocklist[i];

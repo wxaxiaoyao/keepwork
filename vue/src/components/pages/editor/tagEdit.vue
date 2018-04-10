@@ -17,7 +17,10 @@
 				<JsonEditor :objData="styles || {}" v-model="tag.styles"></JsonEditor>
 			</el-tab-pane>
 			<el-tab-pane label="属性">
-				<div>
+				<div style="display:flex">
+					<el-input placeholder="标签别名" v-model="tag.aliasname">
+						<template slot="prepend">标签别名</template>
+					</el-input>
 					<el-input placeholder="字母组合" v-model="tag.key">
 						<template slot="prepend">标签KEY</template>
 					</el-input>

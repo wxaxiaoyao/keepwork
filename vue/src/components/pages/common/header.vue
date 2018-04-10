@@ -5,14 +5,15 @@
 				<div v-if="isLogin">
 					<el-dropdown @command="handleCommand">
 						<span class="el-dropdown-link" style="cursor:pointer">
-							逍遥<i class="el-icon-arrow-down el-icon--right"></i>
+							{{user.aliasname || user.usernam || "逍遥"}}
+							<i class="el-icon-arrow-down el-icon--right"></i>
 						</span>
 						<el-dropdown-menu slot="dropdown">
 							<el-dropdown-item>我的主页</el-dropdown-item>
 							<el-dropdown-item>设置</el-dropdown-item>
 							<el-dropdown-item command="editor">编辑器</el-dropdown-item>
-							<el-dropdown-item command="tagModEditor">TagModEditor</el-dropdown-item>
-							<el-dropdown-item command="adiModEditor">AdiModEditor</el-dropdown-item>
+							<el-dropdown-item command="tagModEditor">Tag编辑器</el-dropdown-item>
+							<el-dropdown-item command="adiModEditor">Adi编辑器</el-dropdown-item>
 							<el-dropdown-item divided command="logout">退出</el-dropdown-item>
 						</el-dropdown-menu>
 					</el-dropdown>
@@ -39,6 +40,7 @@ export default {
 	computed: {
 		...mapGetters({
 			isLogin: "user/isAuth",
+			user: "user/userinfo",
 		}),
 	},
 
@@ -68,7 +70,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .headerContainer {
 	background-color: rgb(248,248,248);
 	height:100%;
