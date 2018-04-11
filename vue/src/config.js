@@ -4,7 +4,19 @@ const defaultConfig = {
 	tagModsPath: "keepwork_data/tag_mods.json",
 }
 
+const productionConfig = {
+	baseURL: window.location.origin + "/api/v1/",
+}
+
+const developmentConfig = {
+	baseURL: "http://localhost:8888/api/v1/",
+}
 
 console.log(process.env.NODE_ENV)
 
-export default defaultConfig;
+const configs = {
+	"production": Object.assign(defaultConfig, productionConfig),
+	"development": Object.assign(defaultConfig, developmentConfig),
+}
+
+export default configs[process.env.NODE_ENV];

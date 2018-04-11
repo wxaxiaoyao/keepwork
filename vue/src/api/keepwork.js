@@ -1,13 +1,12 @@
 import axios from "axios";
 import { Message  } from 'element-ui';
 
+import config from "@/config.js";
+
 const httpProto = window.location.origin.replace(/:.*$/, "");
 
-//const host = window.location.host;
-const host = "http://localhost:8888";
-
 export const keepworkEndpoint = axios.create({
-	baseURL:host + "/api/v1/",
+	baseURL: config.baseURL,
 });
 
 const resultHandle = res => {
