@@ -51,7 +51,7 @@ export default {
 		console.log("userpage");
 		const self = this;
 		const username = this.$route.params.username;
-		const path = this.$route.fullPath;
+		const path = this.$route.path;
 		const pagepath = decodeURIComponent(path) + g_app.config.pageSuffix;
 
 		self.isLoading = true;

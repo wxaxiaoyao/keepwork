@@ -149,6 +149,7 @@ export default {
 		getFileTree() {
 			var pages = this.pages;
 			var roottree = [], i, j, k, name;
+			this.filetreeMap = {};
 
 			for (var key in pages) {
 				var node = pages[key];
@@ -196,6 +197,7 @@ export default {
 				tree.name = node.name;
 				tree.username = paths[0];
 				tree.sitename = paths[1];
+				this.filetreeMap[tree.path] = tree;
 			}
 
 			return roottree;
@@ -206,7 +208,7 @@ export default {
 		isModify(data) {
 			return this.getPageByPath(data.path).isModify;
 		},
-		clickSelectPage(data, node, tree) {
+		clickSelectPage(data) {
 			var self = this;
 			self.setCurrentItem(data.path);
 			if (data.type == "tree") {
@@ -221,6 +223,8 @@ export default {
 				this.setSwitchPage(true);
 			}
 
+			const path = data.path;
+			window.location.hash = "#" + path.substring(0, path.length - g_app.config.pageSuffix.length);
 			this.setPagePath(data.path);
 		},
 		clickCloseBtn(data) {
@@ -295,12 +299,15 @@ export default {
 		this.fileTree[0] = rootnode;
 		rootnode.aliasname = "我的页面";
 
+		const hash = this.$route.hash;
+		const path =  hash.substring(1) + g_app.config.pageSuffix;
+		const data = this.filetreeMap[path];
+		data && this.clickSelectPage(data);
 
 	},
 
 	created() {
 		var self = this;
-		
 	}
 }
 </script>
