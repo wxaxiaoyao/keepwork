@@ -15,8 +15,8 @@ const developmentConfig = {
 console.log(process.env.NODE_ENV)
 
 const configs = {
-	"production": Object.assign(defaultConfig, productionConfig),
-	"development": Object.assign(defaultConfig, developmentConfig),
+	"production": Object.assign({}, defaultConfig, productionConfig),
+	"development": Object.assign({}, defaultConfig, developmentConfig),
 }
 
 export default configs[process.env.NODE_ENV];
