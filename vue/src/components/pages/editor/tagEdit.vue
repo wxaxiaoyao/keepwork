@@ -1,5 +1,5 @@
 <template>
-	<div class="flex-container">
+	<div class="flex-container tag-edit-container">
 		<div class="tag-path-container">
 			<el-breadcrumb separator-class="el-icon-arrow-right">
 				<el-breadcrumb-item v-for="(x, index) in navTagList" :key="index" @click.native="clickSelectTag(x)"><span style="cursor:pointer">{{x.name || x.tagName}}</span></el-breadcrumb-item>
@@ -178,6 +178,9 @@ export default {
 </script>
 
 <style scoped>
+.tag-edit-container {
+	overflow-y:auto;
+}
 .flex-container {
 	height:100%;
 	width:100%;

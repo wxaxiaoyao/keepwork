@@ -20,18 +20,6 @@ export default {
 			return;
 		}
 		var tag = this.tag;
-
-		if (this.vars) {
-			//console.log(this.vars, tag.vars);
-			tag.vars = _.merge(this.vars, tag.vars || {});
-		} 
-
-		//if (this.styles) {
-			//tag.styles = Object.assign(this.styles, tag.styles || {});
-		//}
-
-		//if (this.classes) {
-			//tag.classes = Object.assign(this.classes, tag.classes || {});
-		//}
+		tag.vars = _.merge(this.vars || {}, tag.vars || {});
 	}
 }
