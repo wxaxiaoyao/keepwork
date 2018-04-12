@@ -1,6 +1,8 @@
 
 const config = {
 	port:8088,
+
+	gitlabToken: "18ayouuEsKRo_yM1P5eF",
 }
 
-module.exports = config;
+export default config;
