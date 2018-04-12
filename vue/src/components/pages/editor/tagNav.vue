@@ -1,5 +1,11 @@
 <template>
-	<el-tree :data="[rootTag]" :props="treeProps" :expand-on-click-node="false" :highlight-current="true" 
+	<el-tree :data="[rootTag]" 
+		draggable
+		:allow-drag="allowDrag"
+		:allow-drop="allowDrop"
+		:props="treeProps" 
+		:expand-on-click-node="false" 
+		:highlight-current="true" 
 		node-key="tagId" ref="tree" @node-click="clickSelectTag" :default-expand-all="true">
 		<span :style="customTreeNodeStyle" slot-scope="{ node, data }">
 			<span @click="clickSelectTag(data, node)">{{data.aliasname || data.name || data.key || data.tagName}}</span>
@@ -85,6 +91,12 @@ export default {
 			setHoverTagId:'setHoverTagId',
 			setTagPath:"setTagPath",
 		}),
+		allowDrag(draggingNode) {
+			return true;
+		},
+		allowDrop(draggingNode, dropNode) {
+			return dropNode.data.isContainerTag();
+		},
 		mouseover(tag){
 			if (!this.tag) {
 				return;
