@@ -10,8 +10,6 @@
 		<span :style="customTreeNodeStyle" slot-scope="{ node, data }">
 			<span @click="clickSelectTag(data, node)">{{data.aliasname || data.name || data.key || data.tagName}}</span>
 			<span>
-				<span @click.stop="clickSwapTag(data, -1)" v-show="isShowSortIcon(data, -1)"><i class="fa fa-arrow-up"></i></span>
-				<span @click.stop="clickSwapTag(data, +1)" v-show="isShowSortIcon(data, +1)"><i class="fa fa-arrow-down"></i></span>
 				<span @click.stop="clickDeleteTag(data)" v-show="isShowDeleteIcon(data)"><i class="fa fa-trash-o"></i></span>
 			</span>
 		</span>
@@ -114,23 +112,6 @@ export default {
 
 			return true;
 		},
-		isShowSortIcon(tag, offset) {
-			var parentTag = tag.parentTag;
-			if (!parentTag || !parentTag.children) {
-				return false;
-			}
-
-			var index = parentTag.children.findIndex(t => t.tagId === tag.tagId);			
-			
-			index += offset;
-
-			//console.log(tag.tagId, offset, index);
-			if (index < 0 || index >= parentTag.children.length) {
-				return false;
-			}
-
-			return true;
-		},
 		clickDeleteTag(tag) {
 			if (this.rootTag.tagId == tag.tagId) {
 				return;
@@ -145,26 +126,6 @@ export default {
 			} else {
 				this.setTagId(parentTag.children[index].tagId);
 			}
-		},
-		clickSwapTag(tag, offset) {
-			var parentTag = tag.parentTag;
-			var index1 = parentTag.children.findIndex(t => t.tagId === tag.tagId);			
-			var index2 = index1 + offset;	
-
-			var tmp = parentTag.children[index1];
-			vue.set(parentTag.children, index1, parentTag.children[index2]);
-			vue.set(parentTag.children, index2, tmp);
-			
-			var tree = this.$refs.tree;
-			var tag1 = parentTag.children[index1];
-			var tag2 = parentTag.children[index2];
-			tree.remove(tree.getNode(tag1));
-			if (index1 < index2) {
-				tree.insertBefore(tag1, tree.getNode(tag2));
-			} else {
-				tree.insertAfter(tag1, tree.getNode(tag2));
-			}
-			//this.$forceUpdate();
 		},
   	},
 	created() {

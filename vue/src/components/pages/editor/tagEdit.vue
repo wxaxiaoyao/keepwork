@@ -5,46 +5,66 @@
 				<el-breadcrumb-item v-for="(x, index) in navTagList" :key="index" @click.native="clickSelectTag(x)"><span style="cursor:pointer">{{x.name || x.tagName}}</span></el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
-		<el-tabs type="border-card">
-			<el-tab-pane label="样式">
-				<div>
-					<el-autocomplete class="inline-input" v-model="styleKey" :fetch-suggestions="queryStyleKeySearch" placeholder="请输入样式名">
-					</el-autocomplete>
-					<el-autocomplete class="inline-input" v-model="styleValue" :fetch-suggestions="queryStyleValueSearch" placeholder="请输入样式值" @keyup.native.enter="clickAddStyle">
-					</el-autocomplete>
-					<el-button @click="clickAddStyle">添加</el-button>
-				</div>
-				<JsonEditor :objData="styles || {}" v-model="tag.styles"></JsonEditor>
-			</el-tab-pane>
-			<el-tab-pane label="属性">
-				<div style="display:flex">
-					<el-input placeholder="标签别名" v-model="tag.aliasname">
-						<template slot="prepend">标签别名</template>
-					</el-input>
-					<el-input placeholder="字母组合" v-model="tag.key">
-						<template slot="prepend">标签KEY</template>
-					</el-input>
-				</div>
-				<div>
-					<el-autocomplete class="inline-input" v-model="attrKey" :fetch-suggestions="queryAttrKeySearch" placeholder="请输入属性名">
-					</el-autocomplete>
-					<el-autocomplete class="inline-input" v-model="attrValue" :fetch-suggestions="queryAttrValueSearch" placeholder="请输入属性值" @keyup.native.enter="clickAddAttr">
-					</el-autocomplete>
-					<el-button @click="clickAddAttr">添加</el-button>
-				</div>
-				<JsonEditor :objData="attrs || {}" v-model="tag.attrs"></JsonEditor>
-			</el-tab-pane>
-			<el-tab-pane label="类名">
-				<JsonEditor :objData="classes || {}" v-model="tag.classes"></JsonEditor>
-			</el-tab-pane>
-			<el-tab-pane label="变量">
-				<JsonEditor :objData="vars || {}" v-model="tag.vars" ></JsonEditor>
-			</el-tab-pane>
-		</el-tabs>
+		<div style="display:flex; height:100%; overflow-y:auto;">
+		   	<el-tabs type="border-card">
+				<el-tab-pane label="样式"> <div>
+						<el-autocomplete class="inline-input" v-model="styleKey" :fetch-suggestions="queryStyleKeySearch" placeholder="请输入样式名">
+						</el-autocomplete>
+						<el-autocomplete class="inline-input" v-model="styleValue" :fetch-suggestions="queryStyleValueSearch" placeholder="请输入样式值" @keyup.native.enter="clickAddStyle">
+						</el-autocomplete>
+						<el-button @click="clickAddStyle">添加</el-button>
+					</div>
+					<JsonEditor :objData="styles || {}" v-model="tag.styles"></JsonEditor>
+				</el-tab-pane>
+				<el-tab-pane label="属性">
+					<div style="display:flex">
+						<el-input placeholder="标签别名" v-model="tag.aliasname">
+							<template slot="prepend">标签别名</template>
+						</el-input>
+						<el-input placeholder="字母组合" v-model="tag.key">
+							<template slot="prepend">标签KEY</template>
+						</el-input>
+					</div>
+					<div>
+						<el-autocomplete class="inline-input" v-model="attrKey" :fetch-suggestions="queryAttrKeySearch" placeholder="请输入属性名">
+						</el-autocomplete>
+						<el-autocomplete class="inline-input" v-model="attrValue" :fetch-suggestions="queryAttrValueSearch" placeholder="请输入属性值" @keyup.native.enter="clickAddAttr">
+						</el-autocomplete>
+						<el-button @click="clickAddAttr">添加</el-button>
+					</div>
+					<JsonEditor :objData="attrs || {}" v-model="tag.attrs"></JsonEditor>
+				</el-tab-pane>
+				<el-tab-pane label="类名">
+					<JsonEditor :objData="classes || {}" v-model="tag.classes"></JsonEditor>
+				</el-tab-pane>
+				<el-tab-pane label="变量">
+					<JsonEditor :objData="vars || {}" v-model="tag.vars" ></JsonEditor>
+				</el-tab-pane>
+			</el-tabs>
+			<el-tabs type="border-card">
+				<el-tab-pane label="Markdown编辑">
+					<!--<el-autocomplete class="inline-input" v-model="tagKey" :fetch-suggestions="queryStyleKeySearch" placeholder="请输入KEY">-->
+						<!--<template slot="prepend">KEY</template>-->
+					<!--</el-autocomplete>-->
+					<codemirror :value="tagValue" :options="codemirrorOptions"></codemirror>
+				</el-tab-pane>
+			</el-tabs>
+		</div>
 	</div>
 </template>
 
 <script>
+import CodeMirror from "codemirror";
+import {codemirror} from "vue-codemirror";
+import "codemirror/lib/codemirror.css";
+import "codemirror/theme/lesser-dark.css";
+import "codemirror/addon/fold/foldgutter.css"
+import "codemirror/mode/markdown/markdown.js";
+import "codemirror/addon/fold/foldgutter.js";
+import "codemirror/addon/fold/foldcode.js";
+import "codemirror/addon/fold/markdown-fold.js";
+import "codemirror/addon/fold/xml-fold.js";
+
 import vue from "vue";
 import _ from "lodash";
 import {mapActions, mapGetters} from "vuex";
@@ -75,6 +95,22 @@ export default {
 			attrList:[],
 			tag:{},
 			queryStyles: queryStyles,
+			tagKey:"",
+			tagValue:"",
+
+			codemirrorOptions: {
+				tabSize:4,
+				mode:"text/x-markdown",
+				lineNumbers: true,
+				theme:"default",
+				lineWrapping: true,
+				foldGutter: true,
+				foldOptions: {
+					rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.markdown, CodeMirror.fold.xml),
+					clearOnEnter: false,
+				},
+				gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
+			},
 		}
 	},
 	props: ["rootTag"],
@@ -173,6 +209,7 @@ export default {
 	created() {
 	},
 	components:{
+		codemirror,
 	}
 }
 </script>

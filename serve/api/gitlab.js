@@ -1,11 +1,12 @@
-import Gitlab from "node-gitlab-api";
+import gitlabApi from "node-gitlab-api";
 import {Base64} from "js-base64";
 import _ from "lodash";
 
 const defaultUsername = "keepwork";
 
 const defaultConfig = {
-	url:"https://gitlab.com",
+	apiBaseUrl:"https://gitlab.com",
+	rawBaseUrl:"https://gitlab.com",
 	token:"Ed9S7hSfiruewMR-jitR",
 	ref:"master",
 	branch:"master",
@@ -43,20 +44,6 @@ const gitlab = {
 const encodeUrl = function(url) {
 	return encodeURIComponent(url).replace(/\./g,'%2E')
 }
-export const gitlabFactory = (config) => {
-	config = _.mapKeys(config || {}, (value, key) => _.camelCase(key));
-	const cfg = {
-		...defaultConfig,
-		...((gitlab.gits[config.username] || {}).cfg || {}),
-		...(config || {}),
-	};
-	//console.log(cfg);
-	
-	const api  = new Gitlab({host:cfg.host, token:cfg.token});
-	const git = {api, cfg};
-
-	return git;
-}
 
 const getUsernameByPath = function(path) {
 	const paths = path.split("/");
@@ -73,12 +60,61 @@ const getUsernameByPath = function(path) {
 	return username;
 }
 
+function Gitlab(config){
+	config = _.mapKeys(config || {}, (value, key) => _.camelCase(key));
+	this.cfg = {
+		...defaultConfig,
+		...((gitlab.gits[config.username] || {}).cfg || {}),
+		...(config || {}),
+	};
+	//console.log(cfg);
+	
+	this.api = new gitlabApi({url:this.cfg.rawBaseUrl, token:this.cfg.token});
+	//return this;
+}
+
+Gitlab.prototype.getFile = function(path) {
+	return this.api.RepositoryFiles.show(this.cfg.projectId, path, this.cfg.ref).then(file => {
+		file.content = Base64.decode(file.content);
+		return file;
+	});
+}
+
+Gitlab.prototype.getContent = function(path) {
+	return this.api.RepositoryFiles.show(this.cfg.projectId, path, this.cfg.ref).then(file => Base64.decode(file.content));
+}
+
+Gitlab.prototype.editFile = function(path, options) {
+	return this.api.RepositoryFiles.edit(this.cfg.projectId, path, this.cfg.branch, options);
+}
+
+Gitlab.prototype.createFile = function(path, options) {
+	return this.api.RepositoryFiles.create(this.cfg.projectId, path, this.cfg.branch, options);
+}
+
+Gitlab.prototype.removeFile = function(path, options) {
+	return this.api.RepositoryFiles.remove(this.cfg.projectId, path, this.cfg.branch, options);
+}
+
+Gitlab.prototype.getTree = function(path, options) {
+	options = options || {};
+	options.path = path;
+
+	return this.api.Repositories.tree(this.cfg.projectId, options);
+}
+
+Gitlab.prototype.getFileGitUrl = function(path) {
+	const url = this.cfg.rawBaseUrl + "/" + this.cfg.externalUsername + "/" + this.cfg.projectName + '/blob/' + "master" + '/' + path;
+	
+	return url;
+}
+
 gitlab.initConfig = function(config){
 	if (!config || !config.username) {
 		return;
 	}
 	
-	this.gits[config.username] = gitlabFactory(config);
+	this.gits[config.username] = new Gitlab(config);
 }
 
 gitlab.getGitByPath = function(path) {
@@ -87,50 +123,39 @@ gitlab.getGitByPath = function(path) {
 }
 
 gitlab.getContent = function(path) {
-	const git = this.getGitByPath(path);
-	return git.api.projects.repository.files.show(git.cfg.projectId, path, git.cfg.ref).then(file => Base64.decode(file.content));
+	return this.getGitByPath(path).getContent(path);
 }
 
 gitlab.getFile = function(path) {
-	const git = this.getGitByPath(path);
-	return git.api.projects.repository.files.show(git.cfg.projectId, path, git.cfg.ref).then(file => {
-		file.content = Base64.decode(file.content);
-		return file;
-	});
+	return this.getGitByPath(path).getFile(path);
 }
 
 gitlab.editFile = function(path, options) {
 	const git = this.getGitByPath(path);
-	//path = encodeUrl(path);
-	return git.api.projects.repository.files.edit(git.cfg.projectId, path, git.cfg.branch, options);
+	return git.editFile(path, options);
 }
 
 gitlab.createFile = function(path, options) {
 	const git = this.getGitByPath(path);
 	//path = encodeUrl(path);
-	return git.api.projects.repository.files.create(git.cfg.projectId, path, git.cfg.branch, options);
+	return git.createFile(path, options);
 }
 
 gitlab.removeFile = function(path, options) {
 	const git = this.getGitByPath(path);
-	return git.api.projects.repository.files.remove(git.cfg.projectId, path, git.cfg.branch, options);
+	return git.removeFile(path, options);
 }
 
 gitlab.getTree = function(path, options) {
 	const git = this.getGitByPath(path);
-	options = options || {};
-	options.path = path;
-
-	return git.api.projects.repository.tree(git.cfg.projectId, options);
+	return git.getTree(path, options);
 }
 
 gitlab.getFileGitUrl = function(path) {
-	const cfg = this.getGitByPath(path).cfg;
-	const url = cfg.host + "/" + cfg.externalUsername + "/" + cfg.projectName + '/blob/' + "master" + '/' + path;
-	
-	return url;
+	return this.getGitByPath(path).getFileGitUrl(path);
 }
-gitlab.initConfig(keepworkConfig);
-//gitlab.initConfig(xiaoyaoConfig);
 
+gitlab.initConfig(keepworkConfig);
+
+export const gitlabFactory = (config) => new Gitlab(config);
 export default gitlab;
