@@ -11,7 +11,8 @@ const formats = {
 
 export const esDataFormat = (ctx, next) => {
 	const data = ctx.data || {gitlabWebhook:{}};
-	const filelist = data.gitlabWebhook.
+	const filelist = data.gitlabWebhook.filelist || [];
+
 	console.log(data);
 }
 
