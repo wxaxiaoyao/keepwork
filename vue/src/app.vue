@@ -9,7 +9,7 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import gitlab from "@/api/gitlab.js";
-import {mod, keepworkEndpoint} from "@/api/keepwork.js";
+import {mod, keepworkEndpoint, user} from "@/api/keepwork.js";
 
 import kpHeader from "./components/pages/common/header.vue";
 import appLayout from "./components/pages/common/appLayout.js";
@@ -53,7 +53,8 @@ export default {
 			setDataSource: "dataSource/setDataSource",
 		}),
 		setAPIToken() {
-			keepworkEndpoint.defaults.headers.common['Authorization'] = this.token;
+			keepworkEndpoint.defaults.headers.common['Authorization'] = "Bearer " + this.token;
+			user.isLogin();
 		},
 	},
 

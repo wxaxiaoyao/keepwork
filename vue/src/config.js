@@ -5,11 +5,12 @@ const defaultConfig = {
 }
 
 const productionConfig = {
-	baseURL: window.location.origin + "/api/v1/",
+	baseURL: window.location.origin + "/api/v0/",
 }
 
 const developmentConfig = {
-	baseURL: "http://localhost:8888/api/v1/",
+	//baseURL: "http://localhost:8888/api/v1/",
+	baseURL: "http://www.localhost:8088/api/v0/",
 }
 
 console.log(process.env.NODE_ENV)

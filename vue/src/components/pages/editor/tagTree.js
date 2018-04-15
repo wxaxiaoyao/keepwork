@@ -101,6 +101,10 @@ var tagTree = [
 			type:'toc',
 		},
 		{
+			label:"MARKDOWN",
+			type:'markdown',
+		},
+		{
 			label:"走马灯",
 			type:"wikiCarousel",
 		},

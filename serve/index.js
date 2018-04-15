@@ -1,8 +1,12 @@
 import Koa from "koa";
+import cors from "@koa/cors";
+import seesion from "koa-session";
 import Router from "koa-router";
 import KoaBody from "koa-body";
 import wurl from "wurl";
 import _ from "lodash";
+
+import registerControllerRouter from "./controllers/index.js";
 
 import log from "./log.js";
 import config from "./config.js";
@@ -12,6 +16,7 @@ import {elasticsearchFactory} from "./api/elasticSearch.js";
 import {esDataFormat} from "./es_data_format/index.js";
 
 const app = new Koa();
+
 const router = new Router({
 	prefix: config.apiUrlPrefix,
 });
@@ -161,15 +166,18 @@ router.get("/", (ctx, next) => {
 	ctx.body = 'hello world';
 });
 
-router.all("/user", (ctx, next) => {
-	ctx.body = 'hello user ii';
-});
+
+
+registerControllerRouter(router);
 
 router.get("*", (ctx, next) => {
 	ctx.body = 'hello user ii';
 });
 
 app
+.use(cors())
+.use(KoaBody())
+.use(seesion({signed: false},app))
 .use(router.routes())
 .use(router.allowedMethods());
 

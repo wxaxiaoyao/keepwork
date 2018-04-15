@@ -3,221 +3,221 @@ var mdconf = {};
 var escapeChar = "@";
 var escapeCharList = '@`-+#';
 function md_escape(text) {
-if (typeof(text) != "string") {
-	return text;
-}
+	if (typeof(text) != "string") {
+		return text;
+	}
 
-text = text || "";
+	text = text || "";
 
-var lines = text.split("\n");
-for (var i = 0; i < lines.length; i++) {
-	var line = lines[i];
-	if (escapeCharList.indexOf(line[0]) >=0) {
-		lines[i] = escapeChar + line;
-	} 
-}
+	var lines = text.split("\n");
+	for (var i = 0; i < lines.length; i++) {
+		var line = lines[i];
+		if (escapeCharList.indexOf(line[0]) >=0) {
+			lines[i] = escapeChar + line;
+		} 
+	}
 
-return lines.join("\n");
+	return lines.join("\n");
 }
 
 function md_unescape(text) {
-text = text || "";
+	text = text || "";
 
-var lines = text.split("\n");
-for (var i = 0; i < lines.length; i++) {
-	var line = lines[i];
-	if (line[0] == escapeChar && escapeCharList.indexOf(line[1]) >=0) {
-		lines[i] = line.substring(1);
-	} 
-}
+	var lines = text.split("\n");
+	for (var i = 0; i < lines.length; i++) {
+		var line = lines[i];
+		if (line[0] == escapeChar && escapeCharList.indexOf(line[1]) >=0) {
+			lines[i] = line.substring(1);
+		} 
+	}
 
-return lines.join("\n");
+	return lines.join("\n");
 }
 
 // md 转json对象
 mdconf.mdToJson = function(text) {
-if (typeof(text) != "string") {
-	return text;
-}
-
-text = md_unescape(text);
-
-var temp_lines = text.trim().split("\n");
-var lines = [];
-var conf = {};
-var curConf = conf;
-
-var getObj = function(key) {
-	if (!key) {
-		return conf;
+	if (typeof(text) != "string") {
+		return text;
 	}
-	var keys = key.split(".");
-	var tmpConf = conf;
-	for (var i = 0; i < keys.length; i++){
-		tmpConf[keys[i]] = tmpConf[keys[i]] || {};
 
-		if (keys[i].match(/\d+/)) {
-			var tmp = parseInt(keys[i]);
-			tmpConf.length = tmpConf.length || -1;
-			if (tmpConf.length <= tmp) {
-				tmpConf.length = tmp + 1;
+	text = md_unescape(text);
+
+	var temp_lines = text.trim().split("\n");
+	var lines = [];
+	var conf = {};
+	var curConf = conf;
+
+	var getObj = function(key) {
+		if (!key) {
+			return conf;
+		}
+		var keys = key.split(".");
+		var tmpConf = conf;
+		for (var i = 0; i < keys.length; i++){
+			tmpConf[keys[i]] = tmpConf[keys[i]] || {};
+
+			if (keys[i].match(/\d+/)) {
+				var tmp = parseInt(keys[i]);
+				tmpConf.length = tmpConf.length || -1;
+				if (tmpConf.length <= tmp) {
+					tmpConf.length = tmp + 1;
+				}
+			
 			}
-		
+			tmpConf = tmpConf[keys[i]];
 		}
-		tmpConf = tmpConf[keys[i]];
+
+		return tmpConf;
 	}
 
-	return tmpConf;
-}
-
-var confConvert = function(c) {
-	if (typeof(c) != "object") {
-		return c;
-	}
-
-	var nc = c.length ? [] : {};
-
-	if (c.length) {
-		for (var i = 0; i < c.length; i++) {
-			nc.push(confConvert(c[i+""]));
+	var confConvert = function(c) {
+		if (typeof(c) != "object") {
+			return c;
 		}
-	} else {
-		for (var key in c) {
-			nc[key] = confConvert(c[key]);
-		}
-	}
 
-	return nc;
-}
+		var nc = c.length ? [] : {};
 
-var _mdToJson = function(line) {
-	var temp = line.match(/^([-+#]) (.*)/);
-	var flag = temp[1];
-	var content = line.substring(flag.length + 1).trim();	
-	var key, value;
-
-	if (flag == "#") {
-		curConf = getObj(content);
-	}
-
-	if (flag == "+" || flag == "-") {
-		temp = content.indexOf(":");
-
-		if (temp > 0) {
-			key = content.substring(0, temp).trim(); 
-			value = content.substring(temp + 1).trim();
+		if (c.length) {
+			for (var i = 0; i < c.length; i++) {
+				nc.push(confConvert(c[i+""]));
+			}
 		} else {
-			curConf.length = curConf.length || 0;
-			key = curConf.length + "";
-			value = content.trim();
-			curConf.length = curConf.length + 1;
+			for (var key in c) {
+				nc[key] = confConvert(c[key]);
+			}
 		}
 
-		if (value == "true") {
-			value = true;
-		} else if (value == "false") {
-			value = false;
-		} else {
-			value = value;
+		return nc;
+	}
+
+	var _mdToJson = function(line) {
+		var temp = line.match(/^([-+#]) (.*)/);
+		var flag = temp[1];
+		var content = line.substring(flag.length + 1).trim();	
+		var key, value;
+
+		if (flag == "#") {
+			curConf = getObj(content);
 		}
 
-		curConf[key] = value;
-	}
-}
+		if (flag == "+" || flag == "-") {
+			temp = content.indexOf(":");
 
-var is_comment = false, line = "";
-//console.log(temp_lines);
-for (var i = 0; i < temp_lines.length; i++) {
-	if (temp_lines[i].match(/^<!--.*-->\s*$/)) {
-		continue;
-	}
-	if (temp_lines[i].match(/^<!--/)) {
-		is_comment = true;
-		continue;
-	}
-	if (is_comment) {
-		if (temp_lines[i].match(/-->\s*$/)) {
-			is_comment = false;
+			if (temp > 0) {
+				key = content.substring(0, temp).trim(); 
+				value = content.substring(temp + 1).trim();
+			} else {
+				curConf.length = curConf.length || 0;
+				key = curConf.length + "";
+				value = content.trim();
+				curConf.length = curConf.length + 1;
+			}
+
+			if (value == "true") {
+				value = true;
+			} else if (value == "false") {
+				value = false;
+			} else {
+				value = value;
+			}
+
+			curConf[key] = value;
 		}
-		continue;
 	}
-	if (!temp_lines[i].match(/^[-+#] .*/)) {
-		line += "\n" + temp_lines[i];
-		//line += (line ? "\n" : "") + temp_lines[i];
-		continue;
+
+	var is_comment = false, line = "";
+	//console.log(temp_lines);
+	for (var i = 0; i < temp_lines.length; i++) {
+		if (temp_lines[i].match(/^<!--.*-->\s*$/)) {
+			continue;
+		}
+		if (temp_lines[i].match(/^<!--/)) {
+			is_comment = true;
+			continue;
+		}
+		if (is_comment) {
+			if (temp_lines[i].match(/-->\s*$/)) {
+				is_comment = false;
+			}
+			continue;
+		}
+		if (!temp_lines[i].match(/^[-+#] .*/)) {
+			line += "\n" + temp_lines[i];
+			//line += (line ? "\n" : "") + temp_lines[i];
+			continue;
+		}
+		if (line) {
+			lines.push(line);
+		}
+		line = temp_lines[i];
 	}
+
 	if (line) {
 		lines.push(line);
 	}
-	line = temp_lines[i];
-}
 
-if (line) {
-	lines.push(line);
-}
-
-if (lines.length == 0) {
-	return "";
-} else if (lines.length == 1 && !lines[0].match(/^[-+#] .*/)) {
-	return lines[0];
-} else {
-	for (var i = 0; i < lines.length; i++) {
-		_mdToJson(lines[i]);
+	if (lines.length == 0) {
+		return "";
+	} else if (lines.length == 1 && !lines[0].match(/^[-+#] .*/)) {
+		return lines[0];
+	} else {
+		for (var i = 0; i < lines.length; i++) {
+			_mdToJson(lines[i]);
+		}
 	}
-}
 
-return confConvert(conf);
+	return confConvert(conf);
 }
 
 // json对象转markdown文本
 mdconf.jsonToMd = function(obj) {
-var text = "";
-var value;
+	var text = "";
+	var value;
 
-// 非对象直接写入
-if (typeof(obj) != "object") {
-	text += obj + "\n";
-	return text;
-}
-
-var _jsonToMd = function(obj, key_prefix) {
-	key_prefix = key_prefix ? key_prefix + "." : "";
-	if (obj.length == undefined) {
-		// 单对象对应列表
-		for (var key in obj) {
-			// 优先写非对象值
-			value = obj[key];
-			if (value == null || value == undefined || key.indexOf("$") == 0 || typeof(value) == "object") {
-				continue;
-			}
-			text += "- " + key + " : " + md_escape(value) + "\n";
-		}
-		for (var key in obj) {
-			// 写对象值
-			value = obj[key];
-			if (value == null || key.indexOf("$") == 0 || typeof(value) != "object") {
-				continue;
-			}
-
-			text += "\n# " + key_prefix + key + "\n";
-			_jsonToMd(value, key_prefix + key)
-		}
-	} else {
-		for (var i = 0; i < obj.length; i++) {
-			value = obj[i];
-			if (typeof(value) != "object") {
-				text += "- " + obj[i] + "\n";
-				continue;
-			} 
-
-			text += "\n# " + key_prefix + i + "\n";
-			_jsonToMd(value, key_prefix + i)
-		}		
+	// 非对象直接写入
+	if (typeof(obj) != "object") {
+		text += obj + "\n";
+		return text;
 	}
-}
 
-_jsonToMd(obj);
-return text;
+	var _jsonToMd = function(obj, key_prefix) {
+		key_prefix = key_prefix ? key_prefix + "." : "";
+		if (obj.length == undefined) {
+			// 单对象对应列表
+			for (var key in obj) {
+				// 优先写非对象值
+				value = obj[key];
+				if (value == null || value == undefined || key.indexOf("$") == 0 || typeof(value) == "object") {
+					continue;
+				}
+				text += "- " + key + " : " + md_escape(value) + "\n";
+			}
+			for (var key in obj) {
+				// 写对象值
+				value = obj[key];
+				if (value == null || key.indexOf("$") == 0 || typeof(value) != "object") {
+					continue;
+				}
+
+				text += "\n# " + key_prefix + key + "\n";
+				_jsonToMd(value, key_prefix + key)
+			}
+		} else {
+			for (var i = 0; i < obj.length; i++) {
+				value = obj[i];
+				if (typeof(value) != "object") {
+					text += "- " + obj[i] + "\n";
+					continue;
+				} 
+
+				text += "\n# " + key_prefix + i + "\n";
+				_jsonToMd(value, key_prefix + i)
+			}		
+		}
+	}
+
+	_jsonToMd(obj);
+	return text;
 }
 
 mdconf.test = function() {

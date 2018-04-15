@@ -461,8 +461,8 @@ tags.htmlTag = function(text) {
 	return tag;
 }
 
-tags.wikiMdTag = function(text) {
-	var tag = tagFactory("wiki-md");
+tags.markdownTag = function(text) {
+	var tag = tagFactory("markdown");
 	tag.vars = {
 		text: text == undefined ? "markdwon文本" : text,
 	}
@@ -473,6 +473,7 @@ tags.wikiMdTag = function(text) {
 		}
 	}
 
+	console.log(tag);
 	return tag;
 }
 
@@ -517,7 +518,9 @@ tags.getTagByTag = function(tag) {
 	const self = this;
 	const _cloneTag = function(tag) {
 		let _tag = self.getTag(tag.tagName);
-		_.merge(_tag, tag);
+		let tmpTag = _.omit(tag, ["tagId", "children"]);
+		tmpTag = _.omitBy(tmpTag, _.isFunction);
+		_.merge(_tag, tmpTag);
 		_tag.children = [];
 		for (let i = 0; i < tag.children.length; i++) {
 			var _subtag = _cloneTag(tag.children[i]);

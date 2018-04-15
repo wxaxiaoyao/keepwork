@@ -2,7 +2,7 @@
 <template>
 	<div v-loading="isLoading">
 		<div v-if="isPageExist">
-			<markdown :text="text"></markdown>
+			<page :text="text"></page>
 		</div>
 		<div v-else>
 			用户页不存在
@@ -15,11 +15,11 @@ import {mapActions, mapGetters} from "vuex";
 import gitlab from "@/api/gitlab.js";
 import {dataSource} from "@/api/keepwork.js";
 
-import markdown from "../../bases/markdown.vue";
+import page from "../../bases/page.vue";
 export default {
 	name:"userpage",
 	components: {
-		markdown,
+		page,
 	},
 	data: function() {
 		return {

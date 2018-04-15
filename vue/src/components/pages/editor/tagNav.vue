@@ -1,16 +1,21 @@
 <template>
-	<el-tree :data="[rootTag]" 
+	<el-tree
+		ref="tree"
+	   	:data="[rootTag]" 
 		draggable
 		:allow-drag="allowDrag"
 		:allow-drop="allowDrop"
 		:props="treeProps" 
 		:expand-on-click-node="false" 
 		:highlight-current="true" 
-		node-key="tagId" ref="tree" @node-click="clickSelectTag" :default-expand-all="true">
+		node-key="tagId" 
+		@node-click="clickSelectTag" 
+		:default-expand-all="true">
 		<span :style="customTreeNodeStyle" slot-scope="{ node, data }">
 			<span @click="clickSelectTag(data, node)">{{data.aliasname || data.name || data.key || data.tagName}}</span>
-			<span>
-				<span @click.stop="clickDeleteTag(data)" v-show="isShowDeleteIcon(data)"><i class="fa fa-trash-o"></i></span>
+			<span v-show="!isRootNode(data)" class="node-btn-container">
+				<span @click.stop="clickAddTag(data)"><i class="fa fa-plus" data-toggle="tooltip" title="添加"></i></span>
+				<span @click.stop="clickDeleteTag(data)"><i class="fa fa-minus" data-toggle="tooltip" title="删除"></i></span>
 			</span>
 		</span>
 	</el-tree>
@@ -19,6 +24,7 @@
 <script>
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
+import tags from "@/lib/tags";
 
 export default {
 	data: function() {
@@ -105,18 +111,20 @@ export default {
 			this.setTagId(tag.tagId);
 			this.setTagPath(tag.getTagPath());
 		},
-		isShowDeleteIcon(tag) {
+		isRootNode(tag) {
 			if (!this.rootTag || this.rootTag.tagId == tag.tagId) {
-				return false;
+				return true;
 			}
 
-			return true;
+			return false;
+		},
+		clickAddTag(tag) {
+			const cloneTag = tags.getTagByTag(tag);
+			const parentTag = tag.parentTag;
+			const index = parentTag.children.findIndex(t => t.tagId === tag.tagId);			
+			parentTag.children.splice(index,0, cloneTag);
 		},
 		clickDeleteTag(tag) {
-			if (this.rootTag.tagId == tag.tagId) {
-				return;
-			}
-
 			var parentTag = tag.parentTag;
 			var index = parentTag.children.findIndex(t => t.tagId === tag.tagId);			
 			parentTag.children.splice(index,1);
@@ -138,3 +146,8 @@ export default {
 }
 </script>
 
+<style scoped>
+.node-btn-container>span {
+	margin-right: 5px;
+}
+</style>

@@ -140,6 +140,29 @@ Tag.prototype.findById = function(tagId) {
 	return undefined;
 }
 
+Tag.prototype.getPaths = function() {
+	const self = this;
+	
+	const _getPaths = function(obj, prefix = ""){
+		if (!_.isObject(obj) || _.isEmpty(obj)) {
+			return [];
+		}
+		if (obj instanceof Tag) {
+			obj = _.pick(obj, ["styles", "classes", "attrs", "vars",]);
+			//obj = _.omitBy(obj, _.isFunction);
+		}
+		const isArray = _.isArray(obj);
+		const keyWrap = (key) => prefix + (isArray ? ('[' + key + ']') : key);
+		let keys = _.map(obj, (val, key) => keyWrap(key));
+
+		_.each(obj, (val, key) =>  keys = keys.concat(_getPaths(val, keyWrap(key) + ".")));
+		return keys;
+	}
+
+	return _getPaths(self);
+}
+	
+
 Tag.prototype.findByPath = function(path, srcTag) {
 	if (!path) {
 		return undefined;

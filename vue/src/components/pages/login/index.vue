@@ -79,7 +79,7 @@ export default {
 					username:self.loginForm.username,
 					password:self.loginForm.password,
 				}).then(function(data){
-					if (data.error.id != 0) {
+					if (data.code != 0) {
 						self.$message(data.error.message);
 						return;
 					}

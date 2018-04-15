@@ -6,6 +6,7 @@ module.exports = {
 	lintOnSave: false,
 	devServer: {
 		port:3030,
+		disableHostCheck: true,
 	},
 	configureWebpack: {
 		entry:{

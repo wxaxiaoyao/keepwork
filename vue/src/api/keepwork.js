@@ -28,7 +28,7 @@ export const get = (url, params, config) => keepworkEndpoint.get(url, {
 export const user = {
 	login: (...args) => post("user/login", ...args),
 	register: (...args) => post("user/register", ...args),
-	isLogin: (...args) => get("user/is_login", ...args).then(res => res.data),
+	isLogin: (...args) => get("user/isLogin", ...args).then(res => res.data),
 }
 
 export const dataSource = {
