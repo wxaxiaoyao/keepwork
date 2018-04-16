@@ -24,8 +24,15 @@ export const ERR = new Err(-1, "unknown error");
 export const ERR_OK = new Err();
 export const ERR_PARAMS = new Err(1, "参数错误");
 export const ERR_UNATUH = new Err(2, "未认证");
+export const ERR_NOT_FOUND = new Err(3, "未找到记录");
 
-export default Err;
+export default {
+	ERR,
+	ERR_OK,
+	ERR_PARAMS,
+	ERR_UNATUH,
+	ERR_NOT_FOUND,
+};
 
 
 

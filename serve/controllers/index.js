@@ -6,8 +6,13 @@ import {validate} from "../middlewares/index.js";
 import {ERR_UNATUH} from "../common/error.js";
 
 import user from "./user.js";
+import dataSource from "./dataSource.js";
+import gitlab from "./gitlab.js"; 
+
 export const controllers = {
 	user,
+	dataSource,
+	gitlab,
 }
 
 export const registerControllerRouter = function(router) {
@@ -16,7 +21,7 @@ export const registerControllerRouter = function(router) {
 			const methods = _.isArray(route.method) ? route.method : [route.method || "get"];
 			_.each(methods, method => {
 				method = _.lowerCase(method);
-				console.log(method, route.path);
+				//console.log(method, route.path);
 				router[method](route.path, validate(route.validate), async (ctx, next) => {
 					// 认证中间件
 					const auth = jwt({
@@ -28,6 +33,8 @@ export const registerControllerRouter = function(router) {
 						ctx.body = ERR_UNATUH;
 						return;
 					}
+
+					ctx.state.user = ctx.state.user || {};
 
 					const body = await ctrl[route.action](ctx);	
 					ctx.body = body || ctx.body;

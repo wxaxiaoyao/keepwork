@@ -6,10 +6,8 @@ import config from "../config.js";
 import {ERR, ERR_OK} from "../common/error.js";
 import userModel from "../models/user.js";
 
-
 export const User = function() {
 	this.model = userModel;
-	this.name = "userController";
 }
 
 User.prototype.create = function() {
@@ -30,17 +28,28 @@ User.prototype.find = function() {
 
 User.prototype.register = async function(ctx) {
 	const params = ctx.request.body;
-	const user = await this.model.findOne({
+	let user = await this.model.findOne({
 		where: {
 			username: params.username,
 		},
 	});
 	
-	if (user) {
-		return {error:{id:-1, message:"用户已存在"}};
-	}
+	if (user) 	return {error:{id:-1, message:"用户已存在"}};
 
-	return ;
+	user = await this.user.create({
+		username: params.username,
+		password: params.password,
+	});
+
+	if (!user) return ERR;
+
+	return ERR_OK.setData({
+		token: jwt.encode({
+			userId: user._id, 
+			username: user.username
+		}, config.secret),
+		userinfo: user,
+	});
 }
 
 User.prototype.login = async function(ctx) {
@@ -69,6 +78,7 @@ User.prototype.login = async function(ctx) {
 }
 
 User.prototype.isLogin = async function(ctx) {
+	this.model.findById(1);
 	return "hello world";
 }
 

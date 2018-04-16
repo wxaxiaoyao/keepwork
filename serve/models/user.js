@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import sequelize from "./database.js";
 
 const User = sequelize.define('user', {
-	_id: {
+	id: {
 		type: Sequelize.BIGINT,
 		autoIncrement: true,
 		primaryKey: true,
@@ -42,7 +42,7 @@ const User = sequelize.define('user', {
 	sex: {
 		type: Sequelize.STRING(4),
 	},
-})
+});
 
 //User.sync({force:true}).then(() => {
 	//console.log("create user table successfully");

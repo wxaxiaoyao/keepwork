@@ -84,6 +84,11 @@ Gitlab.prototype.getContent = function(path) {
 	return this.api.RepositoryFiles.show(this.cfg.projectId, path, this.cfg.ref).then(file => Base64.decode(file.content));
 }
 
+Gitlab.prototype.upsertFile = function(path, options) {
+	const file = this.getFile(path);
+	return file ? this.editFile(path, options) : this.createFile(path, options);
+}
+
 Gitlab.prototype.editFile = function(path, options) {
 	return this.api.RepositoryFiles.edit(this.cfg.projectId, path, this.cfg.branch, options);
 }
