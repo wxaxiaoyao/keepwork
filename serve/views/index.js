@@ -2,27 +2,28 @@ import vue from "vue";
 import {createRenderer, createBundleRenderer } from "vue-server-renderer";
 import serverBundle from "../dist/vue-ssr-server-bundle.json";
 
-//const renderer = createRenderer();
-
 const renderer = createBundleRenderer(serverBundle, {
 	runInNewContext: false,
-	//template,
+	template:require("fs").readFileSync("./views/index.html", "utf-8"),
 	//clientManifest,
 })
 
-export const views = (ctx, next) => {
+export const views = async (ctx, next) => {
 	const context = {url: ctx.request.url};
+	
+	await new Promise((resolve, reject) => {
+		renderer.renderToString(context, (err, html) => {
+			if (err) {
+				ctx.status = 500;
+				console.log(err);
+				return reject("FAIL");
+			}
 
-	renderer.renderToString(context, (err, html) => {
-		if (err) {
-			ctx.status = 500;
-			console.log(err);
-			return;
-		}
-
-		ctx.body = html;
+			console.log(html);
+			ctx.body = html;
+			resolve("OK");
+		});
 	});
 }
-
 
 export default views;
