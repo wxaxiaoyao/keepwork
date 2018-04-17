@@ -67,7 +67,7 @@ Gitlab.prototype.submitESData = async function(item) {
 	const data = item.data || {};
 	const tablename = item.tablename;
 	const path = item.path;
-	const oper = item.oper;
+	const action = item.action;
 	const indexs = [data.index_prefix || "kw", tablename, data.version || "v0"];
 	const esData = {
 		index: indexs.join("_"),
@@ -79,14 +79,14 @@ Gitlab.prototype.submitESData = async function(item) {
 
 	let res = null;
 	try {
-		res = await (esClient[oper])(esData);
+		res = await (esClient[action])(esData);
 	} catch(e) {
 		console.log(e);
 	}
-	console.log(res);
+	//console.log(res);
 }
 
-Gitlab.prototype.webhook = async (ctx) => {
+Gitlab.prototype.webhook = async function(ctx) {
 	const self = this;
 	const params = ctx.request.body;
 	const commit = params.commits[0];
@@ -104,22 +104,23 @@ Gitlab.prototype.webhook = async (ctx) => {
 	// 取出文件列表
 	const filelist = [];
 	const dataFileReg = /^[\w\d]+_data\/([_\w]+)\/.+\.json$/;
-	const filelistAddItem = (path, oper) => {
+	const filelistAddItem = (path, oper, action) => {
 		if (!dataFileReg.test(path)) return;
 		
 		const tablename = path.match(dataFileReg)[1];
 		
 		filelist.push({
 			path:path, 
-			tablename: tablename,
-			oper:oper
+			tablename:tablename,
+			oper:oper,
+			action:action,
 		});
 	}
 
 	_.each(params.commits, commit => {
-		_.each(commit.added, (path) => filelistAddItem(path, "added"));
-		_.each(commit.modified, (path) => filelistAddItem(path, "modified"));
-		_.each(commit.removed, (path) => filelistAddItem(path, "removed"));
+		_.each(commit.added, (path) => filelistAddItem(path, "added", "index"));
+		_.each(commit.modified, (path) => filelistAddItem(path, "modified", "index"));
+		_.each(commit.removed, (path) => filelistAddItem(path, "removed", "delete"));
 	});
 
 	const promises = [];
@@ -127,13 +128,15 @@ Gitlab.prototype.webhook = async (ctx) => {
 		promises.push(git.getContent(item.path).then(content => {
 			item.content = content;
 			item.data = self.getGitFileData(content) || {};
+			//console.log(item);
 			//item.esData = self.formatESData(item.data),
 		}));
 	});
 
 	await Promise.all(promises);
 
-	console.log(filelist);
+	//console.log(filelist);
+	_.each(filelist, file => self.submitESData(file));
 
 	return ;
 }
@@ -163,5 +166,4 @@ Gitlab.prototype.getRoutes = function() {
 
 	return routes;
 }
-
 export default new Gitlab();

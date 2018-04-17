@@ -92,7 +92,7 @@ const viewRouter = new Router({});
 //});
 
 
-viewRouter.get("/www/*", views);
+//viewRouter.get("/www/*", views);
 
 registerControllerRouter(apiRouter);
 

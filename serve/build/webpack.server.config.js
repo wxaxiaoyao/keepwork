@@ -15,8 +15,8 @@ module.exports = merge(baseConfig, {
 	devtool: 'source-map',
 	// 此处告知 server bundle 使用 Node 风格导出模块(Node-style exports)
 	output: {
-		path: path.resolve(__dirname, './dist'),
-		filename:"build.js",
+		//path: path.resolve(__dirname, './dist'),
+		//filename:"build.js",
 		libraryTarget: 'commonjs2'
 	},
 	// https://webpack.js.org/configuration/externals/#function

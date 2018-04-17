@@ -1,5 +1,6 @@
 
-import elasticsearch from "elasticsearch";
+//import elasticsearch from "elasticsearch";
+const elasticsearch = require("elasticsearch");
 
 const defaultConfig = {
 	host: "http://10.28.18.7:9200",

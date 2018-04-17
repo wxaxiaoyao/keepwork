@@ -1,38 +1,26 @@
 import vue from "vue";
 import {createRenderer, createBundleRenderer } from "vue-server-renderer";
+import serverBundle from "../dist/vue-ssr-server-bundle.json";
 
-const renderer = createRenderer();
+//const renderer = createRenderer();
 
-//const _renderer = createBundleRenderer(serverBundle, {
-	//runInNewContext: false,
-	////template,
-	////clientManifest,
-//})
-const createApp = (context) => {
-	return new vue({
-		data: {
-			url: context.url
-		},
-		template:"<div>你访问的URL: {{url}}</div>",
-	});
-}
+const renderer = createBundleRenderer(serverBundle, {
+	runInNewContext: false,
+	//template,
+	//clientManifest,
+})
 
 export const views = (ctx, next) => {
-	const app = createApp({url:ctx.request.url});
-	renderer.renderToString(app, (err, html) => {
+	const context = {url: ctx.request.url};
+
+	renderer.renderToString(context, (err, html) => {
 		if (err) {
 			ctx.status = 500;
+			console.log(err);
 			return;
 		}
 
-		ctx.body = `
-      <!DOCTYPE html>
-      <html lang="en">
-        <head><title>Hello</title></head>
-        <body>${html}</body>
-      </html>
-    `;
-		
+		ctx.body = html;
 	});
 }
 
