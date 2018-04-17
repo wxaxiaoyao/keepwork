@@ -1,33 +1,17 @@
 {
-  "publicPath": "",
+  "publicPath": "/mnt/d/workspace/lua/keepwork/node-keepwork/server/views",
   "all": [
-    "main.js"
+    "main.js",
+    "main.js.map"
   ],
   "initial": [
     "main.js"
   ],
   "async": [],
   "modules": {
-    "9e7d05a0": [
-      0
-    ],
-    "085cb030": [
-      0
-    ],
-    "9a65f32c": [
-      0
-    ],
-    "4dbb350b": [
-      0
-    ],
-    "7deb84d5": [
-      0
-    ],
-    "21e5a58e": [
-      0
-    ],
-    "5eb3c19c": [
-      0
+    "4ae32168": [
+      0,
+      1
     ]
   }
 }

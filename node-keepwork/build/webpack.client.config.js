@@ -1,8 +1,11 @@
 const path = require("path");
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const baseConfig = require('./webpack.base.config.js');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
+const isProd = process.env.NODE_ENV === 'production';
+console.log('NODE_ENV--->', process.env.NODE_ENV)
 
 module.exports = merge(baseConfig, {
 	entry: './entry/entry-client.js',
@@ -12,19 +15,44 @@ module.exports = merge(baseConfig, {
 		//filename:"build.js",
 		//libraryTarget: 'commonjs2'
 	},
-	plugins: [
-    	// 重要信息：这将 webpack 运行时分离到一个引导 chunk 中，
-    	// 以便可以在之后正确注入异步 chunk。
-    	// 这也为你的 应用程序/vendor 代码提供了更好的缓存。
-        //new webpack.optimize.CommonsChunkPlugin({
-             //name: "manifest",
-              //minChunks: Infinity
-        //}),
-    	// 此插件在输出目录中
-    	// 生成 `vue-ssr-client-manifest.json`。
-    	new VueSSRClientPlugin()
-  	],
+
+	target: "web",
+
+	devtool: isProd?false:'#source-map',
 	
+	resolve:{ 
+		symlinks: true,
+		alias:{ 
+			'@': '/mnt/d/workspace/lua/keepwork/node-keepwork/client',
+			'vue$':'vue/dist/vue.esm.js'  
+		}, 
+		extensions: [
+		  '.js',
+		  '.jsx',
+		  '.vue',
+		  '.json'
+		],
+	},
+	externals: {
+		"jquery": "$",
+		'Vue': true,
+		'Swiper': true,
+		'VueLazyload': true,
+		'$': true
+    },
+    plugins: [
+        // new webpack.optimize.UglifyJsPlugin({
+        //   compress: { warnings: isProd?false:true }
+        // }),
+        // new ExtractTextPlugin({
+        //   filename: 'common.[chunkhash].css'
+        // }),
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+          'process.env.VUE_ENV': '"server"'
+        }),
+        new VueSSRClientPlugin(),
+    ],
 	optimization: {
 		//splitChunks: {
 			//chunks: "initial", // 必须三选一： "initial" | "all"(默认就是all) | "async" 

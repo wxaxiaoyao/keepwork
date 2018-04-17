@@ -8,9 +8,9 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'github-markdown-css/github-markdown.css';
 
 
-import app from './app.vue';
+import App from './app.vue';
 import {createRouter} from "./router.js";
-import {createStore} from "./store.js";
+import {createStore} from "./store/index.js";
 
 import "./lib/jsonEditor";
 import consts from "./lib/const.js";

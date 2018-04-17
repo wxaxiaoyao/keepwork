@@ -2,9 +2,10 @@
 module.exports = {
 	mode: 'production',
 	module: {
+		noParse: /es6-promise\.js$/,
 		rules: [
-		  {
-			test: /\.vue$/,
+        {
+            test: /\.vue$/,
 			use: [
 			  {
 				loader: 'vue-loader',
@@ -150,6 +151,7 @@ module.exports = {
 					  },
 					  {
 						loader: 'babel-loader'
+						exclude: /node_modules/
 					  }
 					]
 				  },
@@ -160,12 +162,68 @@ module.exports = {
 				}
 			  }
 			]
-		  },
-		  {
-        	test: /\.js$/,
-        	loader: 'babel-loader',
-        	exclude: /node_modules/
-      	  },
+        },
+        {
+			test: /\.js$/,
+			loader: 'babel-loader',
+			exclude: /node_modules/
+        },
+		{
+		  test: /\.(png|jpe?g|gif)(\?.*)?$/,
+		  use: [
+		    {
+		  	loader: 'url-loader',
+		  	options: {
+		  	  limit: 10000,
+		  	  name: 'img/[name].[hash:8].[ext]'
+		  	}
+		    }
+		  ]
+		},
+		{
+		  test: /\.(svg)(\?.*)?$/,
+		  use: [
+		    {
+		  	loader: 'file-loader',
+		  	options: {
+		  	  name: 'img/[name].[hash:8].[ext]'
+		  	}
+		    }
+		  ]
+		},
+		{
+		  test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+		  use: [
+		    {
+		  	loader: 'url-loader',
+		  	options: {
+		  	  limit: 10000,
+		  	  name: 'media/[name].[hash:8].[ext]'
+		  	}
+		    }
+		  ]
+		},
+		{
+		  test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+		  use: [
+		    {
+		  	loader: 'url-loader',
+		  	options: {
+		  	  limit: 10000,
+		  	  name: 'fonts/[name].[hash:8].[ext]'
+		  	}
+		    }
+		  ]
+		},
+        {
+			test: /\.css$/,
+			use: ['vue-style-loader', 'css-loader']
+        },
+        {
+			test: /\.es6$/,
+			loader: "babel-loader",
+			exclude: /node_modules/
+        },
 		]
-	}
+	},
 }

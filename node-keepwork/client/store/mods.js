@@ -45,7 +45,7 @@ function toJson(obj) {
 function fromJson(str) {
 	try {
 		return JSON.parse(str);
-	} catch {
+	} catch(e) {
 		console.log(str);
 	}
 
