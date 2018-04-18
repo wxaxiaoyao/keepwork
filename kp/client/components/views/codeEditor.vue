@@ -10,17 +10,16 @@ import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import {Base64} from "js-base64";
 
-import storage from "../../../lib/storage.js";
+import app from "@/app";
 
-import codemirror from "../../bases/codemirror.vue";
-
+import codemirror from "@/components/bases/codemirror.vue";
 const tempContentKey = "cmeditor_temp_content";
 
 export default {
 	data: function() {
 		return {
 			value:{
-				text:storage.sessionStorageGetItem(tempContentKey) || (""),
+				text:"",
 				filename:null,
 			},
 			pages:{},
@@ -33,9 +32,9 @@ export default {
 
 	computed: {
 		...mapGetters({
-			pagePath: "getPagePath",
-			getPageContentByPath: "getPageContentByPath",
-			switchPage: "switchPage",
+			pagePath: "editor/getPagePath",
+			getPageContentByPath: "editor/getPageContentByPath",
+			switchPage: "editor/switchPage",
 		}),
 		codemirror() {
 			return this.$refs.codemirror.codemirror;
@@ -63,10 +62,10 @@ export default {
 
 	methods: {
 		...mapActions({
-			setPage: "setPage",
-			setPageContent: "setPageContent",
-			savePage: "savePage",
-			setSwitchPage: "setSwitchPage",
+			setPage: "editor/setPage",
+			setPageContent: "editor/setPageContent",
+			savePage: "editor/savePage",
+			setSwitchPage: "editor/setSwitchPage",
 		}),
 
 		savePageToDB(){
@@ -86,7 +85,7 @@ export default {
 			this.setPageContent(payload.text);
 			var self = this;
 			if (!payload.filename) {
-				storage.sessionStorageSetItem(tempContentKey, payload.text);
+				this.storage && this.storage.sessionStorageSetItem(tempContentKey, payload.text);
 				return;
 			}
 
@@ -122,9 +121,17 @@ export default {
 		},
 	},
 
+	mounted() {
+		this.storage = app.storage();
+		this.value = {
+			text:this.storage && this.storage.sessionStorageGetItem(tempContentKey) || (""),
+			filename:null,
+		}
+	},
+
 	created() {
 		const self = this;
-		g_app.vue.$on(g_app.consts.EVENT_ADD_MOD_TO_EDITOR, function(style){
+		app.vue.$on(app.consts.EVENT_ADD_MOD_TO_EDITOR, function(style){
 			self.value = self.$refs.codemirror.getValue();
 			self.value.text += '\n```@' + style.modName + '/' + style.styleName + '\n' +'```\n';
 		});

@@ -1,42 +1,9 @@
 <template>
-	<!--<vue-codemirror ref="codemirror"  v-bind="$attrs" v-on="$listeners" :options="options"></vue-codemirror>-->
-	<vue-codemirror ref="codemirror"  :options="options"></vue-codemirror>
+	<codemirror ref="codemirror" ></codemirror>
 </template>
 
 <script>
 import vue from "vue";
-import CodeMirror from "codemirror";
-import {codemirror} from "vue-codemirror";
-import "codemirror/lib/codemirror.css";
-import "codemirror/theme/lesser-dark.css";
-import "codemirror/addon/fold/foldgutter.css"
-import "codemirror/mode/markdown/markdown.js";
-import "codemirror/addon/fold/foldgutter.js";
-import "codemirror/addon/fold/foldcode.js";
-import "codemirror/addon/fold/markdown-fold.js";
-import "codemirror/addon/fold/xml-fold.js";
-
-vue.component("vueCodemirror", codemirror);
-
-function wikiCmdFold(cm, start) {
-	var line = cm.getLine(start.line);
-	if ((!line) || (!line.match(/^```[@\/]/)))
-		return undefined;
-	//console.log(start);
-	var end = start.line + 1;
-	var lastLineNo = cm.lastLine();
-	while (end < lastLineNo) {
-		line = cm.getLine(end)
-		if (line && line.match(/^```/))
-			break;
-		end++;
-	}
-
-	return {
-		from: CodeMirror.Pos(start.line),
-		to: CodeMirror.Pos(end, cm.getLine(end).length)
-	};
-}
 
 	// 折叠wiki代码
 function foldWikiBlock(cm, changeObj) {
@@ -84,11 +51,8 @@ function wrapfunc(self, funcname) {
 	}
 }
 
-CodeMirror.registerHelper("fold", "wikiCmdFold", wikiCmdFold);
-
-
 export default {
-	name:"codemirror",
+	//name:"codemirror",
 
 	data: function() {
 		var self = this;
@@ -109,18 +73,6 @@ export default {
 			type: Object,
 			default: function(){
 				return {
-					tabSize:4,
-					mode:"text/x-markdown",
-					lineNumbers: true,
-					theme:"default",
-					lineWrapping: true,
-					//theme:"lesser-dark",
-					foldGutter: true,
-					foldOptions: {
-						rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.markdown, CodeMirror.fold.xml, CodeMirror.fold.wikiCmdFold),
-						clearOnEnter: false,
-					},
-					gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
 				}
 			},
 		},
@@ -176,7 +128,7 @@ export default {
 			text = text || "";
 			if (filename) {
 				if (!this.docMap[filename]) {
-					this.docMap[filename] = CodeMirror.Doc(text, 'markdown');
+					this.docMap[filename] = this.CodeMirror.Doc(text, 'markdown');
 				}
 				this.codemirror.swapDoc(this.docMap[filename]);
 			} else {
@@ -186,7 +138,7 @@ export default {
 			if (text) {
 				this.codemirror.setValue(text);
 			} else {
-				CodeMirror.signal(this.codemirror, "change", this.codemirror);
+				this.CodeMirror && this.CodeMirror.signal(this.codemirror, "change", this.codemirror);
 			}
 		},
 		getValue() {
@@ -201,6 +153,7 @@ export default {
 		this.currentFilename = undefined;
 	},
 	mounted() {
+		this.CodeMirror = this.CodeMirror || require("codemirror");
 		this.initCodeMirror();
 	},
 

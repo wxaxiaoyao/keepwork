@@ -218,11 +218,11 @@ export default {
 	},
 	mounted() {
 		const self = this;
-		//self.codemirror.setOption("extraKeys", {
-		//	"Ctrl-S": function(cm) {
-		//		self.clickUpdateTagValueBtn();
-		//	},
-		//});
+		self.codemirror.setOption("extraKeys", {
+			"Ctrl-S": function(cm) {
+				self.clickUpdateTagValueBtn();
+			},
+		});
 	},
 	components:{
 	}

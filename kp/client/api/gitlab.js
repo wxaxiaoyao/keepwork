@@ -46,7 +46,7 @@ const encodeUrl = function(url) {
 }
 
 const getUsernameByPath = function(path) {
-	const paths = path.split("/");
+	const paths = (path || "").split("/");
 	let username = "keepwork";
 	for (let i = 0; i < paths.length; i++) {
 		if (paths[i]) {

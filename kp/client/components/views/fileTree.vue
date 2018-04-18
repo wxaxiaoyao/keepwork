@@ -65,11 +65,6 @@
 				</span>
 			</span>
 		</el-tree>
-		<!--<el-tree ref="treeComp" :data="fileTree" :props="fileTreeProps" -->
-			<!--node-key="path" :highlight-current="true" -->
-			<!--:render-content="renderContent"-->
-			<!--@node-click="clickSelectPage">-->
-		<!--</el-tree>-->
 	</div>
 </template>
 
@@ -78,14 +73,10 @@
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import gitlab from "@/api/gitlab.js";
-import storage from "../../../lib/storage.js";
-import FileTreeNode from "./fileTreeNode.vue";
-
-let pageDB = undefined;
+import app from "@/app.js";
 
 export default {
 	components:{
-		FileTreeNode,
 	},
 	data: function(){
 		return {
@@ -105,11 +96,11 @@ export default {
 	computed: {
 		...mapGetters({
 			user: "user/userinfo",
-			tagId: 'getTagId',
-			pagePath: 'getPagePath',
-			getPageByPath: 'getPageByPath',
-			pages: 'getPages',
-			switchPage: 'switchPage',
+			tagId: 'editor/getTagId',
+			pagePath: 'editor/getPagePath',
+			getPageByPath: 'editor/getPageByPath',
+			pages: 'editor/getPages',
+			switchPage: 'editor/switchPage',
 		}),
 		openedPageTree() {
 			let tree = {name:"已打开页面", type:"tree", path:"", nodes:[]};
@@ -135,17 +126,14 @@ export default {
 	
 	methods: {
 		...mapActions({
-			setPagePath: "setPagePath",
-			setPage: "setPage",
-			savePage: "savePage",
-			loadPage: "loadPage",
-			deletePage: "deletePage",
-			setSwitchPage: "setSwitchPage",
-			loadTree: "loadTree",
+			setPagePath: "editor/setPagePath",
+			setPage: "editor/setPage",
+			savePage: "editor/savePage",
+			loadPage: "editor/loadPage",
+			deletePage: "editor/deletePage",
+			setSwitchPage: "editor/setSwitchPage",
+			loadTree: "editor/loadTree",
 		}),
-		renderContent(h, { node, data, store  }){
-			return (<FileTreeNode node={node} data={data}></FileTreeNode>)
-		},
 		getFileTree() {
 			var pages = this.pages;
 			var roottree = [], i, j, k, name;
@@ -224,7 +212,7 @@ export default {
 			}
 
 			const path = data.path;
-			window.location.hash = "#" + path.substring(0, path.length - g_app.config.pageSuffix.length);
+			window.location.hash = "#" + path.substring(0, path.length - app.config.pageSuffix.length);
 			this.setPagePath(data.path);
 		},
 		clickCloseBtn(data) {
@@ -300,7 +288,7 @@ export default {
 		rootnode.aliasname = "我的页面";
 
 		const hash = this.$route.hash;
-		const path =  hash.substring(1) + g_app.config.pageSuffix;
+		const path =  hash.substring(1) + app.config.pageSuffix;
 		const data = this.filetreeMap[path];
 		data && this.clickSelectPage(data);
 

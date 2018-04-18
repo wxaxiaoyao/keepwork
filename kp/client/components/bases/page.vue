@@ -4,13 +4,17 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import tag from "../common/tag.js";
+import tag from "@/components/common/tag.js";
 import {tags} from "@/lib/tags";
 import md from "@/lib/markdown";
 
 
 export default {	
 	name: "page",
+
+	components:{
+		tag,
+	},
 
 	data: function() {
 		const roottag = tags.getTag();
@@ -138,8 +142,6 @@ export default {
 		this.text && this.parseText(this.text);
 	},
 
-	components:{
-	}
 }
 
 </script>
