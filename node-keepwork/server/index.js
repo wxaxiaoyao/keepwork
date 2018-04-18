@@ -98,7 +98,8 @@ viewRouter.get("/www/*", views);
 registerControllerRouter(apiRouter);
 
 app
-.use(Static("./server/views/"))
+//.use(Static("./server/views/"))
+.use(Static("."))
 .use(cors())
 .use(KoaBody())
 .use(seesion({signed: false},app))

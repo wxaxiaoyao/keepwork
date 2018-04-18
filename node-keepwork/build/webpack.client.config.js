@@ -11,7 +11,7 @@ module.exports = merge(baseConfig, {
 	entry: './entry/entry-client.js',
 	output: {
 		path: path.resolve(__dirname, '../server/views/'),
-		publicPath: path.resolve(__dirname, '../server/views/'),
+		publicPath: '../server/views/',
 		//filename:"build.js",
 		//libraryTarget: 'commonjs2'
 	},
