@@ -72,7 +72,7 @@
 <script>
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
-import gitlab from "@/api/gitlab.js";
+import gitlab from "common/api/gitlab.js";
 import config from "@/config.js";
 
 export default {

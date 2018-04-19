@@ -59,6 +59,22 @@ module.exports = {
   	 ** Build configuration
   	 */
   	build: {
+		vendor: [
+			"vue-template-compiler",
+			"vuex-persistedstate",
+			"axios",
+			"lodash",
+			"element-ui",
+			"elasticsearch",
+			"jshashes",
+			"js-base64",
+			"js-cookie",
+			"jss",
+			"jss-preset-default",
+			"node-gitlab-api",
+			"codemirror",
+			"vue-codemirror",
+		],
 		/*
   	  	 ** Run ESLINT on save
   	  	 */

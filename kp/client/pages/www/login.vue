@@ -22,8 +22,9 @@
 import Cookies from 'js-cookie';
 import {mapActions, mapGetters} from "vuex";
 
-import gitlab from "@/api/gitlab.js";
-import {user, dataSource, keepworkEndpoint} from "@/api/keepwork.js";
+import gitlab from "common/api/gitlab.js";
+import {user, dataSource, keepworkEndpoint} from "common/api/keepwork.js";
+
 export default {
 	name:"login",
 	data:function(){
@@ -66,7 +67,7 @@ export default {
 				self.setDataSource(ds);
 				self.setUserDataSource(ds);
 			}
-			self.$router.push({name:"home"});
+			self.$router.push({name:g_app.getRouteName("home")});
 		},
 		submitLoginForm() {
 			const self = this;

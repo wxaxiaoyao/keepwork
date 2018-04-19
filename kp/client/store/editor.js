@@ -2,7 +2,7 @@ import vue from "vue";
 import {Base64} from "js-base64";
 import Hashes from "jshashes";
 import _const from "@/lib/const.js";
-import gitlab from "@/api/gitlab.js";
+import gitlab from "common/api/gitlab.js";
 
 const SET_PAGE_PATH = 'SET_PAGE_PATH';
 const SET_PAGE_CONTENT = 'SET_PAGE_CONTENT';

@@ -169,4 +169,5 @@ Gitlab.prototype.getRoutes = function() {
 
 	return routes;
 }
+
 export default new Gitlab();

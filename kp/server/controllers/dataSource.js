@@ -42,14 +42,14 @@ DataSource.prototype.getSystemDataSource = function() {
 }
 
 // 获取用户默认数据源
-DataSource.prototype.getDefaultDataSource = function(ctx) {
+DataSource.prototype.getDefaultDataSource = async function(ctx) {
 	const params = ctx.request.query;
 	const authUsername = ctx.state.user.username;
 	const username = params.username || authUsername;
 
 	if (!username) return ERR.ERR_PARAMS;
 	
-	let dataSource = this.model.findOne({
+	let dataSource = await this.model.findOne({
 		where: {
 			username: username,
 			isDefault: true,
@@ -62,14 +62,23 @@ DataSource.prototype.getDefaultDataSource = function(ctx) {
 
 	if (username != authUsername) {
 		dataSource.token = undefined;
-		DataSource.externalPassword = undefined;
+		dataSource.externalPassword = undefined;
 	}
 
 	return dataSource;
 }
 
-DataSource.prototype.getRoutes = function(){
-	return [];
+DataSource.prototype.getRoutes = function() {
+	const prefix = "/dataSource";
+	const routes = [
+	{
+		path: prefix + "/getDefaultDataSource",
+		method: "get",
+		action: "getDefaultDataSource",
+	},
+	];
+
+	return routes;
 }
 
 export default new DataSource();

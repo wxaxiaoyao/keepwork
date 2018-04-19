@@ -8,6 +8,11 @@ const DataSource = sequelize.define("dataSource", {
 		primaryKey: true,
 	},
 
+	username: {
+		type: Sequelize.STRING(48),
+		allowNull: false,
+	},
+
 	name: {
 		type: Sequelize.STRING(48),
 		unique: true,

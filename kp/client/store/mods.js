@@ -1,7 +1,7 @@
 import vue from "vue"; 
 import {Base64} from "js-base64";
 
-import gitlab from "@/api/gitlab.js";
+import gitlab from "common/api/gitlab.js";
 
 //import mods from "../components/adi/mod/index.js";
 

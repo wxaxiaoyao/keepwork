@@ -32,7 +32,7 @@ export const user = {
 }
 
 export const dataSource = {
-	getDefaultDataSource: (...args) => get("data_source/get_default_data_source", ...args).then(res => res.data),
+	getDefaultDataSource: (...args) => get("dataSource/getDefaultDataSource", ...args).then(res => res.data),
 }
 
 export const mod = {
