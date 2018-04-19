@@ -2,10 +2,19 @@ module.exports = {
 	srcDir: "client/",
 	env:{
 		//NODE_ENV:"development",
+		HOST: "0.0.0.0",
+		PORT: 8088,
 	},
+
+	router: {
+	},
+
 	plugins: [
 	{src:"~/plugins/element-ui", ssr: false},
 	{src:"~/plugins/codemirror", ssr: false},
+	{src:"~/plugins/persistedstate", ssr: false},
+	{src:"~/plugins/app", ssr: false},
+	{src:"~/plugins/test", ssr: false},
 	],
 	/*
 	** Headers of the page

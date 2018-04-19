@@ -10,8 +10,6 @@ import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import {Base64} from "js-base64";
 
-import app from "@/app";
-
 import codemirror from "@/components/bases/codemirror.vue";
 const tempContentKey = "cmeditor_temp_content";
 
@@ -122,19 +120,19 @@ export default {
 	},
 
 	mounted() {
-		this.storage = app.storage();
+		const self = this;
+		this.storage = g_app.storage;
 		this.value = {
 			text:this.storage && this.storage.sessionStorageGetItem(tempContentKey) || (""),
 			filename:null,
 		}
-	},
-
-	created() {
-		const self = this;
-		app.vue.$on(app.consts.EVENT_ADD_MOD_TO_EDITOR, function(style){
+		g_app.vue.$on(g_app.consts.EVENT_ADD_MOD_TO_EDITOR, function(style){
 			self.value = self.$refs.codemirror.getValue();
 			self.value.text += '\n```@' + style.modName + '/' + style.styleName + '\n' +'```\n';
 		});
+	},
+
+	created() {
 	},
 
     components:{

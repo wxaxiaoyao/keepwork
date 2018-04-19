@@ -1,7 +1,7 @@
 <template>
 	<el-container>
 		<el-header>
-			<slot name="header"></slot>
+			<Header></Header>
 		</el-header>
 		<el-main>
 			<router-view></router-view>
@@ -13,8 +13,14 @@
 </template>
 
 <script>
+import Header from "@/components/views/header.vue";
+
 export default {
-	name:"headerMainFooterLayout"
+	name:"headerMainFooterLayout",
+
+	components: {
+		Header,
+	},
 }
 </script>
 

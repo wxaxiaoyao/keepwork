@@ -13,6 +13,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import yaml from "js-yaml";
 
 export default {
 	computed: {
@@ -21,6 +22,11 @@ export default {
 		}),
 	},
 
+	mounted() {
+		const str = yaml.safeDump({key:"test", data:{key:1}});
+		console.log(str);
+		console.log(yaml.safeLoad(str));
+	}
 }
 </script>
 <style scoped>

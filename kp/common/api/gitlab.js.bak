@@ -46,7 +46,7 @@ const encodeUrl = function(url) {
 }
 
 const getUsernameByPath = function(path) {
-	const paths = (path || "").split("/");
+	const paths = path.split("/");
 	let username = "keepwork";
 	for (let i = 0; i < paths.length; i++) {
 		if (paths[i]) {
@@ -82,11 +82,6 @@ Gitlab.prototype.getFile = function(path) {
 
 Gitlab.prototype.getContent = function(path) {
 	return this.api.RepositoryFiles.show(this.cfg.projectId, path, this.cfg.ref).then(file => Base64.decode(file.content));
-}
-
-Gitlab.prototype.upsertFile = function(path, options) {
-	const file = this.getFile(path);
-	return file ? this.editFile(path, options) : this.createFile(path, options);
 }
 
 Gitlab.prototype.editFile = function(path, options) {
@@ -161,7 +156,6 @@ gitlab.getFileGitUrl = function(path) {
 }
 
 gitlab.initConfig(keepworkConfig);
-gitlab.initConfig(xiaoyaoConfig);
 
 export const gitlabFactory = (config) => new Gitlab(config);
 export default gitlab;

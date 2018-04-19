@@ -4,15 +4,6 @@ import Hashes from "jshashes";
 import _const from "@/lib/const.js";
 import gitlab from "@/api/gitlab.js";
 
-let pageDB = undefined;
-if (process.BROWSER_BUILD) {
-	const storage = require( "@/lib/storage.js");
-	const indexedDB = require("@/lib/indexedDB.js");
-	indexedDB.open().then(function(){
-		pageDB = indexedDB.getStore("sitepage");
-	});
-}
-
 const SET_PAGE_PATH = 'SET_PAGE_PATH';
 const SET_PAGE_CONTENT = 'SET_PAGE_CONTENT';
 const SET_PAGE = 'SET_PAGE';
@@ -99,7 +90,7 @@ export const actions = {
 			page.isModify = true;
 		}
 		
-		pageDB.setItem({
+		g_app.pageDB.setItem({
 			...oldpage,
 			...page,
 		});
@@ -108,7 +99,7 @@ export const actions = {
 		commit(SET_PAGE, page);
 	},
 	indexDB_deletePage(context, pagePath) {
-		pageDB.deleteItem(pagePath);
+		g_app.pageDB.deleteItem(pagePath);
 	},
 	setTagId({commit, state}, tagId) {
 		commit("setTagId", tagId);
@@ -159,7 +150,7 @@ export const actions = {
 			}
 			commit(SET_PAGE, page);
 		}
-		pageDB.getItem(path).then(function(data){
+		g_app.pageDB.getItem(path).then(function(data){
 			if (!data) {
 				_loadPageFromServer();
 				return;

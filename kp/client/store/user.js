@@ -1,21 +1,21 @@
 import vue from "vue";
 
 const SET_TOKEN = 'SET_TOKEN';
-const SET_AUTH = "SET_AUTH";
-const SET_USERINFO = 'SET_USERINFO';
+const SET_AUTHENTICATED = "SET_AUTH";
+const SET_USER = 'SET_USER';
 const SET_USER_DATA_SOURCE = "SET_USER_DATA_SOURCE";
 
 export const state = () => ({
 	username: "xiaoyao",  // 当前认证用户名
-	isAuth:false, // 是否认证
+	isAuthenticated:false, // 是否认证
 	token:null,
 	userinfo: {},
 })
 
 export const getters = {
-	isAuth: (state) => state.isAuth,
+	isAuthenticated: (state) => state.isAuthenticated,
 	token: (state) => state.token,
-	userinfo: (state) => (state.userinfo || {}),
+	user: (state) => (state.user || {}),
 	dataSource: (state) => state.dataSource,
 }
 
@@ -23,11 +23,11 @@ export const actions = {
 	setToken({commit}, token) {
 		commit(SET_TOKEN, token); 
 	},
-	setAuth({commit}, auth) {
-		commit(SET_AUTH, auth);
+	setAuthenticated({commit}, authenticated) {
+		commit(SET_AUTHENTICATED, authenticated);
 	},
-	setUserinfo({commit}, userinfo){
-		commit(SET_USERINFO, userinfo);
+	setUser({commit}, user){
+		commit(SET_USER, user);
 	},
 	setUserDataSource({commit}, dataSource) {
 		commit(SET_USER_DATA_SOURCE, dataSource);
@@ -38,13 +38,13 @@ export const mutations = {
 	[SET_TOKEN](state, token) {
 		vue.set(state, "token", token);		
 	},
-	[SET_AUTH](state, auth) {
-		vue.set(state, "isAuth", auth);
+	[SET_AUTHENTICATED](state, authenticated) {
+		vue.set(state, "isAuthenticated", authenticated);
 	},
-	[SET_USERINFO](state, userinfo) {
-		vue.set(state, "userinfo", {
-			...(state.userinfo || {}),
-			...(userinfo || {}),
+	[SET_USER](state, user) {
+		vue.set(state, "user", {
+			...(state.user || {}),
+			...(user || {}),
 		});
 	},
 	[SET_USER_DATA_SOURCE](state, dataSource) {

@@ -45,3 +45,7 @@ a, a:hover, a:focus, a:visited
 	margin-right: auto;
 	margin-left: auto;
 }
+
+#__nuxt, #__layout {
+	height: 100%;
+}

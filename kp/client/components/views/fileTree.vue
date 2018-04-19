@@ -73,7 +73,7 @@
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import gitlab from "@/api/gitlab.js";
-import app from "@/app.js";
+import config from "@/config.js";
 
 export default {
 	components:{
@@ -95,7 +95,7 @@ export default {
 
 	computed: {
 		...mapGetters({
-			user: "user/userinfo",
+			user: "user/user",
 			tagId: 'editor/getTagId',
 			pagePath: 'editor/getPagePath',
 			getPageByPath: 'editor/getPageByPath',
@@ -212,7 +212,7 @@ export default {
 			}
 
 			const path = data.path;
-			window.location.hash = "#" + path.substring(0, path.length - app.config.pageSuffix.length);
+			window.location.hash = "#" + path.substring(0, path.length - config.pageSuffix.length);
 			this.setPagePath(data.path);
 		},
 		clickCloseBtn(data) {
@@ -288,7 +288,7 @@ export default {
 		rootnode.aliasname = "我的页面";
 
 		const hash = this.$route.hash;
-		const path =  hash.substring(1) + app.config.pageSuffix;
+		const path =  hash.substring(1) + config.pageSuffix;
 		const data = this.filetreeMap[path];
 		data && this.clickSelectPage(data);
 

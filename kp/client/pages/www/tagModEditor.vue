@@ -55,6 +55,7 @@ import tagEdit from "@/components/views/tagEdit.vue";
 import tagTree from "@/components/views/tagTree.vue";
 //import tags from "../../modeditor/tags.js";
 export default {
+	layout: "headerMainLayout",
 	data: function() {
 		const tag = tags.getTag();
 		return {

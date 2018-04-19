@@ -33,6 +33,7 @@ import codeEditor from "@/components/views/codeEditor.vue";
 
 export default {
 	name:"editor",
+	middleware: "authenticated",
 	data: function() {
 		var tag = tags.getTag("div");
 		return {
