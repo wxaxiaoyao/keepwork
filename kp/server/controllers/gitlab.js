@@ -5,7 +5,7 @@ import yaml from "js-yaml";
 
 import ERR from "../common/error.js";
 import config from "../config.js";
-import esClient from "../../common//api/elasticSearch.js";
+import esClient from "../../common/api/elasticSearch.js";
 import {gitlabFactory} from "../../common//api/gitlab.js";
 import gitlab from "../../common/api/gitlab.js";
 //import {gitlabFactory} from "../../vue/src//api/gitlab.js";

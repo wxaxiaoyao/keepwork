@@ -2,6 +2,7 @@ import Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
 
 import server from "./server.js";
+import _config from "./config.js";
 
 async function start () {
   const app = new Koa()
@@ -35,8 +36,8 @@ async function start () {
     })
   })
 
-  const host = process.env.HOST || config.env.HOST || '127.0.0.1'
-  const port = process.env.PORT || config.env.PORT || 3000
+  const host = _config.host || '127.0.0.1'
+  const port = _config.port || 3000
   app.listen(port, host)
   console.log('Server listening on ' + host + ':' + port) // eslint-disable-line no-console
 }

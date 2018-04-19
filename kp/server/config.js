@@ -1,7 +1,9 @@
+import commonConfig from "../common/config.js";
 import config from "./prod.config.js";
 
 const defaultConfig = {
-	apiUrlPrefix: "/api/v0",
+	...commonConfig,
+
 	gitlabToken: "18ayouuEsKRo_yM1P5eF",
 
 	secret: "keepwork",
@@ -16,7 +18,21 @@ const defaultConfig = {
 	},
 }
 
-export default {
+const productionConfig = {
 	...defaultConfig,
+	
 	...config,
-};
+}
+
+const developmentConfig = {
+	...defaultConfig,
+
+	...config,
+}
+
+const configs = {
+	"production": productionConfig,
+	"development": developmentConfig,
+}
+
+export default configs[process.env.NODE_ENV];

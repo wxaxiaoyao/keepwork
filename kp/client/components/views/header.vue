@@ -29,6 +29,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+
 export default {
 	data: function() {
 		return {
@@ -38,7 +39,7 @@ export default {
 	computed: {
 		...mapGetters({
 			isLogin: "user/isAuthenticated",
-			user: "user/userinfo",
+			user: "user/user",
 		}),
 	},
 
@@ -51,18 +52,18 @@ export default {
 			if (cmd == "logout") {
 				this.setAuthentiacted(false);
 				this.setToken(undefined);
-				this.$router.push({name:"login"});
+				this.$router.push({name: g_app.getRouteName("login")});
 			} else if (cmd == "editor") {
-				this.$router.push({name:"editor"});
+				this.$router.push({name: g_app.getRouteName("editor")});
 			} else if (cmd == "tagModEditor" || cmd == "adiModEditor") {
-				this.$router.push({name:cmd});
+				this.$router.push({name: g_app.getRouteName(cmd)});
 			}
 		},
 		clickLoginBtn() {
-			this.$router.push({name:"login"});
+			this.$router.push({name: g_app.getRouteName("login")});
 		},
 		clickRegisterBtn() {
-			this.$router.push({name:"register"});
+			this.$router.push({name: g_app.getRouteName("register")});
 		},
 	}
 }

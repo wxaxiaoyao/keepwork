@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="container" style="margin-top:40px">
 		<el-row>
 			<el-col :span="8" :offset="8">
 				<el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-width="80px">
@@ -48,7 +48,7 @@ export default {
 		...mapActions({
 			setToken:"user/setToken",
 			setAuthenticated:"user/setAuthenticated",
-			setUserinfo: "user/setUser",
+			setUser: "user/setUser",
 			setUserDataSource: "user/setUserDataSource",
 			setDataSource: "dataSource/setDataSource",
 		}),
