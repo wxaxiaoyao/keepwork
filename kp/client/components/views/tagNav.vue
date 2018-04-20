@@ -24,7 +24,7 @@
 <script>
 import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
-import tags from "@/lib/tags";
+import tags from "../../lib/tags";
 
 export default {
 	data: function() {

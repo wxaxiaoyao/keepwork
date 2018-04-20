@@ -59,7 +59,7 @@
 import vue from "vue";
 import _ from "lodash";
 import {mapActions, mapGetters} from "vuex";
-import mdconf from "@/lib/markdown/mdconf.js";
+import mdconf from "../../lib/markdown/mdconf.js";
 import queryStyleKey from "./styleKey.js";
 import queryStyleValue from "./styleValue.js"
 

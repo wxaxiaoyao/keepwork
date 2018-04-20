@@ -4,8 +4,8 @@ import {mapActions, mapGetters} from "vuex";
 import {create} from "jss";
 import preset from 'jss-preset-default'
 
-import {tags} from "@/lib/tags";
-import _const from "@/lib/const.js";
+import {tags} from "../../lib/tags";
+import _const from "../../lib/const.js";
 
 const compiler = require('vue-template-compiler');
 

@@ -1,9 +1,13 @@
 import vue from "vue";
 import _ from "lodash";
-import config from "@/config.js";
-import consts from "@/lib/const.js";
-import storage from "@/lib/storage.js";
-import indexedDB from "@/lib/indexedDB.js";
+//import config from "@/config.js";
+//import consts from "@/lib/const.js";
+//import storage from "@/lib/storage.js";
+//import indexedDB from "@/lib/indexedDB.js";
+import config from "../config.js";
+import consts from "../lib/const.js";
+import storage from "../lib/storage.js";
+import indexedDB from "../lib/indexedDB.js";
 
 config.baseURL = window.location.origin + config.apiUrlPrefix;
 

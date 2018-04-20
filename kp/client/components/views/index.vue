@@ -44,7 +44,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import {tags} from "@/lib/tags";
+import {tags} from "../../lib/tags";
 
 import adi from "../../bases/adi.js";
 import modTree from "./modTree.vue";

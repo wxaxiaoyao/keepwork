@@ -10,7 +10,7 @@ import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import {Base64} from "js-base64";
 
-import codemirror from "@/components/bases/codemirror.vue";
+import codemirror from "../bases/codemirror.vue";
 const tempContentKey = "cmeditor_temp_content";
 
 export default {

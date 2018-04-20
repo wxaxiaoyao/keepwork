@@ -22,8 +22,10 @@
 import Cookies from 'js-cookie';
 import {mapActions, mapGetters} from "vuex";
 
-import gitlab from "common/api/gitlab.js";
-import {user, dataSource, keepworkEndpoint} from "common/api/keepwork.js";
+//import gitlab from "common/api/gitlab.js";
+//import {user, dataSource, keepworkEndpoint} from "common/api/keepwork.js";
+import gitlab from "../../../common/api/gitlab.js";
+import {user, dataSource, keepworkEndpoint} from "../../../common/api/keepwork.js";
 export default {
 	name:"register",
 	data:function(){

@@ -1,13 +1,9 @@
 import axios from "axios";
 import { Message  } from 'element-ui';
 
-import config from "@/config.js";
-
 //const httpProto = window.location.origin.replace(/:.*$/, "");
 
-export const keepworkEndpoint = axios.create({
-	baseURL: config.baseURL,
-});
+export const keepworkEndpoint = axios.create({});
 
 const resultHandle = res => {
 	const error = res.data.error;

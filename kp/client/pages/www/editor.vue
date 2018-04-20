@@ -25,11 +25,16 @@ import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 import {Base64} from "js-base64";
 
-import {tags} from "@/lib/tags";
-//import components from "@/components/index.js";
-import page from "@/components/bases/page.vue";
-import left from "@/components/views/left.vue";
-import codeEditor from "@/components/views/codeEditor.vue";
+//import {tags} from "@/lib/tags";
+////import components from "@/components/index.js";
+//import page from "@/components/bases/page.vue";
+//import left from "@/components/views/left.vue";
+//import codeEditor from "@/components/views/codeEditor.vue";
+import {tags} from "../../lib/tags";
+//import components from "../../components/index.js";
+import page from "../../components/bases/page.vue";
+import left from "../../components/views/left.vue";
+import codeEditor from "../../components/views/codeEditor.vue";
 
 export default {
 	name:"editor",
