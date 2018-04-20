@@ -90,10 +90,8 @@ module.exports = {
   	  		  //exclude: /(node_modules)/
   	  		//})
   	  	  //}
-		    console.log(config.resolve);
 			config.resolve.alias = {
 				...(config.resolve.alias || {}),
-				'vue$':'vue/dist/vue.esm.js',
 			},
 			config.node = {
 				...(config.node || {}),
