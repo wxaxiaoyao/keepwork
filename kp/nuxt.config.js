@@ -52,7 +52,7 @@ module.exports = {
   	*/
   	css: [
 		'~assets/css/main.css',
-		'font-awesome/css/font-awesome.min.css',
+		//'font-awesome/css/font-awesome.min.css',
 	],
   	/*
   	** Customize the progress-bar color
@@ -62,22 +62,6 @@ module.exports = {
   	 ** Build configuration
   	 */
   	build: {
-		//vendor: [
-			//"vue-template-compiler",
-			//"vuex-persistedstate",
-			//"axios",
-			//"lodash",
-			//"element-ui",
-			//"elasticsearch",
-			//"jshashes",
-			//"js-base64",
-			//"js-cookie",
-			//"jss",
-			//"jss-preset-default",
-			//"node-gitlab-api",
-			//"codemirror",
-			//"vue-codemirror",
-		//],
 		/*
   	  	 ** Run ESLINT on save
   	  	 */
@@ -90,9 +74,6 @@ module.exports = {
   	  		  //exclude: /(node_modules)/
   	  		//})
   	  	  //}
-			config.resolve.alias = {
-				...(config.resolve.alias || {}),
-			},
 			config.node = {
 				...(config.node || {}),
 				fs: "empty",
