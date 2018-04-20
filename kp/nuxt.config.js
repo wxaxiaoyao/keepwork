@@ -2,15 +2,14 @@ module.exports = {
 	srcDir: "client/",
 	env:{
 		//NODE_ENV:"development",
-		HOST: "0.0.0.0",
-		PORT: 8088,
 	},
 
 	router: {
 	},
 
 	plugins: [
-	{src:"~/plugins/element-ui", ssr: false},
+	//{src:"~/plugins/element-ui", ssr: false},
+	{src:"~/plugins/element-ui"},
 	{src:"~/plugins/codemirror", ssr: false},
 	{src:"~/plugins/persistedstate", ssr: false},
 	{src:"~/plugins/app", ssr: false},
@@ -31,29 +30,13 @@ module.exports = {
 		]
 	},
 
-	//babel: {
-		//plugins: [
-			//[
-				//'component',
-				//[
-				//{
-				//'libraryName': 'element-ui',
-				//'styleLibraryName': 'theme-default'
-				//},
-				//'transform-async-to-generator',
-				//'transform-runtime'
-				//]
-			//]
-		//],
-		//comments: false
-	//},
 	/*
   	** Global CSS
   	*/
   	css: [
-		'~assets/css/main.css',
-		//'font-awesome/css/font-awesome.min.css',
+		'font-awesome/css/font-awesome.min.css',
 		'element-ui/lib/theme-chalk/index.css',
+		'~assets/css/main.css',
 	],
   	/*
   	** Customize the progress-bar color
@@ -63,18 +46,24 @@ module.exports = {
   	 ** Build configuration
   	 */
   	build: {
-		/*
-  	  	 ** Run ESLINT on save
-  	  	 */
+		babel: {
+			//presets:[["es2015", {"module":false}]],
+			plugins:[
+				"syntax-dynamic-import",
+				[
+					"component",
+					{
+						libraryName:"element-ui",
+						styleLibraryName:"theme-chalk",
+					},
+					'transform-async-to-generator',
+					'transform-runtime',
+				],
+			]
+		},
   	  	extend (config, ctx) {
-  	  	  //if (ctx.isClient) {
-  	  		//config.module.rules.push({
-  	  		  //enforce: 'pre',
-  	  		  //test: /\.(js|vue)$/,
-  	  		  //loader: 'eslint-loader',
-  	  		  //exclude: /(node_modules)/
-  	  		//})
-  	  	  //}
+			config.resolve.alias["vue$"] = "vue/dist/vue.esm.js";
+
 			config.node = {
 				...(config.node || {}),
 				fs: "empty",

@@ -1,5 +1,5 @@
 <template>
-  <section class="container">
+  <div class="container">
     <img src="../assets/img/logo.png" alt="Nuxt.js Logo" class="logo" />
     <h1 class="title">
       Universal Vue.js Application Framework
@@ -7,15 +7,23 @@
     <nuxt-link class="button" to="/about">
 	  About page
     </nuxt-link>
-	<div>{{counter}}</div>
-  </section>
+	<tag :tag="tag"></tag>
+  </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import yaml from "js-yaml";
+
+import tag from "@/components/common/tag.js";
+import tags from "@/lib/tags";
 
 export default {
+	data: function() {
+		return {
+			tag: tags.getTag("p")
+		}
+	},
+
 	computed: {
 		...mapGetters({
 			counter: "counter",
@@ -23,9 +31,10 @@ export default {
 	},
 
 	mounted() {
-		const str = yaml.safeDump({key:"test", data:{key:1}});
-		console.log(str);
-		console.log(yaml.safeLoad(str));
+	},
+
+	components: {
+		tag,
 	}
 }
 </script>

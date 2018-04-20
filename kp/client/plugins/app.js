@@ -8,8 +8,11 @@ import config from "../config.js";
 import consts from "../lib/const.js";
 import storage from "../lib/storage.js";
 import indexedDB from "../lib/indexedDB.js";
+import {keepworkEndpoint} from "../../common/api/keepwork.js";
 
 config.baseURL = window.location.origin + config.apiUrlPrefix;
+
+keepworkEndpoint.defaults.baseURL = config.baseURL;
 
 const app = {
 	vue: new vue(),

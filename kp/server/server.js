@@ -4,6 +4,7 @@ import jwt from "koa-jwt";
 import seesion from "koa-session";
 import Router from "koa-router";
 import KoaBody from "koa-body";
+import Static from "koa-static";
 import wurl from "wurl";
 import _ from "lodash";
 
@@ -24,6 +25,7 @@ export default (app, views) => {
 	//viewRouter.get("/www/*", views);
 
 	app
+	.use(Static("../.nuxt/"))
 	.use(cors())
 	.use(KoaBody())
 	.use(jwt({secret:config.secret, passthrough:true, cookie:"token"}))

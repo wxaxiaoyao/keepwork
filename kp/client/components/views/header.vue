@@ -2,7 +2,7 @@
 	<div class="headerContainer">
 		<div class="container full-height flex-col">
 			<div class="flex-row">
-				<div v-if="isLogin">
+				<div v-show="isLogin">
 					<el-dropdown @command="handleCommand">
 						<span class="el-dropdown-link" style="cursor:pointer">
 							{{user.aliasname || user.usernam || "逍遥"}}
@@ -18,7 +18,7 @@
 						</el-dropdown-menu>
 					</el-dropdown>
 				</div>
-				<div v-else>
+				<div v-show="!isLogin">
 					<el-button type="text" @click="clickLoginBtn">登陆</el-button>
 					<el-button type="text" @click="clickRegisterBtn">注册</el-button>
 				</div>
@@ -28,9 +28,19 @@
 </template>
 
 <script>
+import vue from "vue";
 import {mapActions, mapGetters} from "vuex";
 
+//import {Button, Dropdown, DropdownMenu, DropdownItem} from "element-ui";
+//vue.use(Button);
+//vue.use(Dropdown);
+//vue.use(DropdownMenu);
+//vue.use(DropdownItem);
+
 export default {
+	components: {
+	},
+
 	data: function() {
 		return {
 		}

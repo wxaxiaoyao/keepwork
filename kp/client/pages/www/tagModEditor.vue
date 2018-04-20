@@ -60,7 +60,6 @@ import tagNav from "../../components/views/tagNav.vue";
 import tagEdit from "../../components/views/tagEdit.vue";
 import tagTree from "../../components/views/tagTree.vue";
 export default {
-	layout: "headerMainLayout",
 	data: function() {
 		const tag = tags.getTag();
 		return {
