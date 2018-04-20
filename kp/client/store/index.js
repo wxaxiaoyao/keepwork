@@ -8,6 +8,12 @@ export const getters = {
 }
 
 export const actions = {
+	//nuxtServerInit({commit}, {req}) {
+		//if (process.server && req && req.ctx.state.user) {
+			//commit("user/SET_USER", req.ctx.state.user);
+			//commit("user/SET_AUTHENTICATED", true);
+		//}
+	//},
 	setCounter({commit}, counter) {
 		commit("setCounter", counter);
 	}

@@ -46,6 +46,7 @@ module.exports = {
   	 ** Build configuration
   	 */
   	build: {
+		//analyze: true,
 		babel: {
 			//presets:[["es2015", {"module":false}]],
 			plugins:[

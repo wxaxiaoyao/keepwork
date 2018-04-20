@@ -152,6 +152,7 @@ export default {
 			this.tagValue = mdconf.jsonToMd(value);
 		},
 		clickUpdateTagValueBtn() {
+			console.log(this, this.tagKey);
 			if (!this.tagKey) {
 				return;
 			}
@@ -160,7 +161,8 @@ export default {
 			if (_.isObject(oldvalue)) {
 				const value = mdconf.mdToJson(text);
 				if (_.isObject(value)) {
-					_.merge(oldvalue, value);
+					//_.merge(oldvalue, value);
+					_.each(value, (val, key) => vue.set(oldvalue, key, val));
 				}
 			} else if (_.isNumber(oldvalue)) {
 				_.set(this.tag, this.tagKey, _.toNumber(text) || oldvalue);

@@ -1,7 +1,7 @@
 import vue from "vue";
 
 const SET_TOKEN = 'SET_TOKEN';
-const SET_AUTHENTICATED = "SET_AUTH";
+const SET_AUTHENTICATED = "SET_AUTHENTICATED";
 const SET_USER = 'SET_USER';
 const SET_USER_DATA_SOURCE = "SET_USER_DATA_SOURCE";
 
