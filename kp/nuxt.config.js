@@ -90,10 +90,9 @@ module.exports = {
   	  		  //exclude: /(node_modules)/
   	  		//})
   	  	  //}
+		    console.log(config.resolve);
 			config.resolve.alias = {
 				...(config.resolve.alias || {}),
-				"@":"/mnt/d/workspace/lua/keepwork/kp/client/",
-				"common":"/mnt/d/workspace/lua/keepwork/kp/common/",
 				'vue$':'vue/dist/vue.esm.js',
 			},
 			config.node = {
