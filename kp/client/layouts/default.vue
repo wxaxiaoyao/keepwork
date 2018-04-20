@@ -1,12 +1,20 @@
 <template>
-	<el-container>
-		<el-header>
+	<div style="display:flex; height:100%; flex-direction:column;">
+		<div style="height:60px;">
 			<Header></Header>
-		</el-header>
-		<el-main>
-			<nuxt/>
-		</el-main>
-	</el-container>
+		</div>
+		<div style="flex:1">
+			<nuxt></nuxt>
+		</div>
+	</div>
+	<!--<el-container>-->
+		<!--<el-header>-->
+			<!--<Header></Header>-->
+		<!--</el-header>-->
+		<!--<el-main>-->
+			<!--<nuxt/>-->
+		<!--</el-main>-->
+	<!--</el-container>-->
 </template>
 
 <script>
