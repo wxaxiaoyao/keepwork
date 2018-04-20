@@ -3,7 +3,7 @@ import _ from "lodash";
 import {create} from "jss";
 import preset from 'jss-preset-default'
 
-import {themeFactory} from "@/lib/theme";
+import {themeFactory} from "../lib/theme";
 
 const jss = create({
 	...preset(),

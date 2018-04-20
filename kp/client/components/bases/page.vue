@@ -4,9 +4,9 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import tag from "@/components/common/tag.js";
-import {tags} from "@/lib/tags";
-import md from "@/lib/markdown";
+import tag from "../common/tag.js";
+import {tags} from "../../lib/tags";
+import md from "../../lib/markdown";
 
 
 export default {	

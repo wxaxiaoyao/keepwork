@@ -11,7 +11,7 @@
 import _ from "lodash";
 import {mapActions, mapGetters} from "vuex";
 
-import md from "@/lib/markdown";
+import md from "../../lib/markdown";
 
 export default {
 	name: "toc",

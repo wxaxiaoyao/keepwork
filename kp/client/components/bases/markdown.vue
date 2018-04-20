@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import md from "@/lib/markdown/index.js";
+import md from "../..//lib/markdown/index.js";
 
 export default {
 	name:"markdown",

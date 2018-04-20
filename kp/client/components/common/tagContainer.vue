@@ -10,7 +10,7 @@
 <script>
 import tagEditor from "../common/tagEditor.vue";
 import {mapActions, mapGetters} from "vuex";
-import {tags} from "@/lib/tags";
+import {tags} from "../../lib/tags";
 import _const from "../../lib/const.js";
 
 export default {

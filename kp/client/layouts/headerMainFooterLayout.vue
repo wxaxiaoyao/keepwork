@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Header from "@/components/views/header.vue";
+import Header from "../components/views/header.vue";
 
 export default {
 	name:"headerMainFooterLayout",
