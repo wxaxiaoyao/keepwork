@@ -1,3 +1,5 @@
+const webpack = require("webpack");
+
 module.exports = {
 	srcDir: "client/",
 
@@ -6,11 +8,10 @@ module.exports = {
 	},
 
 	plugins: [
-	//{src:"~/plugins/element-ui", ssr: false},
+	{src:"~/plugins/app", ssr: false},
+	{src:"~/plugins/persistedstate", ssr: false},
+	{src:"~/plugins/codemirror", ssr: false},
 	//{src:"~/plugins/element-ui"},
-	//{src:"~/plugins/codemirror", ssr: false},
-	//{src:"~/plugins/persistedstate", ssr: false},
-	//{src:"~/plugins/app", ssr: false},
 	//{src:"~/plugins/test", ssr: false},
 	],
 
@@ -44,7 +45,13 @@ module.exports = {
   	 ** Build configuration
   	 */
   	build: {
-		//analyze: true,
+		analyze: true,
+		vendor: [
+			"lodash",
+			"axios",
+			//"vuex-persistedstate",
+			//"vue-template-compiler",
+		],
 		babel: {
 			//presets:[["es2015", {"module":false}]],
 			plugins:[
@@ -60,5 +67,27 @@ module.exports = {
 				],
 			]
 		},
+  	  	extend (config, ctx) {
+			if (config.name == "server") {
+				return;
+			}
+
+			config.entry["vendor1"] = ["~/plugins/codemirror"];
+			config.plugins[0] = new webpack.optimize.CommonsChunkPlugin({
+				//name:"vendor",
+				names: ["vendor1", "vendor"],
+				//chunks: ["lodash", "axios"],
+				minChunks: Infinity,
+			});
+
+			config.resolve.alias["vue$"] = "vue/dist/vue.esm.js";
+			//console.log(config.resolve.alias);
+			config.node = {
+				...(config.node || {}),
+				fs: "empty",
+				tls: "empty",
+  	  			net: "empty",
+  	  		};
+  	  	}
   	}
 }

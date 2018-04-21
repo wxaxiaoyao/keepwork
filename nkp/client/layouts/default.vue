@@ -1,52 +1,49 @@
 <template>
-  <div>
-    <nuxt/>
-    <my-footer/>
-  </div>
+	<!--<div style="display:flex; height:100%; flex-direction:column;">-->
+		<!--<div style="height:60px;">-->
+			<!--<Header></Header>-->
+		<!--</div>-->
+		<!--<div style="flex:1">-->
+			<!--<nuxt></nuxt>-->
+		<!--</div>-->
+	<!--</div>-->
+	<el-container>
+		<el-header>
+			<Header></Header>
+		</el-header>
+		<el-main>
+			<nuxt/>
+		</el-main>
+	</el-container>
 </template>
 
 <script>
-import MyFooter from '../components/Footer.vue'
-
+import {
+	Button,
+	Container,
+	Header,
+	Aside,
+	Main,
+	Footer,
+} from "element-ui";
+import _Header from "../components/views/header.vue";
 export default {
-  components: {
-    MyFooter
-  }
+	components: {
+		[Container.name]:Container,
+		[Header.name]:Header,
+		[Aside.name]:Aside,
+		[Main.name]:Main,
+		[Footer.name]:Footer,
+		Header:_Header,
+	}
 }
 </script>
 
 <style>
-.container
-{
-  margin: 0;
-  width: 100%;
-  padding: 100px 0;
-  text-align: center;
+.el-container, .el-main {
+	height:100%;
 }
-
-.button, .button:visited
-{
-  display: inline-block;
-  color: #3B8070;
-  letter-spacing: 1px;
-  background-color: #fff;
-  border: 2px solid #3B8070;
-  text-decoration: none;
-  text-transform: uppercase;
-  padding: 15px 45px;
-}
-
-.button:hover, .button:focus
-{
-  color: #fff;
-  background-color: #3B8070;
-}
-
-.title
-{
-  color: #505153;
-  font-weight: 300;
-  font-size: 2.5em;
-  margin: 0;
+.el-container>.el-header,.el-main,.el-footer{
+	padding:0px;
 }
 </style>
