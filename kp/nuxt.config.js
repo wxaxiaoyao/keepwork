@@ -13,7 +13,7 @@ module.exports = {
 		extendRoutes(routes) {
 			routes.push({
 				name:"notfound",
-				path:"/www/*",
+				path:"/wiki/*",
 				component: "./client/pages/www/notfound.vue",
 			});
 		},

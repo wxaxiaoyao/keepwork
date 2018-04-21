@@ -1,6 +1,6 @@
 
 const config = {
-	urlPrefix: "www",
+	urlPrefix: "wiki",
 	apiUrlPrefix: "/api/v0",
 	pageSuffix:".md",
 	tagModsPath: "keepwork_data/tag_mods.json",
