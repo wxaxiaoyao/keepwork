@@ -1,10 +1,22 @@
 module.exports = {
 	srcDir: "client/",
+
+	performance: {
+		prefetch: false,
+	},
+
 	env:{
 		//NODE_ENV:"development",
 	},
 
 	router: {
+		extendRoutes(routes) {
+			routes.push({
+				name:"notfound",
+				path:"/www/*",
+				component: "./client/pages/www/notfound.vue",
+			});
+		},
 	},
 
 	plugins: [
