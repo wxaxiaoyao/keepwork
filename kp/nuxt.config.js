@@ -14,7 +14,7 @@ module.exports = {
 			routes.push({
 				name:"notfound",
 				path:"/wiki/*",
-				component: "./client/pages/www/notfound.vue",
+				component: "./client/pages/wiki/notfound.vue",
 			});
 		},
 	},
