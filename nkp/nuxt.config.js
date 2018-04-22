@@ -5,10 +5,6 @@ console.log(path.resolve("."));
 module.exports = {
 	srcDir: "client/",
 
-	performance: {
-		prefetch: false,
-	},
-
 	plugins: [
 	{src:"~/plugins/app", ssr: false},
 	{src:"~/plugins/persistedstate", ssr: false},
