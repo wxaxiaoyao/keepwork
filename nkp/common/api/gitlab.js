@@ -1,5 +1,5 @@
-//import gitlabApi from "../../client/lib/gitlab-api";
-import gitlabApi from "node-gitlab-api";
+import gitlabApi from "../../client/lib/gitlab-api";
+//import gitlabApi from "node-gitlab-api";
 import {Base64} from "js-base64";
 import _ from "lodash";
 
