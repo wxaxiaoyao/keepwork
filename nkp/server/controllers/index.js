@@ -3,11 +3,13 @@ import {validate} from "../middlewares/index.js";
 
 import {ERR_UNATUH} from "../common/error.js";
 
+import code from "./code.js";
 import user from "./user.js";
 import dataSource from "./dataSource.js";
 import gitlab from "./gitlab.js"; 
 
 export const controllers = {
+	code,
 	user,
 	dataSource,
 	gitlab,

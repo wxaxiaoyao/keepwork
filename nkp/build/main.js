@@ -679,9 +679,14 @@ module.exports = require("wurl");
 var path = __webpack_require__(47);
 var webpack = __webpack_require__(49);
 
-console.log(path.resolve("."));
+var rootdir = path.resolve(".");
+
 module.exports = {
 	srcDir: "client/",
+
+	env: {
+		rootdir: rootdir
+	},
 
 	plugins: [{ src: "~/plugins/app", ssr: false }, { src: "~/plugins/persistedstate", ssr: false }, { src: "~/plugins/codemirror", ssr: false }, { src: "~/plugins/element-ui" }],
 
@@ -1710,9 +1715,10 @@ Gitlab.prototype.getRoutes = function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__middlewares_index_js__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common_error_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__user_js__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__dataSource_js__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__gitlab_js__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__code_js__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__user_js__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__dataSource_js__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__gitlab_js__ = __webpack_require__(28);
 /* unused harmony export controllers */
 /* unused harmony export registerControllerRouter */
 
@@ -1728,10 +1734,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 
 
+
 var controllers = {
-	user: __WEBPACK_IMPORTED_MODULE_4__user_js__["a" /* default */],
-	dataSource: __WEBPACK_IMPORTED_MODULE_5__dataSource_js__["a" /* default */],
-	gitlab: __WEBPACK_IMPORTED_MODULE_6__gitlab_js__["a" /* default */]
+	code: __WEBPACK_IMPORTED_MODULE_4__code_js__["a" /* default */],
+	user: __WEBPACK_IMPORTED_MODULE_5__user_js__["a" /* default */],
+	dataSource: __WEBPACK_IMPORTED_MODULE_6__dataSource_js__["a" /* default */],
+	gitlab: __WEBPACK_IMPORTED_MODULE_7__gitlab_js__["a" /* default */]
 };
 
 var registerControllerRouter = function registerControllerRouter(router) {
@@ -2363,6 +2371,49 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 
 start();
+
+/***/ },
+/* 51 */,
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_shelljs__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_shelljs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_shelljs__);
+/* unused harmony export Code */
+
+var path = __webpack_require__(47);
+
+var rootdir = path.resolve();
+var Code = function Code() {
+	this.rootdir = rootdir;
+};
+
+Code.prototype.pushCode = function () {
+	var cmd_str = "cd " + this.rootdir + "; git reset --hard HEAD; git pull origin master;";
+	__WEBPACK_IMPORTED_MODULE_0_shelljs___default.a.exec(cmd_str);
+	console.log(cmd_str);
+};
+
+Code.prototype.getRoutes = function () {
+	var self = this;
+	var prefix = "/code";
+	var routes = [{
+		path: prefix + "/push_code",
+		method: "all",
+		action: "pushCode"
+	}];
+
+	return routes;
+};
+
+/* harmony default export */ exports["a"] = new Code();
+
+/***/ },
+/* 53 */
+/***/ function(module, exports) {
+
+module.exports = require("shelljs");
 
 /***/ }
 /******/ ]);

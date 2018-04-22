@@ -36,6 +36,7 @@
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.37.6",
+    "shelljs": "^0.8.1",
     "source-map-support": "^0.4.15",
     "sqlite3": "^4.0.0",
     "tedious": "^2.3.1",

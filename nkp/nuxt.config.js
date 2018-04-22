@@ -1,9 +1,14 @@
 const path = require("path");
 const webpack = require("webpack");
 
-console.log(path.resolve("."));
+const rootdir = path.resolve(".");
+
 module.exports = {
 	srcDir: "client/",
+
+	env: {
+		rootdir,
+	},
 
 	plugins: [
 	{src:"~/plugins/app", ssr: false},
