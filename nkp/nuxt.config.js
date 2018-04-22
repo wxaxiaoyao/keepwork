@@ -1,5 +1,7 @@
+const path = require("path");
 const webpack = require("webpack");
 
+console.log(path.resolve("."));
 module.exports = {
 	srcDir: "client/",
 
@@ -71,7 +73,7 @@ module.exports = {
 				return;
 			}
 
-			config.entry["vendor1"] = ["~/plugins/codemirror"];
+			config.entry["vendor1"] = ["~/plugins/codemirror", "node-gitlab-api"];
 			config.plugins[0] = new webpack.optimize.CommonsChunkPlugin({
 				//name:"vendor",
 				names: ["vendor1", "vendor"],
@@ -80,6 +82,7 @@ module.exports = {
 			});
 
 			config.resolve.alias["vue$"] = "vue/dist/vue.esm.js";
+			//config.resolve.alias["gitlabapi$"] = "~/lib/gitlab-api/index.js";
 			//console.log(config.resolve.alias);
 			config.node = {
 				...(config.node || {}),
