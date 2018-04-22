@@ -73,7 +73,7 @@ module.exports = {
 				return;
 			}
 
-			config.entry["vendor1"] = ["~/plugins/codemirror", "node-gitlab-api"];
+			config.entry["vendor1"] = ["~/plugins/codemirror"];
 			config.plugins[0] = new webpack.optimize.CommonsChunkPlugin({
 				//name:"vendor",
 				names: ["vendor1", "vendor"],
