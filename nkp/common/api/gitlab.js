@@ -1,4 +1,4 @@
-//import {RepositoryFiles, Repositories} from "node-gitlab-api";
+import gitlabApi from "../../client//lib/gitlab-api";
 import {Base64} from "js-base64";
 import _ from "lodash";
 
@@ -71,11 +71,11 @@ function Gitlab(config){
 	//console.log(cfg);
 	
 	const gitcfg = {url: this.cfg.rawBaseUrl, token: this.cfg.token};
-	this.api = {
-		//RepositoryFiles: new RepositoryFiles(gitcfg),
-		//Repositories: new Repositories(gitcfg),
-	}
-	//this.api = new gitlabApi({url:this.cfg.rawBaseUrl, token:this.cfg.token});
+	//this.api = {
+		////RepositoryFiles: new RepositoryFiles(gitcfg),
+		////Repositories: new Repositories(gitcfg),
+	//}
+	this.api = new gitlabApi({url:this.cfg.rawBaseUrl, token:this.cfg.token});
 	//return this;
 }
 

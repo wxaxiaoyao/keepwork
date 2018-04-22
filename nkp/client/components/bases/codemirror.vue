@@ -60,7 +60,7 @@ export default {
 				"Ctrl-S": function(cm) {
 					self.$emit("save", {
 						filename: self.currentFilename,
-						text:self.cm.getValue()
+						text:self.codemirror.getValue()
 					});
 				},
 			},
@@ -91,34 +91,34 @@ export default {
 	},
 	watch: {
 		"value": function(val) {
-			this.cm && this.swapDoc(val.filename, val.text);	
+			this.codemirror && this.swapDoc(val.filename, val.text);	
 		},
 	},
 	methods: {
 		initCodeMirror() {
 			var self = this;
 
-			self.cm.setSize("100%", "100%");
-			self.originDoc = self.cm.getDoc();
+			self.codemirror.setSize("100%", "100%");
+			self.originDoc = self.codemirror.getDoc();
 
-			self.cm.on("change", function (cm, changeObj) {
+			self.codemirror.on("change", function (cm, changeObj) {
 				// 代码折叠
 				foldWikiBlock(cm, changeObj);
 
 				// change
-				var text = self.cm.getValue();
+				var text = self.codemirror.getValue();
 
 				self.$emit("change", {filename:self.currentFilename, text:text});
 			});
 
-			self.cm.on("cursorActivity", function(cm){
-				var pos = self.cm.getCursor();
+			self.codemirror.on("cursorActivity", function(cm){
+				var pos = self.codemirror.getCursor();
 				self.$emit("cursorActivity", pos);
 			});
 
-			self.cm.setOption("extraKeys", this.keyMap);
+			self.codemirror.setOption("extraKeys", this.keyMap);
 
-			self.cm.setValue(self.text);
+			self.codemirror.setValue(self.text);
 		},
 		swapDoc(filename, text) {
 			text = text || "";
@@ -126,21 +126,21 @@ export default {
 				if (!this.docMap[filename]) {
 					this.docMap[filename] = this.CodeMirror.Doc(text, 'markdown');
 				}
-				this.cm.swapDoc(this.docMap[filename]);
+				this.codemirror.swapDoc(this.docMap[filename]);
 			} else {
-				this.cm.swapDoc(this.originDoc);
+				this.codemirror.swapDoc(this.originDoc);
 			}
 			this.currentFilename = filename;
 			if (text) {
-				this.cm.setValue(text);
+				this.codemirror.setValue(text);
 			} else {
-				this.CodeMirror && this.CodeMirror.signal(this.cm, "change", this.cm);
+				this.CodeMirror && this.CodeMirror.signal(this.codemirror, "change", this.codemirror);
 			}
 		},
 		getValue() {
 			return {
 				filename: this.currentFilename,
-				text: this.cm.getValue(),
+				text: this.codemirror.getValue(),
 			};	
 		},
 	},
@@ -152,7 +152,7 @@ export default {
 		const self = this;
 		self.isClient = true;
 		self.$nextTick(function(){
-			self.cm = self.$refs.cm.codemirror;
+			self.codemirror = self.$refs.cm.codemirror;
 			self.CodeMirror = this.CodeMirror || require("codemirror");
 			self.initCodeMirror();
 			self.swapDoc(self.value.filename, self.value.text);	

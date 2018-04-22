@@ -67,7 +67,7 @@ export default {
 		}),
 
 		savePageToDB(){
-			var value = this.$refs.codemirror.getValue();
+			var value = this.$refs.cm.getValue();
 			var filename = value.filename;
 			var text = value.text;
 			this.change.timer && clearTimeout(this.change.timer);
@@ -127,7 +127,7 @@ export default {
 			filename:null,
 		}
 		g_app.vue.$on(g_app.consts.EVENT_ADD_MOD_TO_EDITOR, function(style){
-			self.value = self.$refs.codemirror.getValue();
+			self.value = self.$refs.cm.getValue();
 			self.value.text += '\n```@' + style.modName + '/' + style.styleName + '\n' +'```\n';
 		});
 	},

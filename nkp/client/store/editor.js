@@ -211,7 +211,7 @@ export const actions = {
 	},
 	async loadTree(context, payload) {
 		let {commit, getters: {getGit}} = context;
-		let list = await gitlab.getTree(payload.path, {...payload, recursive: true,});
+		let list = await gitlab.getTree(payload.path, {...payload, recursive: true,}) || [];
 		let pages = {};
 		list.forEach(function(node){
 			pages[node.path] = treeNodeToPage(node);

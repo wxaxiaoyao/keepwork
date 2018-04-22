@@ -34,7 +34,6 @@ module.exports = {
   	*/
   	css: [
 		'font-awesome/css/font-awesome.min.css',
-		//'element-ui/lib/theme-chalk/index.css',
 		'~assets/css/main.css'
 	],
   	/*
@@ -49,11 +48,11 @@ module.exports = {
 		vendor: [
 			"lodash",
 			"axios",
-			//"vuex-persistedstate",
-			//"vue-template-compiler",
+			"vuex-persistedstate",
 		],
 		babel: {
-			//presets:[["es2015", {"module":false}]],
+			//presets:[
+			//],
 			plugins:[
 				"syntax-dynamic-import",
 				[
@@ -65,7 +64,7 @@ module.exports = {
 					'transform-async-to-generator',
 					'transform-runtime',
 				],
-			]
+			],
 		},
   	  	extend (config, ctx) {
 			if (config.name == "server") {

@@ -4,16 +4,16 @@
 		@mousemove.native="splitStripMousemove"
 		@mouseleave.native="splitStripMouseup">
 		<el-aside ref="splitStrip1" :width="splitStrip1_width">
-			<!--<left :rootTag="rootTag" v-on:addTag="addTag"></left>-->
+			<left :rootTag="rootTag" v-on:addTag="addTag"></left>
 		</el-aside>
 		<el-container ref="splitStrip1R">
 			<div class="split-strip kp_forbit_copy" @mousedown="splitStripMousedown('splitStrip1')"></div>
 			<el-aside ref="splitStrip2" :width="splitStrip2_width">
-				<!--<code-editor ref="codemirror"></code-editor>-->
+				<code-editor ref="codemirror"></code-editor>
 			</el-aside>
 			<div class="split-strip kp_forbit_copy" @mousedown="splitStripMousedown('splitStrip2')"></div>
 			<el-main ref="splitStrip2R">
-				<!--<page :text="pageContent"></page>-->
+				<page :text="pageContent"></page>
 			</el-main>
 		</el-container>
 	</el-container>
@@ -31,9 +31,9 @@ import {mapActions, mapGetters} from "vuex";
 
 import {tags} from "@/lib/tags";
 //import components from "@/components/index.js";
-//import page from "@/components/bases/page.vue";
-//import left from "@/components/views/left.vue";
-//import codeEditor from "@/components/views/codeEditor.vue";
+import page from "@/components/bases/page.vue";
+import left from "@/components/views/left.vue";
+import codeEditor from "@/components/views/codeEditor.vue";
 
 export default {
 	components: {
@@ -41,9 +41,9 @@ export default {
 		[Header.name]:Header,
 		[Aside.name]:Aside,
 		[Main.name]:Main,
-		//left,
-		//codeEditor,
-		//page,
+		left,
+		codeEditor,
+		page,
 	},
 	//middleware: "authenticated",
 	data: function() {
